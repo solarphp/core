@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Sanitizes a value to a float.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_SanitizeFloat extends Solar_Filter_Abstract
 {
     /**

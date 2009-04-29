@@ -204,7 +204,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
                 throw $this->_exception('ERR_AREA_NOT_CREATED');
             }
         }
-
+        
         // get a user object for privileges
         $this->user = Solar_Registry::get('user');
     }

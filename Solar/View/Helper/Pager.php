@@ -141,7 +141,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
             $html[] = $this->_view->getText('PAGER_PREV');
         }
         $html[] = "</li>";
-
+        
         // build the list of page links
         $list = $this->_getPageList($page, $pages);
         foreach ($list as $item) {
@@ -162,7 +162,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
                . $this->_view->action($href, (string) $item, $attribs)
                . "</li>";
         }
-
+        
         // show the "next" link?
         $html[] = "    <li>";
         if ($page < $pages) {

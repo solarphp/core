@@ -15,17 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that a value is blank (null, empty string, or string of only 
- * whitespace characters).
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_ValidateBlank extends Solar_Filter_Abstract
 {
     /**

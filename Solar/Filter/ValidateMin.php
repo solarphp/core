@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that a value is greater than or equal to a minimum.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_ValidateMin extends Solar_Filter_Abstract
 {
     /**

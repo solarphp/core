@@ -139,7 +139,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
     {
          return $this->fetchCol('SELECT LOWER(TABLE_NAME) FROM USER_TABLES');
     }
-
+    
     /**
      * 
      * Returns an array describing the columns in a table.
@@ -172,7 +172,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         if (! $cols) {
             throw $this->_exception('ERR_QUERY_FAILED');
         }
-
+        
         // loop through the result rows; each describes a column.
         foreach ($cols as $val) {
             
@@ -280,7 +280,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         // done!
         return $descr;
     }
-
+    
     /**
      * 
      * Given a native column SQL default value, finds a PHP literal value.

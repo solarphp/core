@@ -15,17 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that a value is composed of one or more words separated by
- * a single separator-character.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_ValidateSepWords extends Solar_Filter_Abstract
 {
     /**

@@ -74,7 +74,6 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      */
     public $through_key;
     
-
     /**
      * 
      * Modifies the base select statement for the relationship type.

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Sanitizes a value to a string with only word characters.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_SanitizeWord extends Solar_Filter_Abstract
 {
     /**

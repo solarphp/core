@@ -133,7 +133,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
      * 
      */
     protected $_flags = STREAM_CLIENT_CONNECT;
-
+    
     /**
      * 
      * The stream context for this connection, if any.

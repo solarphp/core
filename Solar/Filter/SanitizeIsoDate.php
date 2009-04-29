@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Sanitizes a value to an ISO-8601 date.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_SanitizeIsoDate extends Solar_Filter_SanitizeIsoTimestamp
 {
     /**

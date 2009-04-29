@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that a value is in a list of allowed values.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_ValidateInList extends Solar_Filter_Abstract
 {
     /**

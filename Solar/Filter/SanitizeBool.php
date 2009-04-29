@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Sanitizes a value to boolean true or false.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_SanitizeBool extends Solar_Filter_Abstract
 {
     /**

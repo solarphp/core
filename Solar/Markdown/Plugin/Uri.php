@@ -178,5 +178,4 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin
         if ($r < 45) return '&#x'.dechex(ord($char)).';';
         return '&#'.ord($char).';';
     }
-
 }

@@ -29,5 +29,4 @@ class Solar_View_Helper_Title extends Solar_View_Helper
     {
         return '<title>' . $this->_view->escape($text) . '</title>';
     }
-
 }

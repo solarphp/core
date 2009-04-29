@@ -179,7 +179,7 @@ class Solar_Inflect extends Solar_Base
                 );
             }
         }
-
+        
         // reverse rules so they are processed in LIFO order
         $this->_to_plural   = array_reverse($this->_to_plural);
         $this->_to_singular = array_reverse($this->_to_singular);

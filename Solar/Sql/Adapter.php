@@ -234,7 +234,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      */
     protected $_profiling = false;
-
+    
     /**
      * 
      * A PDO-style DSN, for example, "mysql:host=127.0.0.1;dbname=test".

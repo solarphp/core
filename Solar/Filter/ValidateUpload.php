@@ -14,17 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that the value is an array of file-upload information, and
- * if a file is referred to, that is actually an uploaded file.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract
 {
     /**
@@ -43,7 +32,7 @@ class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract
         UPLOAD_ERR_CANT_WRITE => 'INVALID_UPLOAD_CANT_WRITE',
         UPLOAD_ERR_EXTENSION  => 'INVALID_UPLOAD_EXTENSION', // **php** extension
     );
-
+    
     /**
      * 
      * Validates that the value is an array of file-upload information, and

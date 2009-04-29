@@ -3,6 +3,8 @@
  * 
  * Class for reading access privileges from a database table.
  * 
+ *     0:flag 1:type 2:name 3:class 4:action
+ * 
  * @category Solar
  * 
  * @package Solar_Access
@@ -12,18 +14,6 @@
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- */
-
-/**
- * 
- * Class for reading access privileges from a database table.
- * 
- *     0:flag 1:type 2:name 3:class 4:action
- * 
- * @category Solar
- * 
- * @package Solar_Access
  * 
  */
 class Solar_Access_Adapter_Sql extends Solar_Access_Adapter

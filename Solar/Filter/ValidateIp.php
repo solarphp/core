@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that a value is a legal IP address.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- * @todo Validate IPv6 too.
- * 
- */
 class Solar_Filter_ValidateIp extends Solar_Filter_Abstract
 {
     /**

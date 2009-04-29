@@ -84,6 +84,4 @@ class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong
         
         return $text;
     }
-    
 }
-

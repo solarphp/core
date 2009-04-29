@@ -92,7 +92,7 @@ class Solar_Locale extends Solar_Base
     {
         return $this->_code;
     }
-
+    
     /**
      * 
      * Returns ISO 3166 country code for current locale code.
@@ -107,7 +107,7 @@ class Solar_Locale extends Solar_Base
     {
         return substr($this->_code, -2);
     }
-
+    
     /**
      * 
      * Returns the translated locale string for a class and key.

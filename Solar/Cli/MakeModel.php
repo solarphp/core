@@ -335,7 +335,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
               . str_replace('_', DIRECTORY_SEPARATOR, $class)
               . DIRECTORY_SEPARATOR
               . 'Record.php';
-
+        
         if (file_exists($file)) {
             $this->_outln('Record class exists.');
             return;
@@ -367,7 +367,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
               . str_replace('_', DIRECTORY_SEPARATOR, $class)
               . DIRECTORY_SEPARATOR
               . 'Collection.php';
-
+        
         if (file_exists($file)) {
             $this->_outln('Collection class exists.');
             return;

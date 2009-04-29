@@ -155,7 +155,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
         // done
         return $this->_pdo_type . ':' . implode(';', $dsn);
     }
-
+    
     /**
      * 
      * Returns a list of all tables in the database.

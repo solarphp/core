@@ -30,5 +30,4 @@ class Solar_View_Helper_Link extends Solar_View_Helper
     {
         return '<link' . $this->_view->attribs($attribs) . ' />';
     }
-
 }

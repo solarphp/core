@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Validates that a value is an ISO 8601 time string.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
- * 
- */
 class Solar_Filter_ValidateIsoTime extends Solar_Filter_ValidateIsoTimestamp
 {
     /**

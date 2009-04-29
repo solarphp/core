@@ -46,5 +46,4 @@ class Solar_View_Helper_Base extends Solar_View_Helper
         $href = $this->_view->escape($href);
         return "<base href=\"$href\" />";
     }
-
 }

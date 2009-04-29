@@ -32,5 +32,4 @@ class Solar_View_Helper_Meta extends Solar_View_Helper
     {
         return '<meta' . $this->_view->attribs($attribs) . ' />';
     }
-
 }

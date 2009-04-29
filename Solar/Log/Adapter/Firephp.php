@@ -92,7 +92,7 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
             'X-FirePHP-Data-399999999999',
             '["__SKIP__"]],'
         );
-
+        
         $this->_response->setHeader(
             'X-FirePHP-Data-200000000001',
             '"FirePHP.Dump":{'
@@ -108,8 +108,7 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
             '"__SKIP__":"__SKIP__"}'
         );
     }
-
-
+    
     /**
      * 
      * Sends the log message.
@@ -149,7 +148,7 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
                 }
             }
         }
-
+        
         return true;
     }
     

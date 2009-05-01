@@ -446,7 +446,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function isAllowed()
     {
-        return $this->allow;
+        return (bool) $this->allow;
     }
     
     /**

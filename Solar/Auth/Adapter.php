@@ -340,7 +340,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->updateIdleExpire();
         
         // allow auto-processing?
-        if (! $this->allow) {
+        if (! $this->isAllowed()) {
             return;
         }
         
@@ -435,6 +435,18 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function isValid()
     {
         return $this->status == Solar_Auth::VALID;
+    }
+    
+    /**
+     * 
+     * Tells whether authentication processing is allowed.
+     * 
+     * @return bool Whether or not authentication processing is allowed.
+     * 
+     */
+    public function isAllowed()
+    {
+        return $this->allow;
     }
     
     /**

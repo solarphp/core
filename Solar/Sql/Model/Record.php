@@ -302,7 +302,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // unserialize any serialize_cols in the load
         $this->_model->unserializeCols($load);
         
-        // Wholesale dump values into our data array bypassing __set
+        // wholesale dump values into our data array, bypassing __set
         $this->_data = array_merge($this->_data, $load);
         
         // reset values that require a set access method
@@ -1540,11 +1540,18 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // unserialize any serialize_cols in the load
         $this->_model->unserializeCols($load);
         
-        // Wholesale dump values into our data array bypassing __set
+        // wholesale dump values into our data array, bypassing __set
         $this->_data = $load;
         
         // Record the inital values but only for columns that have physical backing
         $this->_initial = array_intersect_key($load, $model->table_cols);
+        
+        // placeholders for nonexistent calculate_cols, bypassing __set
+        foreach ($this->_model->calculate_cols as $name => $info) {
+            if (! array_key_exists($name, $this->_data)) {
+                $this->_data[$name] = null;
+            }
+        }
         
         // reset values that require an access method
         foreach ($this->_access_methods as $col => $methods) {

@@ -302,8 +302,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // unserialize any serialize_cols in the load
         $this->_model->unserializeCols($load);
         
-        // wholesale dump values into our data array, bypassing __set
-        $this->_data = array_merge($this->_data, $load);
+        // use parent load to push values directly into $_data array
+        parent::load($load);
         
         // reset values that require a set access method
         foreach ($this->_access_methods as $field => $methods) {
@@ -312,8 +312,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
             }
         }
         
-        // fix relateds, and we're done
+        // fix relateds
         $this->_fixRelatedData();
+        
+        // record load makes it dirty, unlike the parent load which leaves 
+        // status alone
+        $this->setStatus(self::STATUS_DIRTY);
     }
     
     /**
@@ -1540,8 +1544,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // unserialize any serialize_cols in the load
         $this->_model->unserializeCols($load);
         
-        // wholesale dump values into our data array, bypassing __set
-        $this->_data = $load;
+        // use parent load to push values directly into $_data array
+        parent::load($load);
         
         // Record the inital values but only for columns that have physical backing
         $this->_initial = array_intersect_key($load, $model->table_cols);

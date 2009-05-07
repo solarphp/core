@@ -507,16 +507,18 @@ class Solar_Form extends Solar_Base
     {
         // make sure the element exists
         $name = $this->_prepareName($name, $array);
-        if (! empty($this->elements[$name])) {
-            // add the messages
-            foreach ((array) $spec as $text) {
-                $this->elements[$name]['invalid'][] = $text;
-            }
-        
-            // mark the status of the element, and of the form
-            $this->elements[$name]['status'] = false;
-            $this->_status = false;
+        if (empty($this->elements[$name])) {
+            return;
         }
+        
+        // add the messages
+        foreach ((array) $spec as $text) {
+            $this->elements[$name]['invalid'][] = $text;
+        }
+    
+        // mark the status of the element, and of the form
+        $this->elements[$name]['status'] = false;
+        $this->setStatus(false);
     }
     
     /**

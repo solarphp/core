@@ -315,9 +315,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // fix relateds
         $this->_fixRelatedData();
         
-        // record load makes it dirty, unlike the parent load which leaves 
-        // status alone
-        $this->setStatus(self::STATUS_DIRTY);
+        // if there were changes, mark the record as dirty
+        if ($this->isChanged()) {
+            $this->setStatus(self::STATUS_DIRTY);
+        }
     }
     
     /**
@@ -1278,7 +1279,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Tells if a particular table-column has changed.
+     * Tells if the record, or a particular table-column in the record, has
+     * changed from its initial value.
      * 
      * This is slightly complicated.  Changes to or from a null are reported
      * as "changed".  If both the initial value and new value are numeric
@@ -1294,7 +1296,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * Similarly, we need to make allowances for nulls, because a non-numeric
      * null is loosely equal to zero or an empty string.
      * 
-     * @param string $col The table-column name.
+     * @param string $col The table-column name; if null, 
      * 
      * @return void|bool Returns null if the table-column name does not exist,
      * boolean true if the data is changed, boolean false if not changed.
@@ -1302,8 +1304,18 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * @todo How to handle changes to array values?
      * 
      */
-    public function isChanged($col)
+    public function isChanged($col = null)
     {
+        // if no column specified, check if the record as a whole has changed
+        if ($col === null) {
+            foreach ($this->_initial as $col => $val) {
+                if ($this->isChanged($col)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         // col needs to exist in the initial array
         if (! array_key_exists($col, $this->_initial)) {
             return null;
@@ -1520,11 +1532,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function init(Solar_Sql_Model $model, $spec, $status = null)
     {
-        // default status
-        if (! $status) {
-            $status = self::STATUS_CLEAN;
-        }
-        
         // inject the model
         $this->_model = $model;
         
@@ -1574,7 +1581,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $this->_invalid = array();
         
         // set status directly, bypassing setStatus() logic, and done!
-        $this->_status = $status;
+        if ($status) {
+            // specified status
+            $this->_status = $status;
+        } else {
+            // default status
+            $this->_status = self::STATUS_CLEAN;
+        }
     }
     
     public function isDeleted()

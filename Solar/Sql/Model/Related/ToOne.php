@@ -36,7 +36,8 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Returns foreign data as a record object.
+     * Returns a record object populated with the passed data; if data is 
+     * empty, returns a brand-new record object.
      * 
      * @param array $data The foreign data.
      * 
@@ -45,13 +46,18 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
      */
     public function newObject($data)
     {
-        return $this->_foreign_model->newRecord($data);
+        if (! $data) {
+            return $this->_foreign_model->fetchNew();
+        } else {
+            return $this->_foreign_model->newRecord($data);
+        }
     }
     
     public function fetchEmpty()
     {
         return null;
     }
+    
     /**
      * 
      * Fetches foreign data as a record or collection object.

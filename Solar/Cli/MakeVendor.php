@@ -144,23 +144,36 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         
         $system = Solar::$system;
         
-        // include/Vendor -> source/vendor/Vendor
-        $source  = "$system/source/{$this->_dashes}/$this->_studly";
-        $include = "$system/include/{$this->_studly}";
-        $cmd     = "ln -s $source $include";
-        $this->_outln($cmd);
-        passthru($cmd);
+        $links = array(
+            
+            // include/Vendor -> ../source/vendor/Vendor
+            array(
+                'dir' => "$system/include",
+                'tgt' => $this->_studly,
+                'src' => "../source/{$this->_dashes}/$this->_studly",
+            ),
+            
+            // docroot/public/Vendor -> ../../include/Vendor/App/Public
+            array(
+                'dir' => "$system/docroot/public",
+                'tgt' => $this->_studly,
+                'src' => "../../include/{$this->_studly}/App/Public",
+            ),
+            
+            // script/vendor -> ../source/solar/bin/solar
+            array(
+                'dir' => "$system/script",
+                'tgt' => $this->_dashes,
+                'src' => "../source/solar/script/solar",
+            ),
+            
+        );
         
-        // docroot/public/Vendor -> include/Vendor/App/Public
-        $public = "$system/docroot/public/{$this->_studly}";
-        $cmd    = "ln -s $include/App/Public $public";
-        $this->_outln($cmd);
-        passthru($cmd);
-        
-        // script/vendor -> source/solar/bin/solar
-        $script = "$system/script/{$this->_dashes}";
-        $cmd    = "ln -s $system/source/solar/script/solar $script";
-        $this->_outln($cmd);
-        passthru($cmd);
+        foreach ($links as $link) {
+            extract($link); // $dir, $src, $tgt
+            $cmd = "cd $dir; ln -s $src $tgt";
+            $this->_outln($cmd);
+            passthru($cmd);
+        }
     }
 }

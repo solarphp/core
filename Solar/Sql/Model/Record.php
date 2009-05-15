@@ -800,6 +800,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // pre-hook
         $this->_preSaveRelated();
         
+        // retain current status, because saving relateds will change status
+        // on their parents (i.e., this record).
+        $status = $this->_status;
+        
         // keep track if any of the relateds were invalid
         $is_invalid = false;
         
@@ -825,6 +829,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // was any related invalid?
         if ($is_invalid) {
             $this->setStatus(self::STATUS_INVALID);
+        } else {
+            // reset to original status
+            $this->setStatus($status);
         }
         
         // post-hook
@@ -1447,7 +1454,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // build the form
         $form = Solar::factory('Solar_Form');
         $form->load('Solar_Form_Load_Model', $this->_model, $cols, $array_name);
-        $form->setValues($this->toArray(), $array_name);
+        $form->setValues($this, $array_name);
         $form->addInvalids($this->_invalid, $array_name);
         
         // set the form status

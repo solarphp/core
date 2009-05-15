@@ -579,24 +579,46 @@ class Solar_Form extends Solar_Base
      * Manually set the value of several elements.
      * 
      * Note that this is subtly different from [[populate()]].  This method
-     * takes a flat array where the full name of the element is the key, 
-     * whereas populate() takes a "natural" hierarchical array like $_POST.
+     * takes a flat array or struct where the full name of the element is the
+     * key, as vs populate() takes a "natural" hierarchical array like $_POST.
      * 
-     * @param array $data An associative array where the key is the element
-     * name and the value is the element value to set.
+     * @param array|Solar_Struct $spec The data source to set values from.
      * 
      * @param string $array Rename each element as a key in this array.
      * 
      * @return void
      * 
-     * @throws Solar_Form_Exception_NoSuchElement when the named element does
-     * not exist in the form.
-     * 
      */
-    public function setValues($data, $array = null)
+    public function setValues($spec, $array = null)
     {
-        foreach ((array) $data as $name => $value) {
-            $this->setValue($name, $value, $array);
+        // we traverse through the elements, *not* the data keys, so that
+        // Solar_Sql_Model_Record objects do not lazy-load items that are
+        // not in the form.
+        foreach ($this->elements as $name => &$element) {
+            
+            // are we looking inside a specific element array?
+            if ($array) {
+                // we have to find the non-array name version of the
+                // element name.
+                $find = '/^' . preg_quote($array, '/') . '\[(\w+)\]$/';
+                if (preg_match($find, $name, $matches)) {
+                    $key = $matches[1];
+                } else {
+                    // this element is not part of the array we need
+                    continue;
+                }
+            } else {
+                // not looking in an array, use the name as-is
+                $key = $name;
+            }
+            
+            // is the key set in the data spec?
+            $isset = is_array($spec) && array_key_exists($key, $spec)
+                  || $spec instanceof Solar_Struct && isset($spec->$key);
+            
+            if ($isset) {
+                $element['value'] = $spec[$key];
+            }
         }
     }
     

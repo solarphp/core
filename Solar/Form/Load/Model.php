@@ -76,6 +76,11 @@ class Solar_Form_Load_Model extends Solar_Base
                 unset($list[$key]);
             }
             
+            // remove xmlstruct columns
+            foreach ($model->xmlstruct_cols as $key => $val) {
+                unset($list[$key]);
+            }
+            
             // done!
             $list = array_keys($list);
         } else {

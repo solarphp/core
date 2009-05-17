@@ -1542,16 +1542,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // inject the model
         $this->_model = $model;
         
-        // placeholders for table and calculate cols, bypassing __set
-        $list = array_merge(
-            array_keys($model->table_cols),
-            array_keys($model->calculate_cols)
-        );
-        
-        foreach ($list as $name) {
-            $this->_data[$name] = null;
-        }
-        
         // sets access methods
         $this->_setAccessMethods();
         
@@ -1573,6 +1563,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // Record the inital values but only for columns that have physical backing
         $this->_initial = array_intersect_key($load, $model->table_cols);
+        
+        // placeholders for nonexistent calculate_cols, bypassing __set
+        foreach ($this->_model->calculate_cols as $name => $info) {
+            if (! array_key_exists($name, $this->_data)) {
+                $this->_data[$name] = null;
+            }
+        }
         
         // reset values that require an access method
         foreach ($this->_access_methods as $col => $methods) {

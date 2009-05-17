@@ -30,17 +30,20 @@ class Solar_Mail_Message extends Solar_Base
      * `charset`
      * : (string) The character-set for messages; default is 'utf-8'.
      * 
+     * `encoding`
+     * : (string) The encoding for messages; default is '8bit'.
+     * 
      * `crlf`
      * : (string) The line-ending string to use; default is "\r\n".
      * 
      * `headers`
      * : (array) An array of key-value pairs where the key is the header label
-     * and the value is the header value.  Default null.
+     *   and the value is the header value.  Default null.
      * 
      * `transport`
      * : (dependency) A Solar_Mail_Transport dependency injection, for use 
-     * with the send() method.  Default null, which means you need to send
-     * this message through a separate transport object.
+     *   with the send() method.  Default null, which means you need to send
+     *   this message through a separate transport object.
      * 
      * @var array
      * 
@@ -48,6 +51,7 @@ class Solar_Mail_Message extends Solar_Base
     protected $_Solar_Mail_Message = array(
         'boundary'    => null,
         'charset'     => 'utf-8',
+        'encoding'    => '8bit',
         'crlf'        => "\r\n",
         'headers'     => null,
         'transport'   => null,
@@ -70,6 +74,15 @@ class Solar_Mail_Message extends Solar_Base
      * 
      */
     protected $_boundary = null;
+    
+    /**
+     * 
+     * Encoding used for this message.
+     * 
+     * @var string
+     * 
+     */
+    protected $_encoding = '8bit';
     
     /**
      * 
@@ -193,6 +206,11 @@ class Solar_Mail_Message extends Solar_Base
             $this->_boundary = '__' . hash('md5', uniqid());
         }
         
+        // custom encoding
+        if ($this->_config['encoding']) {
+            $this->_charset = $this->_config['encoding'];
+        }
+        
         // custom charset
         if ($this->_config['charset']) {
             $this->_charset = $this->_config['charset'];
@@ -259,6 +277,33 @@ class Solar_Mail_Message extends Solar_Base
     public function getCrlf()
     {
         return $this->_crlf;
+    }
+    
+    /**
+     * 
+     * Sets the encoding for this message.
+     * 
+     * @param string $encoding The encoding.
+     * 
+     * @return Solar_Mail_Message This object.
+     * 
+     */
+    public function setEncoding($encoding)
+    {
+        $this->_encoding = $encoding;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Returns the encoding for this message.
+     * 
+     * @return string
+     * 
+     */
+    public function getEncoding()
+    {
+        return $this->_encoding;
     }
     
     /**
@@ -510,7 +555,7 @@ class Solar_Mail_Message extends Solar_Base
         $part->setCrlf($this->_crlf);
         $part->setType('text/plain');
         $part->setCharset($this->_charset);
-        $part->setEncoding('quoted-printable');
+        $part->setEncoding($this->_encoding);
         $part->setDisposition('inline');
         
         // keep it
@@ -549,7 +594,7 @@ class Solar_Mail_Message extends Solar_Base
         $part->setCrlf($this->_crlf);
         $part->setType('text/html');
         $part->setCharset($this->_charset);
-        $part->setEncoding('quoted-printable');
+        $part->setEncoding($this->_encoding);
         $part->setDisposition('inline');
         
         // keep it

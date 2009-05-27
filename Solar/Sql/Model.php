@@ -1,9 +1,9 @@
 <?php
 /**
  * 
- * An SQL-centric Model class combining TableModule and TableDataGateway,
- * using a Collection of Record objects for returns, with integrated caching
- * of versioned result data.
+ * An SQL-centric Model class based on TableDataGateway, using Collection and
+ * Record objects for returns, with integrated caching of versioned result
+ * data.
  * 
  * @category Solar
  * 
@@ -1930,74 +1930,29 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Inserts one row to the model table and deletes cache entries.
      * 
-     * @param array|Solar_Sql_Model_Record $spec The row data to insert.
+     * @param array $data The row data to insert.
      * 
-     * @return array The data as inserted, including auto-incremented values,
-     * auto-sequence values, created/updated/inherit values, etc.
+     * @return int|bool On success, the last inserted ID if there is an
+     * auto-increment column on the model (otherwise boolean true). On failure
+     * an exception from PDO bubbles up.
+     * 
+     * @throws Solar_Sql_Exception on failure of any sort.
      * 
      * @see Solar_Sql_Model_Cache::deleteAll()
      * 
      */
-    public function insert($spec)
+    public function insert($data)
     {
-        if (! is_array($spec) && ! ($spec instanceof Solar_Sql_Model_Record)) {
-            throw $this->_exception('ERR_NOT_ARRAY_OR_RECORD');
+        if (! is_array($data)) {
+            throw $this->_exception('ERR_DATA_NOT_ARRAY');
         }
         
         // reset affected rows
         $this->_affected_rows;
         
-        /**
-         * Force or auto-set special columns
-         */
-        // force the 'created' value if there is a 'created' column
-        $now = date('Y-m-d H:i:s');
-        $key = $this->_created_col;
-        if ($key) {
-            $spec[$key] = $now;
-        }
+        // the name of the autoincrement column, if any
+        $autoinc = null;
         
-        // force the 'updated' value if there is an 'updated' column (same as
-        // the 'created' timestamp)
-        $key = $this->_updated_col;
-        if ($key) {
-            $spec[$key] = $now;
-        }
-        
-        // if inheritance is turned on, auto-set the inheritance value,
-        // if not already set.
-        $key = $this->_inherit_col;
-        if ($key && $this->_inherit_model && empty($spec[$key])) {
-            $spec[$key] = $this->_inherit_model;
-        }
-        
-        // auto-set sequence values if needed
-        foreach ($this->_sequence_cols as $key => $val) {
-            if (empty($spec[$key])) {
-                // no value given for the key.
-                // add a new sequence value.
-                $spec[$key] = $this->_sql->nextSequence($val);
-            }
-        }
-        
-        /**
-         * Record filtering and serializing
-         */
-        if ($spec instanceof Solar_Sql_Model_Record) {
-            // apply record filters
-            $spec->filter();
-            // serialize and convert to array
-            $this->serializeCols($spec);
-            $data = $spec->toArray();
-        } else {
-            // already an array, just serialize
-            $this->serializeCols($spec);
-            $data = $spec;
-        }
-        
-        /**
-         * Final prep and insert
-         */
         // remove non-existent table columns from the data
         foreach ($data as $key => $val) {
             if (empty($this->_table_cols[$key])) {
@@ -2009,6 +1964,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             // remove empty autoinc columns to soothe postgres, which won't
             // take explicit NULLs in SERIAL cols.
             if ($this->_table_cols[$key]['autoinc'] && empty($val)) {
+                $autoinc = $key;
                 unset($data[$key]);
             }
         }
@@ -2019,129 +1975,45 @@ abstract class Solar_Sql_Model extends Solar_Base
             $data
         );
         
-        /**
-         * Post-insert
-         */
-        
-        // unserialize data
-        $this->unserializeCols($data);
-        
-        // if there was an autoincrement column, set its value in the data.
-        foreach ($this->_table_cols as $key => $val) {
-            if ($val['autoinc']) {
-                // set the value and leave the loop (should be only one)
-                $data[$key] = $this->_sql->lastInsertId($this->_table_name, $key);
-                break;
-            }
-        }
-        
         // clear the cache for this model and related models
         $this->_cache->deleteAll();
         
-        // refresh the table data in the record
-        if ($spec instanceof Solar_Sql_Model_Record) {
-            // set the primary column so refresh will work
-            $key = $this->_primary_col;
-            $spec->$key = $data[$key];
-            // now refresh it
-            $spec->refresh();
-            $spec->setStatus('inserted');
+        // if there was an autoincrement column, return the last insert id
+        if ($autoinc) {
+            return $this->_sql->lastInsertId($this->_table_name, $autoinc);
+        } else {
+            return true;
         }
-        
-        // return the data as inserted
-        return $data;
     }
     
     /**
      * 
      * Updates rows in the model table and deletes cache entries.
      * 
-     * @param array|Solar_Sql_Model_Record $spec The row data to insert.
+     * @param array $spec The row data to insert.
      * 
      * @param string|array $where The WHERE clause to identify which rows to 
      * update.
      * 
-     * @return array The data as updated.
+     * @return int The number of rows affected.
+     * 
+     * @throws Solar_Sql_Exception on failure of any sort.
      * 
      * @see Solar_Sql_Model_Cache::deleteAll()
      * 
      */
-    public function update($spec, $where)
+    public function update($data, $where)
     {
-        if (! is_array($spec) && ! ($spec instanceof Solar_Sql_Model_Record)) {
-            throw $this->_exception('ERR_NOT_ARRAY_OR_RECORD');
+        if (! is_array($data)) {
+            throw $this->_exception('ERR_DATA_NOT_ARRAY');
         }
         
         // reset affected rows
         $this->_affected_rows = null;
         
-        /**
-         * Force or auto-set special columns
-         */
-        // force the 'updated' value
-        $key = $this->_updated_col;
-        if ($key) {
-            $spec[$key] = date('Y-m-d H:i:s');
-        }
-        
-        // if inheritance is turned on, auto-set the inheritance value,
-        // if not already set.
-        $key = $this->_inherit_col;
-        if ($key && $this->_inherit_model && empty($this->$key)) {
-            $spec[$key] = $this->_inherit_model;
-        }
-        
-        // auto-set sequences where keys exist and values are empty
-        foreach ($this->_sequence_cols as $key => $val) {
-            // hack to to account for arrays *and* Record/Struct objects
-            $exists = array_key_exists($key, $spec) || isset($spec[$key]);
-            if ($exists && empty($spec[$key])) {
-                // key is present but no value is given.
-                // add a new sequence value.
-                $spec[$key] = $this->_sql->nextSequence($val);
-            }
-        }
-        
-        /**
-         * Record filtering and data serializing
-         */
-        if ($spec instanceof Solar_Sql_Model_Record) {
-            
-            // apply record filters
-            $spec->filter();
-            
-            // serialize
-            $this->serializeCols($spec);
-            
-            // convert to array
-            $data = $spec->toArray();
-            
-            // retain only changed columns
-            foreach ($data as $key => $val) {
-                if (! $spec->isChanged($key)) {
-                    unset($data[$key]);
-                }
-            }
-            
-            // it's possible there are no columns that changed.
-            // if so, we're done -- make it match what's at the DB.
-            if (! $data) {
-                $spec->refresh();
-                return $data;
-            }
-            
-        } else {
-            // already an array
-            $this->serializeCols($spec);
-            $data = $spec;
-        }
-        
         // don't update the primary key
         unset($data[$this->_primary_col]);
         
-        /**
-         * Final prep, then update
-         */
         // remove non-existent table columns from the data
         foreach ($data as $key => $val) {
             if (empty($this->_table_cols[$key])) {
@@ -2156,21 +2028,11 @@ abstract class Solar_Sql_Model extends Solar_Base
             $where
         );
         
-        // unserialize after the update
-        $this->unserializeCols($data);
-        
         // clear the cache for this model and related models
         $this->_cache->deleteAll();
         
-        // refresh the table data in the record
-        if ($spec instanceof Solar_Sql_Model_Record) {
-            $spec->refresh();
-            $spec->setStatus('updated');
-        }
-        
-        // return the data as updated. note that if this
-        // was a record, only the changed columns will be returned here.
-        return $data;
+        // done!
+        return $this->_affected_rows;
     }
     
     /**
@@ -2179,7 +2041,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @param string|array $where The WHERE clause to identify which rows to delete.
      * 
-     * @return void
+     * @return int The number of rows affected.
      * 
      * @see Solar_Sql_Model_Cache::deleteAll()
      * 
@@ -2194,6 +2056,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // clear the cache for this model and related models
         $this->_cache->deleteAll();
+        
+        // done!
+        return $this->_affected_rows;
     }
     
     /**
@@ -2213,18 +2078,37 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function serializeCols(&$data)
     {
         foreach ($this->_serialize_cols as $key) {
-            if (! empty($data[$key]) && $data[$key] !== null) {
-                $data[$key] = serialize($data[$key]);
-                if (! $data[$key]) {
-                    // serializing failed
-                    $data[$key] = null;
-                }
+
+            // Don't process columns not in $data
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
+            // don't work on empty cols
+            if (empty($data[$key])) {
+                // Any empty value is canonicalized as NULL
+                $data[$key] = null;
+                continue;
+            }
+
+            $data[$key] = serialize($data[$key]);
+            if (! $data[$key]) {
+                // serializing failed
+                $data[$key] = null;
             }
         }
         
         foreach ($this->_xmlstruct_cols as $key) {
+
+            // Don't process columns not in $data
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
             // don't work on empty cols
             if (empty($data[$key])) {
+                // Any empty value is canonicalized as NULL
+                $data[$key] = null;
                 continue;
             }
             
@@ -2256,17 +2140,34 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // unseralize columns as-needed
         foreach ($this->_serialize_cols as $key) {
+
+            // Don't process columns not in $data
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
             // only unserialize if a non-empty string
-            if (! empty($data[$key]) && is_string($data[$key])) {
-                $data[$key] = unserialize($data[$key]);
-                if (! $data[$key]) {
-                    // unserializing failed
-                    $data[$key] = null;
+            if (empty($data[$key])) {
+                // Any empty value is canonicalized as NULL
+                $data[$key] = null;
+            } else {
+                if (is_string($data[$key])) {
+                    $data[$key] = unserialize($data[$key]);
+                    if (! $data[$key]) {
+                        // unserializing failed
+                        $data[$key] = null;
+                    }
                 }
             }
         }
         
         foreach ($this->_xmlstruct_cols as $key) {
+
+            // Don't process columns not in $data
+            if (! array_key_exists($key, $data)) {
+                continue;
+            }
+
             if (empty($data[$key])) {
                 // create a new struct if there is no serialized data
                 // in the column to begin with

@@ -480,7 +480,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * packages foreign data as a record or collection object.
+     * Packages foreign data as a record or collection object.
      * 
      * @param array $data The foreign Data
      * 
@@ -498,6 +498,18 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract public function fetchEmpty();
+    
+    /**
+     * 
+     * Fetches a new record or collection object.
+     * 
+     * @param array $data The data for the record or collection.
+     * 
+     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or 
+     * collection object.
+     * 
+     */
+    abstract public function fetchNew();
     
     /**
      * 

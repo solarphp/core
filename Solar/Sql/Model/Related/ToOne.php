@@ -58,6 +58,11 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         return null;
     }
     
+    public function fetchNew($data = array())
+    {
+        return $this->_foreign_model->fetchNew($data);
+    }
+    
     /**
      * 
      * Fetches foreign data as a record or collection object.

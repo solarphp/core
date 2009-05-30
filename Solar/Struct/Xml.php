@@ -40,6 +40,76 @@ class Solar_Struct_Xml extends Solar_Struct
     
     /**
      * 
+     * The hierarchical parent of this struct, if any.
+     * 
+     * @var Solar_Struct
+     * 
+     */
+    protected $_parent;
+    
+    /**
+     * 
+     * Sets the hierarchical parent struct.
+     * 
+     * @param Solar_Struct $parent The hierarchical parent of this struct.
+     * 
+     * @return void
+     * 
+     */
+    public function setParent(Solar_Struct $parent)
+    {
+        $this->_parent = $parent;
+    }
+    
+    /**
+     * 
+     * Returns the hierarchical parent struct, if any.
+     * 
+     * @return Solar_Struct The hierarchical parent of this struct.
+     * 
+     */
+    public function getParent()
+    {
+        return $this->_parent;
+    }
+    
+    /**
+     * 
+     * Sets the status (clean/dirty/etc) on the struct.
+     * 
+     * @param string $status The status value.
+     * 
+     * @return void
+     * 
+     */
+    public function setStatus($status)
+    {
+        parent::setStatus($status);
+        
+        // Chain the setting of the status of dirty
+        if ($status == self::STATUS_DIRTY && !empty($this->_parent)) {
+            $this->_parent->setStatus(self::STATUS_DIRTY);
+        }
+    }
+    
+    /**
+     * 
+     * Frees memory used by this struct, especially references to parent
+     * structs down the line.
+     * 
+     * @return void
+     * 
+     */
+    public function free()
+    {
+        if ($this->_parent) {
+            unset($this->_parent);
+        }
+        parent::free();
+    }
+    
+    /**
+     * 
      * Returns the struct as a string of XML.
      * 
      * @return string

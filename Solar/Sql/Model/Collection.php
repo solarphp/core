@@ -108,9 +108,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             
             // done
             $this->_data[$key] = $this->_model->newRecord($load);
-            
-            // make sure the record is tied to this collection
-            $this->_data[$key]->setParent($this);
         }
         
         // return the record
@@ -452,7 +449,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     {
         // create a new record from the spec and append it
         $record = $this->_model->fetchNew($spec);
-        $record->setParent($this);
         $this->_data[] = $record;
         return $record;
     }

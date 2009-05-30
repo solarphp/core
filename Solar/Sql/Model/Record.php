@@ -300,9 +300,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
             }
         }
         
-        // unserialize any serialize_cols in the load
-        $this->_model->unserializeCols($load);
-
         // Set values, respecting accessor methods
         foreach ($load as $key => $value) {
             $this->$key = $value;
@@ -749,26 +746,26 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // force the 'created' value if there is a 'created' column
         $col = $this->_model->created_col;
         if ($col) {
-            $this->_data[$col] = $now;
+            $this->$col = $now;
         }
         
         // force the 'updated' value if there is an 'updated' column
         $col = $this->_model->updated_col;
         if ($col) {
-            $this->_data[$col] = $now;
+            $this->$col = $now;
         }
         
         // if inheritance is turned on, auto-set the inheritance value
         if ($this->_model->inherit_model) {
             $col = $this->_model->inherit_col;
-            $this->_data[$col] = $this->_model->inherit_model;
+            $this->$col = $this->_model->inherit_model;
         }
         
         // auto-set sequence values if needed
         foreach ($this->_model->sequence_cols as $col => $val) {
-            if (empty($this->_data[$col])) {
+            if (empty($this->$col)) {
                 // no value given for the key. add a new sequence value.
-                $this->_data[$col] = $this->_model->sql->nextSequence($val);
+                $this->$col = $this->_model->sql->nextSequence($val);
             }
         }
     }
@@ -880,21 +877,21 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // force the 'updated' value
         $col = $this->_model->updated_col;
         if ($col) {
-            $this->_data[$col] = date('Y-m-d H:i:s');
+            $this->$col = date('Y-m-d H:i:s');
         }
         
         // if inheritance is turned on, auto-set the inheritance value
         $col = $this->_model->inherit_col;
         if ($col && $this->_model->inherit_model) {
-            $this->_data[$col] = $this->_model->inherit_model;
+            $this->$col = $this->_model->inherit_model;
         }
         
         // auto-set sequences where keys exist and values are empty
         foreach ($this->_model->sequence_cols as $col => $val) {
-            if (array_key_exists($col, $this->_data) && empty($this->_data[$col])) {
+            if (array_key_exists($col, $this->_data) && empty($this->$col)) {
                 // key is present but no value is given.
                 // add a new sequence value.
-                $this->_data[$col] = $this->_model->sql->nextSequence($val);
+                $this->$col = $this->_model->sql->nextSequence($val);
             }
         }
     }
@@ -1085,7 +1082,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         $result = $this->_model->fetch($id);
         foreach ($this->_model->table_cols as $col => $info) {
-            $this->$col = $result->$col;
+            $this->_data[$col] = $result->_data[$col];
         }
         
         if ($status) {
@@ -1438,9 +1435,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         if ($reset) {
             
             // reset the initial data for table columns
-            foreach (array_keys($this->_model->table_cols) as $col) {
-                $this->_initial[$col] = $this->$col;
-            }
+            $this->_initial = array_intersect_key($this->_data, $this->_model->table_cols);
             
             // can't be invalid, either
             $this->_invalid = array();
@@ -1500,10 +1495,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // track changes to or from null
         $from_null = $this->_initial[$col] === null &&
-                     $this->$col !== null;
+                     $this->_data[$col] !== null;
         
         $to_null   = $this->_initial[$col] !== null &&
-                     $this->$col === null;
+                     $this->_data[$col] === null;
         
         if ($from_null || $to_null) {
             return true;
@@ -1511,14 +1506,14 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // track numeric changes
         $both_numeric = is_numeric($this->_initial[$col]) &&
-                        is_numeric($this->$col);
+                        is_numeric($this->_data[$col]);
         if ($both_numeric) {
             // use normal inequality
-            return $this->_initial[$col] != (string) $this->$col;
+            return $this->_initial[$col] != (string) $this->_data[$col];
         }
         
         // use strict inequality
-        return $this->_initial[$col] !== $this->$col;
+        return $this->_initial[$col] !== $this->_data[$col];
     }
     
     /**
@@ -1721,6 +1716,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // unserialize any serialize_cols in the load
         $this->_model->unserializeCols($load);
+
+        // Make sure changes to xml struct records cause us to be dirty
+        foreach ($this->_model->xmlstruct_cols as $col) {
+            if (!empty($load[$col])) {
+                $load[$col]->setParent($this);
+            }
+        }
         
         // use parent load to push values directly into $_data array
         parent::load($load);
@@ -1732,16 +1734,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
         foreach ($this->_model->calculate_cols as $name => $info) {
             if (! array_key_exists($name, $this->_data)) {
                 $this->_data[$name] = null;
-            }
-        }
-        
-        // reset values that require an access method
-        foreach ($this->_access_methods as $col => $methods) {
-            if (isset($methods['set']) && array_key_exists($col, $load)) {
-                $this->$col = $load[$col];
-            }
-            if (isset($methods['get']) && array_key_exists($col, $this->_initial)) {
-                $this->_initial[$col] = $this->$col;
             }
         }
         
@@ -1820,7 +1812,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         $related = $this->_model->getRelated($name);
         $new = $related->fetchNew($data);
-        $new->setParent($this);
         return $new;
     }
 }

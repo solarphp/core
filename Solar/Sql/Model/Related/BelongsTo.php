@@ -106,12 +106,10 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related_ToOne
         }
     }
     
-    // pre-save has already connected the records
     public function save($native)
     {
-        $foreign = $native->{$this->name};
-        if ($foreign) {
-            $foreign->save();
-        }
+        // pre-save has already connected the records
+
+        // Don't keep going to avoid recursion.
     }
 }

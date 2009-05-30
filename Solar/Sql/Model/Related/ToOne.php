@@ -138,7 +138,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
                     unset($target[$key]);
                 }
             }
-            return array();
+            return null;
         }
         
         // Extract a record
@@ -218,11 +218,14 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         $count = count($target);
         
         if ($options['join_strategy'] == 'server' || $options['require_related']) {
-        
+
             if ($count == 1) {
                 $result = array();
                 $onlyone = reset($target);
-                $result[] = $this->_extractDependentOne($onlyone);
+                $onlyone = $this->_extractDependentOne($onlyone);
+                if ($onlyone) {
+                    $result[] = $onlyone;
+                }
             } else {
                 $result = $this->_extractDependentAll($target);
             }
@@ -286,13 +289,13 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         if ($options['join_strategy'] == 'server' || $options['require_related']) {
         
             $result = $this->_extractDependentOne($target);
-        
-            
-            foreach ($options['eager'] as $name => $dependent_options) {
-                $related = $this->_foreign_model->getRelated($name);
-                $result = $related->joinOne($result, $select, $dependent_options);
-            }
-            
+
+            if ($result) {
+                foreach ($options['eager'] as $name => $dependent_options) {
+                    $related = $this->_foreign_model->getRelated($name);
+                    $result = $related->joinOne($result, $select, $dependent_options);
+                }
+            }            
         } else if ($options['join_strategy'] == 'client') {
         
             $params = array('eager' => $options['eager']);

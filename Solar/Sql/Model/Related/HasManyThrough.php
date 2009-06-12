@@ -11,6 +11,8 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
+ * @author Jeff Moore <jeff@procata.com>
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id: HasMany.php 3617 2009-02-16 19:47:30Z pmjones $
@@ -106,6 +108,8 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      * @param Solar_Sql_Model_Collection $spec A set of records to fetch
      * related records for
      * 
+     * @param string $parent_col The name of the parent column to alias as.
+     * 
      * @return void
      * 
      */
@@ -146,6 +150,10 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      * 
      * @param Solar_Sql_Select $spec used as an "inner" select to find the 
      * correct native IDs.
+     * 
+     * @param string $parent_alias The alias to the parent table.
+     * 
+     * @param string $parent_col The name of the parent column to alias as.
      * 
      * @return void
      * 
@@ -190,6 +198,8 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      * 
      * @param Solar_Sql_Select $select The SELECT to be modified.
      * 
+     * @param string $parent_alias The alias to the parent table.
+     * 
      * @param array $options options controlling eager selection
      * 
      * @return void The SELECT is modified in place.
@@ -229,9 +239,11 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     
     /**
      * 
-     * Add our through table to a select
+     * Add the "through" mapping table to a select.
      * 
      * @param Solar_Sql_Select $select The selection object to modify.
+     * 
+     * @param string $parent_col The name of the parent column to alias as.
      * 
      * @return void
      * 
@@ -367,8 +379,19 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         }
     }
     
-    // the problem here is to make sure the "through" collection has an entry
-    // for each foreign record, with the right ID on it.
+    /**
+     * 
+     * Saves the related "through" collection *and* the foreign collection
+     * from a native record.
+     * 
+     * Ensures the "through" collection has an entry for each foreign record,
+     * and adds/removes entried in the "through" collection as needed.
+     * 
+     * @param Solar_Sql_Model_Record $native The native record to save from.
+     * 
+     * @return void
+     * 
+     */
     public function save($native)
     {
         // get the foreign collection to work with
@@ -434,6 +457,8 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     /**
      * 
      * Are the related "foreign" and "through" collections valid?
+     * 
+     * @param Solar_Sql_Model_Record $native The native record.
      * 
      * @return bool
      * 

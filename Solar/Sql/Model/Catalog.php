@@ -1,9 +1,27 @@
 <?php
+/**
+ * 
+ * Acts as a central catalog for model instances; reduces the number of times
+ * you instantiate model classes.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
 class Solar_Sql_Model_Catalog extends Solar_Base
 {
     /**
      * 
      * User-defined configuration options.
+     * 
+     * @var array
      * 
      */
     protected $_Solar_Sql_Model_Catalog = array(
@@ -49,6 +67,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
      * 
      */
     public function __construct($config = null)
@@ -251,6 +271,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base
      * 
      * @param array $classes An array of class prefixes to use for the model
      * stack.
+     * 
+     * @return void
      * 
      */
     protected function _setStack($classes)

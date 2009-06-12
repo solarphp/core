@@ -1,15 +1,23 @@
 <?php
+/**
+ * 
+ * Represents the characteristics of a "to-many" related model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @author Jeff Moore <jeff@procata.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Related.php 3761 2009-05-27 18:20:20Z pmjones $
+ * 
+ */
 abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
 {
-    /**
-     * 
-     * To Many Relationship default to server side joins
-     * 
-     * @var int
-     * 
-     */
-    protected $_join_strategy = 'server';
-    
     /**
      * 
      * Is this related to one record?
@@ -48,11 +56,27 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         return $this->_foreign_model->newCollection($data);
     }
     
+    /**
+     * 
+     * Fetches an empty value for the related.
+     * 
+     * @return array
+     * 
+     */
     public function fetchEmpty()
     {
         return array();
     }
     
+    /**
+     * 
+     * Fetches a new related collection.
+     * 
+     * @param array $data Data for the new collection.
+     * 
+     * @return Solar_Sql_Model_Collection
+     * 
+     */
     public function fetchNew($data = array())
     {
         return $this->_foreign_model->newCollection($data);
@@ -122,7 +146,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Join related objects into a parent record or collection 
+     * Join related objects into a parent record or collection.
      *
      * @param Solar_Sql_Model_Collection $target colletion to join into
      * 
@@ -170,7 +194,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Join related objects into a parent record or collection 
+     * Join related objects into a parent record or collection.
      *
      * @param Solar_Sql_Model_Record $target Record to Join into
      * 
@@ -216,6 +240,8 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
      * has-many relation separately, so not adding columns here is OK.
      * 
      * @param Solar_Sql_Select $select The SELECT to be modified.
+     * 
+     * @param string $parent_alias The alias for the parent table.
      * 
      * @param array $options options controlling eager selection
      * 

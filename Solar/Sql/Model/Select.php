@@ -1,13 +1,13 @@
 <?php
 /**
  * 
- * A model aware select statement
+ * A model aware select statement.
  *
  * @category Solar
  * 
  * @package Solar_Sql
  * 
- * @author Paul M. Jones <pmjones@solarphp.com>
+ * @author Jeff Moore <jeff@procata.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
@@ -46,7 +46,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     
     /**
      * 
-     * The alias of the table driving this select
+     * The alias of the table driving this select.
      * 
      * @var boolean
      * 
@@ -117,7 +117,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     
     /**
      * 
-     * Removes any optional eager clauses to simplify the query
+     * Removes any optional eager clauses to simplify the query.
      * 
      * @return void
      * 
@@ -147,7 +147,11 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     }
     
     /**
-     * Force the query to be modified by any specified related requirements
+     * 
+     * Force the query to be modified by any specified related requirements.
+     * 
+     * @return void
+     * 
      */
     protected function _modifyForRequiredRelated()
     {

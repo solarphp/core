@@ -9,6 +9,8 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
+ * @author Jeff Moore <jeff@procata.com>
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
@@ -153,12 +155,15 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Indicates the general strategy to use for joins 'client' or 'server'
+     * Indicates the strategy to use for joins.
      * 
-     * @var int
+     * The 'client' strategy means PHP will merge joined values; 'server' 
+     * means the database will do it.  Default is 'server'.
+     * 
+     * @var string
      * 
      */
-    protected $_join_strategy;
+    protected $_join_strategy = 'server';
     
     /**
      * 
@@ -372,7 +377,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Normalize a set of eager options
+     * Normalizes a set of eager options.
      * 
      * @param array $options Set of options controlling eager fetching
      * 
@@ -424,7 +429,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Normalize a set of eager options when we are going to modify a select statement
+     * Normalizes a set of eager options when we are going to modify a select 
+     * statement.
      * 
      * @param array $options Set of options controlling eager fetching
      * 
@@ -528,7 +534,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Join related objects into a parent record or collection 
+     * Join related objects into a parent record or collection.
      *
      * @param Solar_Sql_Model_Collection $target colletion to join into
      * 
@@ -571,6 +577,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      * @param Solar_Sql_Model_Collection $spec A set of records to fetch
      * related records for
+     * 
+     * @param string $parent_col The name of the parent column to alias as.
      * 
      * @return void
      * 
@@ -615,6 +623,10 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      * @param Solar_Sql_Select $spec used as an "inner" select to find the 
      * correct native IDs.
+     * 
+     * @param string $parent_alias The alias to the parent table.
+     * 
+     * @param string $parent_col The name of the parent column to alias as.
      * 
      * @return void
      * 
@@ -663,7 +675,9 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      * @param Solar_Sql_Select $select The SELECT to be modified.
      * 
-     * @param array $options options controlling eager selection
+     * @param string $parent_alias The alias for the parent table.
+     * 
+     * @param array $options Options controlling eager selection.
      * 
      * @return void The SELECT is modified in place.
      * 

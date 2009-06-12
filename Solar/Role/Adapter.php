@@ -164,7 +164,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * 
      * Appends a single role to the existing list of roles.
      * 
-     * @param string $list The role to append.
+     * @param string $val The role to append.
      * 
      * @return void
      * 

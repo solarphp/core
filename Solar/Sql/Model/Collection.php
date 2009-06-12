@@ -120,8 +120,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * collection. Will not cause records to be created for as of yet 
      * unaccessed rows.
      * 
-     * @param string $key The primary column to look for; when null, uses
-     * the model primary key.
+     * @param string $col The column to look for; when null, uses the model
+     * primary-key column.
      *
      * @return array
      * 

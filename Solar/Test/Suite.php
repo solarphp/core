@@ -172,14 +172,14 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * Finds tests and loads them into the plan.
      * 
-     * @param string $dir The Test directory, typically "include".
-     * 
      * @param string $class Start with this test class; e.g, "Test_Foo".
      * 
      * @param string $method Load only this test method; e.g, "testBar".
      * 
      * @param bool $only Load only the named class, or class and method, 
      * instead of descending into sub-tests.
+     * 
+     * @return void
      * 
      */
     public function loadTests($class = null, $method = null, $only = null)
@@ -431,6 +431,9 @@ class Solar_Test_Suite extends Solar_Base
      * sub-test classes and methods.  When non-empty, run **only** this test 
      * method in the named test class; do not include the "test" prefix. 
      * Default null; ignored when $class is empty.
+     * 
+     * @param bool $only Load only the named class, or class and method, 
+     * instead of descending into sub-tests.
      * 
      * @return void
      * 

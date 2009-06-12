@@ -59,7 +59,7 @@ class Solar_Cli_RunTests extends Solar_Cli_Base
      * Runs the tests for a class, descending into subdirectories unless
      * otherwise specified.
      * 
-     * @param string $class The class to run tests for.
+     * @param string $spec The Test_Class or Test_Class::testMethod to run.
      * 
      * @return void
      * 

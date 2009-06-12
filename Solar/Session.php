@@ -276,6 +276,12 @@ class Solar_Session extends Solar_Base
      * 
      * Magic get for store and flash as a temporary measure.
      * 
+     * @param string $key The session key to retrieve.
+     * 
+     * @return mixed The value of the key.
+     * 
+     * @deprecated
+     * 
      */
     public function &__get($key)
     {

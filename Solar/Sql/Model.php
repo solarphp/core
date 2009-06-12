@@ -1649,6 +1649,15 @@ abstract class Solar_Sql_Model extends Solar_Base
         return $params;
     }
     
+    /**
+     * 
+     * Fix select-object params within the 'eager' param.
+     * 
+     * @param mixed $eager The 'eager' param for select params.
+     * 
+     * @return array A standardized 'eager' param array.
+     * 
+     */
     protected function _fixSelectParamsEager($eager)
     {
         $fixed = array();
@@ -1990,7 +1999,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Updates rows in the model table and deletes cache entries.
      * 
-     * @param array $spec The row data to insert.
+     * @param array $data The row data to insert.
      * 
      * @param string|array $where The WHERE clause to identify which rows to 
      * update.

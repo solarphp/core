@@ -772,9 +772,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Gather values to insert into the DB for a new record
+     * Gather values to insert into the DB for a new record.
      * 
-     * @return array values that should be inserted
+     * @return array The values to be inserted.
      * 
      */
     protected function _getInsertData()
@@ -1673,7 +1673,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * This differs from a simple traversal in that parameters
      * can further restrict or transform the results.
      * 
-     * @param string $key The property name.
+     * @param string $name The related property name.
      * 
      * @param array $params An array of SELECT parameters.
      * 
@@ -1691,7 +1691,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * Initialize the record object.  This is effectively a "first load"
      * method.
      * 
-     * @param Solar_Sql_Model $model The origin model object.
+     * @param Solar_Sql_Model $model The originating model object instance (a
+     * dependency injection).
+     * 
+     * @param array $spec The data with which to initialize this record.
+     * 
+     * @param array $status The status this record should have.
      * 
      * @return void
      * 

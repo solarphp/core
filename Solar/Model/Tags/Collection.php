@@ -3,6 +3,16 @@
  * 
  * A collection of Solar_Model_Tags records.
  * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
  */
 class Solar_Model_Tags_Collection extends Solar_Model_Collection {
     
@@ -28,6 +38,18 @@ class Solar_Model_Tags_Collection extends Solar_Model_Collection {
         return $list;
     }
     
+    /**
+     * 
+     * Sets the names of all tags in the collection.
+     * 
+     * Adds and removes records from the collection as needed.
+     * 
+     * @param mixed $spec The string or array of tags to set for this
+     * collection.
+     * 
+     * @return void
+     * 
+     */
     public function setNames($spec)
     {
         // we need the tags model for various reasons
@@ -83,12 +105,29 @@ class Solar_Model_Tags_Collection extends Solar_Model_Collection {
         }
     }
     
+    /**
+     * 
+     * Gets the names of all tags in this collection as a space-separated
+     * string.
+     * 
+     * @return string
+     * 
+     */
     public function getNamesAsString()
     {
         $list = $this->getNames();
         return implode(' ', $list);
     }
     
+    /**
+     * 
+     * Converts a space-separated string to an array.
+     * 
+     * @param string $text The string to be converted.
+     * 
+     * @return array The array of words in the string.
+     * 
+     */
     protected function _stringToArray($text)
     {
         $list = preg_replace('/[ ]{2,}/', ' ', $text);

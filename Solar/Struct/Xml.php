@@ -235,7 +235,7 @@ class Solar_Struct_Xml extends Solar_Struct
      * 
      * Support method to load data from a DOMNode.
      * 
-     * @param DOMNode $dom_node The source data.
+     * @param DOMNode $data The source data.
      * 
      * @return void
      * 

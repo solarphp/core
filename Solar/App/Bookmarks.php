@@ -302,7 +302,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         
         // save?
         if ($this->_isProcess('save') && $item->save()) {
-            $this->_session->setFlash('add_ok', true);
+            $this->_session->setFlash('success_added', true);
             $this->_redirect("bookmarks/edit/{$item->id}");
         }
         

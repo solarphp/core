@@ -67,7 +67,7 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record {
     protected function _postDelete()
     {
         if ($this->taggings) {
-            $this->taggings->delete();
+            $this->taggings->deleteAll();
         }
     }
 }

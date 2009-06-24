@@ -589,9 +589,31 @@ class Solar_Docs_Phpdoc extends Solar_Base
     
     /**
      * 
-     * Parses a one-part block line.
+     * Parses one or more @config lines into $this->_info.
      * 
-     * Strips everything after the first space.
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     * @todo Use @param parsing algorithm.
+     * 
+     */
+    public function parseConfig($line)
+    {
+        $parts = $this->_3part($line);
+        if ($parts) {
+            $name = $parts[1];
+            $this->_info['key'][$name] = array(
+                'type' => $parts[0],
+                'name' => $parts[1],
+                'summ' => $parts[2],
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Parses a one-part block line; strips everything after the first space.
      * 
      * @param string $line The block line.
      * 
@@ -605,7 +627,7 @@ class Solar_Docs_Phpdoc extends Solar_Base
     
     /**
      * 
-     * Parses a two-part block line.
+     * Parses a two-part block line; part 2 is optional.
      * 
      * @param string $line The block line.
      * 
@@ -614,7 +636,7 @@ class Solar_Docs_Phpdoc extends Solar_Base
      */
     protected function _2part($line)
     {
-        preg_match('/([\S]+)((\s+)(.*))?/', $line, $matches);
+        preg_match('/(\S+)((\s+)(.*))?/', $line, $matches);
         if (empty($matches)) {
             return array();
         }
@@ -629,7 +651,7 @@ class Solar_Docs_Phpdoc extends Solar_Base
     
     /**
      * 
-     * Parses a three-part block line.
+     * Parses a three-part block line; parts 2 and 3 are optional.
      * 
      * @param string $line The block line.
      * 
@@ -638,7 +660,7 @@ class Solar_Docs_Phpdoc extends Solar_Base
      */
     protected function _3part($line)
     {
-        preg_match('/([\S]+)((\s+)(.*))?((\s+)(.*))?/', $line, $matches);
+        preg_match('/([\S]+)((\s+)(\S+))?((\s+)(.*))?/', $line, $matches);
         if (empty($matches)) {
             return array();
         }

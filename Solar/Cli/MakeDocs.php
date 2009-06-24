@@ -206,7 +206,9 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
             $this->writeClassOverview($class);
             $this->_out('.');
             
-            // @todo write the list of all config options and default values
+            // write the list of all config options and default values
+            $this->writeClassConfig($class);
+            $this->_out('.');
             
             // write the list of all constants
             $this->writeClassConstants($class);
@@ -288,17 +290,15 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
             $text[] = '';
         }
         
-        // catalog data
-        $text[] = $this->_title2('Catalog');
-        
-        // catalog: package group
+        // package data
+        $text[] = $this->_title2('Package');
         if ($this->api[$class]['tech']['package']) {
             $package = $this->api[$class]['tech']['package'];
             $text[] = "This class is part of the [[Package::$package | ]] package.";
             $text[] = '';
         }
         
-        // catalog: inheritance hierarchy
+        // inheritance hierarchy
         $parents = $this->api[$class]['from'];
         if ($parents) {
             
@@ -323,6 +323,17 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
             $text[] = "$pad* $class";
             $text[] = '';
         }
+        
+        // Config keys
+        $text[] = $this->_title2('Configuration Keys');
+        $k = count($text);
+        foreach ($this->api[$class]['config_keys'] as $name => $info) {
+            $text[] = "* [[$class::Config#$name | `$name`]]: {$info['summ']}";
+        }
+        if (count($text) == $k) {
+            $text[] = 'None.';
+        }
+        $text[] = '';
         
         // Constants
         $text[] = $this->_title2('Constants');
@@ -433,6 +444,33 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     
     /**
      * 
+     * Writes the Config file.
+     * 
+     * @param string $class The class to write Properties for.
+     * 
+     * @return void
+     * 
+     */
+    public function writeClassConfig($class)
+    {
+        $text = array();
+        $text[] = $this->_title1("Configuration Keys");
+        foreach ($this->api[$class]['config_keys'] as $name => $info) {
+            $text[] = $this->_title2("`$name` {#$name}");
+            $text[] = "* (*{$info['type']}*) {$info['summ']}";
+            $text[] = "* Default: `{$info['value']}`";
+            $text[] = "";
+        }
+        
+        if (! $text) {
+            $text[] = "None.";
+        }
+        
+        $this->_write("class", "$class/Config", $text);
+    }
+    
+    /**
+     * 
      * Writes the Properties file.
      * 
      * @param string $class The class to write Properties for.
@@ -457,7 +495,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
             $tmp = array();
             
             // header
-            $tmp[] = $this->_title3("\$$name {#$name}");
+            $tmp[] = $this->_title3("`\$$name` {#$name}");
             
             // summary
             $tmp[] = '_(' . ($info['static'] ? 'static ' : '')

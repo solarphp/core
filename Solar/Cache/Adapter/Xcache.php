@@ -30,9 +30,6 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
      * 
      * Default configuration values.
      * 
-     * @config int life The cache entry lifetime in seconds, default `0`
-     * (never expires).
-     * 
      * @config string user Admin user name for Xcache, as set in php.ini. This login
      *   and the corresponding password are required _only_ for the deleteAll()
      *   method. Defaults to `null`.

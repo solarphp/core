@@ -32,23 +32,17 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config string host The memcached host name, default 'localhost'.
      * 
-     * `host`
-     * : (string) The memcached host name, default 'localhost'.
+     * @config int port The memcached port number, default 11211.
      * 
-     * `port`
-     * : (int) The memcached port number, default 11211.
-     * 
-     * `timeout`
-     * : (int) The timeout before the server connection is
+     * @config int timeout The timeout before the server connection is
      *   considered a miss, in seconds.  Default is 1 second, and should 
      *   not really be changed for reasons other than testing purposes.
      * 
-     * `pool`
-     * : (array) An array of memcache connections to connect to in a 
+     * @config array pool An array of memcache connections to connect to in a 
      *   multi-server pool. Each connection should be represented by an array
      *   with the following keys: `host`, `port`, `persistent`, `weight`, 
      *   `timeout`, `retry_interval`, `status` and `failure_callback`.
@@ -68,8 +62,6 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
     /**
      * 
      * Default configuration for a pool server node.
-     * 
-     * Keys are ...
      * 
      * `host`
      * : (string) The memcached host name, default 'localhost'.
@@ -135,7 +127,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

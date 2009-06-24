@@ -24,24 +24,17 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
 {
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config string uri URL to the HTTP service, for example "https://example.com/login.php".
      * 
-     * `uri`
-     * : (string) URL to the HTTP service, for example "https://example.com/login.php".
+     * @config string handle The handle element name.
      * 
-     * `handle`
-     * : (string) The handle element name.
+     * @config string passwd The passwd element name.
      * 
-     * `passwd`
-     * : (string) The passwd element name.
+     * @config array headers Additional headers to use in the POST request.
      * 
-     * `headers`
-     * : (array) Additional headers to use in the POST request.
-     * 
-     * `replies`
-     * : (array) Key-value pairs where the key is the server reply string, and
+     * @config array replies Key-value pairs where the key is the server reply string, and
      *   and the value is a boolean indicating if it indicates success or
      *   failure in authenticating.
      * 

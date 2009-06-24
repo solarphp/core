@@ -39,31 +39,25 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config string host Host specification (typically 'localhost').
      * 
-     * `host`
-     * : (string) Host specification (typically 'localhost').
+     * @config string port Port number for the host name.
      * 
-     * `port`
-     * : (string) Port number for the host name.
-     * 
-     * `sock`
-     * : (string) The Unix socket for the connection. Should not be used with
+     * @config string sock The Unix socket for the connection. Should not be used with
      *   host and port.
      * 
-     * `user`
-     * : (string) Connect to the database as this username.
+     * @config string user Connect to the database as this username.
      * 
-     * `pass`
-     * : (string) Password associated with the username.
+     * @config string pass Password associated with the username.
      * 
-     * `name`
-     * : (string) Database name (or file path, or TNS name).
+     * @config string name Database name (or file path, or TNS name).
      * 
-     * `profiling`
-     * : (bool) Turn on query profiling?
+     * @config bool profiling Turn on query profiling?
+     * 
+     * @config dependency cache The cache to use, if any, for the lists of
+     * table names, table columns, etc.
      * 
      * @var array
      * 
@@ -266,7 +260,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

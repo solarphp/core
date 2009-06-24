@@ -18,12 +18,9 @@ class Solar_View_Helper_Script extends Solar_View_Helper
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
      * 
-     * Keys are:
-     * 
-     * `anti_cache`
-     * : _(bool)_ When true, paths in the src attribute will have a
+     * @config bool anti_cache When true, paths in the src attribute will have a
      * cache-busting query string appended to them.
      * 
      * @var array

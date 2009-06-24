@@ -18,19 +18,14 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
 {
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config string uri URL to the LDAP server, for example "ldaps://example.com:389".
      * 
-     * `uri`
-     * : (string) URL to the LDAP server, for example "ldaps://example.com:389".
-     * 
-     * `format`
-     * : (string) Sprintf() format string for the LDAP query; %s
+     * @config string format Sprintf() format string for the LDAP query; %s
      *   represents the username.  Example: "uid=%s,dc=example,dc=com".
      * 
-     * `filter`
-     * : (string) A regular-expression snippet that lists allowed characters
+     * @config string filter A regular-expression snippet that lists allowed characters
      *   in the username.  This is to help prevent LDAP injections.  Default
      *   expression is '\w' (that is, only word characters are allowed).
      * 
@@ -47,7 +42,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

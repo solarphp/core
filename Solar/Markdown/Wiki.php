@@ -25,7 +25,7 @@ class Solar_Markdown_Wiki extends Solar_Markdown
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * This sets the plugins and their processing order for the engine.
      * 

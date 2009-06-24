@@ -18,21 +18,15 @@ class Solar_Inflect extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration keys.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config array identical Words that do not change from singular to plural.
      * 
-     * `identical`
-     * : (array) Words that do not change from singular to plural.
+     * @config array irregular Irregular singular-to-plural inflections.
      * 
-     * `irregular`
-     * : (array) Irregular singular-to-plural inflections.
+     * @config array to_singular Rules for preg_replace() to convert plurals to singulars.
      * 
-     * `to_singular`
-     * : (array) Rules for preg_replace() to convert plurals to singulars.
-     * 
-     * `to_plural`
-     * : (array) Rules for preg_replace() to convert singulars to plurals.
+     * @config array to_plural Rules for preg_replace() to convert singulars to plurals.
      * 
      * @var array
      * 

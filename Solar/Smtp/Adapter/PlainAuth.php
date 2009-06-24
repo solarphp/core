@@ -18,15 +18,11 @@ class Solar_Smtp_Adapter_PlainAuth extends Solar_Smtp_Adapter
 {
     /**
      * 
-     * User-defined confiuration values.
+     * Default configuration values.
      * 
-     * Keys are:
+     * @config string username The username for authentication.
      * 
-     * `username`
-     * : The username for authentication.
-     * 
-     * `password`
-     * : The password for authentication.
+     * @config string password The password for authentication.
      * 
      * @var array
      * 
@@ -58,7 +54,7 @@ class Solar_Smtp_Adapter_PlainAuth extends Solar_Smtp_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

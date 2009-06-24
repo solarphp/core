@@ -40,25 +40,21 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * Keys are:
      * 
-     * `strftime`
-     * : (bool) When true, uses strftime() instead of date() for formatting 
+     * @config bool strftime When true, uses strftime() instead of date() for formatting 
      *   dates. Default is false.
      * 
-     * `format`
-     * : (string) The default output formatting using [[php:date() | ]] codes.
+     * @config string format The default output formatting using [[php:date() | ]] codes.
      *   When `strftime` is true, uses [[php:strftime() | ]] codes instead.
      *   Default is 'Y-m-d H:i:s' (using date() format codes).
      * 
-     * `tz_origin`
-     * : (string) Consider all input timestamps as being from this timezone.
+     * @config string tz_origin Consider all input timestamps as being from this timezone.
      *   Default is the value of [[php:date_default_timezone_get() | ]].
      * 
-     * `tz_output`
-     * : (string) Output all timestamps after converting to this timezone.
+     * @config string tz_output Output all timestamps after converting to this timezone.
      *   Default is the value of [[php:date_default_timezone_get() | ]].
      * 
      * 
@@ -106,7 +102,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

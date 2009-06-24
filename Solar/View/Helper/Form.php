@@ -21,7 +21,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
+     * 
+     * @config array attribs Default attributes to use in the <form> tag.
+     * 
+     * @config string descr_elem The tag to use for description elements.
+     * 
+     * @config string descr_tag Put description inside this tag.
+     * 
+     * @config string descr_class Use this CSS class for descriptions.
      * 
      * @var array
      */
@@ -230,7 +238,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

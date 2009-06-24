@@ -18,12 +18,9 @@ class Solar_Smtp extends Solar_Factory
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The class to factory, for example 'Solar_Smtp_Adapter_NoAuth'.
+     * @config string adapter The class to factory, for example 'Solar_Smtp_Adapter_NoAuth'.
      * 
      * @var array
      * 

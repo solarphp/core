@@ -29,22 +29,16 @@ class Solar_Controller_Front extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration array.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config array classes Base class names for page controllers.
      * 
-     * `classes`
-     * : (array) Base class names for page controllers.
-     * 
-     * `disable`
-     * : (array) A list of class names that should be disallowed and treated
+     * @config array disable A list of class names that should be disallowed and treated
      *   as "not found" if a URI maps to them.
      * 
-     * `default`
-     * : (string) The default page-name.
+     * @config string default The default page-name.
      * 
-     * `routing`
-     * : (array) Key-value pairs explicitly mapping a page-name to a
+     * @config array routing Key-value pairs explicitly mapping a page-name to a
      *   controller class.
      * 
      * @var array
@@ -109,7 +103,7 @@ class Solar_Controller_Front extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

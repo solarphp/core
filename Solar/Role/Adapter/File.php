@@ -26,12 +26,9 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter
 {
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `file`
-     * : (string) Where the roles file is located.
+     * @config string file Where the roles file is located.
      * 
      * @var array
      * 

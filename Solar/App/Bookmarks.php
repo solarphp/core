@@ -20,12 +20,9 @@ class Solar_App_Bookmarks extends Solar_App_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `area_name`
-     * : (string) The content area for the bookmarks app, default "default".
+     * @config string area_name The content area for the bookmarks app, default "default".
      *   Will be created automatically if it does not exist.
      * 
      * @var array

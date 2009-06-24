@@ -18,43 +18,30 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter
 {
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency sql A Solar_Sql dependency injection.
      * 
-     * `sql`
-     * : (dependency) A Solar_Sql dependency injection.
+     * @config string table Name of the table holding authentication data.
      * 
-     * `table`
-     * : (string) Name of the table holding authentication data.
+     * @config string handle_col Name of the column with the user handle ("username").
      * 
-     * `handle_col`
-     * : (string) Name of the column with the user handle ("username").
+     * @config string passwd_col Name of the column with the MD5-hashed passwd.
      * 
-     * `passwd_col`
-     * : (string) Name of the column with the MD5-hashed passwd.
+     * @config string email_col Name of the column with the email address.
      * 
-     * `email_col`
-     * : (string) Name of the column with the email address.
+     * @config string moniker_col Name of the column with the display name (moniker).
      * 
-     * `moniker_col`
-     * : (string) Name of the column with the display name (moniker).
+     * @config string uri_col Name of the column with the website URI.
      * 
-     * `uri_col`
-     * : (string) Name of the column with the website URI.
+     * @config string uid_col Name of the column with the numeric user ID ("user_id").
      * 
-     * `uid_col`
-     * : (string) Name of the column with the numeric user ID ("user_id").
-     * 
-     * `hash_algo`
-     * : (string) The hashing algorithm for the password.  Default is 'md5'.
+     * @config string hash_algo The hashing algorithm for the password.  Default is 'md5'.
      *   See [[php::hash_alogos() | ]] for a list of accepted algorithms.
      * 
-     * `salt`
-     * : (string) A salt prefix to make cracking passwords harder.
+     * @config string salt A salt prefix to make cracking passwords harder.
      * 
-     * `where`
-     * : (string|array) Additional _multiWhere() conditions to use
+     * @config string|array where Additional _multiWhere() conditions to use
      *   when selecting rows for authentication.
      * 
      * @var array

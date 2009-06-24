@@ -51,12 +51,9 @@ class Solar_Debug_Var extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `output`
-     * : (string) Output mode.  Set to 'html' for HTML; 
+     * @config string output Output mode.  Set to 'html' for HTML; 
      *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
      * @var array
@@ -71,7 +68,7 @@ class Solar_Debug_Var extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

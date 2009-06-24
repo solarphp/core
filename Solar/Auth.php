@@ -64,12 +64,9 @@ class Solar_Auth extends Solar_Factory
     
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The adapter class, for example 'Solar_Auth_Adapter_File'.
+     * @config string adapter The adapter class, for example 'Solar_Auth_Adapter_File'.
      * 
      * @var array
      * 

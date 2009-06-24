@@ -35,25 +35,19 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
 {
     /**
      * 
-     * User-defined configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `token`
-     * : (string) The TypeKey "site token" id against which
+     * @config string token The TypeKey "site token" id against which
      * authentication requests will be made.
      * 
-     * `window`
-     * : (int) The signature should have been generated
+     * @config int window The signature should have been generated
      * within this many seconds of "now". Default is 10 seconds, to
      * allow for long network latency periods.
      * 
-     * `cache`
-     * : (dependency) A Solar_Cache dependency for storing 
+     * @config dependency cache A Solar_Cache dependency for storing 
      * the TypeKey public key data.
      * 
-     * `cache_key`
-     * : (string) When using a cache, the entry key for
+     * @config string cache_key When using a cache, the entry key for
      * the TypeKey public key data.  Default 'typekey_pubkey'.
      * 
      * @var array
@@ -125,7 +119,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

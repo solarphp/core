@@ -28,6 +28,40 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
 {
     /**
      * 
+     * Default configuration values.
+     * 
+     * @config string synopsis The "main" format string.
+     * 
+     * @config string access The format string for access type.
+     * 
+     * @config string return The format string for return type.
+     * 
+     * @config string method The format string for the method name.
+     * 
+     * @config string param The format string for required params.
+     * 
+     * @config string param_default The format string for params with a default value.
+     * 
+     * @config string throws The format string for throws.
+     * 
+     * @config string list_sep The list separator for params and throws.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Markdown_Wiki_MethodSynopsis = array(
+        'synopsis'      => "<div class=\"method-synopsis\">\n    %access\n    %return\n    %method (%params\n    )%throws\n</div>",
+        'access'        => '<span class="access">%access</span>',
+        'return'        => '<span class="return">%return</span>',
+        'method'        => '<span class="method">%method</span>',
+        'param'         => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">%name</span>",
+        'param_default' => "\n        <span class=\"param-default\"><span class=\"type\">%type</span> <span class=\"name\">%name</span> default <span class=\"default\">%default</span>",
+        'throws'        => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
+        'list_sep'      => ', ',
+    );
+    
+    /**
+     * 
      * This is a block plugin.
      * 
      * @var bool
@@ -43,50 +77,6 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
      * 
      */
     protected $_chars = '{}:';
-    
-    /**
-     * 
-     * User-defined configuration values.
-     * 
-     * Keys are ...
-     * 
-     * `synopsis`
-     * : (string) The "main" format string.
-     * 
-     * `access`
-     * : (string) The format string for access type.
-     * 
-     * `return`
-     * : (string) The format string for return type.
-     * 
-     * `method`
-     * : (string) The format string for the method name.
-     * 
-     * `param`
-     * : (string) The format string for required params.
-     * 
-     * `param_default`
-     * : (string) The format string for params with a default value.
-     * 
-     * `throws`
-     * : (string) The format string for throws.
-     * 
-     * `list_sep`
-     * : (string) The list separator for params and throws.
-     * 
-     * @var array
-     * 
-     */
-    protected $_Solar_Markdown_Wiki_MethodSynopsis = array(
-        'synopsis'      => "<div class=\"method-synopsis\">\n    %access\n    %return\n    %method (%params\n    )%throws\n</div>",
-        'access'        => '<span class="access">%access</span>',
-        'return'        => '<span class="return">%return</span>',
-        'method'        => '<span class="method">%method</span>',
-        'param'         => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">%name</span>",
-        'param_default' => "\n        <span class=\"param-default\"><span class=\"type\">%type</span> <span class=\"name\">%name</span> default <span class=\"default\">%default</span>",
-        'throws'        => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
-        'list_sep'      => ', ',
-    );
     
     /**
      * 

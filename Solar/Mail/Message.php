@@ -20,28 +20,22 @@ class Solar_Mail_Message extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * Keys are:
      * 
-     * `boundary`
-     * : (string) The default boundary value for separating message parts.
+     * @config string boundary The default boundary value for separating message parts.
      * 
-     * `charset`
-     * : (string) The character-set for messages; default is 'utf-8'.
+     * @config string charset The character-set for messages; default is 'utf-8'.
      * 
-     * `encoding`
-     * : (string) The encoding for messages; default is '8bit'.
+     * @config string encoding The encoding for messages; default is '8bit'.
      * 
-     * `crlf`
-     * : (string) The line-ending string to use; default is "\r\n".
+     * @config string crlf The line-ending string to use; default is "\r\n".
      * 
-     * `headers`
-     * : (array) An array of key-value pairs where the key is the header label
+     * @config array headers An array of key-value pairs where the key is the header label
      *   and the value is the header value.  Default null.
      * 
-     * `transport`
-     * : (dependency) A Solar_Mail_Transport dependency injection, for use 
+     * @config dependency transport A Solar_Mail_Transport dependency injection, for use 
      *   with the send() method.  Default null, which means you need to send
      *   this message through a separate transport object.
      * 
@@ -191,7 +185,7 @@ class Solar_Mail_Message extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

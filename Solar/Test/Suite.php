@@ -28,12 +28,14 @@ class Solar_Test_Suite extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency log A Solar_Log dependency for logging test results.
      * 
-     * `log`
-     * : (dependency) A Solar_Log dependency for logging test results.
+     * @config mixed test_config The config param to use for Solar::start() 
+     * when running tests in the separate PHP environment.
+     * 
+     * @config bool verbose Whether or not to show verbose output.
      * 
      * @var array
      * 
@@ -107,7 +109,7 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

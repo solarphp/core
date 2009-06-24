@@ -23,9 +23,24 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     
     /**
      * 
+     * Default configuration values.
      * 
-     * User-defined configuration parameters.
+     * @config string host The SMTP host to connect to.
      * 
+     * @config string port Connect to the SMTP host on this port.
+     * 
+     * @config string crlf The CRLF string to use at the end of each line.
+     * 
+     * @config string secure The security protocol for the connection, if any
+     * (e.g., 'ssl' or 'tls').
+     * 
+     * @config string client Use this as the client address making the SMTP
+     * request.
+     * 
+     * @config string flags The stream connection flags to use.
+     * 
+     * @config string context The stream context to use, if any.
+     *
      * @var array
      * 
      */
@@ -35,7 +50,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         'crlf'   => "\r\n",
         'secure' => null,
         'client' => '127.0.0.1',
-        'flags'  => null,
+        'flags'  => STREAM_CLIENT_CONNECT,
         'context'=> null,
     );
     
@@ -215,7 +230,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

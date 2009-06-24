@@ -20,28 +20,21 @@ class Solar_Form extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency request A Solar_Request dependency object.
      * 
-     * `request`
-     * : (dependency) A Solar_Request dependency object.
-     * 
-     * `attribs`
-     * : (array) An array of <form> tag attributes; used for hinting
+     * @config array attribs An array of <form> tag attributes; used for hinting
      * the view on how to present the form.  Defaults are 'method="post"',
      * 'action="REQUEST_URI"', and 'enctype="multipart/form-data"'.
      * 
-     * `success`
-     * : (string) The overall "success" message when validating form
+     * @config string success The overall "success" message when validating form
      * input. Default is Solar locale key SUCCESS_FORM.
      * 
-     * `failure`
-     * : (string) The overall "failure" message when validating form
+     * @config string failure The overall "failure" message when validating form
      * input. Default is Solar locale key FAILURE_FORM.
      * 
-     * `filter`
-     * : (dependency) A Solar_Filter dependency injection; default is empty,
+     * @config dependency filter A Solar_Filter dependency injection; default is empty,
      *   which creates a standard Solar_Filter object on the fly.
      * 
      * @var array
@@ -155,8 +148,6 @@ class Solar_Form extends Solar_Base
      * 
      * Default values for each element.
      * 
-     * Keys are ...
-     * 
      * `name`
      * : (string) The name attribute.
      * 
@@ -238,7 +229,7 @@ class Solar_Form extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

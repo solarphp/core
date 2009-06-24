@@ -7,7 +7,7 @@ abstract class Test_{:class} extends {:extends} {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -25,7 +25,7 @@ abstract class Test_{:class} extends {:extends} {
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration parameters.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)
@@ -38,7 +38,7 @@ abstract class Test_{:class} extends {:extends} {
      * 
      * Destructor; runs after all methods are complete.
      * 
-     * @param array $config User-defined configuration parameters.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __destruct()

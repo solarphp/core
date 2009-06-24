@@ -21,16 +21,12 @@ class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `dir`
-     * : (string) The directory where email files should be saved.  Default
+     * @config string dir The directory where email files should be saved.  Default
      *   is the system temp directory.
      * 
-     * `prefix`
-     * : (string) Prefix file names with this value; default is 'solar_email_'.
+     * @config string prefix Prefix file names with this value; default is 'solar_email_'.
      * 
      * @var array
      * 
@@ -44,7 +40,7 @@ class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

@@ -18,42 +18,33 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * Keys are...
      * 
-     * `list_type`
-     * : (string) The type of list to use; default is 'ul'. Only 'ul' and 'ol'
+     * @config string list_type The type of list to use; default is 'ul'. Only 'ul' and 'ol'
      *   are honored.
      * 
-     * `div_id`
-     * :(string) The CSS ID for the <div> wrapping the list. Default empty.
+     * @config string div_id The CSS ID for the <div> wrapping the list. Default empty.
      * 
-     * `div_class`
-     * : (string) The CSS class for the <div> wrapping the list. Default is
+     * @config string div_class The CSS class for the <div> wrapping the list. Default is
      *   'pager'.
      * 
-     * `prev`
-     * : (string) The locale key for the "previous" link text.  Default is
+     * @config string prev The locale key for the "previous" link text.  Default is
      *   'PAGER_PREV'.
      * 
-     * `next`
-     * : (string) The locale key for the "next" link text.  Default is
+     * @config string next The locale key for the "next" link text.  Default is
      *   'PAGER_PREV'.
      * 
-     * `prev_class`
-     * : (string) The CSS class for the previous-page <a> tag. Default is
+     * @config string prev_class The CSS class for the previous-page <a> tag. Default is
      *   'prev'.
      * 
-     * `curr_class`
-     * : (string) The CSS class for the current-page <a> tag. Default is 
+     * @config string curr_class The CSS class for the current-page <a> tag. Default is 
      *   'curr'.
      * 
-     * `next_class`
-     * : (string) The CSS class for the next-page <a> tag. Default is 'next'.
+     * @config string next_class The CSS class for the next-page <a> tag. Default is 'next'.
      * 
-     * `style_href`
-     * : (string) An HREF to the pager stylesheet to load. Default is
+     * @config string style_href An HREF to the pager stylesheet to load. Default is
      *   'Solar/styles/pager.css'.
      * 
      * @var array
@@ -79,7 +70,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
      * for 'count' (total number of items), 'pages' (number of pages), 'paging'
      * (the number of items per page), and 'page' (the current page number).
      * 
-     * @param array $config An array of output config to override the default
+     * @param array $config Configuration value overrides, if any.
      * config.
      * 
      * @return string

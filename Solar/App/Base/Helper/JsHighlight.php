@@ -20,7 +20,7 @@ class Solar_App_Base_Helper_JsHighlight extends Solar_View_Helper
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      * @return void
      * 

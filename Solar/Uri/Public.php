@@ -25,12 +25,9 @@ class Solar_Uri_Public extends Solar_Uri
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `path`
-     * : (string) A path prefix specifically for public resources, for example '/public/'.
+     * @config string path A path prefix specifically for public resources, for example '/public/'.
      * 
      * @var array
      * 

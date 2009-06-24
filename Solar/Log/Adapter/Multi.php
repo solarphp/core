@@ -48,12 +48,9 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapters`
-     * : (array) An array of arrays, where each sub-array
+     * @config array adapters An array of arrays, where each sub-array
      *   is a separate adapter configuration.
      * 
      * @var array
@@ -84,7 +81,7 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

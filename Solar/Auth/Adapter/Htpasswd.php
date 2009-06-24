@@ -29,12 +29,9 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `file`
-     * : (string) Path to password file.
+     * @config string file Path to password file.
      * 
      * @var array
      * 

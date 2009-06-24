@@ -34,8 +34,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * 
      * The pager information for this collection.
      * 
-     * Keys are ...
-     * 
      * `count`
      * : (int) The total number of rows in the database.
      * 

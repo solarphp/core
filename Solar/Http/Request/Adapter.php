@@ -66,9 +66,33 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Config keys are ...
+     * @config string charset The default character set.
+     * 
+     * @config string content_type The default content-type.
+     * 
+     * @config int max_redirects Follow no more than this many redirects.
+     * 
+     * @config string proxy Pass all requests through this proxy server.
+     * 
+     * @config int timeout Allowed connection timeout in seconds.
+     * 
+     * @config string user_agent The default User-Agent string.
+     * 
+     * @config string version The default HTTP version to use.
+     * 
+     * @config string ssl_cafile The local Certificate Authority file.
+     * 
+     * @config string ssl_capath If the CA file is not found, look in this 
+     * directory for suitable CA files.
+     * 
+     * @config string ssl_local_cert The local certificate file.
+     * 
+     * @config string ssl_passphrase Passphrase to open the certificate file.
+     * 
+     * @config bool ssl_verify_peer Whther or not to verify the peer SSL
+     * certificate.
      * 
      * @var array
      * 
@@ -263,7 +287,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config User-defined construction values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

@@ -23,12 +23,11 @@ class Solar_Getopt extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * Keys are:
      * 
-     * `filter_class`
-     * : (string) The data-filter class to use when validating and sanitizing
+     * @config string filter_class The data-filter class to use when validating and sanitizing
      *   parameter values.  Default is 'Solar_Filter'.
      * 
      * @var array
@@ -58,8 +57,6 @@ class Solar_Getopt extends Solar_Base
     /**
      * 
      * Default option settings.
-     * 
-     * Keys are ...
      * 
      * `long`
      * : (string) The long-form of the option name (e.g., "--foo-bar" would
@@ -147,7 +144,7 @@ class Solar_Getopt extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

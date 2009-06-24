@@ -29,7 +29,7 @@ class Solar_Filter_ValidateEmail extends Solar_Filter_Abstract
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

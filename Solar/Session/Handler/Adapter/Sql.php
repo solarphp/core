@@ -18,36 +18,23 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter
 {
     /**
      * 
-     * Solar_Sql object to connect to the database.
-     * 
-     * @var Solar_Sql_Adapter
-     * 
-     */
-    protected $_sql;
-    
-    /**
-     * 
      * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency sql A Solar_Sql dependency injection.
      * 
-     * `sql`
-     * : (dependency) A Solar_Sql dependency injection.
-     * 
-     * `table`
-     * : (string) Table where the session data will be stored, default
+     * @config string table Table where the session data will be stored, default
      * 'sessions'.
      * 
-     * `created_col`
-     * : (string) Column name where time of creation is to be stored, default
-     *   'created'.
+     * @config string created_col Column name where time of creation is to be 
+     * stored, default 'created'.
      * 
-     * `id_col`
-     * : (string) Column name of the session id, default 'id'.
+     * @config string updated_col Column name where time of update is to be 
+     * stored, default 'updated'.
      * 
-     * `data_col`
-     * : (string) Column name where the actual session data will be stored,
-     *   default 'data'.
+     * @config string id_col Column name of the session id, default 'id'.
+     * 
+     * @config string data_col Column name where the actual session data will 
+     * be stored, default 'data'.
      * 
      * @var array
      * 
@@ -60,6 +47,15 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter
         'updated_col' => 'updated',
         'data_col'    => 'data',
     );
+    
+    /**
+     * 
+     * Solar_Sql object to connect to the database.
+     * 
+     * @var Solar_Sql_Adapter
+     * 
+     */
+    protected $_sql;
     
     /**
      * 

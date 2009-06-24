@@ -18,12 +18,9 @@ class Solar_Session_Handler extends Solar_Factory
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The class to factory, for example
+     * @config string adapter The class to factory, for example
      *   'Solar_Session_Handler_Adapter_Native'.
      * 
      * @var array

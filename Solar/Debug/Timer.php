@@ -62,19 +62,14 @@ class Solar_Debug_Timer extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `output`
-     * : (string) Output mode.  Set to 'html' for HTML; 
+     * @config string output Output mode.  Set to 'html' for HTML; 
      *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
-     * `auto_start`
-     * : (bool) When true, starts the timer at __construct() time.  Default false.
+     * @config bool auto_start When true, starts the timer at __construct() time.  Default false.
      * 
-     * `auto_display`
-     * : (bool) When true, calls display() at __destruct() time.  Default false.
+     * @config bool auto_display When true, calls display() at __destruct() time.  Default false.
      * 
      * @var array
      * 
@@ -107,7 +102,7 @@ class Solar_Debug_Timer extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * If the 'auto_start' key is true, this will start the timer.
      * 
      */

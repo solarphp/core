@@ -19,18 +19,15 @@ class Solar_Controller_Console extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * Keys are:
      * 
-     * `classes`
-     * : (array) Base class names for commands.
+     * @config array classes Base class names for commands.
      * 
-     * `routing`
-     * : (array) An array of commands to class names.
+     * @config array routing An array of commands to class names.
      * 
-     * `default`
-     * : (string) The default command to run.
+     * @config string default The default command to run.
      * 
      * @var array
      * 
@@ -63,7 +60,7 @@ class Solar_Controller_Console extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

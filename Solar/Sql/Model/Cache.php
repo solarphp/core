@@ -31,12 +31,9 @@ class Solar_Sql_Model_Cache extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `cache`
-     * : (dependency) A Solar_Cache dependency.
+     * @config dependency cache A Solar_Cache dependency.
      * 
      * @var array
      * 
@@ -77,7 +74,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

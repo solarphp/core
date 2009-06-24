@@ -23,16 +23,12 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `request`
-     * : (dependency) A Solar_Request dependecy.  Defaults to the 'request'
+     * @config dependency request A Solar_Request dependecy.  Defaults to the 'request'
      *   registry entry.
      * 
-     * `slaves`
-     * : (array) An array of arrays, each representing the connection values
+     * @config array slaves An array of arrays, each representing the connection values
      *   for a different slave server.
      * 
      * The non-slave connection values are for the master server.

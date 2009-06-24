@@ -18,12 +18,9 @@ class Solar_Mail_Transport extends Solar_Factory
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The class to factory.  Default is
+     * @config string adapter The class to factory.  Default is
      * 'Solar_Mail_Transport_Adapter_Phpmail'.
      * 
      * @var array

@@ -27,12 +27,9 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `file`
-     * : (string) Path to .ini file.
+     * @config string file Path to .ini file.
      * 
      * @var array
      * 

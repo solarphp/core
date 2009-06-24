@@ -20,36 +20,29 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
 {
     /**
      * 
-     * Config keys
+     * Default configuration values.
      *
-     * `sql`
-     * : (string|array) How to get the SQL object.  If a string, is
-     *   treated as a [[Solar_Registry::get()]] object name.  If array, treated as
-     *   config for a standalone Solar_Sql object.
+     * @config string|array sql How to get the SQL object.  If a string, is
+     * treated as a [[Solar_Registry::get()]] object name.  If array, treated 
+     * as config for a standalone Solar_Sql object.
      *
-     * `table`
-     * : (string) Name of the table holding access data.
+     * @config string table Name of the table holding access data.
      * 
-     * `flag_col`
-     * : (string) Name of the column with privilege flag (the stored value in
-     *   the column should be like a boolean, such as allow/deny, t/f, T/F,
-     *   y/n, Y/N, or 0/1).
+     * @config string flag_col Name of the column with privilege flag (the 
+     * stored value in the column should be like a boolean, such as 
+     * allow/deny, t/f, T/F, y/n, Y/N, or 0/1).
      * 
-     * `type_col`
-     * : (string) Name of the column with access type info ('handle' or
-     *   'role').
+     * @config string type_col Name of the column with access type info 
+     * ('handle' or 'role').
      * 
-     * `name_col`
-     * : (string) Name of the column with the handle or role name.
+     * @config string name_col Name of the column with the handle or role 
+     * name.
      * 
-     * `class_col`
-     * : (string) Name of the column with the class name.
+     * @config string class_col Name of the column with the class name.
      * 
-     * `action_col`
-     * : (string) Name of the column with the action name.
+     * @config string action_col Name of the column with the action name.
      * 
-     * `order_col`
-     * : (string) Order the results by this column.
+     * @config string order_col Order the results by this column.
      * 
      * @var array
      * 

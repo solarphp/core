@@ -18,12 +18,9 @@ abstract class Solar_Factory extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The adapter class for the factory to generate.
+     * @config string adapter The adapter class for the factory to generate.
      * 
      * @var array
      * 

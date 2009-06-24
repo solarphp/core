@@ -18,12 +18,9 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper
 {
     /**
      * 
-     * User-defined configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `class`
-     * : (string) The class for locale translations.
+     * @config string class The class for locale translations.
      * 
      * @var array
      * 
@@ -45,7 +42,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

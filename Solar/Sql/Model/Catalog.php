@@ -19,7 +19,10 @@ class Solar_Sql_Model_Catalog extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration options.
+     * Default configuration values.
+     * 
+     * @config array classes Use these prefixes for the class stack that
+     * loads model classes.
      * 
      * @var array
      * 
@@ -68,7 +71,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

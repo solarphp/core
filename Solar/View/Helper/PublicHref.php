@@ -29,7 +29,7 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

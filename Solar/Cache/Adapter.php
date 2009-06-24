@@ -18,18 +18,15 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
      * Config keys are ...
      * 
-     * `active`
-     * : (bool) Whether or not the cache should be active at instantiation.
+     * @config bool active Whether or not the cache should be active at instantiation.
      * 
-     * `life`
-     * : (int) The lifetime of each cache entry in seconds.
+     * @config int life The lifetime of each cache entry in seconds.
      * 
-     * `prefix`
-     * : (string) A prefix to place in front of every cache entry key; e.g.,
+     * @config string prefix A prefix to place in front of every cache entry key; e.g.,
      *   use this to deconflict between identical cache keys in caches shared
      *   among different domains or environments.
      * 
@@ -64,7 +61,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

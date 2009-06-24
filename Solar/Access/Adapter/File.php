@@ -29,7 +29,9 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
+     * 
+     * @config string file The path to the access file.
      * 
      * @var array
      * 

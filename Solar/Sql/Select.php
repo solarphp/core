@@ -78,15 +78,11 @@ class Solar_Sql_Select extends Solar_Base
     
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency sql A Solar_Sql dependency object.
      * 
-     * `sql`
-     * : (dependency) A Solar_Sql dependency object.
-     * 
-     * `paging`
-     * : (int) Number of rows per page.
+     * @config int paging Number of rows per page.
      * 
      * @var array
      * 
@@ -200,7 +196,7 @@ class Solar_Sql_Select extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

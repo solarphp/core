@@ -63,7 +63,7 @@ class Solar_Test extends Solar_Base
      * 
      * Setup before the entire unit test.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

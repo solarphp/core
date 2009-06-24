@@ -18,28 +18,20 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter
 {
     /**
      * 
-     * Array of user configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config string url URL to the LDAP server. Takes the format of "ldaps://example.com:389".
      * 
-     * `url`
-     * : (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".
+     * @config string basedn The base DN for the LDAP search; example: "o=my company,c=us".
      * 
-     * `basedn`
-     * : (string) The base DN for the LDAP search; example: "o=my company,c=us".
-     * 
-     * `filter`
-     * : (string) An sprintf() filter string for the LDAP search; %s represents the username.
+     * @config string filter An sprintf() filter string for the LDAP search; %s represents the username.
      * Example: "uid=%s".
      * 
-     * `attrib`
-     * : (string) Use these attributes to find role names.
+     * @config string attrib Use these attributes to find role names.
      * 
-     * `binddn`
-     * : (string) Bind to the LDAP server as this distinguished name.
+     * @config string binddn Bind to the LDAP server as this distinguished name.
      * 
-     * `bindpw`
-     * : (string) Bind to the LDAP server as with this password.
+     * @config string bindpw Bind to the LDAP server as with this password.
      * 
      * @var array
      * 
@@ -57,7 +49,7 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

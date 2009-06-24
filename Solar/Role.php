@@ -18,12 +18,9 @@ class Solar_Role extends Solar_Factory
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The adapter class to use.
+     * @config string adapter The adapter class to use.
      * 
      * @var array
      * 

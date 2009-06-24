@@ -26,18 +26,13 @@ class Solar_Docs_Apiref extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency phpdoc A Solar_Docs_Phpdoc dependency.
      * 
-     * `phpdoc`
-     * : (dependency) A Solar_Docs_Phpdoc dependency.
+     * @config dependency log A Solar_Log dependency.
      * 
-     * `log`
-     * : (dependency) A Solar_Log dependency.
-     * 
-     * `unknown`
-     * : (string) When a type is unknown or not specified,
+     * @config string unknown When a type is unknown or not specified,
      *   use this value instead.
      * 
      * @var array
@@ -197,7 +192,7 @@ class Solar_Docs_Apiref extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

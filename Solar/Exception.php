@@ -38,7 +38,7 @@ class Solar_Exception extends Exception
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration with keys
+     * @param array $config Configuration value overrides, if any.
      * for 'class', 'code', 'text', and 'info'.
      * 
      */

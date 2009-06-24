@@ -43,22 +43,16 @@ class Solar_Service_Akismet extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config string key The Akismet service API key.
      * 
-     * `key`
-     * : (string) The Akismet service API key.
+     * @config string blog The front page to the blog, wiki, site, etc.
      * 
-     * `blog`
-     * : (string) The front page to the blog, wiki, site, etc.
-     * 
-     * `http`
-     * : (array) A configuration array for the Solar_Http_Request object to
+     * @config array http A configuration array for the Solar_Http_Request object to
      *   be used internally.
      * 
-     * `request`
-     * : (dependency) A Solar_Request dependency injection. Default 'request'.
+     * @config dependency request A Solar_Request dependency injection. Default 'request'.
      * 
      * @var array
      * 
@@ -103,7 +97,7 @@ class Solar_Service_Akismet extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

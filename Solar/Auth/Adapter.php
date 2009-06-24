@@ -18,62 +18,47 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `expire`
-     * : (int) Authentication lifetime in seconds; zero is
+     * @config int expire Authentication lifetime in seconds; zero is
      *   forever.  Default is 14400 (4 hours).
      * 
-     * `idle`
-     * : (int) Maximum allowed idle time in seconds; zero is
+     * @config int idle Maximum allowed idle time in seconds; zero is
      *   forever.  Default is 1800 (30 minutes).
      * 
-     * `allow`
-     * : (bool) Whether or not to allow automatic login/logout at start()
+     * @config bool allow Whether or not to allow automatic login/logout at start()
      *   time. Default true.
      * 
-     * `cache`
-     * : (dependency) A Solar_Cache dependency to store user data. Default is
+     * @config dependency cache A Solar_Cache dependency to store user data. Default is
      *   to create a Solar_Cache_Adapter_Session object internal to this 
      *   instance.
      * 
-     * `source`
-     * : (string) The source for auth credentials, 'get' (via the
+     * @config string source The source for auth credentials, 'get' (via the
      *   for GET request vars) or 'post' (via the POST request vars).
      *   Default is 'post'.
      * 
-     * `source_handle`
-     * : (string) Username key in the credential array source,
+     * @config string source_handle Username key in the credential array source,
      *   default 'handle'.
      * 
-     * `source_passwd`
-     * : (string) Password key in the credential array source,
+     * @config string source_passwd Password key in the credential array source,
      *   default 'passwd'.
      * 
-     * `source_redirect`
-     * : (string) Element key in the credential array source to indicate
+     * @config string source_redirect Element key in the credential array source to indicate
      *   where to redirect on successful login or logout, default 'redirect'.
      * 
-     * `source_process`
-     * : (string) Element key in the credential array source to indicate
+     * @config string source_process Element key in the credential array source to indicate
      *   how to process the request, default 'process'.
      * 
-     * `process_login`
-     * : (string) The source_process element value indicating a login request;
+     * @config string process_login The source_process element value indicating a login request;
      *   default is the 'PROCESS_LOGIN' locale key value.
      * 
-     * `process_logout`
-     * : (string) The source_process element value indicating a logout request;
+     * @config string process_logout The source_process element value indicating a logout request;
      *   default is the 'PROCESS_LOGOUT' locale key value.
      * 
-     * `login_callback`
-     * : (callback) A callback to execute after successful login, but before
+     * @config callback login_callback A callback to execute after successful login, but before
      *   the source postLogin() method is called.
      * 
-     * `logout_callback`
-     * : (callback) A callback to execute after successful logout, but before
+     * @config callback logout_callback A callback to execute after successful logout, but before
      *   the source postLogout() method is called.
      * 
      * @var array
@@ -167,15 +152,12 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * The available magic properties are:
      * 
-     * `status`
-     * : (string) The Unix time at which the authenticated handle was last 
+     * @config string status The Unix time at which the authenticated handle was last 
      *   valid.
      * 
-     * `initial`
-     * : (int) The Unix time at which the handle was initially authenticated.
+     * @config int initial The Unix time at which the handle was initially authenticated.
      * 
-     * `active`
-     * : (int) The status code of the current user authentication. The string
+     * @config int active The status code of the current user authentication. The string
      *   codes are ...
      *   
      *     `ANON` (or empty)
@@ -195,23 +177,18 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      *     : The user attempted authentication but failed
      *   
      * 
-     * `handle`
-     * : (string) The currently authenticated user handle.
+     * @config string handle The currently authenticated user handle.
      * 
-     * `email`
-     * : (string) The email address of the currently authenticated user. May 
+     * @config string email The email address of the currently authenticated user. May 
      *   or may not be populated by the adapter.
      * 
-     * `moniker`
-     * : (string) The "display name" or "full name" of the currently 
+     * @config string moniker The "display name" or "full name" of the currently 
      *   authenticated user.  May or may not be populated by the adapter.
      * 
-     * `uri`
-     * : (string) The URI for the currently authenticated user. May or may not 
+     * @config string uri The URI for the currently authenticated user. May or may not 
      *   be populated by the adapter.
      * 
-     * `uid`
-     * : (mixed) The user ID (usually numeric) for the currently authenticated 
+     * @config mixed uid The user ID (usually numeric) for the currently authenticated 
      *   user.  May or may not be populated by the adapter.
      * 
      * @var array
@@ -236,7 +213,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config An array of user-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

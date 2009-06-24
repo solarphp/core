@@ -18,24 +18,17 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter
 {
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency sql A Solar_Sql dependency.
      * 
-     * `sql`
-     * : (dependency) A Solar_Sql dependency.
+     * @config string table The table where roles are stored.
      * 
-     * `table`
-     * : (string) The table where roles are stored.
+     * @config string handle_col The column for user handles.
      * 
-     * `handle_col`
-     * : (string) The column for user handles.
+     * @config string role_col The column for roles.
      * 
-     * `role_col`
-     * : (string) The column for roles.
-     * 
-     * `where`
-     * : (string|array) Additional _multiWhere() conditions to use
+     * @config string|array where Additional _multiWhere() conditions to use
      *   when selecting role rows.
      * 
      * @var array

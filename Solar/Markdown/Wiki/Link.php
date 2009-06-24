@@ -178,7 +178,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin
      * 
      * Constructor.
      * 
-     * @param array $config Array of user-defined configuariont values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

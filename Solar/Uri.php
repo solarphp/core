@@ -123,20 +123,15 @@ class Solar_Uri extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `host`
-     * : (string) A host to use as default.  Generally needed only
+     * @config string host A host to use as default.  Generally needed only
      *   for specific URI subclasses, for example Solar_Uri_Public.
      * 
-     * `path`
-     * : (string) A path prefix.  Generally needed only
+     * @config string path A path prefix.  Generally needed only
      *   for specific URI subclasses, for example Solar_Uri_Action.
      * 
-     * `uri`
-     * : (string) Calls set() with this URI string at construct-time, instead
+     * @config string uri Calls set() with this URI string at construct-time, instead
      *   of loading from the current URI.
      * 
      * @var array
@@ -311,7 +306,7 @@ class Solar_Uri extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

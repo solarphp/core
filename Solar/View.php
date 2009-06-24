@@ -25,7 +25,14 @@ class Solar_View extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration values.
+     * Default configuration values.
+     * 
+     * @config array template_path The paths to view template directories.
+     * 
+     * @config array helper_class A stack of helper class prefixes.
+     * 
+     * @config array escape Keys for 'quotes' and 'charset' to use when
+     * escaping template values; cf. the [[Solar_View::$_escape]] property.
      * 
      * @var array
      * 
@@ -106,7 +113,7 @@ class Solar_View extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)
@@ -354,7 +361,7 @@ class Solar_View extends Solar_Base
      * 
      * @param string $name The helper name.
      * 
-     * @param array $config Configuration array for the helper object.
+     * @param array $config Configuration value overrides, if any.
      * 
      * @return object A new standalone helper object.
      * 

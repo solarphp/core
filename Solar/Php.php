@@ -45,13 +45,27 @@ class Solar_Php extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
+     * @config string php Command to invoke the PHP binary.
+     * 
+     * @config string ini_file Which php.ini file to use; if null, use the
+     * default php.ini file.
+     * 
+     * @config array ini_set Override php.ini settings with these settings
+     * instead. The element key is the .ini setting name, and the element 
+     * value is the .ini value to use.
+     * 
+     * @config mixed solar_config When calling Solar::start(), use this as the
+     * config value.
+     * 
+     * @config bool echo Whether or not to echo the process output as it goes.
+     *
      * @var array
      * 
      */
     protected $_Solar_Php = array(
-        'php'          => null,
+        'php'          => 'php',
         'ini_file'     => null,
         'ini_set'      => null,
         'solar_config' => null,
@@ -153,7 +167,7 @@ class Solar_Php extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

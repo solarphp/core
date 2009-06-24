@@ -18,12 +18,9 @@ class Solar_Http_Request extends Solar_Factory
 {
     /**
      * 
-     * User-supplied configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The adapter class; for example, 'Solar_Http_Request_Adapter_Stream'
+     * @config string adapter The adapter class; for example, 'Solar_Http_Request_Adapter_Stream'
      *   (the default).  When the `curl` extension is loaded, the default is
      *   'Solar_Http_Request_Adapter_Curl'.
      * 

@@ -18,12 +18,9 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
     
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `filter`
-     * : (Solar_Filter) The "parent" Solar_Filter object.
+     * @config Solar_Filter filter The "parent" Solar_Filter object.
      * 
      * @var array
      * 
@@ -54,7 +51,7 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

@@ -20,27 +20,20 @@ abstract class Solar_Sql_Model extends Solar_Base
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
+     * @config dependency sql A Solar_Sql dependency.
      * 
-     * `sql`
-     * : (dependency) A Solar_Sql dependency.
-     * 
-     * `cache`
-     * : (dependency) A Solar_Cache dependency for the Solar_Sql_Model_Cache
+     * @config dependency cache A Solar_Cache dependency for the Solar_Sql_Model_Cache
      *   object.
      * 
-     * `catalog`
-     * : (dependency) A Solar_Sql_Model_Catalog to find other models with.
+     * @config dependency catalog A Solar_Sql_Model_Catalog to find other models with.
      * 
-     * `table_scan`
-     * : (bool) Connect to the database and scan the table for its column
+     * @config bool table_scan Connect to the database and scan the table for its column
      *   descriptions, creating the table and indexes if not already present.
      *   Default true.
      * 
-     * `auto_cache`
-     * : (bool) Automatically maintain the data cache.  Default false.
+     * @config bool auto_cache Automatically maintain the data cache.  Default false.
      * 
      * @var array
      * 
@@ -559,7 +552,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

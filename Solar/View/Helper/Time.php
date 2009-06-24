@@ -18,12 +18,11 @@ class Solar_View_Helper_Time extends Solar_View_Helper_Timestamp
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
      * Keys are:
      * 
-     * `format`
-     * : (string) The default output formatting using [[php:date() | ]] codes.
+     * @config string format The default output formatting using [[php:date() | ]] codes.
      *   Default is 'H:i:s'.
      * 
      * @var array

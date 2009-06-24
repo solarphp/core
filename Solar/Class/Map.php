@@ -18,12 +18,9 @@ class Solar_Class_Map extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `base`
-     * : (string) The base directory of the class hierarchy.  Default is the
+     * @config string base The base directory of the class hierarchy.  Default is the
      *   base directory for this class, typically the PEAR directory.
      * 
      * @var array
@@ -57,7 +54,7 @@ class Solar_Class_Map extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

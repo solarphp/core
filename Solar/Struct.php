@@ -95,12 +95,9 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `data`
-     * : (array) Key-value pairs.
+     * @config array data Key-value pairs.
      * 
      * @var array
      * 
@@ -140,7 +137,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      * Constructor.
      * 
-     * @param array $config User-defined values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

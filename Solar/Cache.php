@@ -18,12 +18,9 @@ class Solar_Cache extends Solar_Factory
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The adapter class for the factory, default 
+     * @config string adapter The adapter class for the factory, default 
      * 'Solar_Cache_Adapter_File'.
      * 
      * @var array

@@ -18,7 +18,13 @@ class Solar_Example extends Solar_Base
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
+     * 
+     * @config string foo Example config key and value.
+     * 
+     * @config string baz Example config key and value.
+     * 
+     * @config string zim Example config key and value.
      * 
      * @var array
      * 

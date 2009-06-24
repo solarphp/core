@@ -193,7 +193,7 @@ class Solar_Config
      * 
      * @param string $class The class name.
      * 
-     * @param array $config The config built for that class.
+     * @param array $config Configuration value overrides, if any.
      * 
      * @return void
      * 

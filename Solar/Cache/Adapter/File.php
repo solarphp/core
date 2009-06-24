@@ -44,27 +44,24 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Config keys are ...
-     * 
-     * `path`
-     * : (string) The directory where cache files are located; should be
+     * @config string path The directory where cache files are located; should be
      *   readable and writable by the script process, usually the web server
      *   process. Default is '/Solar_Cache_File' in the system temporary
      *   directory.  Will be created if it does not already exist.  Supports
      *   streams, so you may specify (e.g.) 'http://cache-server/' as the 
      *   path.
      * 
-     * `mode`
-     * : (int) If the cache path does not exist, when it is created, use
+     * @config int mode If the cache path does not exist, when it is created, use
      *   this octal permission mode.  Default is `0740` (user read/write/exec,
      *   group read, others excluded).
      * 
-     * `context`
-     * : (array|resource) A stream context resource, or an array to pass to
+     * @config array|resource context A stream context resource, or an array to pass to
      *   stream_create_context(). When empty, no context is used.  Default
      *   null.
+     * 
+     * @config bool hash Whether or not to hash the cache entry filenames.
      * 
      * @var array
      * 
@@ -108,7 +105,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

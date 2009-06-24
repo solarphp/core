@@ -28,21 +28,16 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `life`
-     * : (int) The cache entry lifetime in seconds, default `0`
+     * @config int life The cache entry lifetime in seconds, default `0`
      * (never expires).
      * 
-     * `user`
-     * : (string) Admin user name for Xcache, as set in php.ini. This login
+     * @config string user Admin user name for Xcache, as set in php.ini. This login
      *   and the corresponding password are required _only_ for the deleteAll()
      *   method. Defaults to `null`.
      * 
-     * `pass`
-     * : (string) Plaintext password that matches the MD5-encrypted password
+     * @config string pass Plaintext password that matches the MD5-encrypted password
      *   in php.ini. This password and the corresponding login are required
      *   _only_ for the deleteAll() method. Defaults to `null`.
      * 
@@ -58,7 +53,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
      * 
      * Constructor.
      * 
-     * @param array $config User-provided configuration values.
+     * @param array $config Configuration value overrides, if any.
      * 
      */
     public function __construct($config = null)

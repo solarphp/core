@@ -18,12 +18,9 @@ class Solar_Sql extends Solar_Factory
 {
     /**
      * 
-     * User-provided configuration.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The class to factory, for example 'Solar_Sql_Adapter_Mysql'.
+     * @config string adapter The class to factory, for example 'Solar_Sql_Adapter_Mysql'.
      * 
      * @var array
      * 

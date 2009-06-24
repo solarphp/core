@@ -33,12 +33,9 @@ class Solar_Log extends Solar_Factory
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `adapter`
-     * : (string) The adapter class to use, for example 'Solar_Log_Adapter_File'.
+     * @config string adapter The adapter class to use, for example 'Solar_Log_Adapter_File'.
      *   Default is 'Solar_Log_Adapter_None'.
      * 
      * @var array

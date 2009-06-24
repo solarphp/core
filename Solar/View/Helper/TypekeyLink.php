@@ -21,22 +21,20 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper
 {
     /**
      * 
-     * User-defined configuration values.
+     * Default configuration values.
      * 
-     * Keys are ...
-     * 
-     * `token`
-     * : (string) The TypeKey site identifier token string. If empty,
+     * @config string token The TypeKey site identifier token string. If empty,
      *   the helper will use the value from the Solar config file under
      *   the $config['Solar_Auth_Adapter_Typekey']['token'] key.
      * 
-     * `href`
-     * : (string) The HREF of the TypeKey login service. Default is
+     * @config string href The HREF of the TypeKey login service. Default is
      *   "https://www.typekey.com:443/t/typekey/login".
      * 
-     * `need_email`
-     * : (bool) Whether or not to get the TypeKey user's email address.
+     * @config bool need_email Whether or not to get the TypeKey user's email address.
      *   Default false.
+     * 
+     * @config string process_key The process key used in URIs (indicating
+     * login, logout, etc).
      * 
      * @var array
      * 

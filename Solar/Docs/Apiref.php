@@ -107,18 +107,26 @@ class Solar_Docs_Apiref extends Solar_Base
      * {{code: php
      *     $api = array(
      *         classname => array(
-     *             summ => string,
-     *             narr => string,
-     *             tech => array(...),
-     *             from => array(...),
+     *             summ => string, // phpdoc summary
+     *             narr => string, // phpdoc narrative
+     *             tech => array(...), // technical phpdoc @tags
+     *             from => array(...), // parent classes
      *             constants => array(
-     *                 constantname => array(
+     *                 name => array(
      *                     type => string,
      *                     value => string,
      *                 ), // constantname
      *             ), // constants
+     *             config_keys => array(
+     *                 name => array(
+     *                     name => string,
+     *                     type => string,
+     *                     summ => string,
+     *                     value => mixed,
+     *                 ),
+     *             ), // config_keys
      *             properties => array(
-     *                 propertyname => array(
+     *                 name => array(
      *                     name => string,
      *                     summ => string,
      *                     narr => string,
@@ -130,7 +138,7 @@ class Solar_Docs_Apiref extends Solar_Base
      *                 ), // propertyname
      *             ), // properties
      *             methods => array(
-     *                 methodname => array(
+     *                 name => array(
      *                     name => string,
      *                     summ => string,
      *                     narr => string,
@@ -141,7 +149,7 @@ class Solar_Docs_Apiref extends Solar_Base
      *                     return => string,
      *                     from => string,
      *                     params => array(
-     *                         paramname => array(
+     *                         name => array(
      *                             name => string,
      *                             type => string,
      *                             summ => string,
@@ -280,6 +288,7 @@ class Solar_Docs_Apiref extends Solar_Base
         // add the class parents, properties and methods
         $this->_addParents($class);
         $this->_addConstants($class);
+        $this->_addConfigKeys($class);
         $this->_addProperties($class);
         $this->_addMethods($class);
         
@@ -411,6 +420,77 @@ class Solar_Docs_Apiref extends Solar_Base
         
         // sort them
         ksort($this->api[$class]['properties']);
+    }
+    
+    /**
+     * 
+     * Adds the Solar configuration keys for a given class.
+     * 
+     * @param string $class The class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addConfigKeys($class)
+    {
+        $this->api[$class]['config_keys'] = array();
+        
+        // holding place for config key names and values
+        $name_value = array();
+        
+        // holding place for tech info about @key phpdoc tags
+        $tech = array();
+        
+        // get the parent classes and add the class itself
+        $list = $this->api[$class]['from'];
+        array_push($list, $class);
+        foreach ($list as $item) {
+            $reflect = new ReflectionClass($item);
+            // all properties
+            $vars = $reflect->getDefaultProperties();
+            // the name of the config property
+            $cvar = "_$item";
+            // is there a config property?
+            if (! empty($vars[$cvar])) {
+                
+                // merge name-value pairs with pre-existing
+                $name_value = array_merge($name_value, $vars[$cvar]);
+                
+                // parse the docblock on the config var
+                $prop = $reflect->getProperty($cvar);
+                $docs = $this->_phpdoc->parse($prop->getDocComment());
+                if (! empty($docs['tech']['key'])) {
+                    foreach ($docs['tech']['key'] as $name => $info) {
+                        $tech[$name] = $info;
+                    }
+                }
+            }
+        }
+        
+        foreach ($name_value as $name => $value) {
+            if ($value === null) {
+                $value = 'null'; // so that we get lower-case
+            } else {
+                $value = var_export($value, true);
+            }
+            
+            if (empty($tech[$name]['type'])) {
+                $tech[$name]['type'] = "unknown";
+                $this->_log($class, "config key '$name' has no type");
+            }
+            
+            if (empty($tech[$name]['summ'])) {
+                $tech[$name]['summ'] = "No summary.";
+                $this->_log($class, "config key '$name' has no summary");
+            }
+            
+            $this->api[$class]['config_keys'][$name] = array(
+                'name'  => $name,
+                'type'  => $tech[$name]['type'],
+                'summ'  => $tech[$name]['summ'],
+                'value' => $value,
+            );
+        }
     }
     
     /**

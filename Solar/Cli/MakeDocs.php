@@ -405,6 +405,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     {
         $text = array();
         $text[] = 'Overview';
+        $text[] = 'Config';
         $text[] = 'Constants';
         $text[] = 'Properties';
         $text[] = 'Methods';

@@ -202,7 +202,7 @@ class Solar_Mail_Message extends Solar_Base
         
         // custom encoding
         if ($this->_config['encoding']) {
-            $this->_charset = $this->_config['encoding'];
+            $this->_encoding = $this->_config['encoding'];
         }
         
         // custom charset

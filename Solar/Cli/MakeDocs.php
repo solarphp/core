@@ -20,6 +20,22 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
 {
     /**
      * 
+     * Default configuration values.
+     * 
+     * @config string class_dir The directory in which to write class docs.
+     * 
+     * @config string package_dir The directory in which to write package docs.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Cli_MakeDocs = array(
+        'class_dir'   => null,
+        'package_dir' => null,
+    );
+    
+    /**
+     * 
      * The source code directory, typically the 'include' directory.
      * 
      * @var string
@@ -74,6 +90,26 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     
     /**
      * 
+     * Constructor.
+     * 
+     * @param array $config Configuration value overrides, if any.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config = null);
+        
+        if ($this->_config['class_dir']) {
+            $this->_class_dir = Solar_Dir::fix($this->_config['class_dir']);
+        }
+        
+        if ($this->_config['package_dir']) {
+            $this->_package_dir = Solar_Dir::fix($this->_config['package_dir']);
+        }
+    }
+    
+    /**
+     * 
      * Main action: parse the classes and write documentation.
      * 
      * @param string $class Start parsing with this class and recursively
@@ -97,11 +133,27 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
             $this->_source = Solar_Dir::name(__FILE__, 2);
         }
         
-        // get the target API dir (if any)
-        $this->_class_dir = Solar_Dir::fix($this->_options['class_dir']);
+        // get the target API dir
+        $class_dir = $this->_options['class_dir'];
+        if ($class_dir) {
+            $this->_class_dir = Solar_Dir::fix($class_dir);
+        }
+        
+        // do we have a class dir?
+        if (! $this->_class_dir) {
+            throw $this->_exception('ERR_NO_CLASS_DIR');
+        }
         
         // get the target package dir (if any)
-        $this->_package_dir = Solar_Dir::fix($this->_options['package_dir']);
+        $package_dir = $this->_options['package_dir'];
+        if ($package_dir) {
+            $this->_package_dir = Solar_Dir::fix($package_dir);
+        }
+        
+        // do we have a package dir?
+        if (! $this->_package_dir) {
+            throw $this->_exception('ERR_NO_PACKAGE_DIR');
+        }
         
         // start parsing
         $this->_outln("Parsing source files from '{$this->_source}' ... ");
@@ -201,7 +253,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
                 continue;
             }
             
-            // write the class home page
+            // write the class overview
             $this->_out("$class: ");
             $this->writeClassOverview($class);
             $this->_out('.');
@@ -228,8 +280,8 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
                 $this->_out('.');
             }
             
-            // write the class table-of-contents
-            $this->writeClassContents($class);
+            // write the class index
+            $this->writeClassIndex($class);
             $this->_outln(". ;");
             
             // retain the class name and info
@@ -244,24 +296,24 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
         
         // write the overall list of classes and summaries.
         $this->_out("Writing summary list of all classes ... ");
-        $this->writeClassesList();
+        $this->writeClassesIndex();
         $this->_outln("done.");
     }
     
     /**
      * 
-     * Writes the contents file for the list of classes.
+     * Writes the index file for the list of classes.
      * 
      * @return void
      * 
      */
-    public function writeClassesList()
+    public function writeClassesIndex()
     {
         $text = array();
         foreach ($this->_classes_list as $name => $summ) {
             $text[] = "$name\t$summ";
         }
-        $this->_write('class', '_list', $text);
+        $this->_write('class', 'index', $text);
     }
     
     /**
@@ -394,14 +446,14 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     
     /**
      * 
-     * Writes the table-of-contents XML file.
+     * Writes the index file for a single class.
      * 
-     * @param string $class The class to write Contents for.
+     * @param string $class The class to write index for.
      * 
      * @return void
      * 
      */
-    public function writeClassContents($class)
+    public function writeClassIndex($class)
     {
         $text = array();
         $text[] = 'Overview';
@@ -412,7 +464,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
         foreach (array_keys($this->api[$class]["methods"]) as $name) {
             $text[] = "$name()";
         }
-        $this->_write("class", "$class/contents", $text);
+        $this->_write("class", "$class/index", $text);
     }
     
     /**

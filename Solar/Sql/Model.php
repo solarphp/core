@@ -1552,7 +1552,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return array A normalized set of clause params.
      * 
      */
-    public function _fixSelectParams($params)
+    protected function _fixSelectParams($params)
     {
         settype($params, 'array');
         

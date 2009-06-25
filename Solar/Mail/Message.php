@@ -22,8 +22,6 @@ class Solar_Mail_Message extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * Keys are:
-     * 
      * @config string boundary The default boundary value for separating message parts.
      * 
      * @config string charset The character-set for messages; default is 'utf-8'.

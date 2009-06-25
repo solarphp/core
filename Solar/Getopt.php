@@ -25,8 +25,6 @@ class Solar_Getopt extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * Keys are:
-     * 
      * @config string filter_class The data-filter class to use when validating and sanitizing
      *   parameter values.  Default is 'Solar_Filter'.
      * 

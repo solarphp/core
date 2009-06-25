@@ -42,8 +42,6 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
      * 
      * Default configuration values.
      * 
-     * Keys are:
-     * 
      * @config bool strftime When true, uses strftime() instead of date() for formatting 
      *   dates. Default is false.
      * 

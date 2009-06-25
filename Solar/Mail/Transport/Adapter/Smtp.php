@@ -20,8 +20,6 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter
      * 
      * Default configuration values.
      * 
-     * Keys are:
-     * 
      * @config dependency smtp A Solar_Smtp_Adapter dependency.  Default is 'smtp',
      *   which means to use the registered object named 'smtp'.
      * 

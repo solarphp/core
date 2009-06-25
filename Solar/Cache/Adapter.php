@@ -20,8 +20,6 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * Default configuration values.
      * 
-     * Config keys are ...
-     * 
      * @config bool active Whether or not the cache should be active at instantiation.
      * 
      * @config int life The lifetime of each cache entry in seconds.

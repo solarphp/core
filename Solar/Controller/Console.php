@@ -21,8 +21,6 @@ class Solar_Controller_Console extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * Keys are:
-     * 
      * @config array classes Base class names for commands.
      * 
      * @config array routing An array of commands to class names.

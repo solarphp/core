@@ -20,8 +20,6 @@ class Solar_View_Helper_Date extends Solar_View_Helper_Timestamp
      * 
      * Default configuration values.
      * 
-     * Keys are:
-     * 
      * @config string format The default output formatting using [[php:date() | ]] codes.
      *   Default is 'Y-m-d'.
      * 

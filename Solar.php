@@ -52,8 +52,6 @@ class Solar
      * 
      * Default config values for the Solar arch-class.
      * 
-     * Keys are:
-     * 
      * @config array ini_set An array of key-value pairs where the key is an
      *   [[php::ini_set | ]] key, and the value is the value for that setting.
      * 

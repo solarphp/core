@@ -20,8 +20,6 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
      * 
      * Default configuration values.
      * 
-     * Keys are...
-     * 
      * @config string list_type The type of list to use; default is 'ul'. Only 'ul' and 'ol'
      *   are honored.
      * 

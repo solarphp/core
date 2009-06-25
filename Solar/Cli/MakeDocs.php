@@ -508,14 +508,15 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     {
         $text = array();
         $text[] = $this->_title1("Configuration Keys");
-        foreach ($this->api[$class]['config_keys'] as $name => $info) {
-            $text[] = $this->_title2("`$name` {#$name}");
-            $text[] = "* (*{$info['type']}*) {$info['summ']}";
-            $text[] = "* Default: `{$info['value']}`";
-            $text[] = "";
-        }
-        
-        if (! $text) {
+        $list = $this->api[$class]['config_keys'];
+        if ($list) {
+            foreach ($list as $name => $info) {
+                $text[] = $this->_title2("`$name` {#$name}");
+                $text[] = "* (*{$info['type']}*) {$info['summ']}";
+                $text[] = "* Default: `{$info['value']}`";
+                $text[] = "";
+            }
+        } else {
             $text[] = "None.";
         }
         

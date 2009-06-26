@@ -1952,9 +1952,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         // reset affected rows
         $this->_affected_rows;
         
-        // the name of the autoincrement column, if any
-        $autoinc = null;
-        
         // remove non-existent table columns from the data
         foreach ($data as $key => $val) {
             if (empty($this->_table_cols[$key])) {
@@ -1966,7 +1963,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             // remove empty autoinc columns to soothe postgres, which won't
             // take explicit NULLs in SERIAL cols.
             if ($this->_table_cols[$key]['autoinc'] && empty($val)) {
-                $autoinc = $key;
                 unset($data[$key]);
             }
         }
@@ -1980,7 +1976,16 @@ abstract class Solar_Sql_Model extends Solar_Base
         // clear the cache for this model and related models
         $this->_cache->deleteAll();
         
-        // if there was an autoincrement column, return the last insert id
+        // does the table have an autoincrement column?
+        $autoinc = null;
+        foreach ($this->_table_cols as $name => $info) {
+            if ($info['autoinc']) {
+                $autoinc = $name;
+                break;
+            }
+        }
+        
+        // return the last insert id, or just "true" ?
         if ($autoinc) {
             return $this->_sql->lastInsertId($this->_table_name, $autoinc);
         } else {

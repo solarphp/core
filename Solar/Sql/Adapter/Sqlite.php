@@ -239,11 +239,9 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             
             // find autoincrement column in CREATE TABLE sql.
             $autoinc_find = str_replace(' ', '\s+', $this->_sqlite_autoinc);
-            $find = "\\b"           // word border
-                  . "\"?$name\"?"   // '"colname"' (quotes optional),
-                  . "\s+$autoinc_find"
-                  . "\\b";          // word border
-                  
+            $find = "(\"$name\"|\'$name\'|`$name`|\[$name\]|\\b$name)" 
+                  . "\s+$autoinc_find";
+            
             $autoinc = preg_match(
                 "/$find/Ui",
                 $create_table,

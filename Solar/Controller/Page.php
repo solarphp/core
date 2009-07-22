@@ -62,24 +62,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The short-name for this controller, populated in _preRender().
-     * 
-     * @var string
-     * 
-     */
-    public $controller;
-    
-    /**
-     * 
-     * The short-name for the executed action, populated in _preRender().
-     * 
-     * @var string
-     * 
-     */
-    public $action;
-    
-    /**
-     * 
      * The action being requested of (performed by) the controller.
      * 
      * @var string
@@ -163,7 +145,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @var string
      * 
      */
-    protected $_layout_default = null;
+    protected $_layout_default = 'default';
     
     /**
      * 
@@ -203,7 +185,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * @var string
      * 
-     * @see Solar_Controller_Page::_process()
+     * @see _isProcess()
      * 
      */
     protected $_process_key = 'process';
@@ -356,6 +338,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * An array of application error messages.
+     * 
+     * @var array
+     * 
+     */
+    protected $_errors = array();
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config Configuration value overrides, if any.
@@ -501,7 +492,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // done, return the response headers, cookies, and body
             return $this->_response;
             
-        } catch (Exception $e){
+        } catch (Exception $e) {
             
             // an exception was thrown somewhere, attempt to rescue it
             return $this->_exceptionDuringFetch($e);
@@ -523,6 +514,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
     {
         $response = $this->fetch($spec);
         $response->display();
+    }
+    
+    /**
+     * 
+     * Shows application errors.
+     * 
+     * @return void
+     * 
+     */
+    public function actionError()
+    {
     }
     
     /**
@@ -685,9 +687,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // get all parents including self
         $stack = array_reverse(Solar_Class::parents($this, true));
         
-        // remove the last two parents
+        // remove Solar_Base
         array_pop($stack); // Solar_Base
-        array_pop($stack); // Solar_Controller_Page
         
         // add _Helper to each one
         foreach ($stack as $key => $val) {
@@ -717,16 +718,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // get the parents of the current class, including self
         $stack = array_reverse(Solar_Class::parents($this, true));
         
-        // remove Solar_Base and Solar_Controller_Page
-        array_pop($stack);
+        // remove Solar_Base
         array_pop($stack);
         
         // convert underscores to slashes, and add /View
         foreach ($stack as $key => $val) {
             $stack[$key] = str_replace('_', '/', $val) . '/View';
         }
-        
-        // should we add Solar/App/Base/View for non-Solar vendors?
         
         // done, add the stack
         $this->_view_object->addTemplatePath($stack);
@@ -758,16 +756,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // get the parents of the current class, including self
         $stack = array_reverse(Solar_Class::parents($this, true));
         
-        // remove Solar_Base and Solar_Controller_Page
-        array_pop($stack);
+        // remove Solar_Base
         array_pop($stack);
         
         // convert underscores to slashes, and add /Layout
         foreach ($stack as $key => $val) {
             $stack[$key] = str_replace('_', '/', $val) . '/Layout';
         }
-        
-        // should we add Solar/App/Base/Layout for non-Solar vendors?
         
         // done, add the stack
         $this->_view_object->setTemplatePath($stack);
@@ -1357,9 +1352,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $class = get_class($this);
         $this->_view_object->getHelper('getTextRaw')->setClass($class);
         
-        // set the public controller and action vars
-        $this->controller = $this->_controller;
-        $this->action     = $this->_action;
+        // inject special vars into the view
+        $this->_view_object->controller = $this->_controller;
+        $this->_view_object->action     = $this->_action;
+        $this->_view_object->layout     = $this->_layout;
+        $this->_view_object->errors     = $this->_errors;
     }
     
     /**
@@ -1379,28 +1376,46 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes when _forward() cannot find a method for the requested action.
+     * Adds an error message, then forwards to the 'error' action.
      * 
-     * This default implementation throws an exception, but extended classes
-     * may override the behavior to be the action that executes when the
-     * requested action was not found.
+     * @param string $key The error-message locale key.
      * 
-     * @param string $action The name for the action that was not found.
-     * 
-     * @param string $params The params for the action that was not found.
+     * @param array $replace Replacement strings for the error message.
      * 
      * @return void
      * 
      */
-    protected function _notFound($action, $params)
+    protected function _error($key, $replace = null)
     {
-        throw $this->_exception(
-            'ERR_ACTION_NOT_FOUND',
-            array(
-                'action' => $action,
-                'params' => $params,
-            )
-        );
+        $this->_errors[] = $this->locale($key, 1, $replace);
+        $this->_response->setStatusCode(500);
+        return $this->_forward('error');
+    }
+    
+    /**
+     * 
+     * Indicates an action (or other page) was not found.
+     * 
+     * @param string $action The name for the action that was not found.
+     * 
+     * @param array $params The params for the action that was not found.
+     * 
+     * @return void
+     * 
+     */
+    protected function _notFound($action, $params = null)
+    {
+        $this->_errors[] = "Controller: \"{$this->_controller}\"";
+        $this->_errors[] = "Action: \"$action\"";
+        $this->_errors[] = "Format: \"{$this->_format}\"";
+        foreach ((array) $params as $key => $val) {
+            $this->_errors[] = "Param $key: $val";
+        }
+        $this->_response->setStatusCode(404);
+        
+        // just set the view; if we call _forward('error') we'll get the
+        // error view, not the not-found view.
+        $this->_view = 'notFound';
     }
     
     /**
@@ -1408,7 +1423,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * When an exception is thrown during the fetch() process, use this
      * method to recover from it.
      * 
-     * This default implementation just re-throws the exception, but extended
+     * This default implementation just displays the exception, but extended
      * classes may override the behavior to return alternative output from
      * the failed fetch().
      * 
@@ -1419,8 +1434,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _exceptionDuringFetch(Exception $e)
     {
-        throw $this->_exception('ERR_DURING_FETCH', array(
-            'exception' => $e,
-        ));
+        $this->_errors[] = $e;
+        $this->_view = 'exception';
+        $this->_response->setStatusCode(500);
+        
+        // render directly; because this came from the fetch process, we
+        // can't depend on that process to complete successfully.
+        $this->_render();
+        return $this->_response;
     }
 }

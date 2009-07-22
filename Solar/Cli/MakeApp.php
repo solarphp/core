@@ -60,7 +60,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
      * @var string
      * 
      */
-    protected $_extends = 'Solar_App_Base';
+    protected $_extends = 'Solar_Controller_Page';
     
     /**
      * 
@@ -387,4 +387,3 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         }
     }
 }
-

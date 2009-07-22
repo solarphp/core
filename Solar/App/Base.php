@@ -18,26 +18,6 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
-     * The name of the layout being used; populated from $this->_layout.
-     * 
-     * @var string
-     * 
-     */
-    public $layout;
-    
-    /**
-     * 
-     * Error messages, usually for the 'error' action/view.
-     * 
-     * In some cases, this may be an Exception object.
-     * 
-     * @var array|Exception
-     * 
-     */
-    public $errors;
-    
-    /**
-     * 
      * Values for the <head> block in the layout.
      * 
      * Keys are:
@@ -195,7 +175,7 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
         );
         
         if (! $allow) {
-            $this->errors[] = $this->locale('ERR_NOT_ALLOWED_ACCESS');
+            $this->_errors[] = $this->locale('ERR_NOT_ALLOWED_ACCESS');
             $this->_action = 'error';
         }
     }
@@ -211,42 +191,10 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     {
         parent::_preRender();
         
-        // let the view know what layout this is
-        $this->layout = $this->_layout;
-        
         // add an app-specific CSS file
         $tmp = explode('_', get_class($this));
         $vendor = $tmp[0];
         $this->layout_head['style'][] = "{$vendor}/styles/app/{$this->_controller}.css";
-    }
-    
-    /**
-     * 
-     * Shows a generic error page.
-     * 
-     * @return void
-     * 
-     */
-    public function actionError()
-    {
-        // no code needed, just dumps $this->errors via the 'error.php'
-        // view
-    }
-    
-    /**
-     * 
-     * Use this to set the action to "error" with a locale key to be
-     * translated.
-     * 
-     * @param string $locale_key The error-message locale key.
-     * 
-     * @return void
-     * 
-     */
-    protected function _error($locale_key)
-    {
-        $this->errors[] = $this->locale($locale_key);
-        return $this->_forward('error');
     }
     
     /**
@@ -264,49 +212,5 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
             array_unshift($this->_info, $this->_action);
             $this->_action = $this->_action_default;
         }
-    }
-    
-    /**
-     * 
-     * Shows the "error" page.
-     * 
-     * @param string $action The name of the not-found action.
-     * 
-     * @param array $params The params for the not-found action.
-     * 
-     * @return void
-     * 
-     */
-    protected function _notFound($action, $params)
-    {
-        $this->_response->setStatusCode(404);
-        $this->errors[] = $this->locale('ACTION_NOT_FOUND');
-        $this->errors[] = "Action: $action";
-        foreach ($params as $key => $val) {
-            $this->errors[] = "Param $key: $val";
-        }
-        return $this->_forward('error');
-    }
-    
-    /**
-     * 
-     * Shows the "exception during fetch" page.
-     * 
-     * @param Exception $e The exception encountered during fetch().
-     * 
-     * @return Solar_Response A response object with a 500 status code and
-     * a page describing the exception.
-     * 
-     */
-    protected function _exceptionDuringFetch(Exception $e)
-    {
-        $this->errors[] = $e;
-        $this->_layout = null;
-        $this->_view = 'exception';
-        $this->_format = null;
-        $this->_response->setStatusCode(500);
-        
-        $this->_render();
-        return $this->_response;
     }
 }

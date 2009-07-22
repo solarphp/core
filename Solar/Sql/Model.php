@@ -559,43 +559,15 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // main construction
         parent::__construct($config);
-        
-        // inflection reference
-        $this->_inflect = Solar_Registry::get('inflect');
-        
-        // our class name so that we don't call get_class() all the time
-        $this->_class = get_class($this);
-        
-        // get the catalog injection
-        $this->_catalog = Solar::dependency(
-            'Solar_Sql_Model_Catalog',
-            $this->_config['catalog']
-        );
-        
-        // connect to the database
-        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
+
+        // Establish the state of this object before _setup
+        $this->_preSetup();        
         
         // user-defined setup
         $this->_setup();
-    
-        // follow-on cleanup of critical user-defined values
-        $this->_fixStack();
-        $this->_fixTableName();
-        $this->_fixIndex();
-        $this->_fixTableCols(); // also creates table if needed
-        $this->_fixPrimaryCol();
-        $this->_fixModelName();
-        $this->_fixOrder();
-        $this->_fixPropertyCols();
-        $this->_fixCalculateCols();
-        $this->_fixFilters(); // including filter class
-        $this->_fixCache(); // including cache class
         
-        // create the cache object and set its model
-        $this->_cache = Solar::factory($this->_cache_class, array(
-            'cache'  => $this->_config['cache'],
-        ));
-        $this->_cache->setModel($this);
+        // Complete the setup of this model
+        $this->_postSetup();
     }
     
     /**
@@ -1377,9 +1349,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchNew($spec = null)
     {
+        $record = $this->_newRecord();
         $data   = $this->_fetchNewData($spec);
-        $record = $this->newRecord($data);
-        $record->setStatus('new');
+        $record->init($this, $data, Solar_Sql_Model_Record::STATUS_NEW);
         return $record;
     }
     
@@ -1426,13 +1398,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         // add Solar_Xml_Struct objects
         foreach ($this->_xmlstruct_cols as $key) {
             $data[$key] = Solar::factory($this->_xmlstruct_class);
-        }
-        
-        // set placeholders for relateds to prevent lazy loading
-        $names = array_keys($this->_related);
-        foreach ($names as $name) {
-            $related = $this->getRelated($name);
-            $data[$name] = $related->fetchEmpty();
         }
         
         // if we have inheritance, set that too
@@ -2093,11 +2058,11 @@ abstract class Solar_Sql_Model extends Solar_Base
 
             // don't work on empty cols
             if (empty($data[$key])) {
-                // Any empty value is canonicalized as NULL
+                // Any empty value is canonicalized as null
                 $data[$key] = null;
                 continue;
             }
-
+            
             $data[$key] = serialize($data[$key]);
             if (! $data[$key]) {
                 // serializing failed
@@ -2114,7 +2079,7 @@ abstract class Solar_Sql_Model extends Solar_Base
 
             // don't work on empty cols
             if (empty($data[$key])) {
-                // Any empty value is canonicalized as NULL
+                // Any empty value is canonicalized as null
                 $data[$key] = null;
                 continue;
             }
@@ -2155,7 +2120,7 @@ abstract class Solar_Sql_Model extends Solar_Base
 
             // only unserialize if a non-empty string
             if (empty($data[$key])) {
-                // Any empty value is canonicalized as NULL
+                // Any empty value is canonicalized as null
                 $data[$key] = null;
             } else {
                 if (is_string($data[$key])) {
@@ -2391,6 +2356,60 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         return $this->_related[$name];
     }
+
+    /**
+     * 
+     * Establish state of this object prior to _setup()
+     * 
+     * @return void
+     * 
+     */
+    protected function _preSetup()
+    {
+        // inflection reference
+        $this->_inflect = Solar_Registry::get('inflect');
+        
+        // our class name so that we don't call get_class() all the time
+        $this->_class = get_class($this);
+        
+        // get the catalog injection
+        $this->_catalog = Solar::dependency(
+            'Solar_Sql_Model_Catalog',
+            $this->_config['catalog']
+        );
+        
+        // connect to the database
+        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
+    }
+
+    /**
+     * 
+     * Complete the setup of this model
+     * 
+     * @return void
+     * 
+     */
+    protected function _postSetup()
+    {
+        // follow-on cleanup of critical user-defined values
+        $this->_fixStack();
+        $this->_fixTableName();
+        $this->_fixModelName();
+        $this->_fixIndex();
+        $this->_fixTableCols(); // also creates table if needed
+        $this->_fixPrimaryCol();
+        $this->_fixOrder();
+        $this->_fixPropertyCols();
+        $this->_fixCalculateCols();
+        $this->_fixFilters(); // including filter class
+        $this->_fixCache(); // including cache class
+        
+        // create the cache object and set its model
+        $this->_cache = Solar::factory($this->_cache_class, array(
+            'cache'  => $this->_config['cache'],
+        ));
+        $this->_cache->setModel($this);
+    }
     
     /**
      * 
@@ -2402,25 +2421,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _fixStack()
     {
         $this->_stack = Solar::factory('Solar_Class_Stack');
-        
-        // get the class parents and work from this class upwards
-        $parents = Solar_Class::parents($this->_class, true);
-        array_shift($parents); // Solar_Base
-        array_shift($parents); // Solar_Sql_Model
-        
-        // any time we change _Model prefixes, add New_Prefix_Model between.
-        // this helps with single-table-inheritance between prefixes,
-        // provided they use the *_Model naming convention.
-        $old = false;
-        foreach ($parents as $class) {
-            $pos = strpos($class, '_Model');
-            $new = substr($class, 0, $pos);
-            if ($new != $old) {
-                $this->_stack->add("{$new}_Model");
-            }
-            $this->_stack->add($class);
-            $old = $new;
-        }
+        $this->_stack->setByParents($this, 'Model');
     }
     
     /**

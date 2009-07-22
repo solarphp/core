@@ -81,6 +81,24 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     {
         $this->_table_alias = $table_alias;
     }
+
+    /**
+     *  Make sure eager options represent a valid query
+     */
+    protected function _validateEager($options)
+    {
+        if (!$options['require_related'] && $options['join_strategy'] == 'server') {
+            foreach ($options['eager'] as $name => $dependent_options) {
+                $options['eager'][$name] = $this->_validateEager($dependent_options);
+                if ($options['eager'][$name]['require_related']) {
+                    // Switch strategies.  Otherwise, the query we would build
+                    // would return incorrect results
+                    $options['join_strategy'] = 'client';
+                }
+            }
+        }
+        return $options;
+    }
     
     /**
      * 
@@ -112,6 +130,11 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
         if (!empty($this->_eager[$related]['require_related'])) {
             $options['require_related'] = true;
         }
+
+        $options = $this->_model->getRelated($related)->fixEagerOptions($options);
+
+        $options = $this->_validateEager($options);
+
         $this->_eager[$related] = $options;
     }
     

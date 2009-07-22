@@ -140,6 +140,8 @@ class Solar_Config
         } else {
             Solar_Config::$_store[$class][$key] = $val;
         }
+        
+        // Invalidate the build cache; this can make set a rather expensive method to call
         Solar_Config::$_build = array();
     }
     

@@ -81,7 +81,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
     {
         return $this->_foreign_model->newCollection($data);
     }
-    
+
     /**
      * 
      * Fetches foreign data as a record or collection object.
@@ -100,6 +100,11 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             throw $this->_exception('ERR_RELATED_SPEC', array(
                 'spec' => $record
             ));
+        }
+
+        // Determine from the record if we have a need to fetch
+        if ($this->_fetchShortCircuit($record)) {
+            return $this->fetchEmpty();
         }
         
         // inject parameters from our options
@@ -166,7 +171,6 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             return $target;
         }
         
-        $options = $this->_fixEagerOptions($options);
         $params = array('eager' => $options['eager']);
         
         // inject parameters from our options
@@ -181,8 +185,11 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             $this->_modSelectRelatedToSelect($dependent_select, $select, $this->native_alias, $parent_col);
         } else {
             // join using WHERE ... IN (...)
-            $collection = $this->newObject($target);
-            $this->_modSelectRelatedToCollection($dependent_select, $collection, $parent_col);
+            $keys = array();
+            foreach ($target as $record) {
+                $keys[] = $record[$this->native_col];
+            }
+            $this->_modSelectRelatedToKeys($dependent_select, $keys, $parent_col);
         }
         
         $result = $dependent_select->fetch('all');
@@ -210,8 +217,6 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         if (empty($target)) {
             return $target;
         }
-        
-        $options = $this->_fixEagerOptions($options);
         
         $params = array('eager' => $options['eager']);
         
@@ -250,9 +255,9 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
      */
     public function modSelectEager($select, $parent_alias, $options = array())
     {
-        $options = $this->_fixEagerOptions($options);
         if (!$options['require_related']) {
-            // for client side joins, we do not modify the select
+            // If we are not requiring related records, we do not
+            // Modify the parent query.
             return;
         }
         
@@ -276,7 +281,9 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         // the number of related rows (since we're not selecting cols).
         $select->distinct(true);
         
-        // don't chain because we're not fetching
+        // don't chain because we can't join Multiple records to a parent
+        // query without causing repeated records in the parent query that
+        // we have no way to deal with.
     }
     
     /**

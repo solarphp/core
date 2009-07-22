@@ -22,6 +22,22 @@ class Solar_Filter extends Solar_Base
 {
     /**
      * 
+     * User-defined configuration values.
+     * 
+     * Keys are:
+     * 
+     * `classes`
+     * : (array) Base class names for filters
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Filter = array(
+        'classes' => array(),
+    );
+    
+    /**
+     * 
      * The chain of filters to be applied to the data array.
      * 
      * Format is 'data_key' => array(), where the sub-array is a sequential
@@ -240,9 +256,8 @@ class Solar_Filter extends Solar_Base
      */
     public function setFilterClass($list = null)
     {
-        $parents = Solar_Class::parents($this, true);
-        array_shift($parents); // drops Solar_Base
-        $this->_stack->set($parents);
+        $this->_stack->setByParents($this);
+        $this->_stack->add($this->_config['classes']);
         $this->_stack->add($list);
     }
     

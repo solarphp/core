@@ -97,6 +97,59 @@ class Solar_Class_Stack extends Solar_Base
     
     /**
      * 
+     * Given a class or object, add itself and its parents to the stack, 
+     * optionally tracking cross-hierarchy shifts around a base name.
+     * 
+     * @param string|object $spec The class or object to find parents of.
+     * 
+     * @param string $base The infix base around which to track cross-
+     * hierarchy shifts.
+     * 
+     * @return void
+     * 
+     */
+    public function addByParents($spec, $base = null)
+    {
+        // get the list of parents; always skip Solar_Base
+        $parents = Solar_Class::parents($spec, true);
+        array_shift($parents);
+        
+        // if not tracking cross-hierarchy shifts, add parents as they are
+        if (! $base) {
+            $list = array_reverse($parents);
+            return $this->add($list);
+        }
+        
+        // track cross-hierarchy shifts in class names. any time we change
+        // "*_Base" prefixes, insert "New_Prefix_Base" into the stack.
+        $old = null;
+        foreach ($parents as $class) {
+            
+            $pos = strpos($class, "_$base");
+            $new = substr($class, 0, $pos);
+            
+            // check to see if we crossed vendors or hierarchies
+            if ($new != $old) {
+                $cross = "{$new}_{$base}";
+                $this->add($cross);
+            } else {
+                $cross = null;
+            }
+            
+            // prevent double-adds where the cross-hierarchy class name ends
+            // up being the same as the current class name
+            if ($cross != $class) {
+                // not the same, add the current class name
+                $this->add($class);
+            }
+            
+            // retain old prefix for next loop
+            $old = $new;
+        }
+    }
+    
+    /**
+     * 
      * Clears the stack and adds one or more classes.
      * 
      * {{code: php
@@ -123,6 +176,25 @@ class Solar_Class_Stack extends Solar_Base
     {
         $this->_stack = array();
         return $this->add($list);
+    }
+    
+    /**
+     * 
+     * Given a class or object, set the stack based on itself and its parents,
+     * optionally tracking cross-hierarchy shifts around a base name.
+     * 
+     * @param string|object $spec The class or object to find parents of.
+     * 
+     * @param string $base The infix base around which to track cross-
+     * hierarchy shifts.
+     * 
+     * @return void
+     * 
+     */
+    public function setByParents($spec, $base = null)
+    {
+        $this->_stack = array();
+        $this->addByParents($spec, $base);
     }
     
     /**

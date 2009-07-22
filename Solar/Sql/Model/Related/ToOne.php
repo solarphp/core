@@ -86,7 +86,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
     {
         return $this->_foreign_model->fetchNew($data);
     }
-    
+
     /**
      * 
      * Fetches foreign data as a record or collection object.
@@ -105,6 +105,11 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
             throw $this->_exception('ERR_RELATED_SPEC', array(
                 'spec' => $record
             ));
+        }
+
+        // Determine from the record if we have a need to fetch
+        if ($this->_fetchShortCircuit($record)) {
+            return $this->fetchEmpty();
         }
         
         // inject parameters from our options
@@ -258,7 +263,6 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         if (empty($target)) {
             return $target;
         }
-        $options = $this->_fixEagerOptions($options);
         $count = count($target);
         
         if ($options['join_strategy'] == 'server' || $options['require_related']) {
@@ -294,8 +298,11 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
                 $this->_modSelectRelatedToSelect($dependent_select, $select, $this->native_alias);
             } else {
                 // join using WHERE ... IN (...)
-                $collection = $this->newObject($target);
-                $this->_modSelectRelatedToCollection($dependent_select, $collection);
+                $keys = array();
+                foreach ($target as $record) {
+                    $keys[] = $record[$this->native_col];
+                }
+                $this->_modSelectRelatedToKeys($dependent_select, $keys);
             }
     
             $result = $dependent_select->fetch('all');
@@ -327,8 +334,6 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         if (empty($target)) {
             return $target;
         }
-        
-        $options = $this->_fixEagerOptions($options);
         
         if ($options['join_strategy'] == 'server' || $options['require_related']) {
         
@@ -383,7 +388,6 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
      */
     public function modSelectEager($select, $parent_alias, $options = array())
     {
-        $options = $this->_fixEagerOptions($options);
         if ($options['join_strategy'] !== 'server'  && !$options['require_related']) {
             // for client side joins, we do not modify the select
             return;

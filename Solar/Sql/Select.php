@@ -359,11 +359,7 @@ class Solar_Sql_Select extends Solar_Base
      */
     public function fromSelect($spec, $name, $cols = '*')
     {
-        // the $spec may be a select object, or a string
-        if ($spec instanceof self) {
-            // get the select object as a string.
-            $spec = $spec->__toString();
-        }
+        $spec = $this->_prepareSubSelect($spec);
         
         // save in the sources list, overwriting previous values
         $this->_addSource(
@@ -421,6 +417,30 @@ class Solar_Sql_Select extends Solar_Base
     
     /**
      * 
+     * Adds a LEFT JOIN sub-select and columns to the query.
+     * 
+     * @param string|Solar_Sql_Select $spec If a Solar_Sql_Select
+     * object, use as the sub-select; if a string, the sub-select
+     * command string.
+     * 
+     * @param string $name The alias name for the sub-select.
+     * 
+     * @param string $cond Join on this condition.
+     * 
+     * @param array|string $cols The columns to select from the joined table.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function leftJoinSelect($spec, $name, $cond, $cols = null)
+    {
+        $spec = $this->_prepareSubSelect($spec);
+        $this->_join('LEFT', "($spec) AS $name", $cond, $cols);
+        return $this;
+    }
+    
+    /**
+     * 
      * Adds an INNER JOIN table and columns to the query.
      * 
      * @param string|object $spec If a Solar_Sql_Model object, the table
@@ -437,6 +457,58 @@ class Solar_Sql_Select extends Solar_Base
     {
         $this->_join('INNER', $spec, $cond, $cols);
         return $this;
+    }
+    
+    /**
+     * 
+     * Adds an INNER JOIN sub-select and columns to the query.
+     * 
+     * @param string|Solar_Sql_Select $spec If a Solar_Sql_Select
+     * object, use as the sub-select; if a string, the sub-select
+     * command string.
+     * 
+     * @param string $name The alias name for the sub-select.
+     * 
+     * @param string $cond Join on this condition.
+     * 
+     * @param array|string $cols The columns to select from the joined table.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function innerJoinSelect($spec, $name, $cond, $cols = null)
+    {
+        $spec = $this->_prepareSubSelect($spec);
+        $this->_join('INNER', "($spec) AS $name", $cond, $cols);
+        return $this;
+    }
+    
+    /**
+     * 
+     * Prepares a select statement for use as a sub-select; returns strings
+     * as they are, but converts Solar_Sql_Select objects to strings after
+     * merging bind values.
+     * 
+     * @param string|Solar_Sql_Select The select to prepare as a sub-select.
+     * 
+     * @return string
+     * 
+     */
+    protected function _prepareSubSelect($spec)
+    {
+        if ($spec instanceof self) {
+            // merge bound values, otherwise they won't follow through to
+            // the sub-select
+            if ($spec->_bind) {
+                $this->_bind = array_merge($this->_bind, $spec->_bind);
+            }
+        
+            // get the select object as a string.
+            return $spec->__toString();
+            
+        } else {
+            return $spec;
+        }
     }
     
     /**
@@ -1017,7 +1089,7 @@ class Solar_Sql_Select extends Solar_Base
             $this->_bind = array_merge($this->_bind, $key);
         } elseif (is_object($key)) {
             $this->_bind = array_merge((array) $this->_bind, $key);
-        } else {
+        } elseif (! empty($key)) {
             $this->_bind[$key] = $val;
         }
         
@@ -1848,8 +1920,8 @@ class Solar_Sql_Select extends Solar_Base
             $parts['from'][] = $this->_sql->quoteName($name);
         } else {
             $parts['from'][] = $this->_sql->quoteName($orig)
-                                    . ' '
-                                    . $this->_sql->quoteName($name);
+                             . ' '
+                             . $this->_sql->quoteName($name);
         }
     }
     

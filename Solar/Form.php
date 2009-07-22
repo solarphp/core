@@ -41,6 +41,7 @@ class Solar_Form extends Solar_Base
      * 
      */
     protected $_Solar_Form = array(
+        'request' => 'request',
         'filter'  => null,
         'success' => null,
         'failure' => null,
@@ -229,7 +230,7 @@ class Solar_Form extends Solar_Base
      * 
      * Constructor.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)
@@ -238,11 +239,27 @@ class Solar_Form extends Solar_Base
         $this->_Solar_Form['success'] = $this->locale('SUCCESS_FORM');
         $this->_Solar_Form['failure'] = $this->locale('FAILURE_FORM');
         
-        // "real" contruction
+        // "real" contruction, which incidentally calls _postConfig()
         parent::__construct($config);
         
+        // reset all the properties based on config now
+        $this->reset();
+    }
+    
+    /**
+     * 
+     * Complete configuration before parent calls reset().
+     * 
+     * @return void
+     * 
+     */
+    public function _postConfig()
+    {
         // request environment
-        $this->_request = Solar_Registry::get('request');
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
         
         // filter object
         $this->_filter = Solar::dependency(
@@ -259,9 +276,6 @@ class Solar_Form extends Solar_Base
             $this->_default_attribs,
             $this->_config['attribs']
         );
-        
-        // reset all the properties based on config now
-        $this->reset();
     }
     
     // -----------------------------------------------------------------
@@ -328,6 +342,49 @@ class Solar_Form extends Solar_Base
         foreach ($list as $name => $info) {
             $this->setElement($name, $info, $array);
         }
+    }
+    
+    /**
+     * 
+     * Gets multiple elements from this form.
+     * 
+     * @param string|array $spec If a string, return all elements with that
+     * prefix (i.e., all elements in an array).  If an array, return that
+     * specific list of elements.  If empty, return all elements.
+     * 
+     * @return array
+     * 
+     */
+    public function getElements($spec = null)
+    {
+        // pre-emptively return all elements when there's no spec
+        if (! $spec) {
+            return $this->elements;
+        }
+        
+        // the elements to return
+        $list = array();
+        
+        // return only specific element names?
+        if (is_array($spec)) {
+            foreach ($spec as $name) {
+                if (! empty($this->elements[$name])) {
+                    $list[$name] = $this->elements[$name];
+                }
+            }
+        }
+        
+        // return all elements of a specific array-name?
+        if (is_string($spec)) {
+            foreach($this->elements as $name => $info) {
+                if (strpos($name, $spec . '[') === 0) {
+                    $list[$name] = $info;
+                }
+            }
+        }
+        
+        // done!
+        return $list;
     }
     
     /**
@@ -483,7 +540,8 @@ class Solar_Form extends Solar_Base
     /**
      * 
      * Adds one or more invalid message to an element, sets the element status
-     * to false (invalid), and sets the form status to false (invalid).
+     * to false (invalid), and sets the form status to false (invalid); if the
+     * element does not exist, adds the message as form-level feedback.
      * 
      * @param string $name The element name.
      * 
@@ -496,19 +554,30 @@ class Solar_Form extends Solar_Base
      */
     public function addInvalid($name, $spec, $array = null)
     {
-        // make sure the element exists
+        // prepare the name as an array key
         $name = $this->_prepareName($name, $array);
+        
+        // does the element exist?
         if (empty($this->elements[$name])) {
-            return;
+            
+            // no; add as messages as feedback on the form as a whole
+            foreach ((array) $spec as $text) {
+                $this->feedback[] = "$name: $text";
+            }
+            
+        } else {
+            
+            // yes, add messages to the element itself
+            foreach ((array) $spec as $text) {
+                $this->elements[$name]['invalid'][] = $text;
+            }
+            
+            // mark the status of the element
+            $this->elements[$name]['status'] = false;
+            
         }
         
-        // add the messages
-        foreach ((array) $spec as $text) {
-            $this->elements[$name]['invalid'][] = $text;
-        }
-    
-        // mark the status of the element, and of the form
-        $this->elements[$name]['status'] = false;
+        // mark the status of the form as a whole
         $this->setStatus(false);
     }
     
@@ -694,19 +763,12 @@ class Solar_Form extends Solar_Base
             // set the filters and require-flag, reference not needed
             $this->_filter->addChainFilters($name, $info['filters']);
             $this->_filter->setChainRequire($name, $info['require']);
-            
         }
         
         // apply the filter chain to the data, which will modify the 
         // element data in place because of the references
-        $this->_status = $this->_filter->applyChain($data);
-        
-        // set the main feedback message
-        if ($this->_status) {
-            $this->feedback = array($this->_config['success']);
-        } else {
-            $this->feedback = array($this->_config['failure']);
-        }
+        $status = $this->_filter->applyChain($data);
+        $this->setStatus($status);
         
         // retain any invalidation messages
         $invalid = $this->_filter->getChainInvalid();
@@ -782,7 +844,7 @@ class Solar_Form extends Solar_Base
     {
         $this->attribs    = $this->_config['attribs'];
         $this->elements   = array();
-        $this->feedback   = null;
+        $this->feedback   = array();
         $this->_filters   = array();
         $this->_submitted = null;
     }
@@ -801,16 +863,27 @@ class Solar_Form extends Solar_Base
      */
     public function setStatus($flag)
     {
-        $this->feedback = array();
+        // normalize the flag to be true, false, or null
+        if ($flag !== null) {
+            $flag = (bool) $flag;
+        }
+        
+        // no operation if status does not change
+        if ($this->_status === $flag) {
+            return;
+        }
+
+        // reset feedback when we change from one status to another
         if ($flag === null) {
-            $this->_status = null;
-        } elseif ((bool) $flag) {
-            $this->_status = true;
+            $this->feedback = array();
+        } elseif ($flag) {
             $this->feedback = array($this->_config['success']);
         } else {
-            $this->_status = false;
             $this->feedback = array($this->_config['failure']);
         }
+        
+        // set the status to the new value
+        $this->_status = $flag;
     }
     
     /**
@@ -885,17 +958,31 @@ class Solar_Form extends Solar_Base
         // we don't call reset() because there are
         // sure to be cases when you need to load()
         // more than once to get a full form.
-        // 
+        $this->_load($info);
+    }
+    
+    /**
+     * 
+     * Adds attribs and elements from the loader results into this form.
+     * 
+     * @param array $info Attribs and elements info.
+     * 
+     * @return void
+     * 
+     */
+    protected function _load($info)
+    {
         // merge the loaded attribs onto the current ones.
         $this->attribs = array_merge(
             $this->attribs,
             $info['attribs']
         );
         
-        // add elements, overwriting existing ones (no way
-        // around this, I'm afraid).
+        // add elements, overwriting existing ones with the same names
+        // (no way around this, I'm afraid).
         $this->setElements($info['elements']);
     }
+    
     
     // -----------------------------------------------------------------
     //

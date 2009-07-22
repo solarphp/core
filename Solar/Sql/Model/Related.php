@@ -17,7 +17,7 @@
  * 
  */
 abstract class Solar_Sql_Model_Related extends Solar_Base {
-    
+
     /**
      * 
      * The name of the relationship as defined by the original (native) model.
@@ -379,12 +379,34 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      * Normalizes a set of eager options.
      * 
+     * `eager`
+     * : (string|array) Allows nested eager specifications.
+     * 
+     * `require_related`
+     * : (bool) require that a related record exists in the dependant
+     *   for every record in the master query.
+     * 
+     * `where`
+     * : (string|array) a set of conditions on the dependant object
+     *   that must be satisfied in order to include that record in
+     *   the master query.
+     * 
+     * `join_strategy`
+     * : (string) An optimization hint that indicates whether to perform
+     *   joins on the client (in php) or on the server (in sql).
+     *
+     * `fromselect_threshold`
+     * : (string) An optimization hint that indicates a number of records.
+     *   When joining a against a number of records smaller than the 
+     *   threshold, a sql IN (value1, value2, ...) construct is used,
+     *   otherwise a join is used.
+     *
      * @param array $options Set of options controlling eager fetching
      * 
      * @return array A normalized set of clause params.
      * 
      */
-    protected function _fixEagerOptions($options)
+    public function fixEagerOptions($options)
     {
         $params = array();
         if (!empty($options['eager'])) {
@@ -401,7 +423,13 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         } else {
             $eager = array();
         }
-        $options['eager'] = $this->_foreign_model->modEagerOptions($eager);
+        $eager = $this->_foreign_model->modEagerOptions($eager);
+
+        $options['eager'] = array();
+        foreach($eager as $name => $dependent_options) {
+            $related = $this->_foreign_model->getRelated($name);
+            $options['eager'][$name] = $related->fixEagerOptions($dependent_options);
+        }
         
         if (isset($options['fromselect_threshold'])) {
             $options['fromselect_threshold'] = (int) $options['fromselect_threshold'];
@@ -521,7 +549,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      * Fetches foreign data as a record or collection object.
      * 
-     * @param Solar_Sql_Model_Record $spec The specification for the
+     * @param Solar_Sql_Model_Record $record The specification for the
      * native selection.  Uses the primary key from that record.
      * 
      * @param array $params An array of SELECT parameters.
@@ -530,7 +558,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * collection object.
      * 
      */
-    abstract public function fetch($spec, $params = array());
+    abstract public function fetch($record, $params = array());
     
     /**
      * 
@@ -546,6 +574,30 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract public function joinAll($target, $select, $options = array());
+
+    /**
+     * 
+     * Determine if a fetch for a related record can be satisfied
+     * Simply from the record definition without a trip to the DB
+     * 
+     * @param Solar_Sql_Model_Record $record The specification for the
+     * native selection.  Uses the primary key from that record.
+     * 
+     * @return bool
+     * 
+     */
+    protected function _fetchShortCircuit($record)
+    {
+        // If the column we need is not set, there cannot be a relationship
+        if (!isset($record[$this->native_col])) {
+            return TRUE;
+        }
+        // If the column we need is not set, there cannot be a relationship
+        if ($record[$this->native_col] == NULL) {
+            return TRUE;
+        }
+        return FALSE;
+    }
     
     /**
      * 
@@ -583,11 +635,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * @return void
      * 
      */
-    protected function _modSelectRelatedToCollection($select, $spec, $parent_col = NULL)
+    protected function _modSelectRelatedToKeys($select, $keys, $parent_col = NULL)
     {
-        // Restrict to the set of IDs in the driving collection
-        $keys = $spec->getPrimaryVals($this->native_col);
-        
         // be nice and only use unique values
         $keys = array_unique($keys);
         
@@ -648,8 +697,6 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $primary_col = "{$parent_alias}.{$this->native_col} AS {$this->native_col}";
         $clone->cols($primary_col);
         
-        $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
-        
         // Condition to join on        
         $cond = "{$this->foreign_alias}.{$this->foreign_col} = {$parent_alias}.{$this->native_col}";
         
@@ -660,11 +707,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             $col = NULL;
         }
         
-        $select->innerJoin(
-            "($inner) AS {$parent_alias}",
-            $cond,
-            $col
-        );
+        $select->innerJoinSelect($clone, $parent_alias, $cond, $col);
     }
     
     /**

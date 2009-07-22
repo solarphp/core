@@ -87,6 +87,15 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      */
     protected $_status = self::STATUS_CLEAN;
+
+    /**
+     * 
+     * Indicates if this record is valid or not.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_valid = TRUE;
     
     /**
      * 
@@ -175,9 +184,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function __set($key, $val)
     {
-        // keep track if this is a "new" record
-        $is_new = $this->getStatus() == self::STATUS_NEW;
-        
         // if an accessor method exists, use it
         if (! empty($this->_access_methods[$key]['set'])) {
             // use accessor method. will mark the record and its parents
@@ -188,13 +194,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
             // no accessor method; use parent method. will mark the record
             // and its parents as dirty.
             parent::__set($key, $val);
-        }
-        
-        // setting values will mark the record as 'dirty' -- but 'new' is a
-        // special case that we have to allow for.
-        if ($is_new) {
-            // reset self back to new.
-            $this->_status = self::STATUS_NEW;
         }
     }
     
@@ -592,7 +591,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 
                 // note that we're not invalid, exactly, but that we
                 // rolled back.
-                $this->_status = self::STATUS_ROLLBACK;
+                $this->setStatus(self::STATUS_ROLLBACK);
                 return false;
             }
             
@@ -616,7 +615,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             
             // set as invalid and force the record status afterwards
             $this->setInvalid('*', $text);
-            $this->_status = self::STATUS_ROLLBACK;
+            $this->setStatus(self::STATUS_ROLLBACK);
             
             // done
             return false;
@@ -635,8 +634,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     protected function _save()
     {
-        // only save if we're not clean
-        if ($this->_status != self::STATUS_CLEAN) {
+        // only save if need to
+        if ($this->isDirty() || $this->isNew()) {
         
             // pre-save routine
             $this->_preSave();
@@ -651,7 +650,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             }
             
             // insert or update based on current status
-            if ($this->_status == self::STATUS_NEW) {
+            if ($this->isNew()) {
                 $this->_insert();
             } else {
                 $this->_update();
@@ -718,7 +717,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // if there is an autoinc column, set its value
         foreach ($this->_model->table_cols as $col => $info) {
-            if ($info['autoinc']) {
+            if ($info['autoinc'] && empty($this->_data[$col])) {
                 // set the value ...
                 $this->_data[$col] = $id;
                 // ... and skip all other cols
@@ -962,13 +961,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // pre-hook
         $this->_preSaveRelated();
         
-        // retain current status, because saving relateds will change status
-        // on their parents (i.e., this record).
-        $status = $this->_status;
-        
-        // keep track if any of the relateds were invalid
-        $is_invalid = false;
-        
         // save each related
         $list = array_keys($this->_model->related);
         foreach ($list as $name) {
@@ -983,17 +975,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 // only retain invalidity; don't retain validity, because
                 // later valids might overwrite earlier invalids.
                 if ($related->isInvalid($this)) {
-                    $is_invalid = true;
+                    $this->setStatus(self::STATUS_INVALID);
                 }
             }
-        }
-        
-        // was any related invalid?
-        if ($is_invalid) {
-            $this->setStatus(self::STATUS_INVALID);
-        } else {
-            // reset to original status
-            $this->setStatus($status);
         }
         
         // post-hook
@@ -1031,6 +1015,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function delete()
     {
+        if ($this->isNew()) {
+            throw $this->_exception("ERR_CANNOT_DELETE_NEW_RECORD");
+        }
         $this->_checkDeleted();
         $this->_preDelete();
         $primary = $this->getPrimaryCol();
@@ -1077,6 +1064,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function refresh($status = null)
     {
+        if ($this->isNew()) {
+            throw $this->_exception("ERR_CANNOT_REFRESH_NEW_RECORD");
+        }
+
         $id = $this->getPrimaryVal();
         if (! $id) {
             throw $this->_exception("ERR_CANNOT_REFRESH_BLANK_ID");
@@ -1126,6 +1117,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function increment($col, $amt = 1)
     {
+
+        if ($this->isNew()) {
+            throw $this->_exception("ERR_CANNOT_INCREMENT_NEW_RECORD");
+        }
+
         // make sure the column exists
         if (! array_key_exists($col, $this->_model->table_cols)) {
             throw $this->_exception('ERR_NO_SUCH_COLUMN', array(
@@ -1379,25 +1375,35 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     protected function _getInvalid()
     {
-        $list = array();
-        foreach ($this->_data as $key => $val) {
-            
-            // record or collection object?
-            $is_object = $val instanceof Solar_Sql_Model_Record
-                      || $val instanceof Solar_Sql_Model_Collection;
-            
-            if ($is_object && $val->isInvalid()) {
-                $list[$key] = $val->getInvalid();
+        // Start with the invalids we've collected for this record
+        $list = $this->_invalid;
+        
+        $relateds = array_keys($this->_model->related);
+        foreach ($relateds as $name) {
+            // Skip relateds that are not instantiated
+            // or that are NULL or array()
+            if (!isset($this->_data[$name])) {
                 continue;
             }
             
-            // normal value
-            if (! empty($this->_invalid[$key])) {
-                $list[$key] = $this->_invalid[$key];
+            // Prevent infinite recursion
+            $related = $this->_model->getRelated($name);
+            if ($related instanceof Solar_Sql_Model_Related_BelongsTo) {
                 continue;
+            }
+            
+            $val = $this->_data[$name];
+
+            // Only check actual related objects
+            if (!is_object($val)) {
+                continue;
+            }
+
+            // Copy any invalid data from related items            
+            if ($val->isInvalid()) {
+                $list[$name] = $val->getInvalid();
             }
         }
-        
         // done!
         return $list;
     }
@@ -1407,6 +1413,34 @@ class Solar_Sql_Model_Record extends Solar_Struct
     // Record status
     //
     // -----------------------------------------------------------------
+
+    /**
+     * 
+     * Is the record new?
+     * 
+     * @return bool
+     * 
+     */
+    public function isNew()
+    {
+        return $this->_status == self::STATUS_NEW;
+    }
+
+    /**
+     * 
+     * Returns the status (clean/dirty/etc) of the struct.
+     * 
+     * @return string The status value.
+     * 
+     */
+    public function getStatus()
+    {
+        if (!$this->_is_valid) {
+            // Force the status to INVALID when the record is marked invalid
+            return self::STATUS_INVALID;
+        }
+        return $this->_status;
+    }
     
     /**
      * 
@@ -1419,21 +1453,41 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function setStatus($status)
     {
-        $dirty_new = $status == self::STATUS_DIRTY
-                  && $this->_status == self::STATUS_NEW;
-        
-        if ($dirty_new) {
-            // new records cannot be dirty
+    
+        if ($status == self::STATUS_INVALID) {
+            // Set to be invalid, but otherwise leave prior status
+            $this->_is_valid = FALSE;
             return;
+        }
+
+        // if we're not actually changing the status, jump out early
+        if ($status == $this->_status) {
+            return;
+        }
+
+        if ($this->_status == self::STATUS_NEW) {
+            if ($status == self::STATUS_DIRTY) {
+                // new records cannot be made dirty
+                return;
+            }
+            if ($status != self::STATUS_INSERTED) {
+                // new records cannot transition into anything but inserted
+                throw $this->_exception('ERR_INVALID_STATUS_CHANGE', array(
+                    'old_status'=> $this->_status, 'new_status'=> $status));
+            }
+        }
+
+        if ($status == self::STATUS_NEW) {
+            // Sorry, you can only make a record be new via init()
+            throw $this->_exception('ERR_INVALID_STATUS_CHANGE', array(
+                'old_status'=> $this->_status, 'new_status'=> $status));
         }
         
         // set the new status
         $this->_status = $status;
         
         // should we reset initial data?
-        $reset = $this->_status != self::STATUS_DIRTY
-              && $this->_status != self::STATUS_INVALID;
-              
+        $reset = $this->_status != self::STATUS_DIRTY && !$this->isInvalid();
         if ($reset) {
             
             // reset the initial data for table columns
@@ -1527,7 +1581,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function isInvalid()
     {
-        return $this->_status == self::STATUS_INVALID;
+        return !$this->_is_valid || $this->_status == self::STATUS_ROLLBACK;
     }
     
     /**
@@ -1575,7 +1629,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     protected function _checkDeleted()
     {
-        if ($this->_status == self::STATUS_DELETED) {
+        if ($this->isDeleted()) {
             throw $this->_exception('ERR_DELETED');
         }
     }
@@ -1618,7 +1672,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $form->addInvalids($this->_invalid, $array_name);
         
         // set the form status
-        switch ($this->_status) {
+        switch ($this->getStatus()) {
         case self::STATUS_INVALID:
         case self::STATUS_ROLLBACK:
             $form->setStatus(false);
@@ -1626,24 +1680,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
         case self::STATUS_INSERTED:
         case self::STATUS_UPDATED:
         case self::STATUS_UNCHANGED:
-            $form->setStatus(true);
-            break;
-        }
-        
-        // if a column is invalid, and an element for it does not exist in the
-        // form, add the invalidation message as feedback on the form as a 
-        // whole.  this helps you track down errors on columns that prevented
-        // a save but were not part of the form, like IDs.
-        foreach ($this->_invalid as $key => $val) {
-            // the element name in the form
-            $elem_name = $array_name . "[$key]";
-            // is the column invalid, but not in the form?
-            if ($this->_invalid[$key] && empty($form->elements[$elem_name])) {
-                // add the invalidation messages as feedback
-                foreach ((array) $this->_invalid[$key] as $text) {
-                    $form->feedback[] = "$elem_name: $text";
-                }
+            // set the form status to true, but only if the form hasn't been 
+            // otherwise validated; we don't want to change already invalid 
+            // forms into valid forms.
+            if ($form->getStatus() === null) {
+                $form->setStatus(true);
             }
+            break;
         }
         
         return $form;

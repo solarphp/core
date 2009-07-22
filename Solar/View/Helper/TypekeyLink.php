@@ -41,7 +41,7 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper
      */
     protected $_Solar_View_Helper_TypekeyLink = array(
         'token'      => null,
-        'href'       => "https://www.typekey.com:443/t/typekey/login",
+        'href'       => "https://www.typekey.com/t/typekey/login",
         'need_email' => false,
         'process_key' => 'process',
     );
@@ -52,10 +52,12 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper
      * 
      * @param string $text The text to display for the link.
      * 
+     * @param array $attribs Attributes for the anchor.
+     * 
      * @return string
      * 
      */
-    public function typekeyLink($text = null)
+    public function typekeyLink($text = null, $attribs = null)
     {
         // get a URI processor; defaults to the current URI.
         $uri = Solar::factory('Solar_Uri');
@@ -86,7 +88,12 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper
         // add the return location
         $uri->query['_return'] = $return;
         
+        if (empty($text)) {
+            // Preserve behavior of returning only the link if no text is passed.
+            return $uri->get(true);
+        }
+        
         // done!
-        return $this->_view->anchor($uri->get(true), $text);
+        return $this->_view->anchor($uri->get(true), $text, $attribs);
     }
 }

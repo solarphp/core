@@ -327,6 +327,18 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         return $this->_status;
     }
+
+    /**
+     * 
+     * Has this structure been changed?
+     * 
+     * @return bool
+     * 
+     */
+    public function isDirty()
+    {
+        return $this->_status == self::STATUS_DIRTY;
+    }
     
     /**
      * 

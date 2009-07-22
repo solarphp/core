@@ -113,12 +113,9 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      * @return void
      * 
      */
-    protected function _modSelectRelatedToCollection($select, $spec, $parent_col = NULL)
+    protected function _modSelectRelatedToKeys($select, $keys, $parent_col = NULL)
     {
         $this->_modSelectAddThrough($select, $parent_col);
-        
-        // Restrict to the set of IDs in the driving collection
-        $keys = $spec->getPrimaryVals($this->native_col);
         
         // be nice and only use unique values
         $keys = array_unique($keys);
@@ -177,11 +174,10 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         $primary_col = "{$parent_alias}.{$this->native_col} AS {$this->native_col}";
         $clone->cols($primary_col);
         
-        $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
-        
         // add the native table ID at the top through a join
-        $select->innerJoin(
-            "($inner) AS {$parent_alias}",
+        $select->innerJoinSelect(
+            $clone,
+            $parent_alias,
             "{$this->through_alias}.{$this->through_native_col} = {$parent_alias}.{$this->native_col}"
         );
     }
@@ -207,9 +203,9 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      */
     public function modSelectEager($select, $parent_alias, $options = array())
     {
-        $options = $this->_fixEagerOptions($options);
         if (!$options['require_related']) {
-            // for client side joins, we do not modify the select
+            // If we are not requiring related records, we do not
+            // Modify the parent query.
             return;
         }
         
@@ -234,7 +230,9 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         // the number of related rows (since we're not selecting cols).
         $select->distinct(true);
         
-        // don't chain because we're not fetching
+        // don't chain because we can't join Multiple records to a parent
+        // query without causing repeated records in the parent query that
+        // we have no way to deal with.
     }
     
     /**
@@ -262,7 +260,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             $join_col = NULL;
         }
         
-        $select->leftJoin($join_table, $join_where, $join_col);
+        $select->innerJoin($join_table, $join_where, $join_col);
     }
     
     /**

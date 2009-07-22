@@ -20,6 +20,8 @@ return array(
     'FORMAT_LANGUAGE'            => 'English',
     'FORMAT_COUNTRY'             => 'United States',
     'FORMAT_CURRENCY'            => '$%s', // printf()
+    'FORMAT_DEC_POINT'           => '.', // number_format
+    'FORMAT_THOUSANDS_SEP'       => ',', // number_format
     'FORMAT_DATE'                => '%b %d, %Y', // strftime(): Mar 19, 2005
     'FORMAT_TIME'                => '%r', // strftime: 12-hour am/pm
     

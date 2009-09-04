@@ -120,7 +120,8 @@ class Solar_Dir extends Solar_Base
     
     /**
      * 
-     * Returns the OS-specific directory for temporary files.
+     * Returns the OS-specific directory for temporary files; uses the Solar
+     * `$system/tmp` directory when available.
      * 
      * @param string $sub Add this subdirectory to the returned temporary
      * directory name.
@@ -134,7 +135,9 @@ class Solar_Dir extends Solar_Base
         if (! Solar_Dir::$_tmp) {
             
             // use the system if we can
-            if (function_exists('sys_get_temp_dir')) {
+            if (Solar::$system) {
+                $tmp = "$system/tmp";
+            } elseif (function_exists('sys_get_temp_dir')) {
                 $tmp = sys_get_temp_dir();
             } else {
                 $tmp = Solar_Dir::_tmp();

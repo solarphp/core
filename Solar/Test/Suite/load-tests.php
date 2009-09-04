@@ -1,14 +1,14 @@
 <?php
 function __autoload($class) {
     $class_file = str_replace('_', DIRECTORY_SEPARATOR, $class) . ".php";
-    require_once $class_file;
+    include_once $class_file;
 }
 
 function solar_load_test_files($dir)
 {
     $list = glob($dir . DIRECTORY_SEPARATOR . "[A-Z]*.php");
     foreach ($list as $class_file) {
-        require_once $class_file;
+        include_once $class_file;
     }
     
     $list = glob($dir . DIRECTORY_SEPARATOR . "[A-Z]*", GLOB_ONLYDIR);

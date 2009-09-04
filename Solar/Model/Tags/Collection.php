@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Model_Tags_Collection extends Solar_Model_Collection {
+class Solar_Model_Tags_Collection extends Solar_Sql_Model_Collection {
     
     /**
      * 

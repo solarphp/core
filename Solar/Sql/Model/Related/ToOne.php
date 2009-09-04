@@ -89,358 +89,10 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
 
     /**
      * 
-     * Fetches foreign data as a record or collection object.
-     * 
-     * @param Solar_Sql_Model_Record $record The specification for the
-     * native selection.  Uses the primary key from that record.
-     * 
-     * @param array $params An array of SELECT parameters.
-     * 
-     * @return Solar_Sql_Model_Record A record  
-     * 
-     */
-    public function fetch($record, $params = array())
-    {
-        if (! ($record instanceof Solar_Sql_Model_Record)) {
-            throw $this->_exception('ERR_RELATED_SPEC', array(
-                'spec' => $record
-            ));
-        }
-
-        // Determine from the record if we have a need to fetch
-        if ($this->_fetchShortCircuit($record)) {
-            return $this->fetchEmpty();
-        }
-        
-        // inject parameters from our options
-        $params = $this->_mergeSelectParams($params);
-        
-        // get a select object for the related rows
-        $select = $this->_foreign_model->newSelect($params);
-        
-        // modify the select per-relationship.
-        $this->_modSelectRelatedToRecord($select, $record);
-        
-        // fetch data and return
-        $data = $select->fetch('one');
-        if (empty($data)) {
-            return $this->fetchEmpty();
-        } else {
-            return $this->newObject($data);
-        }
-    }
-    
-    /**
-     * Convert a result array into an indexed result based on a 
-     * primary key
-     *
-     * @param array $result The result array.
-     *
-     * @param string $primary The primary key.
-     * 
-     * @return array An associative list of records.
-     */
-    protected function _indexResult($result, $primary)
-    {
-        // Create an index of our dependent data
-        $index = array();
-        foreach ($result as $val) {
-            $index[$val[$primary]] = $val;
-        }
-        return $index;
-    }
-    
-    /**
-     * 
-     * Extracts dependent to-one records from a single row.
-     * 
-     * Essentially, in to-one server joins, this pulls out the columns in
-     * the row that were joined from another table.
-     * 
-     * @param array &$target The array row from which we are extracting the 
-     * dependent row.
-     * 
-     * @return array The dependent record data.
-     * 
-     */
-    protected function _extractDependentOne(&$target)
-    {
-        $prefix = $this->name . '__';
-        $prefix_len = strlen($prefix);
-        
-        // Don't bother if our dependent record is not represented
-        $test_key = $prefix . $this->foreign_primary_col;
-        if (empty($target[$test_key])) {
-            // Remove columns for non-existant ToOne Record
-            foreach ($target as $key => $val) {
-                if (strncmp($key, $prefix, $prefix_len) === 0) {
-                    unset($target[$key]);
-                }
-            }
-            return null;
-        }
-        
-        // Extract a record
-        $result = array();
-        foreach ($target as $key => $val) {
-            if (strncmp($key, $prefix, $prefix_len) === 0) {
-                $result[substr($key, $prefix_len)] = $val;
-                unset($target[$key]);
-            }
-        }
-        
-        return $result;
-    }
-    
-    /**
-     * 
-     * Extracts dependent to-one records from a multiple rows.
-     * 
-     * Essentially, in to-one server joins, this pulls out the columns in
-     * the row that were joined from another table.
-     * 
-     * @param array &$target The array rows from which we are extracting the 
-     * dependent rows.
-     * 
-     * @return array The dependent record data.
-     * 
-     */
-    protected function _extractDependentAll(&$target)
-    {
-        // Build a column map because its faster to build it once for the first
-        // record and apply it to the rest of the array.
-        $column_map = array();
-        $prefix = $this->name . '__';
-        $prefix_len = strlen($prefix);
-        $first_row = reset($target);
-        foreach ($first_row as $key => $val) {
-            if (strncmp($key, $prefix, $prefix_len) === 0) {
-                $column_map[$key] = substr($key, $prefix_len);
-            }
-        }
-        
-        $result = array();
-        $test_col = $prefix . $this->foreign_primary_col;
-        foreach ($target as $target_key => $target_row) {
-            // Quick test to see if we have data to merge
-            if (!empty($target_row[$test_col])) {
-                $row = array();
-                // restructure to-one dependent data to remove current prefix
-                foreach ($column_map as $source_col => $row_col) {
-                    // transfer the dependent data to the new row
-                    $row[$row_col] = $target_row[$source_col];
-                    
-                    // remove it from the target
-                    unset($target[$target_key][$source_col]);
-                }
-                $result[] = $row;
-            } else {
-                // Remove columns for non-existant ToOne Record
-                foreach ($column_map as $source_col => $row_col) {
-                    unset($target[$target_key][$source_col]);
-                }
-            }
-        }
-        
-        return $result;
-    }
-    
-    /**
-     * 
-     * Join related objects into a parent record or collection.
-     *
-     * @param Solar_Sql_Model_Collection $target colletion to join into
-     * 
-     * @param Solar_Sql_Select $select The SELECT that fetched the parent.
-     * 
-     * @param array $options options controlling eager selection
-     * 
-     * @return Solar_Sql_Model_Collection|array A replacement for the target
-     * 
-     */
-    public function joinAll($target, $select, $options = array())
-    {
-        if (empty($target)) {
-            return $target;
-        }
-        $count = count($target);
-        
-        if ($options['join_strategy'] == 'server' || $options['require_related']) {
-
-            if ($count == 1) {
-                $result = array();
-                $onlyone = reset($target);
-                $onlyone = $this->_extractDependentOne($onlyone);
-                if ($onlyone) {
-                    $result[] = $onlyone;
-                }
-            } else {
-                $result = $this->_extractDependentAll($target);
-            }
-            
-            // Chain eager
-            foreach ($options['eager'] as $name => $dependent_options) {
-                $related = $this->_foreign_model->getRelated($name);
-                $result = $related->joinAll($result, $select, $dependent_options);
-            }
-        } else if ($options['join_strategy'] == 'client') {
-        
-            $params = array('eager' => $options['eager']);
-            
-            // inject parameters from our options
-            $params = $this->_mergeSelectParams($params);
-            
-            // get a select object for the related rows
-            $dependent_select = $this->_foreign_model->newSelect($params);
-        
-            if ($count > $options['fromselect_threshold']) {
-                // join using FROM (SELECT ...)
-                $this->_modSelectRelatedToSelect($dependent_select, $select, $this->native_alias);
-            } else {
-                // join using WHERE ... IN (...)
-                $keys = array();
-                foreach ($target as $record) {
-                    $keys[] = $record[$this->native_col];
-                }
-                $this->_modSelectRelatedToKeys($dependent_select, $keys);
-            }
-    
-            $result = $dependent_select->fetch('all');
-        } else {
-            throw $this->_exception('ERR_UNRECOGNIZED_STRATEGY');
-        }
-        
-        $index = $this->_indexResult($result, $this->foreign_col);
-        
-        return $this->_joinResults($target, $index, $this->native_col);
-    }
-    
-    /**
-     * 
-     * Join related objects into a parent record or collection.
-     *
-     * @param Solar_Sql_Model_Record $target Record to Join into
-     * 
-     * @param Solar_Sql_Select $select The SELECT that fetched the parent.
-     * 
-     * @param array $options options controlling eager selection
-     * 
-     * @return Solar_Sql_Model_Collection|array A replacement for the target
-     * 
-     */
-    public function joinOne($target, $select, $options = array())
-    {
-    
-        if (empty($target)) {
-            return $target;
-        }
-        
-        if ($options['join_strategy'] == 'server' || $options['require_related']) {
-        
-            $result = $this->_extractDependentOne($target);
-
-            if ($result) {
-                foreach ($options['eager'] as $name => $dependent_options) {
-                    $related = $this->_foreign_model->getRelated($name);
-                    $result = $related->joinOne($result, $select, $dependent_options);
-                }
-            }            
-        } else if ($options['join_strategy'] == 'client') {
-        
-            $params = array('eager' => $options['eager']);
-            
-            // inject parameters from our related options
-            $params = $this->_mergeSelectParams($params);
-            
-            // get a select object for the related rows
-            $dependent_select = $this->_foreign_model->newSelect($params);
-            
-            $this->_modSelectRelatedToRecord($dependent_select, $target);
-    
-            $result = $dependent_select->fetch('one');
-            
-        } else {
-            throw $this->_exception('ERR_UNRECOGNIZED_STRATEGY');
-        }
-        
-        $target[$this->name] = $result;
-        
-        
-        return $target;
-    }
-    
-    /**
-     * 
-     * When the native model is doing a select and an eager-join is requested
-     * for this relation, this method modifies the select to add the eager
-     * join.
-     * 
-     * Automatically adds the foreign columns to the select.
-     * 
-     * @param Solar_Sql_Select $select The SELECT to be modified.
-     * 
-     * @param string $parent_alias The alias for the parent table.
-     * 
-     * @param array $options options controlling eager selection
-     * 
-     * @return void The SELECT is modified in place.
-     * 
-     */
-    public function modSelectEager($select, $parent_alias, $options = array())
-    {
-        if ($options['join_strategy'] !== 'server'  && !$options['require_related']) {
-            // for client side joins, we do not modify the select
-            return;
-        }
-        
-        $options = $this->_fixColumnPrefixOption($options);
-        $column_prefix = $options['column_prefix'];
-        
-        // build column names as "name__col" so that we can extract the
-        // the related data later.
-        $cols = array();
-        foreach ($this->cols as $col) {
-            $cols[] = "$col AS {$column_prefix}__$col";
-        }
-        
-        $join_cond = array_merge(
-            (array) $this->where, 
-            $this->_foreign_model->getWhereMods($this->foreign_alias));
-        
-        // primary-key join condition on foreign table
-        $join_cond[] = "{$parent_alias}.{$this->native_col} = "
-                     . "{$this->foreign_alias}.{$this->foreign_col}";
-        
-        if ($options['require_related']) {
-            $select->innerJoin(
-                "{$this->foreign_table} AS {$this->foreign_alias}",
-                $join_cond,
-                $cols
-            );
-            $select->multiWhere($options['where']);
-        } else {
-            $select->leftJoin(
-                "{$this->foreign_table} AS {$this->foreign_alias}",
-                $join_cond,
-                $cols
-            );
-        }
-        
-        // Chain modSelectEager
-        foreach ($options['eager'] as $name => $dependent_options) {
-            $related = $this->_foreign_model->getRelated($name);
-            $related->modSelectEager($select, $this->foreign_alias, $dependent_options);
-        }
-        
-    }
-        
-    
-    /**
-     * 
      * Sets the base name for the foreign class; assumes the related name is
      * is singular and inflects it to plural.
      * 
-     * @param array $opts The user-defined relationship options.
+     * @param array $opts The user-defined relationship eager.
      * 
      * @return void
      * 
@@ -460,11 +112,11 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Fixes the related column names in the user-defined options **in place**.
+     * Fixes the related column names in the user-defined eager **in place**.
      * 
      * The foreign key is stored in the **foreign** model.
      * 
-     * @param array $opts The user-defined relationship options.
+     * @param array $opts The user-defined relationship eager.
      * 
      * @return void
      * 
@@ -472,5 +124,251 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
     protected function _fixRelatedCol(&$opts)
     {
         $opts['foreign_col'] = $opts['foreign_key'];
+    }
+    
+    /**
+     * 
+     * Sets the merge type; defaults to 'server' merges.
+     * 
+     * @param array $opts The user-defined options for the relationship.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setMerge($opts)
+    {
+        // default to server
+        if (empty($opts['merge'])) {
+            $this->merge = 'server';
+            return;
+        }
+        
+        // check for 'server' or 'client'
+        $opts['merge'] = strtolower(trim($opts['merge']));
+        if ($opts['merge'] == 'client' || $opts['merge'] == 'server') {
+            $this->merge = $opts['merge'];
+        } else {
+            throw $this->_exception('ERR_UNKNOWN_MERGE', array(
+                'merge' => $opts['merge'],
+                'known' => 'client, server',
+            ));
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the eager params based on the settings for this related.
+     * 
+     * Adds a column prefix when not already specified.
+     * 
+     * If there are sub-eagers, sets the merge strategy to 'client' so that
+     * the sub-eagers are honored.
+     * 
+     * On a server merge, sets the join flag.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixEagerParams($eager)
+    {
+        if (! $eager['cols_prefix']) {
+            if ($eager['alias']) {
+                $eager->colsPrefix($eager['alias']);
+            } else {
+                $eager->colsPrefix($this->name);
+            }
+        }
+        
+        // if there are sub-eagers, merge this eager client-side; otherwise,
+        // the sub-eagers won't be honored.
+        if ($eager['eager']) {
+            $eager->merge('client');
+        }
+        
+        parent::_fixEagerParams($eager);
+        
+        if ($eager['merge'] == 'server') {
+            $eager->joinFlag(true);
+        }
+    }
+    
+    /**
+     * 
+     * Modifies the native fetch with an eager join so that columns are
+     * selected from the foreign table.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param Solar_Sql_Model_Params_Fetch $fetch The native fetch params.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modEagerFetchJoin($eager, $fetch)
+    {
+        // the basic join array
+        $join = array(
+            'type' => strtolower($eager['join_type']),
+            'name' => "{$this->foreign_table} AS {$eager['alias']}",
+            'cond' => array(),
+            'cols' => null,
+        );
+        
+        // standard to-one condition (works for both has-one and belongs-to)
+        $join['cond'][] = "{$fetch['alias']}.{$this->native_col} = "
+                . "{$eager['alias']}.{$this->foreign_col}";
+        
+        // extra conditions for the parent fetch
+        if ($eager['join_cond']) {
+            // what type of join?
+            if ($join['type'] == 'left') {
+                // convert the eager conditions to a WHERE clause
+                foreach ((array) $eager['join_cond'] as $cond => $val) {
+                    $fetch->where($cond, $val);
+                }
+            } else {
+                // merge join conditions
+                $join['cond'] = array_merge(
+                    $join['cond'],
+                    (array) $eager['join_cond']
+                );
+            }
+        }
+        
+        // what columns to fetch?
+        if (! $eager['cols']) {
+            $cols = null;
+        } else {
+            $cols = array();
+            foreach ($eager['cols'] as $col) {
+                $cols[] = "{$col} AS {$eager['cols_prefix']}__{$col}";
+            }
+        }
+        
+        // add the columns
+        $join['cols'] = $cols;
+        
+        // add the join to the parent fetch
+        $fetch->join($join);
+    }
+    
+    /**
+     * 
+     * Modifies the parent result array to add eager records.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param array &$result The parent result rows.
+     * 
+     * @param string $type The type of fetch performed (e.g., 'one', 'all', etc).
+     * 
+     * @param Solar_Sql_Model_Params_Fetch $fetch The native fetch settings.
+     * 
+     * @return void
+     * 
+     */
+    public function modEagerResult($eager, &$result, $type, $fetch)
+    {
+        // pre-emptively return if no result, or no cols requested
+        if (! $result || ! $eager['cols']) {
+            return;
+        }
+        
+        switch ($type) {
+        case 'one':
+            if ($eager['merge'] == 'server') {
+                // server-side merge
+                $this->_emergeFromArrayOne($eager, $result);
+            } else {
+                // client-side merge
+                $this->_fetchIntoArrayOne($eager, $result);
+            }
+            break;
+        case 'all':
+        case 'assoc':
+        case 'array':
+            if ($eager['merge'] == 'server') {
+                // server-side merge
+                $this->_emergeFromArrayAll($eager, $result);
+            } else {
+                // client-side merge
+                $this->_fetchIntoArrayAll($eager, $result, $fetch);
+            }
+            break;
+        default:
+            throw $this->_exception('ERR_UNKNOWN_TYPE');
+            break;
+        }
+    }
+    
+    /**
+     * 
+     * Pulls server-merged foreign columns from the native results and puts
+     * them into their own sub-array within the one native row.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param array &$array The native row with the foreign columns in it.
+     * 
+     * @return void
+     * 
+     */
+    protected function _emergeFromArrayOne($eager, &$array)
+    {
+        $data = array();
+        
+        foreach ($eager['cols'] as $col) {
+            $key = "{$eager['cols_prefix']}__{$col}";
+            if (array_key_exists($key, $array)) {
+                $data[$col] = $array[$key];
+                unset($array[$key]);
+            }
+        }
+        
+        $array[$this->name] = $data;
+    }
+    
+    /**
+     * 
+     * Pulls server-merged foreign columns from the native results and puts
+     * them into their own sub-array within each of the many native rows.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param array &$array The native rowset with the foreign columns in it.
+     * 
+     * @return void
+     * 
+     */
+    protected function _emergeFromArrayAll($eager, &$array)
+    {
+        foreach ($array as &$row) {
+            $this->_emergeFromArrayOne($eager, $row);
+        }
+    }
+    
+    /**
+     * 
+     * Collates a result array by an array key, grouping the results by that
+     * value.
+     *
+     * @param array $array The result array.
+     *
+     * @param string $key The key in the array to collate by.
+     * 
+     * @return array An array of collated elements, keyed by the collation 
+     * value.
+     * 
+     */
+    protected function _collate($array, $key)
+    {
+        $collated = array();
+        foreach ($array as $i => $row) {
+            $val = $row[$key];
+            $collated[$val] = $row;
+        }
+        return $collated;
     }
 }

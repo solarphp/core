@@ -48,6 +48,7 @@ return array(
     'ACTION_EDIT'                => 'Edit',
     'ACTION_ADD'                 => 'Add',
     'ACTION_DELETE'              => 'Delete',
+    'ACTION_SEARCH'              => 'Search',
     'ACTION_NOT_FOUND'           => 'Not Found',
     
     // exception error messages  

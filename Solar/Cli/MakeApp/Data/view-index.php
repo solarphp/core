@@ -1,1 +1,1 @@
-Welcome to your new app.
+<?php echo $this->gettext('TEXT_WELCOME'); ?>

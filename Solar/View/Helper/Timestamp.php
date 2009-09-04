@@ -98,14 +98,14 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // set the origin timezone
         $this->_tz_origin = $this->_config['tz_origin'];

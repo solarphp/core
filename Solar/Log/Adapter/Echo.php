@@ -43,14 +43,14 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter
     
     /**
      * 
-     * Constructor.  Detect output mode by SAPI if none is specified.
+     * Modifies $this->_config after it has been built.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConfig()
     {
-        parent::__construct($config);
+        parent::_postConfig();
         if (empty($this->_config['output'])) {
             $mode = (PHP_SAPI == 'cli') ? 'text' 
                                         : 'html';

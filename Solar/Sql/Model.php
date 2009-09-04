@@ -24,16 +24,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @config dependency sql A Solar_Sql dependency.
      * 
-     * @config dependency cache A Solar_Cache dependency for the Solar_Sql_Model_Cache
-     *   object.
+     * @config dependency cache A Solar_Cache dependency for the 
+     * Solar_Sql_Model_Cache object.
      * 
-     * @config dependency catalog A Solar_Sql_Model_Catalog to find other models with.
+     * @config dependency catalog A Solar_Sql_Model_Catalog to find other 
+     * models with.
      * 
-     * @config bool table_scan Connect to the database and scan the table for its column
-     *   descriptions, creating the table and indexes if not already present.
-     *   Default true.
+     * @config bool table_scan Connect to the database and scan the table for 
+     * its column descriptions, creating the table and indexes if not already 
+     * present.
      * 
-     * @config bool auto_cache Automatically maintain the data cache.  Default false.
+     * @config bool auto_cache Automatically maintain the data cache.
      * 
      * @var array
      * 
@@ -42,7 +43,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         'catalog' => 'model_catalog',
         'sql'   => 'sql',
         'cache' => array(
-            'adapter' => 'Solar_Cache_Adapter_Var',
+            'adapter' => 'Solar_Cache_Adapter_None',
         ),
         'table_scan' => true,
         'auto_cache' => false,
@@ -91,7 +92,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * When data values for this model are part of an array, use this name
      * as the array key for those values.
      * 
-     * When inheritance is enabled, the default is the $_inherit_model value,
+     * When inheritance is enabled, the default is the $_inherit_name value,
      * otherwise, the default is the $_table_name.
      * 
      * @var string
@@ -116,7 +117,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * The results of get_class($this) so we don't call get_class() all the time.
+     * The results of get_class($this) so we don't call get_class() all the 
+     * time.
      * 
      * @var string
      * 
@@ -176,7 +178,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @var string
      * 
      */
-    protected $_select_class = 'Solar_Sql_Model_Select';
+    protected $_select_class = 'Solar_Sql_Select';
     
     /**
      * 
@@ -219,9 +221,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Used in auto-creation, and for sync-checks.
      * 
-     * Will be overridden by _fixTableCols() when it reads the table info, so you
-     * don't *have* to enter anything here ... but if it's empty, you won't
-     * get auto-creation.
+     * Will be overridden by _fixTableCols() when it reads the table info, so 
+     * you don't *have* to enter anything here ... but if it's empty, you 
+     * won't get auto-creation.
      * 
      * Each element in this array looks like this...
      * 
@@ -473,7 +475,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * The base model this class is inherited from, in single-table inheritance.
+     * The base model this class is inherited from, in single-table 
+     * inheritance.
      * 
      * @var string
      * 
@@ -488,7 +491,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @var string
      * 
      */
-    protected $_inherit_model = false;
+    protected $_inherit_name = false;
     
     /**
      * 
@@ -550,16 +553,15 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // main construction
-        parent::__construct($config);
-
+        parent::_postConstruct();
+        
         // Establish the state of this object before _setup
         $this->_preSetup();        
         
@@ -781,7 +783,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param int|array $spec The primary key value for a single record, or an
      * array of primary key values for a collection of records.
      * 
-     * @param array $params An array of parameters for the fetch, with keys
+     * @param array $fetch An array of parameters for the fetch, with keys
      * for 'cols', 'group', 'having', 'order', etc.  Note that the 'where'
      * and 'order' elements are overridden and have no effect.
      * 
@@ -789,17 +791,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      * record-set object.
      * 
      */
-    public function fetch($spec, $params = null)
+    public function fetch($spec, $fetch = null)
     {
         $col = "{$this->_model_name}.{$this->_primary_col}";
         if (is_array($spec)) {
-            $params['where'] = array("$col IN (?)" => $spec);
-            $params['order'] = $col;
-            return $this->fetchAll($params);
+            $fetch['where'] = array("$col IN (?)" => $spec);
+            $fetch['order'] = $col;
+            return $this->fetchAll($fetch);
         } else {
-            $params['where'] = array("$col = ?" => $spec);
-            $params['order'] = $col;
-            return $this->fetchOne($params);
+            $fetch['where'] = array("$col = ?" => $spec);
+            $fetch['order'] = $col;
+            return $this->fetchOne($fetch);
         }
     }
     
@@ -807,61 +809,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Fetches a collection of all records by arbitrary parameters.
      * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only records from this page-number.
-     * 
-     * `limit`
-     * : (int|array) Limit to a count of this many records (when an integer), 
-     *   or limit by count and offset (when an array).  When `limit` is non-
-     *   empty, the `page` and `paging` params are ignored.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
      * 
      * @return Solar_Sql_Model_Collection A collection object.
      * 
      */
-    public function fetchAll($params = array())
+    public function fetchAll($fetch = null)
     {
         // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('all', $params);
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('all', $fetch);
         if (! $result) {
             return array();
         }
@@ -870,85 +828,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         $coll = $this->newCollection($result);
         
         // add pager-info to the collection
-        if ($params['count_pages']) {
-            $this->_setCollectionPagerInfo($coll, $params);
-        }
-        
-        // done
-        return $coll;
-    }
-    
-    /**
-     * 
-     * The same as fetchAll(), except the record collection is keyed on the
-     * first column of the results (instead of being a strictly sequential
-     * array.)
-     * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only records from this page-number.
-     * 
-     * `limit`
-     * : (int|array) Limit to a count of this many records (when an integer), 
-     *   or limit by count and offset (when an array).  When `limit` is non-
-     *   empty, the `page` and `paging` params are ignored.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
-     * 
-     * @return Solar_Sql_Model_Collection A collection object.
-     * 
-     */
-    public function fetchAssoc($params = array())
-    {
-        // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('assoc', $params);
-        if (! $result) {
-            return array();
-        }
-        
-        // create a collection from the result
-        $coll = $this->newCollection($result);
-        
-        // add pager-info to the collection
-        if ($params['count_pages']) {
-            $this->_setCollectionPagerInfo($coll, $params);
+        if ($fetch['count_pages']) {
+            $this->_setCollectionPagerInfo($coll, $fetch);
         }
         
         // done
@@ -959,61 +840,72 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Fetches an array of rows by arbitrary parameters.
      * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only records from this page-number.
-     * 
-     * `limit`
-     * : (int|array) Limit to a count of this many records (when an integer), 
-     *   or limit by count and offset (when an array).  When `limit` is non-
-     *   empty, the `page` and `paging` params are ignored.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
      * 
      * @return array
      * 
      */
-    public function fetchArray($params = array())
+    public function fetchAllAsArray($fetch = null)
     {
         // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('all', $params);
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('all', $fetch);
+        if (! $result) {
+            return array();
+        } else {
+            return $result;
+        }
+    }
+    
+    /**
+     * 
+     * The same as fetchAll(), except the record collection is keyed on the
+     * first column of the results (instead of being a strictly sequential
+     * array.)
+     * 
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
+     * 
+     * @return Solar_Sql_Model_Collection A collection object.
+     * 
+     */
+    public function fetchAssoc($fetch = null)
+    {
+        // fetch the result array and select object
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('assoc', $fetch);
+        if (! $result) {
+            return array();
+        }
+        
+        // create a collection from the result
+        $coll = $this->newCollection($result);
+        
+        // add pager-info to the collection
+        if ($fetch['count_pages']) {
+            $this->_setCollectionPagerInfo($coll, $fetch);
+        }
+        
+        // done
+        return $coll;
+    }
+    
+    /**
+     * 
+     * The same as fetchAssoc(), except it returns an array, not a collection.
+     * 
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
+     * 
+     * @return array An array of rows.
+     * 
+     */
+    public function fetchAssocAsArray($fetch = null)
+    {
+        // fetch the result array and select object
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('assoc', $fetch);
         if (! $result) {
             return array();
         } else {
@@ -1029,76 +921,57 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param Solar_Sql_Model_Collection $coll The record collection to set
      * pager info on.
      * 
-     * @param array $params The params for the original fetchAll() or
+     * @param array $fetch The params for the original fetchAll() or
      * fetchAssoc().
      * 
      * @return void
      */
-    protected function _setCollectionPagerInfo($coll, $params)
+    protected function _setCollectionPagerInfo($coll, $fetch)
     {
-        $total = $this->countPages($params);
-        $start = ($params['page'] - 1) * $params['paging'];
-        $coll->setPagerInfo(array(
-            'count'  => $total['count'],
-            'pages'  => $total['pages'],
-            'paging' => $params['paging'],
-            'page'   => $params['page'],
-            'begin'  => $start + 1,
-            'end'    => $start + $coll->count(),
-        ));
+        $total = $this->countPages($fetch);
+        
+        $info = array(
+            'count'  => (int) $total['count'],
+            'pages'  => (int) $total['pages'],
+            'paging' => (int) $fetch['paging'],
+        );
+        
+        if (! $info['count']) {
+            $info['page']  = 0;
+            $info['begin'] = 0;
+            $info['end']   = 0;
+        } elseif (! $fetch['page']) {
+            $info['page']  = 1;
+            $info['begin'] = 1;
+            $info['end']   = $info['count'];
+        } else {
+            $start         = (int) ($fetch['page'] - 1) * $fetch['paging'];
+            $info['page']  = $fetch['page'];
+            $info['begin'] = $start + 1;
+            $info['end']   = $start + $info['count'];
+        }
+        
+        $info['is_first'] = (bool) ($info['page'] == 1);
+        $info['is_last']  = (bool) ($info['end'] == $info['count']);
+        
+        $coll->setPagerInfo($info);
     }
     
     /**
      * 
      * Fetches one record by arbitrary parameters.
      * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `distinct`
-     * : (bool) Is this a SELECT DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
      * 
      * @return Solar_Sql_Model_Record A record object.
      * 
      */
-    public function fetchOne($params = array())
+    public function fetchOne($fetch = null)
     {
         // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('one', $params);
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('one', $fetch);
         if (! $result) {
             return null;
         }
@@ -1112,65 +985,42 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fetches a sequential array of values from the model, using only the
-     * first column of the results.
+     * The same as fetchOne(), but returns an array instead of a record object.
      * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns; only the first one will
-     * be honored.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only records from this page-number.
-     * 
-     * `limit`
-     * : (int|array) Limit to a count of this many records (when an integer), 
-     *   or limit by count and offset (when an array).  When `limit` is non-
-     *   empty, the `page` and `paging` params are ignored.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
      * 
      * @return array
      * 
      */
-    public function fetchCol($params = array())
+    public function fetchOneAsArray($fetch = null)
     {
         // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('col', $params);
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('one', $fetch);
+        if (! $result) {
+            return array();
+        } else {
+            return $result;
+        }
+    }
+    
+    /**
+     * 
+     * Fetches a sequential array of values from the model, using only the
+     * first column of the results.
+     * 
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
+     * 
+     * @return array
+     * 
+     */
+    public function fetchCol($fetch = null)
+    {
+        // fetch the result array and select object
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('col', $fetch);
         if ($result) {
             return $result;
         } else {
@@ -1183,50 +1033,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Fetches an array of key-value pairs from the model, where the first
      * column is the key and the second column is the value.
      * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns; only the first two will
-     *   be honored.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only elements from this page-number.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
      * 
      * @return array
      * 
      */
-    public function fetchPairs($params = array())
+    public function fetchPairs($fetch = null)
     {
         // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('pairs', $params);
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('pairs', $fetch);
         if ($result) {
             return $result;
         } else {
@@ -1239,57 +1056,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Fetches a single value from the model (i.e., the first column of the 
      * first record of the returned page set).
      * 
-     * Recognized parameters for the fetch are:
-     * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
-     * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns; only the first one will
-     *   be honored.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only elements from this page-number.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having', 'order', etc.
+     * @param array|Solar_Sql_Model_Params_Fetch $fetch Parameters for the
+     * fetch.
      * 
      * @return mixed The single value from the model query, or null.
      * 
      */
-    public function fetchValue($params = array())
+    public function fetchValue($fetch = null)
     {
         // fetch the result array and select object
-        list($result, $select) = $this->_fetchResultSelect('value', $params);
+        $fetch = $this->_fixFetchParams($fetch);
+        list($result, $select) = $this->_fetchResultSelect('value', $fetch);
         return $result;
     }
     
@@ -1302,22 +1079,19 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @param string $type The type of fetch to perform: 'all', 'one', etc.
      * 
-     * @param array &$params A reference to the params for the select; these
-     * will be passed through _fixSelectParams(), so the calling code doesn't
-     * have to do it twice.
+     * @param Solar_Sql_Model_Params_Fetch $fetch The params for the fetch.
      * 
      * @return array An array of two elements; element 0 is the result data,
-     * element 1 is the Solar_Sql_Select object used to fetch the data.  Note
-     * that if the 
+     * element 1 is the Solar_Sql_Select object used to fetch the data.
+     * 
      */
-    protected function _fetchResultSelect($type, &$params)
+    protected function _fetchResultSelect($type, Solar_Sql_Model_Params_Fetch $fetch)
     {
-        $params = $this->_fixSelectParams($params);
-        $select = $this->newSelect($params);
+        $select = $this->newSelect($fetch);
         
-        // fetch from cache?
-        if ($params['cache']) {
-            $key = $this->_cache->entry($params);
+        // attempt to fetch from cache?
+        if ($fetch['cache']) {
+            $key = $this->_cache->entry($fetch);
             $result = $this->_cache->fetch($key);
             if ($result !== false) {
                 // found some data!
@@ -1325,11 +1099,17 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // attempt to fetch from database, and add to the cache
+        // attempt to fetch from database
         $result = $select->fetch($type);
         
+        // now process the results through the eagers
+        foreach ($fetch['eager'] as $name => $eager) {
+            $related = $this->getRelated($name);
+            $related->modEagerResult($eager, $result, $type, $fetch);
+        }
+        
         // add to cache?
-        if ($params['cache']) {
+        if ($fetch['cache']) {
             $this->_cache->add($key, $result);
         }
         
@@ -1351,7 +1131,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         $record = $this->_newRecord();
         $data   = $this->_fetchNewData($spec);
-        $record->init($this, $data, Solar_Sql_Model_Record::STATUS_NEW);
+        $record->initNew($this, $data);
         return $record;
     }
     
@@ -1401,9 +1181,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // if we have inheritance, set that too
-        if ($this->_inherit_model) {
+        if ($this->_inherit_name) {
             $key = $this->_inherit_col;
-            $data[$key] = $this->_inherit_model;
+            $data[$key] = $this->_inherit_name;
         }
         
         // done
@@ -1414,25 +1194,25 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Fetches count and pages of available records.
      * 
-     * @param array $params An array of clauses for the SELECT COUNT()
+     * @param array $fetch An array of clauses for the SELECT COUNT()
      * statement, including 'where', 'group, and 'having'.
      * 
      * @return array An array with keys 'count' and 'pages'; 'count' is the
      * number of records, 'pages' is the number of pages.
      * 
      */
-    public function countPages($params = null)
+    public function countPages($fetch = null)
     {
         // fix up the parameters
-        $params = $this->_fixSelectParams($params);
+        $fetch = $this->_fixFetchParams($fetch);
         
         // add a fake param called 'count' to make this different from the
         // orginating query (for cache deconfliction).
-        $params['__count__'] = true;
+        $fetch['__count__'] = true;
         
         // check the cache
-        if ($params['cache']) {
-            $key = $this->_cache->entry($params);
+        if ($fetch['cache']) {
+            $key = $this->_cache->entry($fetch);
             $result = $this->_cache->fetch($key);
             if ($result !== false) {
                 // cache hit
@@ -1441,14 +1221,14 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // get the base select
-        $select = $this->newSelect($params);
+        $select = $this->newSelect($fetch);
         
         // count on the primary column
         $col = "{$this->_model_name}.{$this->_primary_col}";
         $result = $select->countPages($col);
         
         // save in cache?
-        if ($params['cache']) {
+        if ($fetch['cache']) {
             $this->_cache->add($key, $result);
         }
         
@@ -1464,196 +1244,33 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * "Cleans up" SELECT clause parameters.
+     * Converts and cleans-up fetch params from arrays to instances of
+     * Solar_Sql_Model_Params_Fetch.
      * 
-     * `eager`
-     * : (string|array) Eager-fetch records from these related models.
+     * @param array $spec The parameters for the fetch.
      * 
-     * `distinct`
-     * : (bool) Use DISTINCT?
-     * 
-     * `cols`
-     * : (string|array) Return only these columns.
-     * 
-     * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
-     *   restrict which records are returned.
-     * 
-     * `group`
-     * : (string|array) GROUP BY these columns.
-     * 
-     * `having`
-     * : (string|array) HAVING these column values.
-     * 
-     * `order`
-     * : (string|array) ORDER BY these columns.
-     * 
-     * `paging`
-     * : (int) Return this many records per page.
-     * 
-     * `page`
-     * : (int) Return only records from this page-number.
-     * 
-     * `limit`
-     * : (int|array) Limit to a count of this many records (when an integer), 
-     *   or limit by count and offset (when an array).  When `limit` is non-
-     *   empty, the `page` and `paging` params are ignored.
-     * 
-     * `bind`
-     * : (array) Key-value pairs to bind into the query.
-     * 
-     * `count_pages`
-     * : (bool) Perform a second query for count and pages.
-     * 
-     * `cache`
-     * : (bool) Use the cache?
-     * 
-     * `cache_key`
-     * : (bool) An explicit cache key to use; otherwise, defaults to the
-     *   serialized SELECT params.
-     * 
-     * @param array $params The parameters for the SELECT clauses.
-     * 
-     * @return array A normalized set of clause params.
+     * @return Solar_Sql_Model_Params_Fetch
      * 
      */
-    protected function _fixSelectParams($params)
+    protected function _fixFetchParams($spec)
     {
-        settype($params, 'array');
-        
-        // fix up the eager values
-        if (empty($params['eager'])) {
-            $params['eager'] = array();
-        }
-        $params['eager'] = $this->_fixSelectParamsEager($params['eager']);
-        
-        // fix up distinct
-        if (empty($params['distinct'])) {
-            $params['distinct'] = null;
-        }
-        
-        // if we have columns, make sure they're unique
-        if (! empty($params['cols'])) {
-            $params['cols'] = array_unique((array) $params['cols']);
-        }
-        
-        // even after uniqing, cols might still be empty
-        if (empty($params['cols'])) {
-            $params['cols'] = array_keys($this->_table_cols);
-        }
-        
-        if (empty($params['where'])) {
-            $params['where'] = null;
-        }
-        
-        if (empty($params['group'])) {
-            $params['group'] = null;
-        }
-        
-        if (empty($params['having'])) {
-            $params['having'] = null;
-        }
-        
-        if (empty($params['order'])) {
-            $params['order'] = $this->_order;
-        }
-        
-        if (empty($params['limit'])) {
-            $params['limit'] = null;
+        if ($spec instanceof Solar_Sql_Model_Params_Fetch) {
+            return $spec;
         } else {
-            // force to array
-            settype($params['limit'], 'array');
-            // pad out to 2 elements (count, offset)
-            $params['limit'] = array_pad($params['limit'], 2, 0);
+            // baseline object
+            $fetch = Solar::factory('Solar_Sql_Model_Params_Fetch');
+            // defaults
+            $fetch->load(array(
+                'cache'       => $this->_config['auto_cache'],
+                'cols'        => array_keys($this->_table_cols),
+                'paging'      => $this->_paging,
+                'alias' => $this->_model_name,
+            ));
+            // overrides
+            $fetch->load($spec);
+            // done
+            return $fetch;
         }
-        
-        if (empty($params['paging'])) {
-            $params['paging'] = $this->_paging;
-        }
-        
-        if (empty($params['page'])) {
-            $params['page'] = null;
-        }
-        
-        if (empty($params['bind'])) {
-            $params['bind'] = null;
-        }
-        
-        if (empty($params['count_pages'])) {
-            $params['count_pages'] = false;
-        }
-        
-        // go by array_key_exists() so that an explicit "false" does not
-        // accidentally get overwritten
-        if (! array_key_exists('cache', $params)) {
-            // key not present, use the default
-            $params['cache'] = $this->_config['auto_cache'];
-        }
-        
-        // force to boolean
-        $params['cache'] = (bool) $params['cache'];
-        
-        // table alias?
-        if (empty($params['table_alias'])) {
-            $params['table_alias'] = $this->_model_name;
-        }
-        
-        // explicit cache key?
-        if (empty($params['cache_key'])) {
-            $params['cache_key'] = false;
-        }
-        
-        // done
-        return $params;
-    }
-    
-    /**
-     * 
-     * Fix select-object params within the 'eager' param.
-     * 
-     * @param mixed $eager The 'eager' param for select params.
-     * 
-     * @return array A standardized 'eager' param array.
-     * 
-     */
-    protected function _fixSelectParamsEager($eager)
-    {
-        $fixed = array();
-        
-        settype($eager, 'array');
-        foreach ($eager as $key => $val) {
-            
-            // look for a eager name by itself, or an eager name with
-            // eager options
-            if (is_int($key)) {
-                $name = $val;
-                $opts = array(
-                    'require_related' => null,
-                );
-            } else {
-                $name = $key;
-                $opts = $val;
-                
-                // a 'where' clause implies a 'require_related'
-                if (! empty($opts['where'])) {
-                    $opts['require_related'] = true;
-                }
-                
-                // always need a default 'require_related'
-                if (! array_key_exists('require_related', $opts)) {
-                    $opts['require_related'] = null;
-                }
-            }
-            
-            // retain the fixed version
-            $fixed[$name] = $opts;
-        }
-        
-        // apply further modifications
-        $fixed = $this->modEagerOptions($fixed);
-        
-        // done
-        return $fixed;
     }
     
     /**
@@ -1697,9 +1314,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         $where = array();
         
         // is inheritance on?
-        if ($this->_inherit_model) {
+        if ($this->isInherit()) {
             $key = "{$alias}.{$this->_inherit_col} = ?";
-            $val = $this->_inherit_model;
+            $val = $this->_inherit_name;
             $where = array($key => $val);
         }
         
@@ -1710,57 +1327,64 @@ abstract class Solar_Sql_Model extends Solar_Base
     /**
      * 
      * Returns a new Solar_Sql_Select tool, with the proper SQL object
-     * injected automatically, and with eager "to-one" associations joined.
+     * injected automatically.
      * 
-     * @param array $params An array of SELECT parameters.
+     * @param Solar_Sql_Model_Params_Fetch|array $fetch Parameters for the
+     * fetch.
      * 
      * @return Solar_Sql_Select
      * 
      */
-    public function newSelect($params = null)
+    public function newSelect($fetch = null)
     {
-        $params = $this->_fixSelectParams($params);
+        $fetch = $this->_fixFetchParams($fetch);
+        
+        if (! $fetch['alias']) {
+            $fetch->alias($this->_model_name);
+        }
+        
+        foreach ($fetch['eager'] as $name => $eager) {
+            $related = $this->getRelated($name);
+            $related->modEagerFetch($eager, $fetch);
+        }
+        
+        $use_default_order = ! $fetch['order'] && $fetch['order'] !== false;
+        if ($use_default_order) {
+            $fetch->order("{$fetch['alias']}.{$this->_order}");
+        };
         
         // get the select object
         $select = Solar::factory(
             $this->_select_class,
             array('sql' => $this->_sql)
         );
-        $select->setModel($this);
-        
-        $table_alias = $params['table_alias'];
-        $select->setTableAlias($table_alias);
         
         // add the explicitly asked-for columns before the eager-join cols.
         // this is to make sure the fetchPairs() method works right, because
         // adding the eager columns first will mess that up.
         $select->from(
-            "{$this->_table_name} AS {$table_alias}",
-            $params['cols']
+            "{$this->_table_name} AS {$fetch['alias']}",
+            $fetch['cols']
         );
         
-        // load our eager options into our Select
-        foreach ($params['eager'] as $name => $dependent_options) {
-            $select->eager($name, $dependent_options);
-        }
-        
-        $select->multiWhere($this->getWhereMods($table_alias));
+        $select->multiWhere($this->getWhereMods($fetch['alias']));
         
         // all the other pieces
-        $select->distinct($params['distinct'])
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->multiHaving($params['having'])
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->bind($params['bind']);
+        $select->distinct($fetch['distinct'])
+               ->multiJoin($fetch['join'])
+               ->multiWhere($fetch['where'])
+               ->group($fetch['group'])
+               ->multiHaving($fetch['having'])
+               ->order($fetch['order'])
+               ->setPaging($fetch['paging'])
+               ->bind($fetch['bind']);
         
         // limit by count/offset, or by page?
-        if ($params['limit']) {
-            list($count, $offset) = $params['limit'];
+        if ($fetch['limit']) {
+            list($count, $offset) = $fetch['limit'];
             $select->limit($count, $offset);
         } else {
-            $select->limitPage($params['page']);
+            $select->limitPage($fetch['page']);
         }
         
         // done!
@@ -2011,7 +1635,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Deletes rows from the model table and deletes cache entries.
      * 
-     * @param string|array $where The WHERE clause to identify which rows to delete.
+     * @param string|array $where The WHERE clause to identify which rows to 
+     * delete.
      * 
      * @return int The number of rows affected.
      * 
@@ -2154,6 +1779,18 @@ abstract class Solar_Sql_Model extends Solar_Base
                 }
             }
         }
+    }
+    
+    /**
+     * 
+     * Does this model have single-table inheritance values?
+     * 
+     * @return bool
+     * 
+     */
+    public function isInherit()
+    {
+        return $this->_inherit_col && $this->_inherit_name;
     }
     
     /**
@@ -2359,7 +1996,7 @@ abstract class Solar_Sql_Model extends Solar_Base
 
     /**
      * 
-     * Establish state of this object prior to _setup()
+     * Establish state of this object prior to _setup().
      * 
      * @return void
      * 
@@ -2384,7 +2021,7 @@ abstract class Solar_Sql_Model extends Solar_Base
 
     /**
      * 
-     * Complete the setup of this model
+     * Complete the setup of this model.
      * 
      * @return void
      * 
@@ -2401,7 +2038,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixOrder();
         $this->_fixPropertyCols();
         $this->_fixCalculateCols();
-        $this->_fixFilters(); // including filter class
+        $this->_fixFilterClass();
+        $this->_fixFilters();
         $this->_fixCache(); // including cache class
         
         // create the cache object and set its model
@@ -2427,7 +2065,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     /**
      * 
      * Loads table name into $this->_table_name, and pre-sets the value of
-     * $this->_inherit_model based on the class name.
+     * $this->_inherit_name based on the class name.
      * 
      * @return void
      * 
@@ -2435,8 +2073,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _fixTableName()
     {
         /**
-         * Pre-set the value of $_inherit_model.  Will be modified one
-         * more time in _fixTableCols().
+         * Pre-set the value of $_inherit_name.  Will be modified one
+         * more time in _fixPropertyCols().
          */
         // find the closest base called *_Model.  we do this so that
         // we can honor the top-level table name with inherited models.
@@ -2484,9 +2122,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             // both result in "bookmarks".
             $len = strlen($base_name);
             if (substr($curr_name, 0, $len + 1) == "{$base_name}_") {
-                $this->_inherit_model = substr($curr_name, $len + 1);
+                $this->_inherit_name = substr($curr_name, $len + 1);
             } else {
-                $this->_inherit_model = $curr_name;
+                $this->_inherit_name = $curr_name;
             }
             
             // set the base-class for inheritance
@@ -2667,8 +2305,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _fixModelName()
     {
         if (! $this->_model_name) {
-            if ($this->_inherit_model) {
-                $this->_model_name = $this->_inherit_model;
+            if ($this->_inherit_name) {
+                $this->_model_name = $this->_inherit_name;
             } elseif ($this->_table_name) {
                 $this->_model_name = $this->_table_name;
             } else {
@@ -2698,14 +2336,14 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _fixOrder()
     {
         if (! $this->_order) {
-            $this->_order = $this->_model_name . '.' . $this->_primary_col;
+            $this->_order = $this->_primary_col;
         }
     }
     
     /**
      * 
      * Fixes up special column indicator properties, and post-sets the
-     * $_inherit_model value based on the existence of the inheritance column.
+     * $_inherit_name value based on the existence of the inheritance column.
      * 
      * @return void
      * 
@@ -2733,7 +2371,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // post-set the inheritance model value
         if (! $this->_inherit_col) {
-            $this->_inherit_model = null;
+            $this->_inherit_name = null;
             $this->_inherit_base = null;
         }
         
@@ -2762,7 +2400,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // make sure we have a hint to foreign models as to what colname
         // to use when referring to this model
         if (empty($this->_foreign_col)) {
-            if (! $this->_inherit_model) {
+            if (! $this->_inherit_name) {
                 // not inherited
                 $prefix = $this->_inflect->toSingular($this->_model_name);
                 $this->_foreign_col = strtolower($prefix)
@@ -2810,22 +2448,34 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fixes the $_filters array and $_filter_class property.
+     * Fix the $_filter_class property.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixFilterClass()
+    {
+        if ($this->_filter_class) {
+            return;
+        }
+        
+        // use a special stack of vendors only
+        $stack = Solar::factory('Solar_Class_Stack');
+        $stack->setByVendors($this);
+        
+        // find the filter class
+        $this->_filter_class = $stack->load('Filter');
+    }
+    
+    /**
+     * 
+     * Fixes the $_filters array property.
      * 
      * @return void
      * 
      */
     protected function _fixFilters()
     {
-        // make sure we have a filter class
-        if (empty($this->_filter_class)) {
-            $class = $this->_stack->load('Filter', false);
-            if (! $class) {
-                $class = 'Solar_Sql_Model_Filter';
-            }
-            $this->_filter_class = $class;
-        }
-        
         // make sure filters are an array
         settype($this->_filters, 'array');
         

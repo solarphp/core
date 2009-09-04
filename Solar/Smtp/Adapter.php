@@ -228,15 +228,14 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // do parent construction
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // set explicit crlf
         if ($this->_config['crlf']) {

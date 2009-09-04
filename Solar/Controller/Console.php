@@ -25,6 +25,8 @@ class Solar_Controller_Console extends Solar_Base
      * 
      * @config array routing An array of commands to class names.
      * 
+     * @config array disable An array of command names to disallow.
+     * 
      * @config string default The default command to run.
      * 
      * @var array
@@ -33,8 +35,18 @@ class Solar_Controller_Console extends Solar_Base
     protected $_Solar_Controller_Console = array(
         'classes' => array('Solar_Cli'),
         'routing' => array(),
+        'disable' => 'base',
         'default' => '',
     );
+    
+    /**
+     * 
+     * A list of command names that should be disallowed.
+     * 
+     * @var array
+     * 
+     */
+    protected $_disable = array('base');
     
     /**
      * 
@@ -56,15 +68,14 @@ class Solar_Controller_Console extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // do the "real" construction
-        parent::__construct($config); 
+        parent::_postConstruct();
         
         // get the current request environment
         $this->_request = Solar_Registry::get('request');
@@ -72,6 +83,7 @@ class Solar_Controller_Console extends Solar_Base
         // set convenience vars from config
         $this->_routing = $this->_config['routing'];
         $this->_default = $this->_config['default'];
+        $this->_disable = (array)  $this->_config['disable'];
         
         // set up a class stack for finding commands
         $this->_stack = Solar::factory('Solar_Class_Stack');
@@ -100,9 +112,15 @@ class Solar_Controller_Console extends Solar_Base
             $argv = (array) $argv;
         }
         
-        // take the command name off the top of the path and try to get a
-        // controller class from it.
+        // take the command name off the top of the path and
         $command = array_shift($argv);
+        
+        // is the command disallowed?
+        if (in_array($command, $this->_disable)) {
+            return $this->_notFound($command);
+        }
+        
+        // try to get a controller class from it.
         $class = $this->_getCommandClass($command);
         
         // did we get a class from it?

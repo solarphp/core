@@ -1,2 +1,1 @@
-<?php
-return 'tags';
+<?php return 'tags';

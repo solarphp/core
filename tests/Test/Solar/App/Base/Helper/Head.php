@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_App_Base_Helper_Head extends Solar_Test_View_Helper {
+class Test_Solar_App_Base_Helper_Head extends Test_Solar_View_Helper {
     
     /**
      * 

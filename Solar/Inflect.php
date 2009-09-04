@@ -153,14 +153,14 @@ class Solar_Inflect extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param string $config User-defined configuration values.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // append to the default arrays from configs
         $list = array('identical', 'irregular', 'to_singular', 'to_plural');

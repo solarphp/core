@@ -77,24 +77,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * The struct is clean (no values have changed).
-     * 
-     * @const
-     * 
-     */
-    const STATUS_CLEAN = 'clean';
-    
-    /**
-     * 
-     * The struct is dirty (at least one value has changed).
-     * 
-     * @const
-     * 
-     */
-    const STATUS_DIRTY = 'dirty';
-    
-    /**
-     * 
      * Default configuration values.
      * 
      * @config array data Key-value pairs.
@@ -117,6 +99,15 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
+     * Notes if the data keys should be locked (unchangeable).
+     * 
+     * @var bool
+     * 
+     */
+    protected $_data_keylock = false;
+    
+    /**
+     * 
      * Iterator: is the current position valid?
      * 
      * @var array
@@ -126,34 +117,32 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * The status of the struct (clean/dirty).
+     * Notes if one or more data elements has been set after initialization.
      * 
-     * @var string
+     * @var bool
      * 
      */
-    protected $_status = self::STATUS_CLEAN;
+    protected $_is_dirty = false;
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
-        if (is_array($this->_config['data'])) {
-            $this->_data = $this->_config['data'];
-        } else {
-            $this->_data = array();
+        parent::_postConstruct();
+        
+        // @todo inherit initial $_data values
+        if ($this->_data) {
+            $this->_data_keylock = true;
         }
         
-        // set iterator validity
-        if ($this->_data) {
-            $this->_iterator_valid = true;
-        } else {
-            $this->_iterator_valid = false;
+        // load data from config
+        if ($this->_config['data']) {
+            $this->load($this->_config['data']);
         }
     }
     
@@ -195,7 +184,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         // set the value and mark self as dirty
         $this->_data[$key] = $val;
-        $this->setStatus(self::STATUS_DIRTY);
+        $this->_setIsDirty();
     }
     
     /**
@@ -226,10 +215,16 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __unset($key)
     {
-        // nullify and unset the vavlue, then mark as dirty
+        // nullify the value regardless
         $this->_data[$key] = null;
-        unset($this->_data[$key]);
-        $this->setStatus(self::STATUS_DIRTY);
+        
+        // if keys are not locked, unset the value
+        if (! $this->_data_keylock) {
+            unset($this->_data[$key]);
+        }
+        
+        // finally, mark as dirty
+        $this->_setIsDirty();
     }
     
     /**
@@ -304,40 +299,14 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Sets the status (clean/dirty/etc) on the struct.
-     * 
-     * @param string $status The status value.
-     * 
-     * @return void
-     * 
-     */
-    public function setStatus($status)
-    {
-        $this->_status = $status;
-    }
-    
-    /**
-     * 
-     * Returns the status (clean/dirty/etc) of the struct.
-     * 
-     * @return string The status value.
-     * 
-     */
-    public function getStatus()
-    {
-        return $this->_status;
-    }
-
-    /**
-     * 
-     * Has this structure been changed?
+     * Is the struct dirty?
      * 
      * @return bool
      * 
      */
     public function isDirty()
     {
-        return $this->_status == self::STATUS_DIRTY;
+        return (bool) $this->_is_dirty;
     }
     
     /**
@@ -347,6 +316,8 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * @param array|Solar_Struct $spec The data to load into the object.
      * 
      * @return void
+     * 
+     * @see _load()
      * 
      */
     public function load($spec)
@@ -361,14 +332,38 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
             $data = array();
         }
         
-        // load new data, merging new values with old
-        $this->_data = array_merge($this->_data, $data);
+        // heavy lifting
+        $this->_load($data);
         
         // set iterator validity
         if ($this->_data) {
             $this->_iterator_valid = true;
         } else {
             $this->_iterator_valid = false;
+        }
+    }
+    
+    /**
+     * 
+     * Overridable method to load the struct with array data.
+     * 
+     * @param array $data The array to load into the object.
+     * 
+     * @return void
+     * 
+     */
+    protected function _load($data)
+    {
+        if ($this->_data_keylock) {
+            // only load keys that already exist in the data
+            foreach ($this->_data as $key => $val) {
+                if (array_key_exists($key, $data)) {
+                    $this->_data[$key] = $data[$key];
+                }
+            }
+        } else {
+            // merge new values with old, adding new keys
+            $this->_data = array_merge($this->_data, $data);
         }
     }
     
@@ -534,5 +529,17 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     public function valid()
     {
         return $this->_iterator_valid;
+    }
+    
+    /**
+     * 
+     * Marks the struct as dirty.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setIsDirty()
+    {
+        $this->_is_dirty = true;
     }
 }

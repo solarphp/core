@@ -40,27 +40,25 @@ class Solar_Uri_Action extends Solar_Uri
     
     /**
      * 
-     * Constructor.
+     * Checks the server variables to see if we have a SOLAR_URI_ACTION_PATH
+     * value set from Apache; also pre-sets $this->_request.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * In a standard solar system, when mod_rewrite is turned on, it
+     * may "SetEnv SOLAR_URI_ACTION_PATH /" as a hint for the default
+     * action path. This lets you go from no-rewriting to rewriting in
+     * one easy step, rather than having to remember to change the action
+     * path in the Solar.config.php file as well.
+     * 
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        // get the request environment
+        parent::_preConfig();
         $this->_request = Solar_Registry::get('request');
-        
-        // in a standard solar system, when mod_rewrite is turned on, it
-        // may "SetEnv SOLAR_URI_ACTION_PATH /" as a hint for the default
-        // action path. this lets you go from no-rewriting to rewriting in
-        // one easy step, rather than having to remember to change the action
-        // path in the solar config file as well.
         $this->_Solar_Uri_Action['path'] = $this->_request->server(
             'SOLAR_URI_ACTION_PATH',
             '/index.php'
         );
-        
-        // now do the real construction
-        parent::__construct($config);
     }
 }

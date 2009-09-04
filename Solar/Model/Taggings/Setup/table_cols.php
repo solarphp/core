@@ -1,5 +1,4 @@
-<?php
-return array (
+<?php return array (
   'id' => 
   array (
     'name' => 'id',
@@ -7,7 +6,7 @@ return array (
     'size' => NULL,
     'scope' => NULL,
     'default' => NULL,
-    'require' => false,
+    'require' => true,
     'primary' => true,
     'autoinc' => true,
   ),

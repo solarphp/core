@@ -33,16 +33,17 @@ class Solar_Http_Request extends Solar_Factory
     
     /**
      * 
-     * Constructor.
+     * Sets the default adapter to 'Solar_Http_Request_Adapter_Curl' when the
+     * curl extension is available.
      * 
-     * @param mixed $config User-defined configuration values.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
+        parent::_preConfig();
         if (extension_loaded('curl')) {
             $this->_Solar_Http_Request['adapter'] = 'Solar_Http_Request_Adapter_Curl';
         }
-        parent::__construct($config);
     }
 }

@@ -30,23 +30,20 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
 {
     /**
      * 
-     * Constructor.
+     * Checks to make sure the EAccelerator extension is available.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        // make sure we have apc available
+        parent::_preConfig();
         if (! (extension_loaded('eaccelerator') && ini_get('eaccelerator.enable'))) {
             throw $this->_exception(
                 'ERR_EXTENSION_NOT_LOADED',
                 array('extension' => 'eaccelerator')
             );
         }
-        
-        // we're ok
-        parent::__construct($config);
     }
     
     /**

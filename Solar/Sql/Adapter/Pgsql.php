@@ -213,6 +213,78 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
     
     /**
      * 
+     * Returns an array of index information for a table.
+     * 
+     * @param string $table The table name to fetch indexes for.
+     * 
+     * @return array An array of table indexes.
+     * 
+     */
+    protected function _fetchIndexInfo($table)
+    {
+        // strip non-word characters to try and prevent SQL injections,
+        // then quote it to avoid reserved-word issues
+        $table = preg_replace('/[^\w]/', '', $table);
+        
+        // where the index info will be stored
+        $info = array();
+        
+        // get all indexed columns. thank, Robert Treat, <robert@omniti.com>
+        $stmt = "
+            SELECT
+                i.relname AS indexname,
+                attname AS column,
+                indisunique AS unique
+            FROM pg_class t
+            JOIN pg_attribute ON oid = attrelid
+            JOIN (
+                SELECT *, regexp_split_to_array(indkey::text,' ') AS x
+                FROM pg_index
+            ) xx ON indrelid = attrelid and attnum::text=any(xx.x)
+            JOIN pg_class i ON oid = indexrelid
+            WHERE
+                indisprimary = false
+                AND t.relname = :table";
+        
+        $list = $this->fetchAll($stmt, array(
+            'table' => $table,
+        ));
+        
+        if (! $list) {
+            // no indexes
+            return array();
+        }
+        
+        // table prefix string
+        $pre = "{$table}__";
+        $len = strlen($pre);
+        
+        // collect indexes
+        foreach ($list as $item) {
+            // index name?
+            $name = $item['indexname'];
+            
+            // strip table prefix?
+            if (substr($name, 0, $len) == $pre) {
+                $name = substr($name, $len);
+            }
+            
+            // unique?
+            if ($item['unique']) {
+                $info[$name]['type'] = 'unique';
+            } else {
+                $info[$name]['type'] = 'normal';
+            }
+            
+            // cols?
+            $info[$name]['cols'][] = $item['column'];
+        }
+        
+        // done!
+        return $info;
+    }
+    /**
+     * 
      * Given a native column SQL default value, finds a PHP literal value.
      * 
      * SQL NULLs are converted to PHP nulls.  Non-literal values (such as
@@ -306,7 +378,9 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
      */
     protected function _nextSequence($name)
     {
-        $cmd = "SELECT NEXTVAL(" . $this->quoteName($name) . ")";
+        // use quote(), not quoteName(), as it is a string literal passed
+        // to NEXTVAL(), not an identifier.
+        $cmd = "SELECT NEXTVAL(" . $this->quote($name) . ")";
         
         // first, try to increment the sequence number, assuming
         // the table exists.

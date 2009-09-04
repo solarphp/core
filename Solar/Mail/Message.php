@@ -181,15 +181,14 @@ class Solar_Mail_Message extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // main construction
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // custom boundary string
         if ($this->_config['boundary']) {

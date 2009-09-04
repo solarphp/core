@@ -28,23 +28,20 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
 {
     /**
      * 
-     * Constructor.
+     * Checks to make sure the APC extension is available.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        // make sure we have apc available
+        parent::_preConfig();
         if (! ( extension_loaded('apc') && ini_get('apc.enabled') ) ) {
             throw $this->_exception(
                 'ERR_EXTENSION_NOT_LOADED',
                 array('extension' => 'apc')
             );
         }
-        
-        // we're ok
-        parent::__construct($config);
     }
     
     /**

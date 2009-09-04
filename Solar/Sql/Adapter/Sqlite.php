@@ -316,6 +316,78 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     
     /**
      * 
+     * Returns an array of index information for a table.
+     * 
+     * @param string $table The table name to fetch indexes for.
+     * 
+     * @return array An array of table indexes.
+     * 
+     */
+    protected function _fetchIndexInfo($table)
+    {
+        // sqlite> PRAGMA INDEX_LIST('nodes');
+        // seq|name|unique
+        // 0|nodes__email|0
+        // 1|nodes__area_id__name|1
+        // 2|nodes__id|1
+        //
+        // sqlite> PRAGMA INDEX_INFO('nodes__area_id__name');
+        // seqno|cid|name
+        // 0|3|area_id
+        // 1|5|name
+        
+        // strip non-word characters to try and prevent SQL injections
+        $table = preg_replace('/[^\w]/', '', $table);
+        
+        // where the index info will be stored
+        $info = array();
+        
+        // get all indexes on the table
+        $list = $this->fetchAll("PRAGMA INDEX_LIST(:table)", array(
+            'table' => $table,
+        ));
+        
+        if (! $list) {
+            // no indexes
+            return array();
+        }
+        
+        // table prefix string
+        $pre = "{$table}__";
+        $len = strlen($pre);
+        
+        // collect cols into indexes
+        foreach ($list as $item) {
+            
+            // index name?
+            $name = $item['name'];
+            
+            // strip table prefix?
+            if (substr($name, 0, $len) == $pre) {
+                $name = substr($name, $len);
+            }
+            
+            // unique?
+            $info[$name]['unique'] = (bool) $item['unique'];
+            
+            // what cols in the index?
+            $cols = $this->fetchAll("PRAGMA INDEX_INFO(:name)", array(
+                // use the original name with any existing table prefix
+                'name' => $item['name'],
+            ));
+            
+            // collect column info
+            foreach ($cols as $col) {
+                $info[$name]['cols'][] = $col['name'];
+            }
+        }
+        
+        // done!
+        return $info;
+    }
+    
+    /**
+     * 
      * Creates a sequence, optionally starting at a certain number.
      * 
      * @param string $name The sequence name to create.
@@ -371,8 +443,8 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      * 
      * SQLite won't allow two indexes of the same name, even if they are
      * on different tables.  This method modifies the name by prefixing with
-     * the table name and two underscores.  Thus, for a index named 'foo' on 
-     * a table named 'bar', the modified name will be 'foo__bar'.
+     * the table name and two underscores.  Thus, for a index named 'bar' on 
+     * a table named 'foo', the modified name will be 'foo__bar'.
      * 
      * @param string $table The table on which the index occurs.
      * 

@@ -150,6 +150,41 @@ class Solar_Class_Stack extends Solar_Base
     
     /**
      * 
+     * Given a class or object, add its vendor and its parent vendors to the 
+     * stack; optionally, add a standard suffix base to the vendor name.
+     * 
+     * @param string|object $spec The class or object to find vendors of.
+     * 
+     * @param string $base The suffix base to append to each vendor name.
+     * 
+     * @return void
+     * 
+     */
+    public function addByVendors($spec, $base = null)
+    {
+        // get the list of parents; retain Solar_Base
+        $parents = Solar_Class::parents($spec, true);
+        
+        // if we have a suffix, put a separator on it
+        if ($base) {
+            $base = "_$base";
+        }
+        
+        // look through vendor names
+        $old = null;
+        foreach ($parents as $class) {
+            $new = Solar_Class::vendor($class);
+            if ($new != $old) {
+                // not the same, add the current vendor name and suffix
+                $this->add("{$new}{$base}");
+            }
+            // retain old vendor for next loop
+            $old = $new;
+        }
+    }
+    
+    /**
+     * 
      * Clears the stack and adds one or more classes.
      * 
      * {{code: php
@@ -195,6 +230,25 @@ class Solar_Class_Stack extends Solar_Base
     {
         $this->_stack = array();
         $this->addByParents($spec, $base);
+    }
+    
+    /**
+     * 
+     * Given a class or object, set the stack based on its vendor and its
+     * parent vendors; optionally, add a standard suffix base to the vendor
+     * name.
+     * 
+     * @param string|object $spec The class or object to find vendors of.
+     * 
+     * @param string $base The suffix base to add to each vendor name.
+     * 
+     * @return void
+     * 
+     */
+    public function setByVendors($spec, $base = null)
+    {
+        $this->_stack = array();
+        $this->addByVendors($spec, $base);
     }
     
     /**

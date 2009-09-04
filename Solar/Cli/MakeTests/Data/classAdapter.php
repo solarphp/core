@@ -23,12 +23,12 @@ class Test_{:class} extends {:extends} {
     
     /**
      * 
-     * Constructor.
+     * Marks the test as 'todo' because it needs adapter-specific config.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
         $this->todo('need adapter-specific config');
     }

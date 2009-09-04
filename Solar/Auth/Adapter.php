@@ -21,7 +21,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Default configuration values.
      * 
      * @config int expire Authentication lifetime in seconds; zero is
-     *   forever.  Default is 14400 (4 hours).
+     *   forever.  Default is 10800 (3 hours). If this value is greater than
+     *   the PHP ini setting for `session.cache_expire`, it will throw an
+     *   exception; note that the ini setting is in *minutes*.
      * 
      * @config int idle Maximum allowed idle time in seconds; zero is
      *   forever.  Default is 1800 (30 minutes).
@@ -65,7 +67,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_Solar_Auth_Adapter = array(
-        'expire'         => 14400,
+        'expire'         => 10800,
         'idle'           => 1800,
         'allow'          => true,
         'cache' => array(
@@ -211,14 +213,24 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Constructor.
+     * Modifies $this->_config after it has been built.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConfig()
     {
-        parent::__construct($config);
+        parent::_postConfig();
+        
+        // error if the configured expiry or idle times are longer than the
+        // PHP session.cache_expire value (convert minutes to seconds).
+        $php_expire = ini_get('session.cache_expire') * 60;
+        if ($this->_config['expire'] > $php_expire) {
+            throw $this->_exception('ERR_PHP_SESSION_CACHE_EXPIRE', array(
+                'session.cache_expire' => $php_expire,
+                'solar_auth_expire' => $this->_config['expire'],
+            ));
+        }
         
         // make sure we have process values
         if (empty($this->_config['process_login'])) {
@@ -237,6 +249,18 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             // default to post
             $this->_config['source'] = 'post';
         }
+    }
+    
+    /**
+     * 
+     * Post-construction tasks to complete object construction.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
+    {
+        parent::_postConstruct();
         
         // get the current request environment
         $this->_request = Solar_Registry::get('request');

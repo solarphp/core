@@ -27,7 +27,7 @@ class Solar_Model_Bookmarks_Record extends Solar_Model_Nodes_Record {
      * @return Solar_Form
      * 
      */
-    public function form($cols = null)
+    public function newForm($cols = null)
     {
         // force the columns to be shown in the form
         $cols = array(
@@ -61,6 +61,6 @@ class Solar_Model_Bookmarks_Record extends Solar_Model_Nodes_Record {
             ),
         );
         
-        return parent::form($cols);
+        return parent::newForm($cols);
     }
 }

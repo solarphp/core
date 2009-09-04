@@ -44,6 +44,18 @@ $vendor = ucwords($vendor);
 $vendor = str_replace(' ', '', $vendor);
 
 /**
+ * manually look for a --verbose flag.
+ */
+$verbose = false;
+foreach ($argv as $val) {
+    if ($val == '--verbose') {
+        // found the argument
+        $verbose = true;
+        break;
+    }
+}
+
+/**
  * 
  * Discover and set the include-path.
  * 
@@ -88,7 +100,9 @@ if ($found && ! $include) {
 }
 
 set_include_path($include);
-echo "Using include_path '" . get_include_path() . "'." . PHP_EOL;
+if ($verbose) {
+    echo "Using include_path '" . get_include_path() . "'." . PHP_EOL;
+}
 
 
 /**
@@ -141,11 +155,14 @@ if ($found && ! $config) {
 // was there a config file at all?
 if ($config) {
     $config = realpath($config);
-    echo "Using config file '$config'." . PHP_EOL;
+    $text = "Using config file '$config'." . PHP_EOL;
 } else {
-    echo "Not using a config file." . PHP_EOL;
+    $text = "Not using a config file." . PHP_EOL;
 }
 
+if ($verbose) {
+    echo $text;
+}
 
 /**
  * Main

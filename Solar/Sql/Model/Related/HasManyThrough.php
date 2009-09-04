@@ -78,193 +78,6 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     
     /**
      * 
-     * Modifies the base select statement for the relationship type.
-     * 
-     * @param Solar_Sql_Select $select The selection object to modify.
-     * 
-     * @param Solar_Sql_Model_Record|array $spec find based on the ID of the
-     * record.
-     * 
-     * @return void
-     * 
-     */
-    protected function _modSelectRelatedToRecord($select, $spec)
-    {
-        $this->_modSelectAddThrough($select);
-        
-        // restrict to the related native column value in the "through" table
-        $select->where(
-            "{$this->through_alias}.{$this->through_native_col} = ?",
-            $spec[$this->native_col] // this is where we set the filtering clause
-        );
-    }
-    
-    /**
-     * 
-     * Modifies the base select statement for the relationship type.
-     * 
-     * @param Solar_Sql_Select $select The selection object to modify.
-     * 
-     * @param Solar_Sql_Model_Collection $spec A set of records to fetch
-     * related records for
-     * 
-     * @param string $parent_col The name of the parent column to alias as.
-     * 
-     * @return void
-     * 
-     */
-    protected function _modSelectRelatedToKeys($select, $keys, $parent_col = NULL)
-    {
-        $this->_modSelectAddThrough($select, $parent_col);
-        
-        // be nice and only use unique values
-        $keys = array_unique($keys);
-        
-        // how many are there?
-        $num_keys = count($keys);
-        if ($num_keys == 0) {
-            // We are too far down to stop the SELECT from being issued, but
-            // we can give a big fat hint to the SQL optimizer
-            $select->where('FALSE');
-        } else if ($num_keys == 1) {
-            $select->where(
-                "{$this->through_alias}.{$this->through_native_col} = ?",
-                $keys[0]
-            );
-        } else {
-            $select->where(
-                "{$this->through_alias}.{$this->through_native_col} IN (?)",
-                $keys
-            );
-        }
-    }
-    
-    /**
-     * 
-     * Modifies the base select statement for the relationship type.
-     * 
-     * @param Solar_Sql_Select $select The selection object to modify.
-     * 
-     * @param Solar_Sql_Select $spec used as an "inner" select to find the 
-     * correct native IDs.
-     * 
-     * @param string $parent_alias The alias to the parent table.
-     * 
-     * @param string $parent_col The name of the parent column to alias as.
-     * 
-     * @return void
-     * 
-     */
-    protected function _modSelectRelatedToSelect($select, $spec, $parent_alias, $parent_col = NULL)
-    {
-        $this->_modSelectAddThrough($select, $parent_col);
-        
-        // $spec is a Select object. restrict to a sub-select of IDs from
-        // the native table.
-        $clone = clone $spec;
-        
-        // We don't care about eager fetching in this result set
-        $clone->clearOptionalEager();
-        
-        // sub-select **only** the native column, so that we're not
-        // pulling back everything, just the part we need to join on.
-        // SQLite needs the explicit "AS" here.
-        // <http://osdir.com/ml/db.sqlite.general/2003-05/msg00228.html>
-        $clone->clear('cols');
-        $primary_col = "{$parent_alias}.{$this->native_col} AS {$this->native_col}";
-        $clone->cols($primary_col);
-        
-        // add the native table ID at the top through a join
-        $select->innerJoinSelect(
-            $clone,
-            $parent_alias,
-            "{$this->through_alias}.{$this->through_native_col} = {$parent_alias}.{$this->native_col}"
-        );
-    }
-    
-    /**
-     * 
-     * When the native model is doing a select and an eager-join is requested
-     * for this relation, this method modifies the select to add the eager
-     * join.
-     * 
-     * **Does not** add the foreign columns to the select, because that would
-     * result in really large result tables. Note that we fetch rows from the
-     * has-many relation separately, so not adding columns here is OK.
-     * 
-     * @param Solar_Sql_Select $select The SELECT to be modified.
-     * 
-     * @param string $parent_alias The alias to the parent table.
-     * 
-     * @param array $options options controlling eager selection
-     * 
-     * @return void The SELECT is modified in place.
-     * 
-     */
-    public function modSelectEager($select, $parent_alias, $options = array())
-    {
-        if (!$options['require_related']) {
-            // If we are not requiring related records, we do not
-            // Modify the parent query.
-            return;
-        }
-        
-        // join through the mapping table.
-        $join_table = "{$this->through_table} AS {$this->through_alias}";
-        $join_where = "{$parent_alias}.{$this->native_col} = "
-                    . "{$this->through_alias}.{$this->through_native_col}";
-                    
-        $select->innerJoin($join_table, $join_where);
-        
-        $join_table = "{$this->foreign_table} AS {$this->foreign_alias}";
-        $join_where = "{$this->through_alias}.{$this->through_foreign_col} = "
-                    . "{$this->foreign_alias}.{$this->foreign_col}";
-                    
-        $select->innerJoin($join_table, $join_where);
-        
-        // added where conditions for the join
-        $select->multiWhere($options['where']);
-        $select->multiWhere($this->where);
-        
-        // make the rows distinct, so we only get one row regardless of
-        // the number of related rows (since we're not selecting cols).
-        $select->distinct(true);
-        
-        // don't chain because we can't join Multiple records to a parent
-        // query without causing repeated records in the parent query that
-        // we have no way to deal with.
-    }
-    
-    /**
-     * 
-     * Add the "through" mapping table to a select.
-     * 
-     * @param Solar_Sql_Select $select The selection object to modify.
-     * 
-     * @param string $parent_col The name of the parent column to alias as.
-     * 
-     * @return void
-     * 
-     */
-    protected function _modSelectAddThrough($select, $parent_col = NULL)
-    {
-        // join through the mapping table.
-        $join_table = "{$this->through_table} AS {$this->through_alias}";
-        $join_where = "{$this->foreign_alias}.{$this->foreign_col} = "
-                    . "{$this->through_alias}.{$this->through_foreign_col}";
-                    
-        // Add a column so that we know what parent we are joining to
-        if ($parent_col) {
-            $join_col = "{$this->through_native_col} AS {$parent_col}";
-        } else {
-            $join_col = NULL;
-        }
-        
-        $select->innerJoin($join_table, $join_where, $join_col);
-    }
-    
-    /**
-     * 
      * Sets the relationship type.
      * 
      * @return void
@@ -375,6 +188,229 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         } else {
             $this->through_foreign_col = $opts['through_foreign_col'];
         }
+    }
+    
+    /**
+     * 
+     * Modifies the native fetch with eager joins so that the through table
+     * and the foreign table are joined properly.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param Solar_Sql_Model_Params_Fetch $fetch The native fetch params.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modEagerFetchJoin($eager, $fetch)
+    {
+        // first, join the native table to the through table
+        $join = array(
+            'type' => 'inner',
+            'name' => "{$this->through_table} AS {$this->through_alias}",
+            'cond' => "{$fetch['alias']}.{$this->native_col} = "
+                    . "{$this->through_alias}.{$this->through_native_col}",
+            'cols' => null,
+        );
+        $fetch->join($join);
+        
+        // then join to the through table to the foreign table
+        $join = array(
+            'type' => $eager['join_type'],
+            'name' => "{$this->foreign_table} AS {$eager['alias']}",
+            'cond' => "{$eager['alias']}.{$this->foreign_col} = "
+                    . "{$this->through_alias}.{$this->through_foreign_col}",
+            'cols' => null,
+        );
+        
+        // extra conditions for the parent fetch
+        if ($eager['join_cond']) {
+            // what type of join?
+            if ($join['type'] == 'left') {
+                // convert the eager conditions to a WHERE clause
+                foreach ((array) $eager['join_cond'] as $cond => $val) {
+                    $fetch->where($cond, $val);
+                }
+            } else {
+                // merge join conditions
+                $join['cond'] = array_merge(
+                    $join['cond'],
+                    (array) $eager['join_cond']
+                );
+            }
+        }
+        
+        // done!
+        $fetch->join($join);
+    }
+    
+    /**
+     * 
+     * Fetches eager results into an existing single native array row.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param array &$array The existing native result row.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fetchIntoArrayOne($eager, &$array)
+    {
+        $join = array(
+            'type' => 'inner',
+            'name' => "{$this->through_table} AS {$this->through_alias}",
+            'cond' => "{$eager['alias']}.{$this->foreign_col} = "
+                    . "{$this->through_alias}.{$this->through_foreign_col}",
+            'cols' => null,
+        );
+        
+        $where = $this->where;
+        
+        $col = "{$this->through_alias}.{$this->through_native_col}";
+        $where["$col = ?"] = $array[$this->native_col];
+        
+        $params = array(
+            'alias' => $eager['alias'],
+            'cols'  => $eager['cols'],
+            'join'  => $join,
+            'where' => $where,
+            'order' => $this->order,
+            'eager' => $eager['eager'],
+        );
+        
+        $data = $this->_foreign_model->fetchAllAsArray($params);
+        
+        $array[$this->name] = $data;
+    }
+    
+    /**
+     * 
+     * Fetches eager results into an existing native array rowset.
+     * 
+     * @param Solar_Sql_Model_Params_Eager $eager The eager params.
+     * 
+     * @param array &$array The existing native result row.
+     * 
+     * @param Solar_Sql_Model_Params_Fetch $fetch The native fetch settings.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fetchIntoArrayAll($eager, &$array, $fetch)
+    {
+        $col = "{$this->through_alias}.{$this->through_native_col}";
+        
+        $use_select = $eager['native_by'] == 'select'
+                   || count($array) > $eager['wherein_max'];
+        
+        if ($use_select) {
+            $join[] = $this->_getNativeBySelect($eager, $fetch, $col);
+            $where  = $this->where;
+        } else {
+            $where  = $this->_getNativeByWherein($eager, $array, $col);
+        }
+        
+        $index_col = "{$this->native_alias}__{$this->through_native_col}";
+        $join = array();
+        $join[] = array(
+            'type' => 'inner',
+            'name' => "{$this->through_table} AS {$this->through_alias}",
+            'cond' => "{$eager['alias']}.{$this->foreign_col} = "
+                    . "{$this->through_alias}.{$this->through_foreign_col}",
+            'cols' => "{$this->through_native_col} AS {$index_col}",
+        );
+        
+        $params = array(
+            'alias' => $eager['alias'],
+            'cols'  => $eager['cols'],
+            'join'  => $join,
+            'where' => $where,
+            'order' => $this->order,
+            'eager' => $eager['eager'],
+        );
+        
+        $data = $this->_foreign_model->fetchAllAsArray($params);
+        $data = $this->_collate($data, $index_col);
+        
+        // now we have all the foreign rows for all-of-all of the native rows.
+        // next is to tie each of those foreign sets to the appropriate
+        // native result rows.
+        foreach ($array as &$row) {
+            $key = $row[$this->native_col];
+            if (! empty($data[$key])) {
+                $row[$this->name] = $data[$key];
+            } else {
+                $row[$this->name] = array();
+            }
+        }
+    }
+    
+    
+    /**
+     * 
+     * Fetches the related collection for a native ID or record.
+     * 
+     * @param mixed $spec If a scalar, treated as the native primary key
+     * value; if an array or record, retrieves the native primary key value
+     * from it.
+     * 
+     * @return object The related collection object.
+     * 
+     */
+    public function fetch($spec)
+    {
+        if ($spec instanceof Solar_Sql_Model_Record || is_array($spec)) {
+            $native_id = $spec[$this->native_col];
+        } else {
+            $native_id = $spec;
+        }
+        
+        $join = array(
+            'type' => 'inner',
+            'name' => "{$this->through_table} AS {$this->through_alias}",
+            'cond' => "{$this->foreign_alias}.{$this->foreign_col} = "
+                    . "{$this->through_alias}.{$this->through_foreign_col}",
+            'cols' => null,
+        );
+        
+        $where = $this->where;
+        $cond  = "{$this->through_alias}.{$this->through_native_col} = ?";
+        $where[$cond] = $native_id;
+        
+        $fetch = array(
+            'alias' => $this->foreign_alias,
+            'join'  => $join,
+            'where' => $where,
+            'order' => $this->order,
+        );
+        
+        $obj = $this->_foreign_model->fetchAll($fetch);
+        return $obj;
+    }
+    
+    /**
+     * 
+     * Collates a result array by an array key, grouping the results by that
+     * value.
+     *
+     * @param array $array The result array.
+     *
+     * @param string $key The key in the array to collate by.
+     * 
+     * @return array An array of collated elements, keyed by the collation 
+     * value.
+     * 
+     */
+    protected function _collate($array, $key)
+    {
+        $collated = array();
+        foreach ($array as $i => $row) {
+            $val = $row[$key];
+            unset($row[$key]); // clear the key from the array
+            $collated[$val][] = $row;
+        }
+        return $collated;
     }
     
     /**

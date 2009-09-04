@@ -69,17 +69,14 @@ class Solar_User extends Solar_Base
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config Configuration value overrides, if any.
+     * Post-construction tasks to complete object construction.
      * 
      * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // construction
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // setup
         $this->_setup();

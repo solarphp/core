@@ -165,15 +165,14 @@ class Solar_Php extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // parent construction
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // populate each of these properties with its config value ...
         $list = array_keys($this->_Solar_Php);

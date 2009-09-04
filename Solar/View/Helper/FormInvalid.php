@@ -16,11 +16,29 @@
  */
 class Solar_View_Helper_FormInvalid extends Solar_View_Helper_FormElement
 {
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config string css_class_list The CSS class to use for the list tag.
+     * 
+     * @config string css_class_item The CSS class to use for the item tag.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_View_Helper_FormInvalid = array(
         'css_class_list' => 'invalid',
         'css_class_item' => 'invalid',
     );
     
+    /**
+     * 
+     * Indent this many levels.
+     * 
+     * @var int
+     * 
+     */
     protected $_indent = 0;
     
     /**
@@ -71,11 +89,31 @@ class Solar_View_Helper_FormInvalid extends Solar_View_Helper_FormElement
         return implode("\n", $html);
     }
     
+    /**
+     * 
+     * Sets the indent level.
+     * 
+     * @param int $indent The indent level.
+     * 
+     * @return void
+     * 
+     */
     public function setIndent($indent)
     {
         $this->_indent = (int) $indent;
     }
     
+    /**
+     * 
+     * Returns text after indenting it.
+     * 
+     * @param int $num The indent level.
+     * 
+     * @param string $text The text to indent.
+     * 
+     * @return string The indented text.
+     * 
+     */
     protected function _indent($num, $text)
     {
         $num += $this->_indent;

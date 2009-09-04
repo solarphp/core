@@ -1,2 +1,1 @@
-<?php
-return 'nodes';
+<?php return 'nodes';

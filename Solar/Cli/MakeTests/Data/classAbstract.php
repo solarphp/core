@@ -23,15 +23,14 @@ abstract class Test_{:class} extends {:extends} {
     
     /**
      * 
-     * Constructor.
+     * Skips the test because this is an abstract class.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
         $this->skip('abstract class');
-        parent::__construct($config);
     }
     
     /**

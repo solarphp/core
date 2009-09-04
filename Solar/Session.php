@@ -226,15 +226,14 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
-     * Constructor; lazy-starts the session (i.e., starts it only if one 
-     * exists already).
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // only set up the handler if it doesn't exist yet.
         if (! self::$_handler) {

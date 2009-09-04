@@ -13,6 +13,8 @@
  * 
  * @author Clay Loveless <clay@killersoft.com>
  * 
+ * @author Jeff Moore <jeff@procata.com>
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
@@ -75,25 +77,6 @@ class Solar_Struct_Xml extends Solar_Struct
     
     /**
      * 
-     * Sets the status (clean/dirty/etc) on the struct.
-     * 
-     * @param string $status The status value.
-     * 
-     * @return void
-     * 
-     */
-    public function setStatus($status)
-    {
-        parent::setStatus($status);
-        
-        // Chain the setting of the status of dirty
-        if ($status == self::STATUS_DIRTY && !empty($this->_parent)) {
-            $this->_parent->setStatus(self::STATUS_DIRTY);
-        }
-    }
-    
-    /**
-     * 
      * Frees memory used by this struct, especially references to parent
      * structs down the line.
      * 
@@ -102,9 +85,7 @@ class Solar_Struct_Xml extends Solar_Struct
      */
     public function free()
     {
-        if ($this->_parent) {
-            unset($this->_parent);
-        }
+        unset($this->_parent);
         parent::free();
     }
     
@@ -123,6 +104,24 @@ class Solar_Struct_Xml extends Solar_Struct
             ));
         } else {
             return $this->_toString($this->_data);
+        }
+    }
+    
+    /**
+     * 
+     * Marks the struct and its parents as dirty.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setIsDirty()
+    {
+        // set this struct as dirty
+        $this->_is_dirty = true;
+        
+        // set the parent struct as dirty too
+        if ($this->_parent) {
+            $this->_parent->_setIsDirty();
         }
     }
     

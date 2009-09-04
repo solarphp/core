@@ -347,13 +347,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
+        parent::_postConstruct();
+        
         $class = get_class($this);
         
         // create the session object for this class
@@ -376,9 +378,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
             );
             $this->_controller = strtolower($this->_controller);
         }
-        
-        // do parent construction
-        parent::__construct($config);
         
         // get the current request environment
         $this->_request = Solar_Registry::get('request');
@@ -673,29 +672,20 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _addViewHelpers()
     {
-        // who is the vendor of this controller?
-        $vendor = Solar_Class::vendor($this);
+        // start with requested helper classes
+        $stack = $this->_helper_class;
         
-        // if vendor is not Solar, add {Vendor}_View_Helper
-        if ($vendor != 'Solar') {
-            $this->_view_object->addHelperClass("{$vendor}_View_Helper");
+        // find vendors, disregarding Solar itself (since Solar_View will
+        // add that anyway)
+        $vendors = Solar_Class::vendors($this);
+        array_shift($vendors);
+        
+        // add each vendor to the stack in turn
+        foreach ($vendors as $vendor) {
+            $stack[] = "{$vendor}_View_Helper";
         }
         
-        // add custom helper classes
-        $this->_view_object->addHelperClass($this->_helper_class);
-        
-        // get all parents including self
-        $stack = array_reverse(Solar_Class::parents($this, true));
-        
-        // remove Solar_Base
-        array_pop($stack); // Solar_Base
-        
-        // add _Helper to each one
-        foreach ($stack as $key => $val) {
-            $stack[$key] = $val . '_Helper';
-        }
-        
-        // add local helper classes
+        // set the helper classes on the view object
         $this->_view_object->addHelperClass($stack);
     }
     

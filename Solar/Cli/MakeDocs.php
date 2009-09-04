@@ -90,14 +90,14 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config = null);
+        parent::_postConstruct();
         
         if ($this->_config['class_dir']) {
             $this->_class_dir = Solar_Dir::fix($this->_config['class_dir']);

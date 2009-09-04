@@ -25,12 +25,27 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * @config array attribs Default attributes to use in the <form> tag.
      * 
+     * @config array request A Solar_Request dependency injection.
+     * 
      * @config string descr_part Where to place descriptions (in the 'label'
      * or the 'value').
      * 
-     * @config string descr_class Use this CSS class for descriptions.
+     * @config array decorators Use these decorators around form parts.
+     * 
+     * @config array css_classes Use these CSS classes for form elements.
+     * 
+     * @config string label_suffix Attach this suffix to all labels.
      * 
      * @var array
+     * 
+     * @see setDecorators()
+     * 
+     * @see setCssClasses()
+     * 
+     * @see setDescrPart()
+     * 
+     * @see setLabelSuffix()
+     * 
      */
     protected $_Solar_View_Helper_Form = array(
         'attribs'      => array(),
@@ -215,6 +230,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected $_label_suffix = null;
     
+    /**
+     * 
+     * Which form part the element description goes in: 'label' or 'value'.
+     * 
+     * @var string
+     * 
+     */
     protected $_descr_part = 'value';
     
     /**
@@ -235,29 +257,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config Configuration value overrides, if any.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        // "real" construction
-        parent::__construct($config);
-        
-        // reset the form propertes
-        $this->reset();
-    }
-    
-    /**
-     * 
-     * Complete configuration before parent calls reset().
+     * Post-construction tasks to complete object construction.
      * 
      * @return void
      * 
      */
-    public function _postConfig()
+    public function _postConstruct()
     {
+        parent::_postConstruct();
+        
         // get the current request environment
         $this->_request = Solar::dependency(
             'Solar_Request',
@@ -267,6 +275,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         // make sure we have a default action
         $action = $this->_request->server('REQUEST_URI');
         $this->_default_attribs['action'] = $action;
+        
+        // reset the form propertes
+        $this->reset();
     }
     
     /**
@@ -1044,6 +1055,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $this->_buildElementEnd($html);
     }
     
+    /**
+     * 
+     * Builds the beginning decorator of an element.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
     protected function _buildElementBegin(&$html)
     {
         if ($this->_in_group) {
@@ -1055,6 +1075,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         }
     }
     
+    /**
+     * 
+     * Builds the ending decorator of an element.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
     protected function _buildElementEnd(&$html)
     {
         if ($this->_in_group) {
@@ -1535,7 +1564,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     }
     
     /**
-     * add a suffix string to all labels.  (such as ":")
+     * 
+     * Use this suffix string on all labels; for example, ": ".
+     * 
+     * @param string $suffix The suffix string to use.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
      */
     public function setLabelSuffix($suffix)
     {
@@ -1544,7 +1579,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     }
     
     /**
-     * Display this form as a table
+     * 
+     * When fetching output, render elements as part of an HTML table.
+     * 
+     * @return void
+     * 
      */
     public function decorateAsTable()
     {
@@ -1558,6 +1597,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * When fetching output, render elements as part of an HTML definition list.
+     * 
+     * @return void
+     * 
+     */
     public function decorateAsDlList()
     {
         $this->setDecorators(array(
@@ -1570,6 +1616,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * When fetching output, render elements without any surrounding decoration.
+     * 
+     * @return void
+     * 
+     */
     public function decorateAsPlain()
     {
         $this->setDecorators(array(
@@ -1582,12 +1635,33 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * Set the CSS class to use for particular element type.
+     * 
+     * @param string $type The tag type ('text', 'checkbox', 'button', etc).
+     * 
+     * @param string $class The CSS class to use for that element type.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function setCssClass($type, $class)
     {
         $this->_css_class[$type] = $class;
         return $this;
     }
     
+    /**
+     * 
+     * Set the CSS classes to use for various element types.
+     * 
+     * @param array $list An array of key-value pairs where the key is the
+     * element type and the value is the CSS class to use for it.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function setCssClasses($list)
     {
         foreach ((array) $list as $type => $class) {
@@ -1596,12 +1670,35 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * Set decoration tag to use for a particular form part.
+     * 
+     * @param string $part The form part to decorate (list, elem, label, or
+     * value).
+     *
+     * @param string $tag The tag to use for decoration; this will be used as
+     * both the opening and closing tag around the part.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function setDecorator($part, $tag)
     {
         $this->_decorator[$part] = $tag;
         return $this;
     }
     
+    /**
+     * 
+     * Sets the decoration tags to use for various form parts.
+     * 
+     * @param array $list An array of key-value pairs where the key is the
+     * form part, and the value is the tag to decorate that part with.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function setDecorators($list)
     {
         foreach ((array) $list as $part => $tag) {
@@ -1610,6 +1707,16 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * Sets where the element description goes, 'label' or 'value'.
+     * 
+     * @param string $part Where to put element descriptions, in the 'label'
+     * part or the 'value' part.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function setDescrPart($part)
     {
         // make sure we force the description to be in either the 'label'

@@ -52,14 +52,14 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         $this->_file = $this->_config['file'];
     }
     

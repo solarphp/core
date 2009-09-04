@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Model_Areas extends Solar_Model {
+class Solar_Model_Areas extends Solar_Sql_Model {
     
     /**
      * 
@@ -32,16 +32,7 @@ class Solar_Model_Areas extends Solar_Model {
         
         $this->_table_name = Solar_File::load($dir . 'table_name.php');
         $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
-        
-        /**
-         * Indexes.
-         */
-        $this->_index = array(
-            'created',
-            'updated',
-            'name' => 'unique',
-            'owner_handle',
-        );
+        $this->_index      = Solar_File::load($dir . 'index_info.php');
         
         /**
          * Behaviors (serialize, sequence, filter).
@@ -51,9 +42,6 @@ class Solar_Model_Areas extends Solar_Model {
         /**
          * Relationships.
          */
-        $this->_hasMany('nodes', array(
-            // use a non-standard foreign key
-            'foreign_key'   => 'parent_id',
-        ));
+        $this->_hasMany('nodes');
     }
 }

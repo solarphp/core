@@ -79,6 +79,9 @@ abstract class Solar_Base
      */
     public function __construct($config = null)
     {
+        // pre-configuration tasks
+        $this->_preConfig();
+        
         // build configuration
         $this->_config = array_merge(
             $this->_buildConfig(get_class($this)),
@@ -87,6 +90,9 @@ abstract class Solar_Base
         
         // post-configuration tasks
         $this->_postConfig();
+        
+        // post-construction tasks
+        $this->_postConstruct();
     }
     
     /**
@@ -256,12 +262,42 @@ abstract class Solar_Base
     
     /**
      * 
+     * A hook that activates before _buildConfig() in the constructor.
+     * 
+     * Allows you to modify the object before configuration is built; for
+     * example, to set properties or to check for extensions.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preConfig()
+    {
+    }
+    
+    /**
+     * 
      * A hook that activates after _buildConfig() in the constructor.
+     * 
+     * Allows you to modify $this->_config after it has been built.
      * 
      * @return void
      * 
      */
     protected function _postConfig()
+    {
+    }
+    
+    /**
+     * 
+     * A hook that activates at the end of the constructor.
+     * 
+     * Allows you to modify the object properties after config has been built,
+     * and to call follow-on methods.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
     {
     }
     

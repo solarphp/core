@@ -27,14 +27,14 @@ class Solar_Filter_ValidateEmail extends Solar_Filter_Abstract
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         $qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
         

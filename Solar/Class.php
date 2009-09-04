@@ -192,4 +192,36 @@ class Solar_Class
             return $class;
         }
     }
+    
+    /**
+     * 
+     * Find the vendors of a given class or object and its parents.
+     * 
+     * @param mixed $spec An object, or a class name.
+     * 
+     * @return array The vendor names of the class or object hierarchy.
+     * 
+     */
+    public static function vendors($spec)
+    {
+        // vendor listing
+        $stack = array();
+        
+        // get the list of parents
+        $parents = Solar_Class::parents($spec, true);
+        
+        // look through vendor names
+        $old = null;
+        foreach ($parents as $class) {
+            $new = Solar_Class::vendor($class);
+            if ($new != $old) {
+                // not the same, add the current vendor name and suffix
+                $stack[] = $new;
+            }
+            // retain old vendor for next loop
+            $old = $new;
+        }
+        
+        return $stack;
+    }
 }

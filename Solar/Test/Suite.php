@@ -37,6 +37,8 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * @config bool verbose Whether or not to show verbose output.
      * 
+     * @config bool stop_on_fail Stop running tests at the first failure.
+     * 
      * @var array
      * 
      */
@@ -47,6 +49,7 @@ class Solar_Test_Suite extends Solar_Base
         ),
         'test_config'   => null,
         'verbose'       => null,
+        'stop_on_fail'  => false,
     );
     
     /**
@@ -107,15 +110,23 @@ class Solar_Test_Suite extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * The result of the last test ('fail', 'todo', 'skip', or 'pass').
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @var string
      * 
      */
-    public function __construct($config = null)
+    protected $_test_result = null;
+    
+    /**
+     * 
+     * Post-construction tasks to complete object construction.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
     {
-        // main construction
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // verbosity
         if ($this->_config['verbose'] !== null) {
@@ -290,15 +301,30 @@ class Solar_Test_Suite extends Solar_Base
             $php->setSolarConfig($config);
             
             // try constructing the test case once
-            $exit = $this->_testConstruct($php, $class);
-            if ($exit != Solar_Test::EXIT_PASS) {
-                // construction failed, skip to the next test case
-                continue;
+            $this->_testConstruct($php, $class);
+            if ($this->_test_result == 'fail') {
+                // construction failed
+                if ($this->_config['stop_on_fail']) {
+                    // stop testing entirely
+                    break;
+                } else {
+                    // go on to next test case
+                    continue;
+                }
             }
             
             // run each test method
             foreach ($methods as $method) {
+                // run the method
                 $this->_testMethod($php, $class, $method);
+                // did it fail?
+                $fail = $this->_test_result == 'fail';
+                // should we stop on failure?
+                $stop = $this->_config['stop_on_fail'];
+                if ($fail && $stop) {
+                    // stop testing entirely
+                    break 2;
+                }
             }
         }
         
@@ -369,13 +395,15 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * @param Solar_Php $php The PHP execution object.
      * 
-     * @param string $class The test class for contstruction.
+     * @param string $class The test class for construction.
      * 
-     * @return int The exit code from construction.
+     * @return void
      * 
      */
     protected function _testConstruct($php, $class)
     {
+        $this->_test_result = null;
+        
         $file = Solar_Class::dir($this) . 'pre-test.php';
         
         $php->setArgv(array($class))
@@ -385,10 +413,10 @@ class Solar_Test_Suite extends Solar_Base
         
         if ($exit != Solar_Test::EXIT_PASS) {
             $this->_done($exit, $class, $php->getLastLine());
-            $this->_info['done'] += count($this->_tests[$class]) - 1;
+            $count = count($this->_tests[$class]);
+            $this->_log("# Skip $count test methods in $class");
+            $this->_info['done'] += $count - 1;
         }
-        
-        return $exit;
     }
     
     /**
@@ -406,14 +434,12 @@ class Solar_Test_Suite extends Solar_Base
      */
     protected function _testMethod($php, $class, $method)
     {
+        $this->_test_result = null;
+        
         $file = Solar_Class::dir($this) . 'run-test.php';
         
         $php->setArgv(array($class, $method))
             ->runSolar($file);
-        
-        $exit = $php->getExitCode();
-        $last = $php->getLastLine();
-        $name = "$class::$method";
         
         $this->_done(
             $php->getExitCode(),
@@ -546,10 +572,10 @@ class Solar_Test_Suite extends Solar_Base
             break;
         }
         
+        $this->_test_result = $type;
         $this->_log($text);
         $this->_info[$type][$name] = array($num, $note);
     }
-    
     
     /**
      * 

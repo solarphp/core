@@ -197,7 +197,7 @@ class Solar_Form_Load_Model extends Solar_Base
      */
     protected function _getCol($name)
     {
-        if (in_array($name, $this->_cols)) {
+        if (! empty($this->_cols[$name])) {
             return $this->_cols[$name];
         } else {
             return $this->_getFakeCol($name);
@@ -298,6 +298,8 @@ class Solar_Form_Load_Model extends Solar_Base
      * Gets the default value for a column, or null if the columns does not
      * exist at the model.
      * 
+     * @param string $name The column name to get default value for.
+     * 
      * @return mixed
      * 
      */
@@ -327,6 +329,8 @@ class Solar_Form_Load_Model extends Solar_Base
      * Gets the filters for a column.
      * 
      * @param string $name The column name.
+     * 
+     * @return array
      * 
      */
     protected function _getFilters($name)
@@ -387,7 +391,7 @@ class Solar_Form_Load_Model extends Solar_Base
     protected function _fixElement(&$elem, $name, $col)
     {
         foreach ($elem as $key => $val) {
-            $method = "_fixElement" . strtoupper($key);
+            $method = "_fixElement" . ucfirst($key);
             if (method_exists($this, $method)) {
                 $this->$method($elem, $name, $col);
             }
@@ -435,12 +439,8 @@ class Solar_Form_Load_Model extends Solar_Base
             return;
         }
         
-        // make primary and (ostensibly) foreign keys hidden
-        $hide = $col['primary']
-             || $name == 'id'
-             || substr($name, -3) == '_id';
-        
-        if ($hide) {
+        // hide primary keys
+        if ($col['primary']) {
             $elem['type'] = 'hidden';
             return;
         }

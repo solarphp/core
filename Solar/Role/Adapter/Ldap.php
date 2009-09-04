@@ -47,23 +47,20 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter
     
     /**
      * 
-     * Constructor.
+     * Checks to make sure the LDAP extension is loaded.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        // make sure we have LDAP available
+        parent::_preConfig();
         if (! extension_loaded('ldap')) {
             throw $this->_exception(
                 'ERR_EXTENSION_NOT_LOADED',
                 array('extension' => 'ldap')
             );
         }
-        
-        // continue construction
-        parent::__construct($config);
     }
     
     /**

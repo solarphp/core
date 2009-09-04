@@ -20,18 +20,15 @@ class Solar_View_Helper_FormPassword extends Solar_View_Helper_FormElement
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * @config bool retain Only retain values between posts if true. For 
+     * security, we should not echo back a password on a failed form 
+     * validation attempt.
      * 
-     * `retain`
-     * : (bool) Only retain values between posts if true. For security, we should
-     * not echo back a password on a failed form validation attempt.
-     * 
-     * `auto_complete`
-     * : (string) If set forces an auto_complete attribute with this value.
-     * auto_complete indicates to the browser that it should not attempt to
-     * remember the value of this field for future auto completion.
-     * auto_complete is not a part of the HTML 4 era standard, but is supported
-     * by all popular browsers.
+     * @config string auto_complete If set, forces an auto_complete attribute 
+     * with this value. The auto_complete attribute indicates to the browser 
+     * that it should not attempt to remember the value of this field for 
+     * future auto completion. The attribute is not a part of the HTML 4 era 
+     * standard, but is supported by all popular browsers.
      * 
      * @var array
      * 

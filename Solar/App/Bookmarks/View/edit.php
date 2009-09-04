@@ -35,7 +35,3 @@
                   'delete' => array('attribs' => $attribs)
               ))
               ->fetch();
-    
-    // javascript highlight effects
-    $this->jsHighlight("#form-bookmark ul.success");
-    $this->jsHighlight("#form-bookmark ul.failure");

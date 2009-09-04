@@ -153,6 +153,48 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
+     * Appends to the end of the current <title> string.
+     * 
+     * @param string $text The string to be appended to the title.
+     * 
+     * @return Solar_View_Helper_Head
+     * 
+     */
+    public function addTitle($text)
+    {
+        $this->_title .= $text;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Prepends to the beginning of the current <title> string.
+     * 
+     * @param string $text The string to be appended to the title.
+     * 
+     * @return Solar_View_Helper_Head
+     * 
+     */
+    public function preTitle($text)
+    {
+        $this->_title = $text . $this->_title;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Returns the current title string.
+     * 
+     * @return string The current title string.
+     * 
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
+    
+    /**
+     * 
      * Adds a <meta> tag.
      * 
      * @param array $attribs Attributes for the tag.

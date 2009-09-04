@@ -56,14 +56,14 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
     
     /**
      * 
-     * Constructor.  Detect output mode by SAPI if none is specified.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         $this->_response = Solar::dependency(
             'Solar_Http_Response',

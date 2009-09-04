@@ -15,7 +15,6 @@ return array(
         'long'    => 'extends',
         'descr'   => 'Extend the model class from this parent class name.',
         'param'   => 'required',
-        'value'   => 'Solar_Sql_Model',
     ),
     'connect' => array(
         'long'    => 'connect',

@@ -18,6 +18,23 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
 {
     /**
      * 
+     * Default configuration values.
+     * 
+     * @config string extends The default page-controller class to extend.
+     * 
+     * @config string extends_model The page-controller class to extend when
+     * a model name is the basis for the app.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Cli_MakeApp = array(
+        'extends'       => null,
+        'extends_model' => null,
+    );
+    
+    /**
+     * 
      * The base directory where we will write the class file to, typically
      * the local PEAR directory.
      * 
@@ -60,16 +77,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
      * @var string
      * 
      */
-    protected $_extends = 'Solar_Controller_Page';
-    
-    /**
-     * 
-     * The model class we're using, if any.
-     * 
-     * @var string
-     * 
-     */
-    protected $_model_class = null;
+    protected $_extends = null;
     
     /**
      * 
@@ -112,11 +120,11 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         // we need a target directory
         $this->_setTarget();
         
-        // extending a class?
-        $this->_setExtends();
-        
         // using a model?
-        $this->_setModel();
+        $this->_setModelName();
+        
+        // extending which class?
+        $this->_setExtends($class);
         
         // load the templates
         $this->_loadTemplates();
@@ -157,10 +165,11 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     protected function _writeAppClass()
     {
         // emit feedback
-        $this->_outln("Preparing to write '{$this->_class}' to '{$this->_target}'.");
+        $this->_outln("App class '{$this->_class}' extends '{$this->_extends}'.");
+        $this->_outln("Preparing to write to '{$this->_target}'.");
         
         // using app, or app-model?
-        if ($this->_model_class) {
+        if ($this->_model_name) {
             $tpl_key = 'app-model';
         } else {
             $tpl_key = 'app';
@@ -196,7 +205,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
             $this->_outln('App directory exists.');
         }
         
-        $list = array('Layout', 'Locale', 'View', 'Helper');
+        $list = array('Layout', 'Locale', 'View');
         
         foreach ($list as $sub) {
             if (! file_exists("$dir/$sub")) {
@@ -237,17 +246,10 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
      */
     protected function _writeViews()
     {
-        if (! $this->_model_class) {
+        if (! $this->_model_name) {
             $list = array('index');
         } else {
-            $list = array(
-                '_record',
-                'browse',
-                'read',
-                'edit',
-                'add',
-                'delete',
-            );
+            $list = array();
         }
         
         foreach ($list as $view) {
@@ -278,7 +280,6 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         $data = array(
             '{:class}'          => $this->_class,
             '{:extends}'        => $this->_extends,
-            '{:model_class}'    => $this->_model_class,
             '{:model_name}'     => $this->_model_name,
         );
         
@@ -343,17 +344,48 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
      * 
      * Sets the class this app will extend from.
      * 
+     * @param string $class The app class name.
+     * 
      * @return void
      * 
      */
-    protected function _setExtends()
+    protected function _setExtends($class)
     {
+        // explicit as cli option?
         $extends = $this->_options['extends'];
         if ($extends) {
             $this->_extends = $extends;
-        } else {
-            $this->_extends = 'Solar_App_Base';
+            return;
         }
+        
+        // explicit as config value?
+        if ($this->_model_name) {
+            $extends = $this->_config['extends_model'];
+        } else {
+            $extends = $this->_config['extends'];
+        }
+        if ($extends) {
+            $this->_extends = $extends;
+            return;
+        }
+        
+        // look at the vendor name and find a controller class
+        $vendor = Solar_Class::vendor($class);
+        if ($this->_model_name) {
+            $name = "{$vendor}_Controller_Model";
+            $file = $this->_target . "$vendor/Controller/Model.php";
+        } else {
+            $name = "{$vendor}_Controller_Page";
+            $file = $this->_target . "$vendor/Controller/Page.php";
+        }
+        if (file_exists($file)) {
+            $this->_extends = $name;
+            return;
+        }
+        
+        // final fallback: Solar_Controller_Page
+        $this->_extends = 'Solar_Controller_Page';
+        return;
     }
     
     /**
@@ -363,27 +395,13 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
      * @return void
      * 
      */
-    protected function _setModel()
+    protected function _setModelName()
     {
-        $model = $this->_options['model'];
-        if ($model) {
-            
-            // the class name
-            $this->_model_class = $model;
-            
-            // find a var name based on the class name
-            $pos = strpos($model, 'Model_');
-            if ($pos === false) {
-                $this->_model_name = strtolower($model);
-            } else {
-                $inflect = Solar_Registry::get('inflect');
-                $name = substr($model, $pos + 6);
-                $this->_model_name = strtolower($inflect->camelToUnder($name));
-            }
-            
+        $model_name = $this->_options['model_name'];
+        if ($model_name) {
+            $this->_model_name = $model_name;
         } else {
-            $this->_model_class = null;
-            $this->_model_name  = null;
+            $this->_model_name = null;
         }
     }
 }

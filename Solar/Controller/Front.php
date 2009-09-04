@@ -33,13 +33,13 @@ class Solar_Controller_Front extends Solar_Base
      * 
      * @config array classes Base class names for page controllers.
      * 
-     * @config array disable A list of class names that should be disallowed and treated
-     *   as "not found" if a URI maps to them.
+     * @config array disable A list of app names that should be disallowed
+     * and treated as "not found" if a URI maps to them.
      * 
      * @config string default The default page-name.
      * 
-     * @config array routing Key-value pairs explicitly mapping a page-name to a
-     *   controller class.
+     * @config array routing Key-value pairs explicitly mapping a page-name to
+     * a controller class.
      * 
      * @var array
      * 
@@ -101,15 +101,14 @@ class Solar_Controller_Front extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        // do the "real" construction
-        parent::__construct($config); 
+        parent::_postConstruct();
         
         // set convenience vars from config
         $this->_default = (string) $this->_config['default'];

@@ -718,4 +718,86 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     {
         $this->todo('stub');
     }
+    
+    /**
+     * 
+     * Test -- special column behaviors.
+     * 
+     */
+    public function test_specialColumns()
+    {
+        $this->todo('convert from Model test case');
+        
+        
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
+        
+        /**
+         * Correct population of new columns
+         */
+        
+        $data = $model->fetchNew()->toArray();
+        $model->insert($data);
+        $now = date('Y-m-d H:i:s');
+        
+        $record = $model->fetchOne();
+        
+        // autoincremented id
+        $this->assertEquals($record->id, 1);
+        
+        // created & updated
+        $created = $record->created;
+        $this->assertEquals($record->created, $now);
+        $this->assertEquals($record->updated, $now);
+        
+        // auto-sequence foo & bar
+        $this->assertEquals($record->seq_foo, 1);
+        $this->assertEquals($record->seq_bar, 1);
+        
+        /**
+         * Correct "updated" and sequence numbering
+         */
+        
+        $data = $model->fetch(1)->toArray();
+        $data['seq_bar'] = null;
+        $model->update($data, array("id = ?" => $data['id']));
+        $now = date('Y-m-d H:i:s');
+        
+        $record->refresh();
+        
+        // created should be as original
+        $this->assertEquals($record->created, $created);
+        
+        // updated should have changed
+        $this->assertEquals($record->updated, $now);
+        
+        // seq_foo should still be 1, but seq_bar should have been increased
+        $this->assertEquals($record->seq_foo, 1);
+        $this->assertEquals($record->seq_bar, 2);
+        
+        /**
+         * Serializing
+         */
+        // first, save something to be serialized
+        $expect = array('foo', 'bar', 'baz');
+        $record->serialize = $expect;
+        $model->update($record, null);
+        
+        // should have been unserialized after saving
+        $this->assertSame($record->serialize, $expect);
+        
+        // now retrieve from the database and see if it unserialized
+        $record = $model->fetch(1);
+        $this->assertSame($record->serialize, $expect);
+        
+        /**
+         * 
+         * Autoinc and sequences on a second record
+         * 
+         */
+        $record = $model->fetchNew();
+        $model->insert($record);
+        $this->assertEquals($record->id, 2);
+        $this->assertEquals($record->seq_foo, 2);
+        $this->assertEquals($record->seq_bar, 3);
+    }
 }

@@ -244,6 +244,58 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
     
     /**
      * 
+     * Returns an array of index information for a table.
+     * 
+     * @param string $table The table name to fetch indexes for.
+     * 
+     * @return array An array of table indexes.
+     * 
+     */
+    protected function _fetchIndexInfo($table)
+    {
+        // strip non-word characters to try and prevent SQL injections,
+        // then quote it to avoid reserved-word issues
+        $table = preg_replace('/[^\w]/', '', $table);
+        $table = $this->quoteName($table);
+        
+        // where the index info will be stored
+        $info = array();
+        
+        // get all indexed columns
+        $list = $this->fetchAll("SHOW INDEXES IN $table");
+        if (! $list) {
+            // no indexes
+            return array();
+        }
+        
+        // collect indexes
+        foreach ($list as $item) {
+            
+            // index name?
+            $name = $item['key_name'];
+            
+            // skip primary-key indexes
+            if ($name == 'PRIMARY') {
+                continue;
+            }
+            
+            // unique?
+            if ($item['non_unique']) {
+                $info[$name]['type'] = 'normal';
+            } else {
+                $info[$name]['type'] = 'unique';
+            }
+            
+            // cols?
+            $info[$name]['cols'][] = $item['column_name'];
+        }
+        
+        // done!
+        return $info;
+    }
+    
+    /**
+     * 
      * Given a native column SQL default value, finds a PHP literal value.
      * 
      * SQL NULLs are converted to PHP nulls.  Non-literal values (such as

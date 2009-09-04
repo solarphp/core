@@ -38,15 +38,22 @@ class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter
     
     /**
      * 
-     * Constructor.
+     * Sets the default directory to write emails to (the temp dir).
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        $this->_Solar_Mail_Transport_Adapter_File['dir'] = Solar_Dir::tmp();
-        parent::__construct($config);
+        parent::_preConfig();
+        
+        if (Solar::$system) {
+            $tmp = Solar::$system . '/mail/';
+        } else {
+            $tmp = Solar_Dir::tmp('/Solar_Mail_Transport_Adapter_File/');
+        }
+        
+        $this->_Solar_Mail_Transport_Adapter_File['dir'] = $tmp;
     }
     
     /**

@@ -75,7 +75,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
             'Solar_Sql',
             $this->_sql_config
         );
-        $this->_sql->setProfiling(true);
         
         // set up a model catalog
         $this->_catalog = Solar::factory(
@@ -135,7 +134,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertTrue(in_array('test_solar_special_cols', $list));
     }
     
-    
     public function test__construct_repeated()
     {
         $model_a = $this->_catalog->newModel('TestSolarSpecialCols');
@@ -168,19 +166,21 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $model = $this->_catalog->getModel('TestSolarSpecialCols');
         for ($i = 0; $i < 5; $i++) {
             // id's are 11-15, all named 'z' with seq_foo of 88
-            $record = $model->fetchNew();
-            $record->name = 'z'; 
-            $record->seq_foo = 88;
-            $model->insert($record);
+            $data = array(
+                'name'    => 'z', 
+                'seq_foo' => 88,
+            );
+            $model->insert($data);
         }
         
         // add some extras so we can see if fetchAll() grabs more than it should
         for ($i = 0; $i < 5; $i++) {
             // id's are 16-20, all named 'z' with seq_foo of 88
-            $record = $model->fetchNew();
-            $record->name = 'z'; 
-            $record->seq_foo = 99;
-            $model->insert($record);
+            $data = array(
+                'name'    => 'z', 
+                'seq_foo' => 99,
+            );
+            $model->insert($data);
         }
         
         /**
@@ -349,9 +349,12 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         $model = $this->_catalog->getModel('TestSolarSpecialCols');
         
-        $record = $model->fetch(7);
-        $this->assertEquals($record->id, 7);
-        $model->delete($record);
+        $id = 7;
+        
+        $record = $model->fetch($id);
+        $this->assertEquals($record->id, $id);
+        
+        $model->delete(array('id = ?' => $id));
         
         // the record should not allow modification now
         try {
@@ -362,7 +365,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         }
         
         // should not be able to retrieve the record
-        $record = $model->fetch(7);
+        $record = $model->fetch($id);
         $this->assertNull($record);
     }
     
@@ -621,54 +624,21 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $model = $this->_catalog->getModel('TestSolarFoo');
         $record = $model->fetchNew();
         
-        $email = 'nobody@example.com';
-        $uri   = 'http://example.com';
-        $name  = 'Nobody Example';
-        
-        $record->email = $email;
-        $record->uri   = $uri;
-        $record->name  = $name;
+        $data = array(
+            'email' => 'nobody@example.com',
+            'uri'   => 'http://example.com',
+            'name'  => 'Nobody Example',
+        );
         
         // insert and make sure we got the ID back
-        $model->insert($record);
-        $this->assertEquals($record->id, 1);
+        $id = $model->insert($data);
+        $this->assertEquals($id, 1);
         
         // now fetch and make sure the insert "took"
-        $record = $model->fetch(1);
-        $this->assertEquals($record->email, $email);
-        $this->assertEquals($record->uri, $uri);
-        $this->assertEquals($record->name, $name);
-    }
-    
-    /**
-     * 
-     * Test -- Filters and inserts a Record into the table, checking
-     * for invalidation at the record level.
-     * 
-     */
-    public function testInsert_invalid()
-    {
-        $model = $this->_catalog->getModel('TestSolarFoo');
-        
-        // insert should fail
-        $record = $model->fetchNew();
-        $record->email = 'not-an-email';
-        try {
-            $model->insert($record);
-            $this->fail('should have thrown ERR_INVALID');
-        } catch (Exception $e) {
-            $this->assertInstance($e, 'Solar_Sql_Model_Record_Exception_Invalid');
-        }
-        
-        // should have failed on email
-        $invalid = $record->getInvalid();
-        $actual = array_keys($invalid);
-        $expect = array('email');
-        $this->assertSame($actual, $expect);
-        
-        // insert should pass
-        $record->email = 'nobody@example.com';
-        $model->insert($record);
+        $record = $model->fetch($id);
+        $this->assertEquals($record->email, $data['email']);
+        $this->assertEquals($record->uri,   $data['uri']);
+        $this->assertEquals($record->name,  $data['name']);
     }
     
     /**
@@ -682,40 +652,18 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $model = $this->_catalog->getModel('TestSolarFoo');
         
         // insert should succeed
-        $record = $model->fetchNew();
-        $record->email = 'nobody@example.com';
-        $model->insert($record);
+        $data = array('email' => 'nobody@example.com');
+        $model->insert($data);
         
         // insert should fail **at database** because of unique index on the
         // email column.
-        $record = $model->fetchNew();
-        $record->email = 'nobody@example.com';
         try {
-            $model->insert($record);
+            // insert the same thing, again
+            $model->insert($data);
             $this->fail('should have thrown ERR_QUERY_FAILED');
         } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Sql_Adapter_Exception_QueryFailed');
         }
-    }
-    
-    /**
-     * 
-     * Test -- Filters and inserts a Record into the table, checking
-     * for single-table inheritance value.
-     * 
-     */
-    public function testInsert_inherit()
-    {
-        $model = $this->_catalog->getModel('TestSolarBar');
-        
-        // it should self-set its inheritance value
-        $record = $model->fetchNew();
-        $this->assertEquals($record->inherit, 'TestSolarBar');
-        
-        // if we clear the inheritance value, it should self-set again
-        $record->inherit = null;
-        $model->insert($record);
-        $this->assertEquals($record->inherit, 'TestSolarBar');
     }
     
     /**
@@ -905,82 +853,41 @@ class Test_Solar_Sql_Model extends Solar_Test {
     {
         $model = $this->_catalog->getModel('TestSolarFoo');
         
-        /**
-         * insert a valid record
-         */
-        $record = $model->fetchNew();
-        
         $email = 'nobody@example.com';
         $uri   = 'http://example.com';
         $name  = 'Nobody Example';
         
-        $record->email = $email;
-        $record->uri   = $uri;
-        $record->name  = $name;
+        $data = array(
+            'email' => $email,
+            'uri'   => $uri,
+            'name'  => $name,
+        );
         
         // insert and make sure we got the ID back
-        $model->insert($record);
-        $this->assertEquals($record->id, 1);
+        $id = $model->insert($data);
+        $this->assertEquals($id, 1);
         
         /**
          * fetch and update the record
          */
          
         // fetch and make sure the insert "took"
-        $record = $model->fetch(1);
+        $record = $model->fetch($id);
         $this->assertEquals($record->email, $email);
         $this->assertEquals($record->uri, $uri);
         $this->assertEquals($record->name, $name);
         
         // change something and update
         $name = 'Another Example';
-        $record->name = $name;
-        $model->update($record, null);
-        
-        // did it change in the record?
-        $this->assertEquals($record->email, $email);
-        $this->assertEquals($record->uri, $uri);
-        $this->assertEquals($record->name, $name);
+        $data = $record->toArray();
+        $data['name'] = $name;
+        $model->update($data, array("id = ?" => $id));
         
         // did the update "take"?
-        $record = $model->fetch(1);
+        $record = $model->fetch($id);
         $this->assertEquals($record->email, $email);
         $this->assertEquals($record->uri, $uri);
         $this->assertEquals($record->name, $name);
-    }
-    /**
-     * 
-     * Test -- Filters and updates a Record into the table, checking
-     * for invalidation at the record level.
-     * 
-     */
-    public function testUpdate_invalid()
-    {
-        $model = $this->_catalog->getModel('TestSolarFoo');
-        
-        // insert should pass
-        $record = $model->fetchNew();
-        $record->email = 'nobody@example.com';
-        $model->insert($record);
-        
-        // update should fail
-        $record->email = 'not-an-email';
-        try {
-            $model->update($record, null);
-            $this->fail('should have thrown ERR_INVALID');
-        } catch (Exception $e) {
-            $this->assertInstance($e, 'Solar_Sql_Model_Record_Exception_Invalid');
-        }
-        
-        // should have failed on email
-        $invalid = $record->getInvalid();
-        $actual = array_keys($invalid);
-        $expect = array('email');
-        $this->assertSame($actual, $expect);
-        
-        // update should pass
-        $record->email = 'another@example.com';
-        $model->update($record, null);
     }
     
     /**
@@ -994,127 +901,24 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $model = $this->_catalog->getModel('TestSolarFoo');
         
         // insert should succeed
-        $record = $model->fetchNew();
-        $record->email = 'nobody@example.com';
-        $model->insert($record);
+        $data = array('email' => 'nobody@example.com');
+        $first_id = $model->insert($data);
         
         // insert another record to work with
-        $record = $model->fetchNew();
-        $record->email = 'another@example.com';
-        $model->insert($record);
+        $data = array('email' => 'another@example.com');
+        $second_id = $model->insert($data);
+        $this->assertNotEquals($second_id, $first_id);
+        $this->assertTrue($second_id > 0);
         
         // now modify the more-recent record, and fail the uniqueness index
         // at the database.
-        $record->email = 'nobody@example.com';
+        $data = array('email' => 'nobody@example.com');
         try {
-            $model->update($record, null);
+            $model->sql->setProfiling(true);
+            $count = $model->update($data, array("id = ?" => $second_id));
             $this->fail('should have thrown ERR_QUERY_FAILED');
         } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Sql_Adapter_Exception_QueryFailed');
         }
-    }
-    
-    /**
-     * 
-     * Test -- Filters and updates a Record into the table, checking
-     * for single-table inheritance value.
-     * 
-     */
-    public function testUpdate_inherit()
-    {
-        $model = $this->_catalog->getModel('TestSolarBar');
-        
-        // it should self-set its inheritance value
-        $record = $model->fetchNew();
-        $this->assertEquals($record->inherit, 'TestSolarBar');
-        
-        // if we clear the inheritance value, it should self-set again
-        $record->inherit = null;
-        $model->insert($record);
-        $this->assertEquals($record->inherit, 'TestSolarBar');
-        
-        // if we fetch, clear, and update, it should self-set *again*
-        $record = $model->fetch(1);
-        $this->assertEquals($record->inherit, 'TestSolarBar');
-        $record->inherit = null;
-        $model->update($record, null);
-        $this->assertEquals($record->inherit, 'TestSolarBar');
-        $record = $model->fetch(1);
-        $this->assertEquals($record->inherit, 'TestSolarBar');
-    }
-    
-    /**
-     * 
-     * Test -- special column behaviors.
-     * 
-     */
-    public function test_specialColumns()
-    {
-        $model = $this->_catalog->getModel('TestSolarSpecialCols');
-        
-        /**
-         * Correct population of new columns
-         */
-        
-        $record = $model->fetchNew();
-        $model->insert($record);
-        $now = date('Y-m-d H:i:s');
-        
-        // autoincremented id
-        $this->assertEquals($record->id, 1);
-        
-        // created & updated
-        $created = $record->created;
-        $this->assertEquals($record->created, $now);
-        $this->assertEquals($record->updated, $now);
-        
-        // auto-sequence foo & bar
-        $this->assertEquals($record->seq_foo, 1);
-        $this->assertEquals($record->seq_bar, 1);
-        
-        /**
-         * Correct "updated" and sequence numbering
-         */
-        
-        $record = $model->fetch(1);
-        $record->seq_bar = null;
-        $model->update($record, null);
-        $now = date('Y-m-d H:i:s');
-        
-        // created should be as original
-        $this->assertEquals($record->created, $created);
-        
-        // updated should have changed
-        $this->assertEquals($record->updated, $now);
-        
-        // seq_foo should still be 1, but seq_bar should have been increased
-        $this->assertEquals($record->seq_foo, 1);
-        $this->assertEquals($record->seq_bar, 2);
-        
-        /**
-         * Serializing
-         */
-        // first, save something to be serialized
-        $expect = array('foo', 'bar', 'baz');
-        $record->serialize = $expect;
-        $model->update($record, null);
-        
-        // should have been unserialized after saving
-        $this->assertSame($record->serialize, $expect);
-        
-        // now retrieve from the database and see if it unserialized
-        $record = $model->fetch(1);
-        $this->assertSame($record->serialize, $expect);
-        
-        /**
-         * 
-         * Autoinc and sequences on a second record
-         * 
-         */
-        $record = $model->fetchNew();
-        $model->insert($record);
-        $this->assertEquals($record->id, 2);
-        $this->assertEquals($record->seq_foo, 2);
-        $this->assertEquals($record->seq_bar, 3);
     }
 }

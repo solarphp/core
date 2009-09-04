@@ -100,22 +100,31 @@ class Solar_Debug_Timer extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Modifies $this->_config after it has been built.
      * 
-     * @param array $config Configuration value overrides, if any.
-     * If the 'auto_start' key is true, this will start the timer.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConfig()
     {
-        parent::__construct($config);
-        
+        parent::_postConfig();
         if (empty($this->_config['output'])) {
             $mode = (PHP_SAPI == 'cli') ? 'text' 
                                         : 'html';
             $this->_config['output'] = $mode;
         }
-        
+    }
+    
+    /**
+     * 
+     * Post-construction tasks to complete object construction.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
+    {
+        parent::_postConstruct();
         if ($this->_config['auto_start']) {
             $this->start();
         }

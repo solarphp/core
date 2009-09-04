@@ -27,4 +27,11 @@ return array(
         'descr' => 'Use this config file for the test cases themselves.',
         'filters' => array('validateString', 'sanitizeString')
     ),
+    'stop_on_fail' => array(
+        'long' => 'stop-on-fail',
+        'param' => null,
+        'value' => false,
+        'descr' => 'Stop running tests when a test fails.',
+        'filters' => array('validateBool', 'sanitizeBool'),
+    ),
 );

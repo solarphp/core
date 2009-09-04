@@ -10,9 +10,9 @@ return array(
         'descr'   => 'Extends from this class name.',
         'param'   => 'required',
     ),
-    'model' => array(
-        'long'    => 'model',
-        'descr'   => 'Add this model class automatically.',
+    'model-name' => array(
+        'long'    => 'model-name',
+        'descr'   => 'Use this as the main model in the app.',
         'param'   => 'required',
     ),
 );

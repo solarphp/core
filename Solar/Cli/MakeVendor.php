@@ -49,15 +49,15 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         '/{:dashes}/script',
         '/{:dashes}/docs',
         '/{:dashes}/tests',
-        '/{:dashes}/{:studly}/App',
+        '/{:dashes}/tests/Test',
+        '/{:dashes}/tests/Test/{:studly}',
         '/{:dashes}/{:studly}/App/Public',
-        '/{:dashes}/{:studly}/App/Public/images',
-        '/{:dashes}/{:studly}/App/Public/scripts',
-        '/{:dashes}/{:studly}/App/Public/styles',
-        '/{:dashes}/{:studly}/Model',
-        '/{:dashes}/{:studly}/Locale',
-        '/{:dashes}/{:studly}/View',
-        '/{:dashes}/{:studly}/View/Helper',
+        '/{:dashes}/{:studly}/Controller/Page/Layout',
+        '/{:dashes}/{:studly}/Controller/Page/Locale',
+        '/{:dashes}/{:studly}/Controller/Page/View',
+        '/{:dashes}/{:studly}/Controller/Model/Layout',
+        '/{:dashes}/{:studly}/Controller/Model/Locale',
+        '/{:dashes}/{:studly}/Controller/Model/View',
     );
     
     /**
@@ -90,8 +90,9 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         $this->_dashes  = $this->_inflect->camelToDashes($vendor);
         $this->_studly  = $this->_inflect->dashesToStudly($this->_dashes);
         
-        // create dirs and symlinks
+        // create dirs, files, and symlinks
         $this->_createDirs();
+        $this->_createFiles();
         $this->_createLinks();
         
         // done!
@@ -153,6 +154,13 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
                 'src' => "../source/{$this->_dashes}/$this->_studly",
             ),
             
+            // include/Test/Vendor => ../../source/vendor/tests/Test/Vendor
+            array(
+                'dir' => "$system/include/Test",
+                'tgt' => $this->_studly,
+                'src' => "../../source/{$this->_dashes}/Test/$this->_studly",
+            ),
+            
             // docroot/public/Vendor -> ../../include/Vendor/App/Public
             array(
                 'dir' => "$system/docroot/public",
@@ -166,7 +174,6 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
                 'tgt' => $this->_dashes,
                 'src' => "../source/solar/script/solar",
             ),
-            
         );
         
         foreach ($links as $link) {
@@ -174,6 +181,49 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
             $cmd = "cd $dir; ln -s $src $tgt";
             $this->_outln($cmd);
             passthru($cmd);
+        }
+    }
+    
+    /**
+     * 
+     * Creates the baseline PHP files in the Vendor directories from the 
+     * skeleton files in `Data/*.txt`.
+     * 
+     * @return void
+     * 
+     */
+    protected function _createFiles()
+    {
+        $system = Solar::$system;
+        $data_dir = Solar_Class::dir($this, 'Data');
+        $list = glob($data_dir . "*.txt");
+        foreach ($list as $data_file) {
+            
+            $file = substr($data_file, strlen($data_dir));
+            $file = str_replace('.txt', '.php', $file);
+            $file = str_replace('_', '/', $file);
+            $file = str_replace('-', '_', $file);
+            $file = "$system/source/{$this->_dashes}/{$this->_studly}/$file";
+            
+            if (file_exists($file)) {
+                $this->_outln("Skipping $file.");
+                continue;
+            }
+            
+            $dirname = dirname($file);
+            if (! is_dir($dirname)) {
+                $this->_out("Making directory $dirname ... ");
+                mkdir($dirname, 0755, true);
+                $this->_outln("done.");
+            }
+            
+            $text = file_get_contents($data_file);
+            $text = str_replace('{:php}', '<?php', $text);
+            $text = str_replace('{:vendor}', $this->_studly, $text);
+            
+            $this->_out("Writing $file ... ");
+            file_put_contents($file, $text);
+            $this->_outln("done.");
         }
     }
 }

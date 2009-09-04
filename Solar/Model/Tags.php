@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Model_Tags extends Solar_Model {
+class Solar_Model_Tags extends Solar_Sql_Model {
     
     /**
      * 
@@ -32,13 +32,7 @@ class Solar_Model_Tags extends Solar_Model {
         
         $this->_table_name = Solar_File::load($dir . 'table_name.php');
         $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
-        
-        /**
-         * Indexes.
-         */
-        $this->_index = array(
-            'name' => 'unique',
-        );
+        $this->_index      = Solar_File::load($dir . 'index_info.php');
         
         /**
          * Behaviors (serialize, sequence, filter).
@@ -67,20 +61,22 @@ class Solar_Model_Tags extends Solar_Model {
      */
     public function fetchAllWithCount($params = null)
     {
-        // primary key on this table alias; e.g., tags.id
-        $native_primary = "{$this->_model_name}.{$this->_primary_col}";
+        // fix up so we can manipulate easier, esp. to get the table alias
+        $params = $this->_fixFetchParams($params);
         
-        // fetch all columns, plus a count column
-        $params['cols'] = $this->_fetch_cols;
-        $params['cols'][] = "COUNT($native_primary) AS count";
+        // count the number of nodes.
+        $params->cols("COUNT(nodes.id) AS count");
         
         // group on primary key for counts
-        $params['group'][] = $native_primary;
+        $native_col = "{$params['alias']}.{$this->_primary_col}";
+        $params->group($native_col);
         
         // eager-join to nodes for the count of nodes.
         // force the join even though we're not fetching nodes, so  that
         // the counts come back.
-        $params['eager']['nodes']['require_related'] = true;
+        $params->eager('nodes', array(
+            'join_only' => true,
+        ));
         
         // done with params
         return $this->fetchAll($params);

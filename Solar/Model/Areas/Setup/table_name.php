@@ -1,2 +1,1 @@
-<?php
-return 'areas';
+<?php return 'areas';

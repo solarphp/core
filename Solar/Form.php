@@ -18,6 +18,18 @@
  */
 class Solar_Form extends Solar_Base
 {
+    // we use "success/failure" terminology rather than "valid/invalid"
+    // terminology for a couple reasons.
+    // 
+    // (1) the form may be in a midway state, where validation has not been
+    // applied yet; the form is neither valid nor invalid in that case.  
+    // 
+    // (2) form feedback usually indicates something more than whether or not 
+    // the data are valid; the feedback is intended to show that (on success) 
+    // some other process has been completed, e.g. saving to a database.
+    const STATUS_SUCCESS = true;
+    const STATUS_FAILURE = false;
+    
     /**
      * 
      * Default configuration values.
@@ -228,33 +240,29 @@ class Solar_Form extends Solar_Base
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-provided configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        // programmatic defaults
-        $this->_Solar_Form['success'] = $this->locale('SUCCESS_FORM');
-        $this->_Solar_Form['failure'] = $this->locale('FAILURE_FORM');
-        
-        // "real" contruction, which incidentally calls _postConfig()
-        parent::__construct($config);
-        
-        // reset all the properties based on config now
-        $this->reset();
-    }
-    
-    /**
-     * 
-     * Complete configuration before parent calls reset().
+     * Sets the default success and failure messages.
      * 
      * @return void
      * 
      */
-    public function _postConfig()
+    protected function _preConfig()
     {
+        parent::_preConfig();
+        $this->_Solar_Form['success'] = $this->locale('SUCCESS_FORM');
+        $this->_Solar_Form['failure'] = $this->locale('FAILURE_FORM');
+    }
+    
+    /**
+     * 
+     * Post-construction tasks to complete object construction.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
+    {
+        parent::_postConstruct();
+        
         // request environment
         $this->_request = Solar::dependency(
             'Solar_Request',
@@ -271,11 +279,14 @@ class Solar_Form extends Solar_Base
         $action = $this->_request->server('REQUEST_URI');
         $this->_default_attribs['action'] = $action;
         
-        // now merge attribute configs
-        $this->_config['attribs'] = array_merge(
-            $this->_default_attribs,
-            $this->_config['attribs']
+        // now merge attribute configs to defaults
+        $this->_default_attribs = array_merge(
+            $this->_config['attribs'],
+            $this->_default_attribs
         );
+        
+        // reset everything
+        $this->reset();
     }
     
     // -----------------------------------------------------------------
@@ -842,7 +853,7 @@ class Solar_Form extends Solar_Base
      */
     public function reset()
     {
-        $this->attribs    = $this->_config['attribs'];
+        $this->attribs    = $this->_default_attribs;
         $this->elements   = array();
         $this->feedback   = array();
         $this->_filters   = array();
@@ -855,35 +866,44 @@ class Solar_Form extends Solar_Base
      * 
      * Does not set individual element status values.
      * 
-     * @param bool $flag True if you want to say the form is valid,
-     * false if you want to say it is not valid.
+     * @param bool $status Solar_Form::STATUS_SUCCESS if you want to say the 
+     * form as a whole is valid, Solar_Form::STATUS_FAILURE if you want to say
+     * the form as a whole is is invalid.
      * 
      * @return void
      * 
      */
-    public function setStatus($flag)
+    public function setStatus($status)
     {
-        // normalize the flag to be true, false, or null
-        if ($flag !== null) {
-            $flag = (bool) $flag;
+        // only allow certain statuses
+        $allowed = array(
+            Solar_Form::STATUS_SUCCESS,
+            Solar_Form::STATUS_FAILURE,
+            null,
+        );
+        
+        if (! in_array($status, $allowed)) {
+            throw $this->_exception('ERR_STATUS_NOT_ALLOWED', array(
+                'status' => $status,
+            ));
         }
         
         // no operation if status does not change
-        if ($this->_status === $flag) {
+        if ($this->_status === $status) {
             return;
         }
-
+        
         // reset feedback when we change from one status to another
-        if ($flag === null) {
+        if ($status === null) {
             $this->feedback = array();
-        } elseif ($flag) {
+        } elseif ($status) {
             $this->feedback = array($this->_config['success']);
         } else {
             $this->feedback = array($this->_config['failure']);
         }
         
         // set the status to the new value
-        $this->_status = $flag;
+        $this->_status = $status;
     }
     
     /**
@@ -897,6 +917,34 @@ class Solar_Form extends Solar_Base
     public function getStatus()
     {
         return $this->_status;
+    }
+    
+    /**
+     * 
+     * Has the current form been successfully validated?
+     * 
+     * Note that if validation has not been attempted, this will return false.
+     * 
+     * @return bool
+     * 
+     */
+    public function isSuccess()
+    {
+        return $this->_status === Solar_Form::STATUS_SUCCESS;
+    }
+    
+    /**
+     * 
+     * Has the current form failed validation?
+     * 
+     * Note that if validation has not been attempted, this will return false.
+     * 
+     * @return bool
+     * 
+     */
+    public function isFailure()
+    {
+        return $this->_status === Solar_Form::STATUS_FAILURE;
     }
     
     /**

@@ -72,14 +72,14 @@ class Solar_Sql_Model_Cache extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         $this->_cache = Solar::dependency(
             'Solar_Cache',
             $this->_config['cache']
@@ -155,7 +155,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * @return string The versioned cache entry key.
      * 
      */
-    public function entry($params)
+    public function entry(Solar_Sql_Model_Params_Fetch $params)
     {
         $version = (int) $this->_fetchVersion();
         
@@ -165,7 +165,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
             unset($params['cache']);
             unset($params['cache_key']);
             unset($params['count_pages']);
-            $serial = serialize($params);
+            $serial = serialize($params->toArray());
             $key = hash('md5', $serial);
         }
         

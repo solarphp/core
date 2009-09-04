@@ -125,23 +125,33 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
     
     /**
      * 
-     * Constructor.
+     * Checks to make sure the memcache extension is available.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        // make sure we have memcache available
+        parent::_preConfig();
         if (! extension_loaded('memcache')) {
             throw $this->_exception(
                 'ERR_EXTENSION_NOT_LOADED',
                 array('extension' => 'memcache')
             );
         }
+    }
+    
+    /**
+     * 
+     * Post-construction tasks to complete object construction.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
+    {
+        parent::_postConstruct();
         
-        // construction
-        parent::__construct($config);
         $this->memcache = new Memcache;
         
         // pool or single-server connection?

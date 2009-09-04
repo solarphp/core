@@ -16,6 +16,17 @@
  */
 class Solar_View_Helper_FormLabel extends Solar_View_Helper_FormElement
 {
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config string css_class_require The CSS class to use for required elements.
+     * 
+     * @config string css_class_invalid The CSS class to use for invalid elements.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_View_Helper_FormLabel = array(
         'css_class_require' => 'require',
         'css_class_invalid' => 'invalid',
@@ -47,6 +58,13 @@ class Solar_View_Helper_FormLabel extends Solar_View_Helper_FormElement
              . '</label>';
     }
     
+    /**
+     * 
+     * Returns the attributes array to use for the label.
+     * 
+     * @return array
+     * 
+     */
     protected function _getAttribs()
     {
         return array(
@@ -55,6 +73,13 @@ class Solar_View_Helper_FormLabel extends Solar_View_Helper_FormElement
         );
     }
     
+    /**
+     * 
+     * Returns the 'for' attribute.
+     * 
+     * @return string
+     * 
+     */
     protected function _getFor()
     {
         if (! empty($this->_attribs['for'])) {
@@ -66,6 +91,13 @@ class Solar_View_Helper_FormLabel extends Solar_View_Helper_FormElement
         }
     }
     
+    /**
+     * 
+     * Returns the 'class' attribute.
+     * 
+     * @return string
+     * 
+     */
     protected function _getClass()
     {
         if (! empty($this->_attribs['class'])) {

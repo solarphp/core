@@ -61,14 +61,14 @@ class Solar_Test extends Solar_Base
     
     /**
      * 
-     * Setup before the entire unit test.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         $this->_debug = Solar::factory('Solar_Debug_Var');
     }
     

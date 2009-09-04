@@ -36,14 +36,14 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // prefix the session class store, not the individual keys.
         $prefix = $this->_prefix;

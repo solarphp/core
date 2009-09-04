@@ -258,14 +258,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // turn on profiling?
         $this->setProfiling($this->_config['profiling']);
@@ -694,11 +694,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Binds data as values into a prepared PDOStatment.
+     * Binds an array of scalars as values into a prepared PDOStatment.
+     * 
+     * Array element values that are themselves arrays will not be bound
+     * correctly, because PDO expects scalar values only.
      * 
      * @param PDOStatement $prep The prepared PDOStatement.
      * 
-     * @param array $data The data to bind as values to the PDOStatement.
+     * @param array $data The scalar values to bind into the PDOStatement.
      * 
      * @return void
      * 
@@ -1977,6 +1980,37 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return array($type, $size, $scope);
     }
     
+    /**
+     * 
+     * Returns an array describing table indexes from the cache; if the cache
+     * entry is not available, queries the database for the index information.
+     * 
+     * @param string $table The table name to fetch indexes for.
+     * 
+     * @return array An array of table indexes.
+     * 
+     */
+    public function fetchIndexInfo($table)
+    {
+        $key = $this->_getCacheKey("table/$table/index");
+        $result = $this->_cache->fetch($key);
+        if (! $result) {
+            $result = $this->_fetchIndexInfo($table);
+            $this->_cache->add($key, $result);
+        }
+        return $result;
+    }
+    
+    /**
+     * 
+     * Returns an array of index information for a table.
+     * 
+     * @param string $table The table name to fetch indexes for.
+     * 
+     * @return array An array of table indexes.
+     * 
+     */
+    abstract protected function _fetchIndexInfo($table);
     
     // -----------------------------------------------------------------
     // 
@@ -2470,7 +2504,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Check if a table, column, or index name is a valid identifier.
+     * Check if a table, column, or index name is a valid portable identifier.
      * 
      * @param string $type The indentifier type: table, index, sequence, etc.
      * 

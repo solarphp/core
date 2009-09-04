@@ -1,0 +1,18 @@
+<?php return array (
+  'LABEL_ID' => 'Id',
+  'LABEL_CREATED' => 'Created',
+  'LABEL_UPDATED' => 'Updated',
+  'LABEL_NAME' => 'Name',
+  'LABEL_OWNER_HANDLE' => 'Owner Handle',
+  'LABEL_SUBJ' => 'Subj',
+  'LABEL_SUMM' => 'Summ',
+  'LABEL_PREFS' => 'Prefs',
+  'DESCR_ID' => '',
+  'DESCR_CREATED' => '',
+  'DESCR_UPDATED' => '',
+  'DESCR_NAME' => '',
+  'DESCR_OWNER_HANDLE' => '',
+  'DESCR_SUBJ' => '',
+  'DESCR_SUMM' => '',
+  'DESCR_PREFS' => '',
+);

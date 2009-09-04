@@ -24,10 +24,7 @@ class Solar_Filter extends Solar_Base
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
-     * 
-     * `classes`
-     * : (array) Base class names for filters
+     * @config array classes Base class names for filters.
      * 
      * @var array
      * 
@@ -177,14 +174,14 @@ class Solar_Filter extends Solar_Base
     
     /**
      * 
-     * Constructor.
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
         
         // build the filter class stack
         $this->_stack = Solar::factory('Solar_Class_Stack');

@@ -283,6 +283,20 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
     
     /**
      * 
+     * Returns an array of index information for a table.
+     * 
+     * @param string $table The table name to fetch indexes for.
+     * 
+     * @return array An array of table indexes.
+     * 
+     */
+    protected function _fetchIndexInfo($table)
+    {
+        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
+    }
+    
+    /**
+     * 
      * Given a native column SQL default value, finds a PHP literal value.
      * 
      * SQL NULLs are converted to PHP nulls.  Non-literal values (such as

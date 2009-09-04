@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a formatted mnumber
+ * Helper for a formatted number.
  * 
  * @category Solar
  * 
@@ -20,15 +20,11 @@ class Solar_View_Helper_Number extends Solar_View_Helper
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * @config string dec_point Designates the character used for decimal 
+     * points. Default is the locale string for FORMAT_DEC_POINT.
      * 
-     * `dec_point`
-     * : (string) Designates the character used for decimal points. Default is
-     *   the locale string for FORMAT_DEC_POINT.
-     * 
-     * `thousands_sep`
-     * : (string) Designates the character used to separate thousands. Default
-     *   is the locale string for FORMAT_THOUSANDS_SEP.
+     * @config string thousands_sep Designates the character used to separate 
+     * thousands. Default is the locale string for FORMAT_THOUSANDS_SEP.
      * 
      * @var array
      * 
@@ -40,13 +36,15 @@ class Solar_View_Helper_Number extends Solar_View_Helper
     
     /**
      * 
-     * Constructor..
+     * Sets the default 'dec_point' and 'thousands_sep' values.
      * 
-     * @param array $config User-defined configuration keys.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
+        parent::_preConfig();
+        
         $this->_Solar_View_Helper_Number['dec_point'] = $this->locale(
             'FORMAT_DEC_POINT'
         );
@@ -54,13 +52,11 @@ class Solar_View_Helper_Number extends Solar_View_Helper
         $this->_Solar_View_Helper_Number['thousands_sep'] = $this->locale(
             'FORMAT_THOUSANDS_SEP'
         );
-        
-        parent::__construct($config);
     }
     
     /**
      * 
-     * Returns a numeric value formatted with [[php::number_format() | ]]
+     * Returns a numeric value formatted with [[php::number_format() | ]].
      * 
      * @param string|int|float $number A numeric value.
      * 

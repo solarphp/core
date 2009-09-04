@@ -23,14 +23,46 @@ class Test_{:class} extends {:extends} {
     
     /**
      * 
-     * Constructor.
+     * A hook that activates before _buildConfig() in the constructor.
      * 
-     * @param array $config Configuration value overrides, if any.
+     * Allows you to modify the object before configuration is built; for
+     * example, to set properties or to check for extensions.
+     * 
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        parent::__construct($config);
+        parent::_preConfig();
+    }
+    
+    /**
+     * 
+     * A hook that activates after _buildConfig() in the constructor.
+     * 
+     * Allows you to modify $this->_config after it has been built.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConfig()
+    {
+        parent::_postConfig();
+    }
+    
+    /**
+     * 
+     * A hook that activates at the end of the constructor.
+     * 
+     * Allows you to modify the object properties after config has been built,
+     * and to call follow-on methods.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
+    {
+        parent::_postConstruct();
     }
     
     /**

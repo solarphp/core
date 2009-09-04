@@ -18,6 +18,19 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
 {
     /**
      * 
+     * Default configuration values.
+     * 
+     * @config string extends The default model class to extend.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Cli_MakeModel = array(
+        'extends' => null,
+    );
+    
+    /**
+     * 
      * The base directory where we will write the class file to, typically
      * the local PEAR directory.
      * 
@@ -42,7 +55,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      * @var string
      * 
      */
-    protected $_extends = 'Solar_Sql_Model';
+    protected $_extends = null;
     
     /**
      * 
@@ -102,7 +115,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_setTable($class);
         
         // extend this class
-        $this->_setExtends();
+        $this->_setExtends($class);
         
         // using inheritance?
         $this->_setInherit();
@@ -119,6 +132,9 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
             $this->_createSetupDir($class);
             $this->_writeTableName($class);
             $this->_writeTableCols($class);
+            $this->_writeIndexInfo($class);
+            $this->_createLocaleDir($class);
+            $this->_writeLocaleFile($class);
         }
         
         // done!
@@ -240,17 +256,38 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      * 
      * Sets the class this model will extend from.
      * 
+     * @param string $class The model class name.
+     * 
      * @return void
      * 
      */
-    protected function _setExtends()
+    protected function _setExtends($class)
     {
+        // explicit as cli option?
         $extends = $this->_options['extends'];
         if ($extends) {
             $this->_extends = $extends;
-        } else {
-            $this->_extends = 'Solar_Sql_Model';
+            return;
         }
+        
+        // explicit as config value?
+        $extends =  $this->_config['extends'];
+        if ($extends) {
+            $this->_extends = $this->_config['extends'];
+            return;
+        }
+        
+        // look at the class name and find a Vendor_Sql_Model class
+        $vendor = Solar_Class::vendor($class);
+        $file = $this->_target . "$vendor/Sql/Model.php";
+        if (file_exists($file)) {
+            $this->_extends = "{$vendor}_Sql_Model";
+            return;
+        }
+        
+        // final fallback: Solar_Sql_Model
+        $this->_extends = 'Solar_Sql_Model';
+        return;
     }
     
     /**
@@ -425,7 +462,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         );
         
         $file = $dir . DIRECTORY_SEPARATOR . 'table_name.php';
-        $text = "<?php\nreturn '{$this->_table}';";
+        $text = "<?php return '{$this->_table}';";
         
         // write the name file
         $this->_out('Saving table name for setup ... ');
@@ -453,7 +490,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         
         if (! file_exists($file)) {
             $this->_out('Creating empty table cols setup ... ');
-            $text = "<?php\nreturn array();";
+            $text = "<?php return array();";
             file_put_contents($file, $text);
             $this->_outln('done.');
         }
@@ -480,10 +517,134 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln('done.');
         
         // write the cols file
-        $this->_out('Saving table cols for setup ...');
+        $this->_out('Saving table cols for setup ... ');
         $text = var_export($table_cols, true);
-        file_put_contents($dir . 'table_cols.php', "<?php\nreturn $text;");
+        file_put_contents($file, "<?php return $text;");
+        $this->_outln('done.');
+    }
+    
+    /**
+     * 
+     * Writes the "Setup/index_info.php" file, connecting to the database if
+     * needed.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _writeIndexInfo($class)
+    {
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Setup'
+        );
+        
+        $file = $dir . DIRECTORY_SEPARATOR . 'index_info.php';
+        
+        if (! file_exists($file)) {
+            $this->_out('Creating empty index info setup ... ');
+            $text = "<?php return array();";
+            file_put_contents($file, $text);
+            $this->_outln('done.');
+        }
+        
+        if (! $this->_connect) {
+            $this->_outln('Not connecting to database.');
+            $this->_outln('Not fetching index info.');
+            return;
+        }
+        
+        // connect to database
+        $this->_out('Connecting to database ... ');
+        $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
+        $this->_outln('connected.');
+        
+        // fetch index info
+        $this->_out('Fetching index info ... ');
+        $index_info = $sql->fetchIndexInfo($this->_table);
+        if (! $index_info) {
+            $this->_outln('no indexes found.');
+            return;
+        } else {
+            $this->_outln('done.');
+        }
+        
+        // write the cols file
+        $this->_out('Saving index info for setup ... ');
+        $text = var_export($index_info, true);
+        file_put_contents($file, "<?php return $text;");
+        $this->_outln('done.');
+    }
+    
+    /**
+     * 
+     * Creates the model "Locale/" directory.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _createLocaleDir($class)
+    {
+        // get the setup dir
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Locale'
+        );
+        
+        if (! file_exists($dir)) {
+            $this->_out('Creating locale directory ... ');
+            mkdir($dir, 0755, true);
+            $this->_outln('done.');
+        } else {
+            $this->_outln('Locale directory exists.');
+        }
+    }
+    
+    /**
+     * 
+     * Writes the model "Locale/en_US.php" file.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _writeLocaleFile($class)
+    {
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Locale'
+        );
+        
+        $file = $dir . DIRECTORY_SEPARATOR . 'en_US.php';
+        
+        if (file_exists($file)) {
+            $this->_outln('Locale file for en_US already exists.');
+            return;
+        }
+        
+        // get the table cols
+        $incl = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Setup/table_cols.php'
+        );
+        $cols = include($incl);
+        
+        // create a label value & descr placeholder for each column
+        $list = array_keys($cols);
+        $label = array();
+        foreach ($list as $col) {
+            $key = strtoupper("LABEL_{$col}");
+            $label[$key] = ucwords(str_replace('_', ' ', $col));
+            
+            $key = strtoupper("DESCR_{$col}");
+            $descr[$key] = '';
+        }
+        
+        // write the en_US file
+        $this->_out('Saving locale file for en_US ... ');
+        $data = array_merge($label, $descr);
+        $text = var_export($data, true);
+        file_put_contents($file, "<?php return $text;");
         $this->_outln('done.');
     }
 }
-

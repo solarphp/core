@@ -193,7 +193,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * as extracted from the fetched key string.
      * 
      */
-    protected protected function _fetchKeyData()
+    protected function _fetchKeyData()
     {
         $cache_key = $this->_config['cache_key'];
         if ($this->_cache) {

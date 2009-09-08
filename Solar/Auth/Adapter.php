@@ -152,45 +152,38 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Magic "public" properties that are actually stored in the cache.
      * 
-     * The available magic properties are:
+     * The available magic properties are ...
      * 
-     * @config string status The Unix time at which the authenticated handle was last 
+     * - status:  (string)  The Unix time at which the authenticated handle was last 
      *   valid.
      * 
-     * @config int initial The Unix time at which the handle was initially authenticated.
+     * - initial:  (int)  The Unix time at which the handle was initially authenticated.
      * 
-     * @config int active The status code of the current user authentication. The string
+     * - active:  (int)  The status code of the current user authentication. The string
      *   codes are ...
      *   
-     *     `ANON` (or empty)
-     *     : The user is anonymous/unauthenticated (no attempt to 
-     *       authenticate)
+     *     - Solar_Auth::ANON (or empty): The user is anonymous/unauthenticated (no attempt to authenticate)
      *     
-     *     `EXPIRED`
-     *     : The max time for authentication has expired
+     *     - Solar_Auth::EXPIRED: The max time for authentication has expired
      *     
-     *     `IDLED`
-     *     : The authenticated user has been idle for too long
+     *     - Solar_Auth::IDLED: The authenticated user has been idle for too long
      *     
-     *     `VALID`
-     *     : The user is authenticated and has not timed out
+     *     - Solar_Auth::VALID: The user is authenticated and has not timed out
      *     
-     *     `WRONG`
-     *     : The user attempted authentication but failed
+     *     - Solar_Auth::WRONG: The user attempted authentication but failed
      *   
+     * - handle:  (string) The currently authenticated user handle.
      * 
-     * @config string handle The currently authenticated user handle.
-     * 
-     * @config string email The email address of the currently authenticated user. May 
+     * - email:  (string) The email address of the currently authenticated user. May 
      *   or may not be populated by the adapter.
      * 
-     * @config string moniker The "display name" or "full name" of the currently 
+     * - moniker:  (string) The "display name" or "full name" of the currently 
      *   authenticated user.  May or may not be populated by the adapter.
      * 
-     * @config string uri The URI for the currently authenticated user. May or may not 
+     * - uri:  (string) The URI for the currently authenticated user. May or may not 
      *   be populated by the adapter.
      * 
-     * @config mixed uid The user ID (usually numeric) for the currently authenticated 
+     * - uid:  (mixed) The user ID (usually numeric) for the currently authenticated 
      *   user.  May or may not be populated by the adapter.
      * 
      * @var array
@@ -277,7 +270,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Magic get for pseudo-public properties.
+     * Magic get for pseudo-public properties as defined by [[$_magic]].
      * 
      * @param string $key The name of the property to get.
      * 
@@ -306,7 +299,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Magic set for pseudo-public properties.
+     * Magic set for pseudo-public properties as defined by [[$_magic]].
      * 
      * @param string $key The name of the property to set.
      * 

@@ -366,12 +366,6 @@ class Solar
             return $obj->factory();
         }
         
-        // "the old way" so we can ease transition to "the new way"
-        if (method_exists($obj, 'solarFactory')) {
-            // return an instance from the object factory
-            return $obj->solarFactory();
-        }
-        
         // return the object itself
         return $obj;
     }

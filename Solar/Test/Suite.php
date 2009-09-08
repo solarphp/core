@@ -302,15 +302,22 @@ class Solar_Test_Suite extends Solar_Base
             
             // try constructing the test case once
             $this->_testConstruct($php, $class);
-            if ($this->_test_result == 'fail') {
-                // construction failed
-                if ($this->_config['stop_on_fail']) {
-                    // stop testing entirely
-                    break;
-                } else {
-                    // go on to next test case
-                    continue;
-                }
+            
+            // was it a stop-on-fail?
+            $stop = $this->_test_result == 'fail'
+                 && $this->_config['stop_on_fail'];
+            if ($stop) {
+                // stop testing entirely
+                break;
+            }
+            
+            // was it a fail/todo/skip?
+            $continue = in_array($this->_test_result, array(
+                'fail', 'todo', 'skip',
+            ));
+            if ($continue) {
+                // go on to next class
+                continue;
             }
             
             // run each test method

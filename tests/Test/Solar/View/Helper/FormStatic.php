@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_View_Helper_FormStatic extends Solar_Test {
+class Test_Solar_View_Helper_FormStatic extends Test_Solar_View_Helper {
     
     /**
      * 
@@ -71,17 +71,6 @@ class Test_Solar_View_Helper_FormStatic extends Solar_Test {
     // Test methods.
     // 
     // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_View_Helper_FormStatic');
-        $this->assertInstance($obj, 'Solar_View_Helper_FormStatic');
-    }
     
     /**
      * 

@@ -63,27 +63,32 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         
         // make sure that nodes has-one meta entry
         $expect = array(
-            'cols'                  => array(
-                0 => 'id',
-                1 => 'node_id',
-                2 => 'last_comment_id',
-                3 => 'last_comment_by',
-                4 => 'last_comment_at',
-                5 => 'comment_count',
+            "cols" => array(
+                0 => "id",
+                1 => "node_id",
+                2 => "last_comment_id",
+                3 => "last_comment_by",
+                4 => "last_comment_at",
+                5 => "comment_count",
             ),
-            'foreign_alias'         => 'meta',
-            'foreign_class'         => 'Solar_Example_Model_Metas',
-            'foreign_col'           => 'node_id',
-            'foreign_key'           => 'node_id',
-            'foreign_primary_col'   => 'id',
-            'foreign_table'         => 'test_solar_metas',
-            'name'                  => 'meta',
-            'native_alias'          => 'nodes',
-            'native_class'          => 'Solar_Example_Model_Nodes',
-            'native_col'            => 'id',
-            'order'                 => array('meta.id'),
-            'type'                  => 'has_one',
-            'where'                 => NULL,
+            "foreign_alias" => "meta",
+            "foreign_class" => "Solar_Example_Model_Metas",
+            "foreign_col" => "node_id",
+            "foreign_key" => "node_id",
+            "foreign_primary_col" => "id",
+            "foreign_table" => "test_solar_metas",
+            "merge" => "server",
+            "name" => "meta",
+            "native_alias" => "nodes",
+            "native_by" => "wherein",
+            "native_class" => "Solar_Example_Model_Nodes",
+            "native_col" => "id",
+            "order" => array(
+                0 => "meta.id",
+            ),
+            "type" => "has_one",
+            "where" => array(),
+            "wherein_max" => 100,
         );
         
         $actual = $nodes->getRelated('meta')->toArray();

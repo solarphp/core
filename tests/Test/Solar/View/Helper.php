@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_View_Helper extends Solar_Test {
+abstract class Test_Solar_View_Helper extends Solar_Test {
     
     /**
      * 
@@ -31,7 +31,6 @@ class Test_Solar_View_Helper extends Solar_Test {
      */
     public function __construct($config = null)
     {
-        $this->skip('abstract class');
         parent::__construct($config);
     }
     
@@ -80,7 +79,9 @@ class Test_Solar_View_Helper extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_View_Helper');
-        $this->assertInstance($obj, 'Solar_View_Helper');
+        $view = Solar::factory('Solar_View');
+        $class = substr(get_class($this), 5);
+        $obj = Solar::factory($class, array('_view' => $view));
+        $this->assertInstance($obj, $class);
     }
 }

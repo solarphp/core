@@ -62,26 +62,31 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
         $actual = $related->toArray();
         
         $expect = array (
-            'cols'                  =>  array(
-                0 => 'id',
-                1 => 'created',
-                2 => 'updated',
-                3 => 'user_id',
-                4 => 'name',
+            "cols" => array (
+                0 => "id",
+                1 => "created",
+                2 => "updated",
+                3 => "user_id",
+                4 => "name",
             ),
-            'foreign_alias'         => 'area',
-            'foreign_class'         => 'Solar_Example_Model_Areas',
-            'foreign_col'           => 'id',
-            'foreign_key'           => 'area_id',
-            'foreign_primary_col'   => 'id',
-            'foreign_table'         => 'test_solar_areas',
-            'name'                  => 'area',
-            'native_alias'          => 'nodes',
-            'native_class'          => 'Solar_Example_Model_Nodes',
-            'native_col'            => 'area_id',
-            'order'                 => array('area.id'),
-            'type'                  => 'belongs_to',
-            'where'                 => null,
+            "foreign_alias" => "area",
+            "foreign_class" => "Solar_Example_Model_Areas",
+            "foreign_col" => "id",
+            "foreign_key" => "area_id",
+            "foreign_primary_col" => "id",
+            "foreign_table" => "test_solar_areas",
+            "merge" => "server",
+            "name" => "area",
+            "native_alias" => "nodes",
+            "native_by" => "wherein",
+            "native_class" => "Solar_Example_Model_Nodes",
+            "native_col" => "area_id",
+            "order" => array(
+                0 => "area.id",
+            ),
+            "type" => "belongs_to",
+            "where" => array(),
+            "wherein_max" => 100,
         );
         
         $this->assertSame($actual, $expect);

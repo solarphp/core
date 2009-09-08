@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_View_Helper_Meta extends Solar_Test {
+class Test_Solar_View_Helper_Meta extends Test_Solar_View_Helper {
     
     /**
      * 
@@ -71,17 +71,6 @@ class Test_Solar_View_Helper_Meta extends Solar_Test {
     // Test methods.
     // 
     // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_View_Helper_Meta');
-        $this->assertInstance($obj, 'Solar_View_Helper_Meta');
-    }
     
     /**
      * 

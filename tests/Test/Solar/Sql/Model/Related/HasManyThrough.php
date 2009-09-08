@@ -121,31 +121,36 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         $actual = $related->toArray();
         
         // make sure that areas has-many nodes entry
-        $expect = array (
-            'cols'                  => array (
-                0 => 'id',
-                1 => 'name',
-                2 => 'summ',
+        $expect = array(
+            "cols" => array(
+                0 => "id",
+                1 => "name",
+                2 => "summ",
             ),
-            'foreign_alias'          => 'tags',
-            'foreign_class'          => 'Solar_Example_Model_Tags',
-            'foreign_col'            => 'id',
-            'foreign_key'            => 'id',
-            'foreign_primary_col'    => 'id',
-            'foreign_table'          => 'test_solar_tags',
-            'name'                   => 'tags',
-            'native_alias'           => 'nodes',
-            'native_class'           => 'Solar_Example_Model_Nodes',
-            'native_col'             => 'id',
-            'order'                  => array('tags.id'),
-            'through'                => 'taggings',
-            'through_alias'          => 'taggings',
-            'through_foreign_col'    => 'tag_id',
-            'through_key'            => null,
-            'through_native_col'     => 'node_id',
-            'through_table'          => 'test_solar_taggings',
-            'type'                   => 'has_many_through',
-            'where'                  => null,
+            "foreign_alias" => "tags",
+            "foreign_class" => "Solar_Example_Model_Tags",
+            "foreign_col" => "id",
+            "foreign_key" => "id",
+            "foreign_primary_col" => "id",
+            "foreign_table" => "test_solar_tags",
+            "merge" => "client",
+            "name" => "tags",
+            "native_alias" => "nodes",
+            "native_by" => "wherein",
+            "native_class" => "Solar_Example_Model_Nodes",
+            "native_col" => "id",
+            "order" => array(
+                0 => "tags.id",
+            ),
+            "through" => "taggings",
+            "through_alias" => "taggings",
+            "through_foreign_col" => "tag_id",
+            "through_key" => null,
+            "through_native_col" => "node_id",
+            "through_table" => "test_solar_taggings",
+            "type" => "has_many_through",
+            "where" => array(),
+            "wherein_max" => 100,
         );
         
         $this->assertSame($actual, $expect);

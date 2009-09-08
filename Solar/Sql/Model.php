@@ -1264,7 +1264,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             // defaults
             $fetch->load(array(
                 'cache'       => $this->_config['auto_cache'],
-                'cols'        => array_keys($this->_table_cols),
                 'paging'      => $this->_paging,
                 'alias' => $this->_model_name,
             ));
@@ -1323,6 +1322,10 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function newSelect($fetch = null)
     {
         $fetch = $this->_fixFetchParams($fetch);
+        
+        if (! $fetch['cols']) {
+            $fetch->cols(array_keys($this->_table_cols));
+        }
         
         if (! $fetch['alias']) {
             $fetch->alias($this->_model_name);

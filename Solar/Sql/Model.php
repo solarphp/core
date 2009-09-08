@@ -11,6 +11,8 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
+ * @author Jeff Moore <jeff@procata.com>
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
@@ -1271,23 +1273,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             // done
             return $fetch;
         }
-    }
-    
-    /**
-     * 
-     * Modifies eager options for selecting from this model.
-     * 
-     * This allows a standard join strategy to be implemented, or allows
-     * additional required eagers to be chained.
-     * 
-     * @param array $options The eager options.
-     * 
-     * @return array The modified options.
-     * 
-     */
-    public function modEagerOptions($options)
-    {
-        return $options;
     }
     
     /**

@@ -51,6 +51,10 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
         '_postRender' => 0,
     );
     
+    protected $_layout_default = null;
+    
+    protected $_layout = null;
+    
     /**
      * 
      * Default action.

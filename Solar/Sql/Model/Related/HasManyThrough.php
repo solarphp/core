@@ -15,7 +15,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: HasMany.php 3617 2009-02-16 19:47:30Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToMany

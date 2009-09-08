@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {

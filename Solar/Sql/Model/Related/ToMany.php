@@ -13,7 +13,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Related.php 3761 2009-05-27 18:20:20Z pmjones $
+ * @version $Id$
  * 
  */
 abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related

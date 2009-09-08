@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 abstract class Solar_Sql_Model_Params extends Solar_Struct { 

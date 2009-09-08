@@ -21,7 +21,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Suite.php 3153 2008-05-05 23:14:16Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Test_Suite extends Solar_Base

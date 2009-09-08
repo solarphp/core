@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: FormText.php 3153 2008-05-05 23:14:16Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_View_Helper_FormInvalid extends Solar_View_Helper_FormElement

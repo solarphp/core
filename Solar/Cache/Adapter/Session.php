@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Var.php 3617 2009-02-16 19:47:30Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter

@@ -80,7 +80,7 @@ class Test_Solar_Sql extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Sql');
-        $this->assertInstance($obj, 'Solar_Sql');
+        $this->assertInstance($obj, 'Solar_Sql_Adapter');
     }
     
     /**

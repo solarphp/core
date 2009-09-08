@@ -23,118 +23,101 @@ class Test_Solar_Access_Adapter_None extends Test_Solar_Access_Adapter {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        $this->todo('need adapter-specific config');
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
     
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Access_Adapter_None');
-        $this->assertInstance($obj, 'Solar_Access_Adapter_None');
-    }
-    
-    /**
-     * 
-     * Test -- Fetch access privileges for a user handle and roles.
-     * 
-     */
     public function testFetch()
     {
-        $this->todo('stub');
+        // anonymous user
+        $list = $this->_access->fetch(null, array());
+        $this->assertTrue(count($list) == 1);
+        
+        $list = $this->_access->fetch('gir', array());
+        $this->assertTrue(count($list) == 1);
+        
+        $list = $this->_access->fetch('gir', array('bar'));
+        $this->assertTrue(count($list) == 1);
     }
     
-    /**
-     * 
-     * Test -- Tells whether or not to allow access to a class/action/process combination.
-     * 
-     */
     public function testIsAllowed()
     {
-        $this->todo('stub');
+        $this->_access->load('gir', array('bar'));
+        
+        // deny all override
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Deny',
+            '*'
+        ));
+        
+        // deny for role bar
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example',
+            'read'
+        ));
+        
+        // test wildcard actions
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example2',
+            'read'
+        ));
+        
+        // test specific action
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example3',
+            'edit'
+        ));
+        
+        // allow access to all authenticated users ('+')
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example4',
+            'read'
+        ));
+        
+        $this->_access->load('someone', array('foo'));
+        
+        // deny access for role 'foo'
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example',
+            'read'
+        ));
+        
+        // non-autenticated user
+        $this->_access->load(null, array());
+        
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Auth',
+            'read'
+        ));
     }
     
-    /**
-     * 
-     * Test -- Checks to see if the current user is the owner of application-specific content; always returns false, since no access is allowed at all.
-     * 
-     */
-    public function testIsOwner()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Fetches the access list from the adapter into $this->list.
-     * 
-     */
     public function testLoad()
     {
-        $this->todo('stub');
+        // load with literal handle and roles
+        $this->_access->load('gir', array('bar'));
+        $this->diag($this->_access->list);
+        
+        // simply test there's correct amount of acl rows
+        $actual = count($this->_access->list);
+        $expect = 1;
+        $this->assertEquals($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Resets the current access controls to a blank array, along with the  $_auth and $_role properties.
-     * 
-     */
-    public function testReset()
+    public function testLoad_object()
     {
-        $this->todo('stub');
+        $auth = Solar::factory('Solar_Auth');
+        $auth->handle = 'gir';
+        
+        $role = Solar::factory('Solar_Role');
+        $role->setList(array('bar'));
+        
+        // load with auth and role object
+        $this->_access->load($auth, $role);
+        $this->diag($this->_access->list);
+        
+        // simply test there's correct amount of acl rows
+        $actual = count($this->_access->list);
+        $expect = 1;
+        $this->assertEquals($actual, $expect);
     }
 }

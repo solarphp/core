@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_App_Base extends Solar_Test {
+abstract class Test_Solar_App_Base extends Solar_Test {
     
     /**
      * 

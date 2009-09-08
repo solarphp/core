@@ -106,21 +106,4 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
     {
         parent::teardown();
     }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Access_Adapter_Sql');
-        $this->assertInstance($obj, 'Solar_Access_Adapter_Sql');
-    }
 }

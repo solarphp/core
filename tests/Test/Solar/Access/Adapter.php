@@ -86,8 +86,8 @@ abstract class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Access_Adapter');
-        $this->assertInstance($obj, 'Solar_Access_Adapter');
+        $obj = Solar::factory($this->_class);
+        $this->assertInstance($obj, $this->_class);
     }
     
     /**

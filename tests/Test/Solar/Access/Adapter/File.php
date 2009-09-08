@@ -38,21 +38,4 @@ class Test_Solar_Access_Adapter_File extends Test_Solar_Access_Adapter {
         $this->_config['file'] = $dir . 'access.txt';
         parent::setup();
     }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Access_Adapter_File');
-        $this->assertInstance($obj, 'Solar_Access_Adapter_File');
-    }
 }

@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Example_Model_TestSolarFoo_Bar_Record extends Test_Solar_Example_Model {
+class Test_Solar_Example_Model_TestSolarBar_Record extends Test_Solar_Example_Model {
     
     /**
      * 
@@ -13,7 +13,7 @@ class Test_Solar_Example_Model_TestSolarFoo_Bar_Record extends Test_Solar_Exampl
      * @var array
      * 
      */
-    protected $_Test_Solar_Example_Model_TestSolarFoo_Bar_Record = array(
+    protected $_Test_Solar_Example_Model_TestSolarBar_Record = array(
     );
     
     // -----------------------------------------------------------------
@@ -79,8 +79,8 @@ class Test_Solar_Example_Model_TestSolarFoo_Bar_Record extends Test_Solar_Exampl
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Example_Model_TestSolarFoo_Bar_Record');
-        $this->assertInstance($obj, 'Solar_Example_Model_TestSolarFoo_Bar_Record');
+        $obj = Solar::factory('Solar_Example_Model_TestSolarBar_Record');
+        $this->assertInstance($obj, 'Solar_Example_Model_TestSolarBar_Record');
     }
     
     /**

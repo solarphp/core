@@ -228,14 +228,8 @@ class Test_Solar_Controller_Page extends Solar_Test {
      */
     public function testFetch_notFound()
     {
-        try {
-            $this->_page->fetch("no-such-action");
-            $this->fail('should have thrown an Exception During Fetch');
-        } catch (Solar_Controller_Page_Exception_DuringFetch $e) {
-            $actual = $e->getInfo('exception');
-            $expect = 'Solar_Controller_Page_Exception_ActionNotFound';
-            $this->assertInstance($actual, $expect);
-        }
+        $this->_page->fetch("no-such-action");
+        $this->todo('need to rewrite to examine page output');
     }
     
     /**
@@ -275,26 +269,13 @@ class Test_Solar_Controller_Page extends Solar_Test {
     public function testFetch_actionDefaultNotFound()
     {
         $this->_page->setActionDefault('no-such-action');
-        try {
-            $result = $this->_page->fetch();
-            $this->fail('should have thrown an Exception During Fetch');
-        } catch (Solar_Controller_Page_Exception_DuringFetch $e) {
-            $actual = $e->getInfo('exception');
-            $expect = 'Solar_Controller_Page_Exception_ActionNotFound';
-            $this->assertInstance($actual, $expect);
-        }
+        $this->todo('need to rewrite to examine page output');
     }
     
     public function testFetch_noRelatedView()
     {
-        try {
-            $this->_page->fetch("no-related-view");
-            $this->fail('should have thrown ViewNotFound exception');
-        } catch (Solar_Controller_Page_Exception_DuringFetch $e) {
-            $actual = $e->getInfo('exception');
-            $expect = 'Solar_Controller_Page_Exception_ViewNotFound';
-            $this->assertInstance($actual, $expect);
-        }
+        $this->_page->fetch("no-related-view");
+        $this->todo('need to rewrite to examine page output');
     }
     
     /**

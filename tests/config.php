@@ -28,6 +28,8 @@ $config['Solar_Sql_Adapter_Mysql'] = array(
 $config['Solar_Sql_Adapter_Pgsql'] = array(
 	'host'   => '127.0.0.1',
 	'name'   => 'test',
+	'user'   => 'postgres',
+	'pass'   => 'postgres',
 );
 
 $config['Solar_Sql_Adapter_Sqlite'] = array(

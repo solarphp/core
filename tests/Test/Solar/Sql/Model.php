@@ -432,6 +432,30 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->todo('stub');
     }
     
+    public function testFetchAssocAsArray()
+    {
+        // insert a set of records
+        $this->_populateSpecialColsTable();
+        
+        // fetch by some WHERE clause
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
+        $array = $model->fetchAssocAsArray(array(
+            'where' => 'id > 5',
+            'order' => 'name',
+            'cols' => array(
+                'name', 'id', 'seq_foo'
+            ),
+        ));
+        
+        // generic
+        $this->assertEquals(count($array), 5);
+        
+        // specific: array keys should be on 'name', not 'id'
+        $actual = array_keys($array);
+        $expect = array('f', 'g', 'h', 'i', 'j');
+        $this->assertSame($actual, $expect);
+    }
+    
     /**
      * 
      * Test -- The same as fetchAll(), except the record collection is keyed on the first column of the results (instead of being a strictly sequential array.)  Recognized parameters for the fetch are:  `eager` : (string|array) Eager-fetch records from these related models.

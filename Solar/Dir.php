@@ -136,7 +136,7 @@ class Solar_Dir extends Solar_Base
             
             // use the system if we can
             if (Solar::$system) {
-                $tmp = "$system/tmp";
+                $tmp = Solar::$system . "/tmp";
             } elseif (function_exists('sys_get_temp_dir')) {
                 $tmp = sys_get_temp_dir();
             } else {

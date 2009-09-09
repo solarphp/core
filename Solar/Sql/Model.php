@@ -1257,21 +1257,30 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _fixFetchParams($spec)
     {
         if ($spec instanceof Solar_Sql_Model_Params_Fetch) {
+            // already a params object, pre-empt further modification
             return $spec;
-        } else {
-            // baseline object
-            $fetch = Solar::factory('Solar_Sql_Model_Params_Fetch');
-            // defaults
-            $fetch->load(array(
-                'cache'       => $this->_config['auto_cache'],
-                'paging'      => $this->_paging,
-                'alias' => $this->_model_name,
-            ));
-            // overrides
-            $fetch->load($spec);
-            // done
-            return $fetch;
         }
+        
+        // baseline object
+        $fetch = Solar::factory('Solar_Sql_Model_Params_Fetch');
+        
+        // defaults
+        $fetch->load(array(
+            'cache'  => $this->_config['auto_cache'],
+            'paging' => $this->_paging,
+            'alias'  => $this->_model_name,
+        ));
+        
+        // user specification
+        $fetch->load($spec);
+        
+        // add columns if none already specified
+        if (! $fetch['cols']) {
+            $fetch->cols(array_keys($this->_table_cols));
+        }
+        
+        // done
+        return $fetch;
     }
     
     /**
@@ -1322,10 +1331,6 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function newSelect($fetch = null)
     {
         $fetch = $this->_fixFetchParams($fetch);
-        
-        if (! $fetch['cols']) {
-            $fetch->cols(array_keys($this->_table_cols));
-        }
         
         if (! $fetch['alias']) {
             $fetch->alias($this->_model_name);

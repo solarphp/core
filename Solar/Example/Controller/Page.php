@@ -51,8 +51,22 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
         '_postRender' => 0,
     );
     
+    /**
+     * 
+     * Turn off the default layout.
+     * 
+     * @var string
+     * 
+     */
     protected $_layout_default = null;
     
+    /**
+     * 
+     * Turn off the initial layout.
+     * 
+     * @var string
+     * 
+     */
     protected $_layout = null;
     
     /**

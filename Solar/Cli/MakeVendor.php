@@ -177,7 +177,7 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
                 'src' => "../../include/{$this->_studly}/App/Public",
             ),
             
-            // script/vendor -> ../source/solar/bin/solar
+            // script/vendor -> ../source/solar/script/solar
             array(
                 'dir' => "$system/script",
                 'tgt' => $this->_dashes,

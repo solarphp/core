@@ -96,11 +96,19 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         $this->_createLinks();
         
         // done!
-        $done = "Done! Remember to add your new {$this->_studly}_App class "
-              . "prefix to the ['Solar_Controller_Front']['classes'] element "
-              . "in your config file.";
+        $this->_outln("Done!");
+        
+        $this->_outln(
+                "Remember to add '{$this->_studly}_App' to the "
+              . "['Solar_Controller_Front']['classes'] element "
+              . "in your config file so that it finds your apps."
+        );
 
-        $this->_outln($done);
+        $this->_outln(
+                "Remember to add '{$this->_studly}_Model' to the "
+              . "['Solar_Sql_Model_Catalog']['classes'] element "
+              . "in your config file so that it finds your models."
+        );
     }
     
     /**

@@ -649,7 +649,7 @@ class Solar_Form_Load_Model extends Solar_Base
                || $filter[0] == 'validateInList';
                
             if ($ok) {
-                $elem['options'] = $this->_autoOptions($v[0], $v[1]);
+                $elem['options'] = $this->_autoOptions($filter[0], $filter[1]);
                 break;
             }
         }

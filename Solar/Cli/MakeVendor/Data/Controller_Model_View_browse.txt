@@ -14,4 +14,4 @@
     }
 ?>
 
-<p><?php echo $this->action("{$this->controller}/add", 'ACTION_ADD'); ?>
+<p><?php echo $this->action("{$this->controller}/add", 'ACTION_ADD'); ?></p>

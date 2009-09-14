@@ -43,4 +43,4 @@ $css_class = $this->escape($model_name) . '-list';
         ?>
         </ul></li>
     <?php endforeach; ?>
-    </ol>
+    </ul>

@@ -134,8 +134,8 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
             $val = Solar_Sql_Select::IGNORE;
         }
         
-        // now the real logic
-        if ($val == Solar_Sql_Select::IGNORE) {
+        // now the real logic. use triple-equals so that empties are honored.
+        if ($val === Solar_Sql_Select::IGNORE) {
             $this->_data['where'][] = $cond;
         } else {
             $this->_data['where'][$cond] = $val;
@@ -188,8 +188,8 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
             $val = Solar_Sql_Select::IGNORE;
         }
         
-        // now the real logic
-        if ($val == Solar_Sql_Select::IGNORE) {
+        // now the real logic. use triple-equals so that empties are honored.
+        if ($val === Solar_Sql_Select::IGNORE) {
             $this->_data['having'][] = $cond;
         } else {
             $this->_data['having'][$cond] = $val;

@@ -235,7 +235,7 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
         if (! $spec) {
             $this->_data['limit'] = null;
         } else {
-            $spec = array_pad($spec, 2, null);
+            $spec = array_pad((array) $spec, 2, null);
             $this->_data['limit'][0] = (int) $spec[0];
             $this->_data['limit'][1] = (int) $spec[1];
         }

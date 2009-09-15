@@ -390,7 +390,6 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
             'count_pages' => 'countPages',
             'distinct',
             'group',
-            'limit',
             'order',
             'page',
             'paging',
@@ -400,6 +399,11 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
             'having',
             'where',
         ));
+        
+        // limit() is a special case
+        if (! empty($data['limit'])) {
+            $this->limit($data['limit']);
+        }
         
         // join() is a special case
         if (! empty($data['join'])) {

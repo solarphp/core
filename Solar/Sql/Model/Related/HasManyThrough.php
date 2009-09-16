@@ -341,7 +341,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             if (! empty($data[$key])) {
                 $row[$this->name] = $data[$key];
             } else {
-                $row[$this->name] = array();
+                $row[$this->name] = $this->fetchEmpty();
             }
         }
     }

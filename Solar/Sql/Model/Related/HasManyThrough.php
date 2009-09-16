@@ -346,7 +346,6 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         }
     }
     
-    
     /**
      * 
      * Fetches the related collection for a native ID or record.

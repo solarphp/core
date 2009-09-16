@@ -903,7 +903,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             if (! empty($data[$key])) {
                 $row[$this->name] = $data[$key];
             } else {
-                $row[$this->name] = null;
+                $row[$this->name] = $this->fetchEmpty();
             }
         }
     }

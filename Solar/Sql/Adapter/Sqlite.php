@@ -343,9 +343,8 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
         $info = array();
         
         // get all indexes on the table
-        $list = $this->fetchAll("PRAGMA INDEX_LIST(:table)", array(
-            'table' => $table,
-        ));
+        $tmp = $this->_quoteName($table);
+        $list = $this->fetchAll("PRAGMA INDEX_LIST($tmp)");
         
         if (! $list) {
             // no indexes
@@ -371,10 +370,8 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             $info[$name]['unique'] = (bool) $item['unique'];
             
             // what cols in the index?
-            $cols = $this->fetchAll("PRAGMA INDEX_INFO(:name)", array(
-                // use the original name with any existing table prefix
-                'name' => $item['name'],
-            ));
+            $tmp = $this->_quoteName($item['name']);
+            $cols = $this->fetchAll("PRAGMA INDEX_INFO($tmp)");
             
             // collect column info
             foreach ($cols as $col) {

@@ -463,7 +463,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         if ($list) {
             // add only listed elements
             foreach ($elements as $info) {
-                if (in_array($list, $info['name'])) {
+                if (in_array($info['name'], $list)) {
                     // it's on the list, add it
                     $this->addElement($info);
                 }

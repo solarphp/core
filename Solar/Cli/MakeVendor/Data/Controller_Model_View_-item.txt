@@ -33,7 +33,9 @@ $cols = array_keys($item->getModel()->table_cols);
         
         // localized label
         $locale_key = strtoupper("LABEL_$col");
-        echo "\n    <dt>" . $this->getText($locale_key) . "</dt>\n";
+        echo "\n    <dt>"
+           . $this->escape($item->locale($locale_key))
+           . "</dt>\n";
         
         // value
         $val = $item->$col;

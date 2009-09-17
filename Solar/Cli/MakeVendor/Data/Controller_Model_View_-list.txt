@@ -20,7 +20,7 @@ $css_class = $this->escape($model_name) . '-list';
                 
                 // localized label
                 $locale_key = strtoupper("LABEL_$col");
-                $label = $this->getText($locale_key);
+                $label = $this->escape($item->locale($locale_key));
         
                 // value
                 if (is_scalar($val)) {

@@ -1276,7 +1276,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // add columns if none already specified
         if (! $fetch['cols']) {
-            $fetch->cols(array_keys($this->_table_cols));
+            $fetch->cols($this->_fetch_cols);
         }
         
         // done

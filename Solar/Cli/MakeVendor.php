@@ -150,46 +150,57 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
      */
     protected function _createLinks()
     {
-        $this->_outln('Making symlinks.');
-        
-        $system = Solar::$system;
+        $this->_outln('Making links.');
         
         $links = array(
             
             // include/Vendor -> ../source/vendor/Vendor
             array(
-                'dir' => "$system/include",
+                'dir' => "include",
                 'tgt' => $this->_studly,
                 'src' => "../source/{$this->_dashes}/$this->_studly",
             ),
             
             // include/Test/Vendor => ../../source/vendor/tests/Test/Vendor
             array(
-                'dir' => "$system/include/Test",
+                'dir' => "include/Test",
                 'tgt' => $this->_studly,
                 'src' => "../../source/{$this->_dashes}/Test/$this->_studly",
             ),
             
             // docroot/public/Vendor -> ../../include/Vendor/App/Public
             array(
-                'dir' => "$system/docroot/public",
+                'dir' => "docroot/public",
                 'tgt' => $this->_studly,
                 'src' => "../../include/{$this->_studly}/App/Public",
             ),
             
             // script/vendor -> ../source/solar/script/solar
             array(
-                'dir' => "$system/script",
+                'dir' => "script",
                 'tgt' => $this->_dashes,
                 'src' => "../source/solar/script/solar",
             ),
         );
         
+        $system = Solar::$system;
         foreach ($links as $link) {
-            extract($link); // $dir, $src, $tgt
-            $cmd = "cd $dir; ln -s $src $tgt";
-            $this->_outln($cmd);
+            
+            // $dir, $src, $tgt
+            extract($link);
+            
+            // skip it?
+            $link = "$system/$dir/$tgt";
+            if (file_exists($link)) {
+                $this->_outln("Link $link exists.");
+                continue;
+            }
+            
+            // make it
+            $this->_out("Making link $link ... ");
+            $cmd = "cd $system/$dir; ln -s $src $tgt";
             passthru($cmd);
+            $this->_outln("done.");
         }
     }
     
@@ -215,7 +226,7 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
             $file = "$system/source/{$this->_dashes}/{$this->_studly}/$file";
             
             if (file_exists($file)) {
-                $this->_outln("Skipping $file.");
+                $this->_outln("File $file exists.");
                 continue;
             }
             

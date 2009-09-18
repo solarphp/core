@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Areas.php 3617 2009-02-16 19:47:30Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Example_Model_Bookmarks_Collection extends Solar_Example_Model_Nodes_Collection {

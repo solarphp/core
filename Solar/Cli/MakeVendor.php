@@ -190,8 +190,8 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
             extract($link);
             
             // skip it?
-            $link = "$system/$dir/$tgt";
-            if (file_exists($link)) {
+            $link = "$dir/$tgt";
+            if (file_exists("$system/$link")) {
                 $this->_outln("Link $link exists.");
                 continue;
             }

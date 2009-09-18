@@ -165,7 +165,7 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
             array(
                 'dir' => "include/Test",
                 'tgt' => $this->_studly,
-                'src' => "../../source/{$this->_dashes}/Test/$this->_studly",
+                'src' => "../../source/{$this->_dashes}/tests/Test/$this->_studly",
             ),
             
             // docroot/public/Vendor -> ../../include/Vendor/App/Public

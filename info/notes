@@ -1,0 +1,322 @@
+* General
+
+    * Renamed all "driver" to "adapter" in line with pattern vocabulary.
+    
+    * All facade classes that take adapter configs at construction time
+      now use an additional 'config' key to hold those values; this
+      affects Solar_Cache and Solar_Sql, since they previously would
+      pass unused config keys to the adapter. You now explicitly pass a
+      'config' key with those values.
+
+* Schema changes
+
+    * Added columns to the 'areas' and 'nodes' tables; be certain to run
+      "docs/migrate/0.19.0-0.20.0/content.sql" against your database if
+      you are upgrading.
+      
+* Added new classes
+
+    * Solar_Flash takes over from Solar::*Flash() methods.
+    
+* Moved/renamed classes
+    
+    * Solar_User_Access is now Solar_Access; all Solar_User_Access_*
+      driver classes are now Solar_Access_Adapter_* classes.
+
+    * Solar_User_Auth is now Solar_Auth; all Solar_User_Auth_* driver
+      classes are now Solar_Auth_Adapter_* classes.
+    
+    * Solar_User_Role is now Solar_Role; all Solar_User_Role_* driver
+      classes are now Solar_Role_Adapter_* classes.
+      
+    * Solar_Cache_* classes are now named Solar_Cache_Adapter_*.
+    
+    * Solar_Sql_Driver* classes are now named Solar_Sql_Adapter*.
+    
+* Solar
+
+    * Renamed inRegistry() to isRegistered().
+
+    * Moved addFlash(), setFlash(), getFlash() to Solar_Flash.
+    
+    * The start() method only starts a session when not in a CLI
+      environment, per suggestion from Antti Holvikari.
+    
+    * Added $parents property and parents() method to discover and
+      retain class parentage; used for locale string fallbacks and other
+      purposes.
+
+    * Modified locale() method to load locale string files as it goes
+      (functionality moved here from Solar_Base).
+
+    * Added _loadLocale() method to load locale files into
+      Solar::$locale.
+
+* Solar_Access
+
+    * Renamed 'driver' config key to 'adapter'.
+    
+    * Renamed fetch() to load.
+    
+    * Renamed allow() to isAllowed().
+    
+* Solar_App*
+
+    * Now uses Solar_Auth::isValid() instead of Solar_Auth::$status ==
+      'VALID'.
+
+* Solar_App_Bookmarks
+
+    * Bugfix: wiews for "add", "edit", and "quick" now show the correct
+      backlink (was using "action" helper instead of "anchor").
+      
+* Solar_App_Hello
+
+    * Removed database registration from _setup() so no DB is needed;
+      this should speed things up for new users (thanks Clay Loveless).
+      
+* Solar_Auth
+
+    * MAJOR BC BREAKS IN ALL OF AUTH
+    
+    * Renamed 'driver' config key to 'adapter'.
+    
+    * Added 'source' config key to define where authentication
+      credentials come from ('get' or 'post') ... per suggestions from
+      Antti Holvikari.
+    
+    * Renamed 'post_*' config keys to 'source_*' ... per suggestions
+      from Antti Holvikari
+
+    * Renamed valid() to isValid().
+    
+    * Refactored Auth and adapters to push more activity down to the
+      adapter level in anticipation of non handle/passwd adapters (like
+      TypeKey and OpenID).
+    
+    * Now use Solar_Auth::isValid() instead of Solar_Auth::$status ==
+      'VALID'.
+      
+    * Method isValid() no longer updates idle & expire times, only
+      returns current status.
+
+    * If you try to log in while already logged in, the new attempt is
+      **not** honored as a login request.
+    
+    * Now supports limited retrieval of additional user data from auth
+      sources:  "email", "uri" (for user's website), and "moniker" (for
+      user's display-name).
+
+* Solar_Auth_Adapter_*
+
+    * Renamed valid() to isValid().
+
+* Solar_Auth_Adapter_Ini
+
+    * Recognized file format has changed:  handles are now groups, and
+      each handle uses these keys:  passwd, email, moniker, uri.
+      
+* Solar_Auth_Adapter_Multi
+
+    * In "Multi" adapter, renamed 'drivers' config key to 'adapters'.
+
+* Solar_Base
+
+    * Now builds Solar.config.php values based on parent class
+      hierarchy, not just the class itself.
+
+    * Removed 'locale' config key; locale files are now always and only
+      located at the "Class/Locale/*.php".
+
+    * Moved all locale() loading and discovery logic to Solar::locale()
+      ... and locale strings are now inherited from parent classes.
+      
+    * Moved Solar/Locale/* files to Solar/Base/Locale/* to help
+      streamline inheritance of locale strings.
+      
+* Solar_Cache
+
+    * Renamed 'driver' config key to 'adapter'.
+    
+    * Previously, you would pass adapter config keys as part of the
+      Solar_Cache configs directly; now, you must pass them as part of a
+      'config' key.
+
+* Solar_Content_Abstract
+
+    * In fetch() and fetchAll(), node part counts are now joined with a
+      LEFT JOIN; this way, the lack of a sub-part does not cause a row
+      not to be returned.
+
+    * fetchParts() now fetches *all* parts of a node, not just the
+      parts that match the content-type.
+    
+    * The insert() and update() methods now force the editor_ipaddr when
+      not already set.
+
+    * Content objects no longer fetch only "master" nodes of a type
+      (i.e., where parent_id = 0), but all nodes of the type, regardless
+      of parentage.
+
+    * fetchParts() signature change; params are now $parent_id, $where,
+      $order.
+
+* Solar_Controller_Page
+    
+    * MAJOR BC BREAKS IN ALL OF PAGE
+    
+    * Now uses an internal $_flash object instead of setFlash(), et. al.
+      methods. Use $this->_flash->set() instead of $this->setFlash(),
+      and do on.
+      
+    * The _query() method now returns the default value when the
+      requested value is null.
+
+    * Now uses methods instead of files for actions.
+    
+    * Changed Views/ to View/.
+    
+    * Views are now named just ".php" instead of ".view.php", since
+      there's no need to distinguish action files from view files.
+    
+    * Changed Layouts/ to Layout/.
+    
+    * Layouts are now named just ".php" instead of ".layout.php".
+    
+    * Removed $_action_info property entirely, as path-info params are
+      now passed directly to the action method in the same order.
+      
+    * The _forward() method now takes a second param, an array of
+      parameters to pass to the target action method.
+    
+    * Renamed _collect() to _load() to be in line with coding standards.
+
+    * The _load() method (previously the _collect() method) no longer
+      attempts to name path-info parameters.
+    
+    * Added _viewInstance() and _layoutInstance() methods to make view
+      and layout object building overridable.
+
+    * Auto-adds standard template-path and helper-class locations in new
+      _viewInstance() and _layoutInstance() methods.
+
+    * Removed helper_class key, helper classes are now found in standard
+      locations.
+
+    * Added _preRun() and _postRun() methods to run before and after the
+      entire action stack.
+      
+    * Re-purposed _preAction() and _postAction() hooks to run before and
+      after each individual action.
+
+    * Added _render() method to separate view and layout rendering from
+      action-running.
+    
+* Solar_Docs_Apiref
+
+    * Now uses a Solar_Log dependency via the 'log' config key.
+    
+* Solar_Docs_Phpdoc
+
+    * Now handles Windows and MacOS 9 line endings.
+    
+* Solar_Form
+
+    * Removed unused 'listsep' element info key.
+
+* Solar_Form_Load_Table
+
+    * Per discussion with Jeff Surgeson, automated options-building from
+      inKeys() and inList() validations is smarter; inList() validations
+      make the option-value the same as the option-label.
+
+* Solar_Log
+
+    * The save() method signature is now $class, $event, $message
+    
+* Solar_Model_Areas
+
+    * Added 'summ' column.
+    
+* Solar_Model_Nodes
+
+    * Added 'status' column for things like public, draft, etc.
+    
+    * Added 'moniker' column as a display name, or the name of an
+      external item related to the node.
+      
+* Solar_Model_Tags
+
+    * Fixed bug in asArray() where an empty tag string gets converted
+      to an array with one empty element (now returns an empty array).
+
+* Solar_Role
+
+    * Renamed 'driver' config key to 'adapter'.
+    
+    * Renamed fetch() to load().
+    
+    * Renamed in(), inAny(), inAll() to is(), isAny(), isAll().
+
+* Solar_Sql
+
+    * Renamed 'driver' config key to 'adapter'.
+    
+    * Previously, you would pass adapter config keys as part of the
+      Solar_Sql configs directly; now, you must pass them as part of a
+      'config' key.
+    
+    * No longer loads Solar_Sql_Exception or Solar_Sql_Adapter as part
+      of the construction process; instead, the adapters load
+      Solar_Sql_Adapter on their own. This is to facilitate independent
+      testing of the adapter classes.
+
+* Solar_Sql_Select
+
+    * Added quote(), quoteInto(), quoteMulti() methods.
+    
+    * Added method fromSelect($select, $as, $cols) method to support
+      sub-selects.
+
+    * Removed "major" column-name deconfliction strategy, leaving only
+      simple/minimal deconfliction in place (i.e., no more automated
+      "table.col AS table__col" deconfliction).
+    
+* Solar_Test
+
+    * Added methods getAssertCount() and resetAssertCount() to track how
+      many assertions are made by the test; used by Solar_Test_Suite to
+      see if any assertions are made by a test method.
+    
+    * Added method error() to act as error handler callback for
+      Solar_Test_Suite; all errors throw a failure exception.
+    
+* Solar_Test_Suite
+
+    * Now uses Solar_Log for logging
+    
+    * Now reports a test as TODO if it makes no assertions.
+    
+    * Now uses Solar_Test::error() as set_error_handler() callback
+      so that notices and warnings generate a FAIL report.  Thanks to
+      Mike Naberezny for implementation advice.
+    
+    * New config key 'error_reporting' lets you set the error reporting
+      level so that not all PHP errors generate failures; default is
+      E_ALL | E_STRICT.
+      
+* Solar_View
+
+    * Changed default escape() charset to UTF-8 per notes from Clay
+      Loveless.
+
+    * Added support for "partial" templates via the new partial() method
+      and the related $_partial_file and $_partial_vars properties.
+    
+    * Streamlined fetch() processing a bit by using class properties
+      instead of a _run() method (which is now removed).
+    
+    * Fixed bug so that assign()-ing a source Solar_View object to a
+      target Solar_View object does not overwrite the internals of the
+      target object.
+    

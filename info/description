@@ -1,0 +1,9 @@
+Solar is a framework for PHP 5 that provides structured, easy-to-comprehend
+E_STRICT class libraries for the common aspects of application development.
+
+Solar is for developers who intend to distribute their applications to the
+whole world. This means, for example, the database driver functions work
+exactly the same way for each supported database. It also means that
+localization support is built in from the start.
+
+Please visit http://solarphp.com/ for more information.

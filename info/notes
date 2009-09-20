@@ -1,0 +1,703 @@
+Solar 1.0.0-alpha1 Release Notes
+================================
+
+
+Deleted/Renamed Classes
+-----------------------
+
+* Solar_Filter and Solar_Valid removed, and their functionality combined into
+  the a new Solar_Filter class (which itself has been renamed from
+  Solar_DataFilter to just Solar_Filter).
+
+* Solar_Sql_Result: Removed deprecated class.
+
+* Solar_Sql_Model is a complete and total rewrite, breaking everything.
+
+* Removed Solar_Sql_Table, Row, Rowset in favor of new Solar_Sql_Model series.
+
+* Solar_Content* removed in favor of completely new Solar_Model series.
+
+* Solar_View_Helper_Js(Scriptaculous|Prototype): Per long-ago discussions with
+  Clay et. al., removing these helpers due to disuse.
+
+* Solar_View_Helper_Js and JsLibrary helpers removed. All script- and
+  style-related "add*()" and "needs*()" functionality is now in
+  Solar_View_Helper_Head. The selector-related pieces appear to have been
+  Prototype-specific, and since we don't ship with Prototype/Scriptaculous any
+  more, they're no longer strictly necessary.
+
+* Renamed Solar_View_Helper_InlineScript to ScriptInline.
+
+
+
+New Classes
+-----------
+
+* Solar_Cache_Adapter_Var: A weak cache controller that stores cache entries
+  to an object property. Of course, when the script ends, the cache goes away.
+
+* Solar_Cli: Command line scripts for various Solar tasks.
+
+* Solar_Controller_Command: This is the page-controller equivalent for the command line, a single
+  command that can be invoked. Based on work originally from Clay in
+  Sungrazr_Controller_Console and Sungrazr_ConsoleApp, then significantly
+  refactored.
+
+* Solar_Controller_Console: Based on work from Clay Loveless in
+  Sungrazr_Console and Sungrazr_Controller_Console, this acts as a
+  front-controller for commands. As with Solar_Controller_Front, its use is
+  not strictly required, but it does make it easy to invoke several different
+  CLI commands through one front end script.
+
+* Solar_Dir: Contains directory-related methods removed from the Solar
+  arch-class.
+
+* Solar_File: contains file-related methods removed from the Solar arch-class.
+
+* Solar_Form_Load_Model: Loads a form processor from a Solar_Sql_Model class.
+
+* Solar_Getopt: Command-line options support based on from Clay Loveless in
+  Sungrazr.
+
+* Solar_Registry: contains registry-related methods removed from the Solar
+  arch-class.
+
+* Solar_Sql_Model, Record, Collection, Filter, and Related:  These form the
+  core of the new ORM system, replacing Solar_Sql_Table et. al.
+
+* Solar_View_Helper_Head: Lets you compose styles, scripts, links, meta
+  keywords, etc. in a holding space, and then lets you fetch the entire <head>
+  block all at once.  This means that views can add styles and scripts as
+  needed.
+  
+
+Other
+-----
+
+* [CHG] Moved Solar_Test_Example to Solar_Example, to make the hierarchy shallower.
+
+* [CHG] Solar_Example: updated package name, moved page-controller example to mirror
+  location in Solar hierarchy.
+
+* [NEW] Added example Model classes for Solar test suite.
+
+* [FIX] Set __construct($config = null) on various classes
+
+    * Solar/Auth/Adapter/Typekey.php
+    * Solar/Cli/MakeTests/Data/classAbstract.php
+    * Solar/Cli/MakeTests/Data/classAdapter.php
+    * Solar/Cli/MakeTests/Data/classConcrete.php
+    * Solar/Cli/MakeTests/Data/classFactory.php
+    * Solar/Controller/Console.php
+    * Solar/Controller/Front.php
+    * Solar/Markdown/Wiki/Link.php
+    * Solar/View/Helper/Action.php
+    * Solar/View/Helper/ActionImage.php
+    * Solar/View/Helper/PublicHref.php
+
+* [FIX] changed usage from Solar_Uri[_Action|_Public]->fetch() to ->get()
+
+    * Solar/Controller/Page.php
+    * Solar/Http/Request/Adapter.php
+    * Solar/View/Helper/Action.php
+    * Solar/View/Helper/ActionImage.php
+    * Solar/View/Helper/Anchor.php
+    * Solar/View/Helper/AnchorImage.php
+    * Solar/View/Helper/Base.php
+    * Solar/View/Helper/PublicHref.php
+
+* [BRK] Changed all 'filter', 'datafilter', and 'valid' config and array keys
+  to 'filters'.
+
+* [DEL] Removed all use of global SOLAR_IGNORE_PARAM constant. The only place
+  that still kind-of needs it is Solar_Sql_Select, so we have an internal
+  constant for that now.
+
+* [BRK] Solar_Auth, Cache, Role, Sql: Deprecated 'config' key removed, factory
+  classes now use $_config directly.
+
+* [BRK] Solar_Access, Log, Log_Adapter_Multi: Deprecated 'config' key removed,
+  factory classes now use $_config directly.
+
+* [BRK] Standards: The locale key prefix for validation-failure messages is
+  now 'INVALID_' (vice 'VALIDATE_').
+
+* [NEW] Added a new "solar" shell script for command-line invocations.
+  Analagous to a web-based "bootstrap" script, this is a Unix "binary" to
+  start a Solar_Controller_Console process to work with Solar_Cli subcommands.
+
+
+Solar
+-----
+
+* [BRK] Removed SOLAR_CONFIG_PATH; when Solar::start() is called with an empty
+  param, now does no config instead of using SOLAR_CONFIG_PATH. This is to
+  make Solar a little more secure-by-default.
+
+* [ADD] Added Solar::autoload() method to combine loadClass() and
+  loadInterface() logic, to avoid loading errors with using those methods
+  separately through spl_autoload. Thanks, Robert Everah, for the suggestion.
+
+* [DEL] Removed deprecated Solar::loadClass() and loadInterface() in favor of
+  new autoload() method.
+  
+* [BRK] Removed Solar::$locale property; instead, Solar::start() now
+  lazy-loads a Solar_Locale object into the registry under 'locale'. Access
+  that object instead of Solar::$locale, using Solar_Registry::get('locale').
+
+* [CHG] Solar::start() now lazy-loads a Solar_Request object into the registry
+  under 'request'.
+
+* [BRK] Moved many Solar::* methods to their own classes. Search-and-replace
+  these method names; method signatures are unchanged.
+	
+	Old Method              New Method
+	----------------------	------------------------
+    Solar::loadClass()      Solar::autoload()
+    Solar::loadInterface()  Solar::autoload()
+
+    Solar::fileExists()     Solar_File::exists()
+    Solar::run()            Solar_File::load()
+
+    Solar::dirname()        Solar_Dir::name()
+    Solar::fixdir()         Solar_Dir::fix()
+    Solar::isDir()          Solar_Dir::exists()
+    Solar::temp()           Solar_Dir::tmp()
+
+    Solar::isRegistered()   Solar_Registry::exists()
+    Solar::register()       Solar_Registry::set()
+    Solar::registry()       Solar_Registry::get()
+
+
+
+Solar_App_Base
+--------------
+
+* [BRK] No longer registers a Solar_Content object, since that class no longer
+  exists.
+
+* [ADD] New property $layout tells the view what layout has been selected.
+
+
+Solar/App/Base/Layout/*
+-----------------------
+
+* [CHG] Individual main layout files are now essentially identical; the
+  _head.php partial automatically loads the correct CSS layout file based on
+  the layout name. Also, _head.php uses the new Solar_View_Helper_Head helper
+  logic.
+
+
+Solar_App_Bookmarks
+-------------------
+
+* [BRK] Updated entire app to match new Model/Record/Collection usage, new
+  Solar_View::partial() usage, new Solar_Form usage, and new Solar_Uri::get()
+  usage.
+
+* [BRK] Default area is now 'default' (vice 'Solar_App_Bookmarks').
+
+* [CHG] actionUser() and actionTag() no longer flash a backlink under RSS
+  formats; this fixes errors when the user has live bookmarks in Firefox and
+  the "back" link points to RSS feed pulled by the live bookmark.
+
+* [CHG] The edit.php view now uses Solar_App_Base_Helper_JsHighlight for
+  highlighting success and failure messages.
+
+* [FIX] actionUser() and actionTag() no longer flash a backlink under RSS
+  formats; this fixes errors when the user has live bookmarks in Firefox and
+  the "back" link points to RSS feed pulled by the live bookmark.
+
+
+Solar/App/Hello/View/rss.php
+----------------------------
+
+* [BRK] Now uses the 'request' registry object instead of creating a new 
+  Solar_Request object.
+
+
+Solar/App/Public
+----------------
+
+* [CHG] Added jQuery scripts (vice Protoype/Scriptaculous) for examples, and a
+  blank bookmarks.css file to avoid browser notices.
+
+
+Solar_Auth_Adapter
+------------------
+
+* [BRK] Now uses a Solar_Request dependency injection, with config key
+  'request', instead of creating a new Solar_Request object.
+
+* [CHG] Successful logout now checks for a redirection request; this is
+  identical to the current redirect-on-login behavior. Per request from Chris
+  Cornutt.
+
+
+Solar_Auth_Adapter_Sql
+----------------------
+
+* [FIX] Uses fetchAll() vice select('rowset'); thanks, Jeff Surgeson and
+  Rodrigo Moraes.
+
+
+Solar_Base
+----------
+
+* [CHG] The $replace param may now be an associative array. If so, the keys
+  are treated as named placeholders in the locale string, and are replaced
+  with the values when those keys appear in the locale string, like so:
+  "{:key}" (uses 'key' from the replacement array).
+
+* [CHG] Method _exception() now sends $info as a replacement array to the
+  internal locale() call; this means that exception text can now use named
+  placeholders.
+
+* [ADD] Per note from Clay Loveless, add an empty default __destruct() method
+  for safe fallbacks to parent::__destruct(). Thanks Clay.
+
+
+Solar_Cache_Adapter_Apc
+-----------------------
+
+* [FIX] Now using apc_add() instead of a hack for the add() method. Thanks,
+  Antti Holvikari.
+
+
+Solar_Class_Map
+---------------
+
+* [BRK] Method fetch() now takes only the class name, not a base directory and
+  the class name. Use new method setBase() to set an explicit base directory;
+  otherwise, the class uses the current include-path leading to
+  Solar_Class_Map as the base directory.
+
+
+Solar_Controller_Front
+----------------------
+
+* [CHG] Now injects $this into the instantiated page-controller object so
+  the page-controller can access the front-controller that invoked it.
+
+* [ADD] Method _setup() now registers a Solar_Request object under the name
+  'request'.
+
+* [CHG] Now that Solar::start() registers a 'request' object, the
+  front-controller doesn't need to.
+
+
+Solar_Controller_Page
+---------------------
+
+* [ADD] New method setFrontController() to allow injection of the
+  front-controller, based on an idea by Rodrigo Moraes.
+
+* [BRK] Now uses a Solar_Request dependency injection, with config key
+  'request', instead of creating a new Solar_Request object.
+
+* [CHG] Removed ugly micro-optimization switch/case in _forward() method.
+
+
+Solar_Docs_Apiref
+-----------------
+
+* [CHG] Class-level structure now includes 'abstract', 'final', and
+  'interface' keys; method-level structure now includes 'abstract' key.
+
+* [CHG] When a class has no @package tag, add a placeholder array element for
+  it so that document generation doesn't raise notices.
+
+
+Solar_Filter
+------------
+
+* [CHG] Major refactoring to make it more like Solar_View, with helpers for
+  the various filtering functions. All validate() and sanitize() methods are
+  now classes.
+
+* [CHG] Method validateEmail() now uses the "iamcal" algorithm, vice the
+  modified "ilovejackdaniels" one.
+
+* [FIX] Apparently, chr(255) as a regex delimiter does not work on Windows.
+  Changed to use "{" and "}" in the uri() method. Thanks, Rodrigo.
+
+* [BRK] Changed all timestamp "T" separators to " " (space) in accordance w/
+  every DB known
+
+* [ADD] Added new filter-chain methods for a single place to do filters (vice
+  repeating in Solar_Form, Solar_Sql_Table, etc).
+
+* [BRK] Renamed 'sanitizeRegex' to 'sanitizePregReplace'.
+
+* [BRK] Renamed 'sanitizeReplace' to 'sanitizeStrReplace'.
+
+* [BRK] Renamed 'validateRegex' to 'validatePregMatch'.
+
+* [ADD] Now uses a class stack for filters, like Solar_View does with Helper
+  classes.
+
+* [FIX] Method getData() now returns reference properly.
+
+* [CHG] Now using isset() instead of array_key_exists() when checking
+  chain_require, because the ArrayAccess interface used by Solar_Struct
+  doesn't honor array keys properly.
+
+* [FIX] When chain_require doesn't find a required element, now uses
+  chainLocale() method properly.
+
+* [ADD] New validation: validateConfirm.
+
+* [CHG] In method applyChain(), don't run filters on elements that are
+  required but missing.
+
+* [CHG] To help alleviate infinite recursion in Model_Record objects, the
+  method applyChain() now loops through the filters directly, instead of
+  looping through each data element and then looking for the filters on that
+  element.
+
+* [ADD] Added method __destruct(). Turns out it's not enough to
+  unset($filter). To release *all* memory, especially that consumed by the
+  internal filter processor objects, you need to call $filter->__destruct()
+  first, **then** unset($filter).
+
+* [BRK] Method getData() now returns by copy, not by reference. Turns out the
+  reference was not necessary, as the filter-chain copies the sanitized value
+  back into the data array directly.
+
+* [FIX] Method getData() now properly checks for key existence in Solar_Struct
+  objects.
+
+* [CHG] Method applyChain() now loops through the data elements, not the
+  filter elements, as the outer loop.
+
+* [FIX] Method applyChain() now applies "sanitize" methods to the correct
+  variable; thanks, Antti Holvikari.
+
+
+Solar_Form
+----------
+
+* [BRK] Now uses a Solar_Request dependency injection, with config key
+  'request', instead of creating a new Solar_Request object.
+
+* [CHG] In populate(), do not set values for "submit", "button", or "reset" 
+  elements.  This keeps values from previous submit buttons from overwriting 
+  those on new forms.
+
+* [BRK] Many BC breaks related to using the new Filter mechanism, where
+  sanitizing and validation are wrapped into the same class.
+
+* [BRK] Element-specific messages are now keyed on 'invalid' (not 'feedback'),
+  although overall form-level messages are still called feedback.
+
+* [ADD] New config key 'filter' is a Solar_Filter dependency injection.
+
+* [BRK] Methods addFilter() and addFilters() are now related to the new
+  Solar_Filter class, and so handle both validation and sanitizing. Removed
+  addValid() method entirely.
+
+* [BRK] Methods addInvalid() and addInvalids() to invalidation messages to one
+  or more elements. This replaces addFeedback(), which has been removed.
+
+* [ADD] Methods setValue() and setValues() to more reliably set the value on
+  one or more elements manually.
+
+* [CHG] Method validate() now uses the Solar_Filter filter-chain instead of a
+  custom internal sanitize/validate routine.
+
+* [BRK] Renamed method values() to getValues(), to be more consistent with
+  coding standards.
+
+* [FIX] Added default 'filters' attribute.
+
+* [CHG] Method addInvald() no longer throws an exception when the element does
+  not exist; instead, ignores it.
+
+* [CHG] Method setValue() no longer throws an exception when the element does
+  not exist; instead, ignores it.
+
+
+Solar_Http_Response
+-------------------
+
+* [CHG] No more exception in _sendHeaders() if hears already sent.
+
+
+Solar_Locale
+------------
+
+* [CHG] The $replace param may now be an associative array. If so, the keys
+  are treated as named placeholders in the locale string, and are replaced
+  with the values when those keys appear in the locale string, like so:
+  "{:key}" (uses 'key' from the replacement array).
+
+* [ADD] New method, getCountryCode().  Thanks Antti Holvikari.
+
+
+Solar_Mail_Message
+------------------
+
+* [ADD] Methods setReplyTo() and getReplyTo(), for easier "Reply-To:" headers.
+
+
+Solar_Mime
+----------
+
+* [CHG] Header values are now stripped of URL-encoded control characters (such
+  as %0a) as an added header-injection security measure.
+
+* [FIX] Copy & paste typo ($hdr_val vice $hdr_value); thanks, Antti Holvikari.
+
+
+Solar_Model
+-----------
+
+* Complete rewrite of all model structures.
+
+
+Solar_Request
+-------------
+
+* [BRK] No longer acts as a singleton; no more static properties, which means
+  that each instance gets its own variables. This can be expensive, becuase it
+  reloads from the superglobals each time. Should be injected as a dependency
+  wherever it is needed. Solar::start() now lazy-loads it into the registry
+  automatically.
+
+* [DEL] Removed static $_request and $_loaded properties.
+
+* [BRK] Removed method public load() and renamed to protected _setup().
+
+* [FIX] Renamed _setup() to reset(), to reset properties from superglobals.
+  Now de-quotes the *properties* for get/post/cookies, instead of the globals
+  (thanks, Antti Holvikari).
+
+* [ADD] Property $argv for command-line arguments.
+
+* [ADD] Method argv() for command-line arguments.
+
+* [ADD] Method isCli() to see if we're in a command-line environment.
+
+
+Solar_Session
+-------------
+
+* [ADD] Support for P3P header, to help with IE6 privacy controls. Thanks,
+  Clay Loveless, for providing this patch.
+
+
+Solar_Smtp_Adapter
+------------------
+
+* [FIX] Be sure to set the client.  Thanks, Clay Loveless.
+
+* [FIX] Method _expect() now gives the full error line in exceptions, not just
+  the first word. Thanks, Antti Holvikari.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [BRK] Many BC breaks for portability. The intent of these breaks is to
+  prepare the way for more use of native date, time, and timestamp column
+  types (when available), and for future support of Oracle in a portable
+  manner.
+
+* [CHG] All identifiers (table, column, and index) are now allowed 30
+characters, and are checked in a common _checkIdentifier() method.
+
+* [FIX] Method createTable() now throws the correct exception when the table
+  is not created.
+
+* [BRK] Indexes are **no longer** universally forced to table__index__i
+  format; instead, the index name is determined by the _modIndexName() method.
+
+* [BRK] Sequences are **no longer** universally forced to sequence__s format;
+  instead, the sequence name is determined by the _modSequenceName() method.
+
+* [BRK] Removed deprecated fetchRow() and fetchRowset() methods.
+
+* [BRK] Renamed ColTypeUnknown exception to ColType (consisten with ColSize
+  and ColScope).
+
+* [ADD] Added method _postConnect() for post-connection tasks; portability PDO
+  settings have moved here from _connect().
+
+* [CHG] On table creation, returns slightly better error information.
+
+* [FIX] Actually set default values when creating the table
+
+* [CHG] Recent versions of Mysql, Sqlite, and Pgsql all support DROP TABLE IF
+  EXISTS, so that's the dropTable() command now. Also, Pgsql supports DROP
+  SEQUENCE IF EXISTS, so using that now too. These changes are to suppress
+  warnings when the entity doesn't exist.
+
+* [BRK] Method lastInsertId() now takes $table and $col, vice only $name, as
+  params. This is because some DBs ("Postgres") need that information to
+  construct the sequence name. The base method ignores $table and $name.
+
+* [ADD] Added 'cache' config key and $_cache property. This is currently used
+  to cache fetchTableList() and fetchTableCols() queries in support of the new
+  Model/Record/Collection system.  Use will expand later to cache query
+  results.
+  
+* [CHG] In the abstract adapter, methods fetchTableList() and fetchTableCols()
+  are now public and act as facades to the new _fetchTableList() and
+  _fetchTableCols() methods, respectively.  This is to enable transparent 
+  caching of results from the underlying adapters.
+
+* [CHG] Methods createTable(), dropTable(), addColumn(), dropColumn(), 
+  createSequence(), and dropSequence() now clear the internal query cache.
+
+* [BRK] Changed protected _connect() to public connect().
+
+* [ADD] Method disconnect() to close database connection; thanks, Rodrigo
+  Moraes.
+
+
+
+Solar_Sql_Adapter_Mssql
+-----------------------
+
+* [BRK] Use native "datetime" data type for timestamps.
+
+* [BRK] Method lastInsertId() now takes $table and $col, vice only $name, as
+  params. This is in line with the updated Adapter parent.
+
+
+Solar_Sql_Adapter_Mysql
+-----------------------
+
+* [ADD] Method _modSequenceName() to modify the requested sequence name for
+  portability.
+
+* [FIX] Native "timestamp" type now maps to Solar "int" type (vice "integer").
+
+* [FIX] On table column discover, all integer columns now get NULL for their
+  size.
+
+* [CHG] Methods dropTable() and dropSequence() now use DROP TABLE IF EXISTS to
+  avoid notices from MySQL.
+
+
+Solar_Sql_Adapter_Pgsql
+-----------------------
+
+* [ADD] Method _modSequenceName() to modify the requested sequence name for
+  portability.
+
+* [ADD] Method _modIndexName() to modify the requested index name for
+  portability.
+
+* [FIX] Method lastInsertId() now works, although it's a BC break because of
+  the new signature ("$table, $col" vice "$name").
+
+
+Solar_Sql_Adapter_Sqlite
+------------------------
+
+* [CHG] Method _nextSequence() now uses PDO::lastInsertId(), not the class
+  method.
+
+* [CHG] Index names are now modified the same as Postgres; i.e.,
+  {table}__{index}. Apparently SQLite has the same behavior PostgreSQL does.
+
+
+Solar_Sql_Select
+----------------
+
+* [ADD] Per usage notes from Chris Cornutt, adding more-intuitive fetchAll(),
+  fetchOne(), etc. methods. Thanks Chris.
+
+* [FIX] When finding identifer aliases, use strripos() to get the right-most
+  AS (vice stripos(), which finds the left-most one).
+
+* [CHG] In queries with only one source (e.g., FROM a single table) column
+  names are no longer prefixed. This helps soothe SQLite when using a SELECT
+  as the source for a JOIN (it has problems with the ORDER BY clause in some
+  cases).
+
+* [DEL] Removed deprecated methods fetchRow() and fetchRowset().
+
+
+Solar_Struct
+------------
+
+* [CHG] Method offsetUnset() now actually unsets the element, instead of
+  setting it to null.
+
+* [CHG] "Unified" internals so that ArrayAccess and Iterator methods call
+  __get(), __set(), __isset(), and __unset().
+
+
+Solar_Test_Suite
+----------------
+
+* [CHG] Now catches all exceptions (even non-Solar exceptions) and reports
+  them as failures, instead of interrupting the test execution.
+
+* [CHG] Reorganized internals of run() method so that error reporting, etc.,
+  are set once for the class, not once for each test method
+
+* [CHG] Per note from Antti Holvikari, now turning *on* display_errors so that
+  fatal errors get displayed where you can see them.
+
+* [CHG] Updated config-keys to use newer format (vice old 'adapter' + 'config'
+  format). This means that 'format' and 'events' keys are now top-level
+  elements.
+
+
+Solar_Uri
+---------
+
+* [BRK] Now uses a Solar_Request dependency injection, with config key
+  'request', instead of creating a new Solar_Request object.
+
+* [BRK] Renamed method fetch() to get(), to be more consistent with naming
+  conventions (because we are "getting" properties, not "fetching" from
+  storage)
+
+
+Solar_View
+----------
+
+* [FIX] method setHelperClass(), when resetting the class stack, now allows
+  for extended Solar_View classes (i.e., takes the parents into account).
+
+* [FIX] New setHelperClass() logic now properly appends _Helper to the default
+  stack class names.
+
+* [CHG] Method template() now appends ".php" to the template name if it does
+  not appear; this allows for things like "include $this->template('foo')"
+  and "echo $this->partial('_bar')".
+
+* [BRK] Instead of converting objects to arrays in the partial() method, we
+  now keep the object as-is and name it for the filename. E.g., if you pass an
+  object to a partial named `_item.php`, the object is now available as
+  `$item`. Previously, the object would have been converted to an array so
+  that its separate properties would be variables, but this causes trouble
+  when working with complex Solar_Struct objects (like model records).
+
+
+Solar_View_Helper_Form
+----------------------
+
+* [BRK] Now uses a Solar_Request dependency injection, with config key
+  'request', instead of creating a new Solar_Request object.
+
+* [BRK] In keeping with new Solar_Form, element-level messages are now keyed
+  on 'invalid' (vice 'feedback').
+
+
+Solar_View_Helper_FormElement
+-----------------------------
+
+* [BRK] In keeping with new Solar_Form, element-level messages are now keyed
+  on 'invalid' (vice 'feedback')
+
+
+Solar_View_Helper_Timestamp
+---------------------------
+
+* [CHG] Default format is now 'Y-m-d H:i:s' (a space separator instead of a
+  literal 'T').

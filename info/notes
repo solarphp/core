@@ -1,0 +1,1587 @@
+Solar 1.0.0alpha2
+=================
+
+General Changes
+---------------
+
+* Broad change to factories. Factory classes are now identified using
+  "instanceof Solar_Factory", not by the existence of a solarFactory() method.
+  The Solar::factory() method takes this into account. The following classes
+  now extend Solar_Factory and have their (identical) solarFactory() methods
+  removed:
+
+    * Solar_Access
+    * Solar_Auth
+    * Solar_Cache
+    * Solar_Http_Request
+    * Solar_Log
+    * Solar_Mail_Transport
+    * Solar_Role
+    * Solar_Session_Handler
+    * Solar_Smtp
+    * Solar_Sql
+
+
+Schema Changes
+--------------
+
+The "nodes" table provided for the example Bookmarks application has one new
+column and index. Please review "docs/migrate/1.0.0alpha1-1.0.0alpha2" for the
+SQL file to migrate your database schema from then earlier Solar version.
+
+
+New Classes
+-----------
+
+* Solar_Access_Adapter_Sql: Access adapter for SQL data stores. Thanks, Antti
+  Holvikari, for this addition from Lux.
+
+* Solar_Cache_Adapter_None: Dummy no-cache for when a cache injection is
+  needed but not really used.
+
+* Solar_Class: Static methods for class information.
+
+* Solar_Cli_MakeApp: Command-line script to create a new skeleton application.
+  By specifying --model, it will also create browse/read/edit/add/delete logic
+  and views for you. Long overdue, and per the request of Nate Abele.
+
+* Solar_Cli_MakeVendor: Solar CLI command to make all the basic vendor
+  directories in the right places, including appropriate symlinks.
+
+* Solar_Config: Eventual replacement for Solar arch-class config methods and
+  properties.
+
+* Solar_Factory: Abstract base class for factory classes (Auth, Cache, Sql,
+  etc).
+
+* Solar_Filter_SanitizeUpload: Sanitizes a file-upload information array.
+
+* Solar_Filter_ValidateUpload: Validates that the value is an array of
+  file-upload information, and if a file is referred to, that is actually an
+  uploaded file.
+
+* Solar_Http_Request_Adapter_Curl: Curl-based HTTP request adapter.
+
+* Solar_Mail_Transport_Adapter_File: Mail transport that writes the headers
+  and content to a file.
+
+* Solar_Php: Class to let you execute Solar scripts in a separate PHP
+  environment; captures the output, exit code, and last line of the run
+  (depending on the execution mode). Expected to be useful for docs and
+  testing.
+
+* Solar_Service_Akismet: First attempt at a web service class for Akismet
+  spam-checking.
+
+* Solar_Session_Handler: Classes to let you encapsulate session handlers; come
+  with "native" and "sql" adapters.
+
+* Solar_Sql_Adapter_MysqlReplicated: First attempt at supporting single-master
+  multiple-slave replication setups for MySQL.
+
+* Solar_Sql_Adapter_Oracle: Oracle adapter from James Kilbride and the team at
+  General Dynamics AIS. Many thanks guys!
+
+* Solar_Sql_Adapter_Sqlite2: Adapter for legacy sqlite2 databases.
+
+* Solar_Sql_Model_Cache: Cache handler for models, for versioned caching of
+  table data.
+
+* Solar_View_Helper_(Date|Time|Timestamp): Helpers to show select elements to
+  build a date, time, or timestamp.
+
+* Solar_View_Helper_ActionHref: Helper to work with action 'href' values
+  directly, instead of via Solar_View_Helper_Action. Thanks, Jeff Moore, for
+  the report that led to this.
+
+* Solar_View_Helper_FormImage: View helper for 'input type="image"'.
+
+* Solar_View_Helper_FormStatic: Pseudo-element for escaped static text in a
+  form. Does not produce a hidden element, so no value will be submitted back
+  to the server from this.
+
+* Solar_View_Helper_Href: Helper to work with 'href' and 'src' values
+  directly, instead of via Solar_View_Helper_Anchor. Thanks, Jeff Moore, for
+  the report that led to this.
+
+* Solar_View_Helper_Nl2p: Helper to convert 2 or more newlines in text to
+  paragraph tags.
+
+* Solar_View_Helper_Pager: Default pager for Solar. Note that more
+  highly-customizable pagers exist in Lux, and may be more-suitable for
+  different situations.
+
+
+Renamed Classes
+---------------
+
+* Renamed Solar_Model_Nodes_Bookmarks to Solar_Model_Bookmarks, to reduce
+  hierarchy depth on single-table inheritance classes.
+
+
+Solar "binary"
+--------------
+
+* [FIX] Use PHP_EOL for OS-specific newline, instead of hard-coded unix
+  newline char
+
+* [ADD] Now recognizes "--include-path" switch.
+
+* [CHG] Look up include-path relative to a solar-system installation.
+
+* [CHG] Look up config file relative to a solar-system installation.
+
+* [FIX] Call Solar::stop() when needed, and use PHP_EOL instead of newlines.
+
+* [CHG] For include-path, allow "." and ".." as well as the regular "include"
+  dir. This facilitates calling scripts from the project home dir and from the
+  script dir.
+
+* [BRK] Per mailing list discussion, assume that the binary is part of a Solar
+  "system" and as such can look for certain directories (source, scripts, and
+  include).  Remove checks for $_SERVER['PHP_PEAR_INSTALL_DIR'] etc.
+
+* [CHG] More-robust checks for binary location in relation to vendor name
+  (i.e., in source and scripts, under the name "solar" and the vendor name,
+  to allow for symlinks and copies).
+
+* [CHG] When looking for config file, check for both Vendor.config.php and
+  Solar.config.php by default.
+
+* [FIX] When creating the console controller, use the config values if they
+  exist.  If not, use Vendor_Cli as the main class.
+  
+* [FIX] stop using Solar as the fallback for Vendor commands; it's confusing
+  to see Solar and Vendor commands mixed in together.
+
+* [FIX] Only use positive exit codes.
+
+* [FIX] Force integer exit codes.
+
+
+Solar
+-----
+
+* [BRK] Removed config keys 'locale_class' and 'request_class'. Replaced with
+  a new config key, 'registry_set', that allows you to define registry entries
+  to be created at Solar::start() time. This allows you to directly control
+  the registry entries from the config file. Solar::start() still sets
+  'locale' and 'request' registry entries if they are not set by the
+  'registry_set' config.
+
+* [ADD] Automatically register a 'response' entry using Solar_Http_Response
+  for all Solar classes to have available (esp. the page-controller and
+  auth-adapter classes). This is in addition to the 'locale' and 'request'
+  registry entries.
+
+* [ADD] Automatically register an 'inflect' entry using Solar_Inflect for all
+  Solar classes to have available.
+
+* [BRK] Where previously the hooks for 'start' and 'stop' were only files,
+  they are now allowed to be callbacks. See the new Solar::callback() method
+  for examples.
+
+* [ADD] Method Solar::callback() to standardize multiple-callback API.
+
+* [ADD] A new property, $system, for the Solar-system directory path.
+
+
+Solar_Access_Adapter
+--------------------
+
+* [BRK] Method isAllowed() no longer honors 'process' key.  Removed this per
+  discussion with Antti Holvikari, Jeff Surgeson, and others.
+
+* [BRK] Method isAllowed() now uses a different 3rd param, $content, and
+  optionally checks for ownership of that content when an 'owner' control
+  type is requested (vice 'handle' or 'role').  The ownership check is
+  implemented via the new isOwner() method.
+
+* [ADD] Abstract method isOwner($content), to check if the user is the owner
+  of a particular piece of content.  This is expected to be very application-
+  specific in implementation, so if you need this, override the adapter to
+  provide your own mechanism for checking ownership on content.
+
+* [CHG] Method load() now optionally takes a Solar_Auth_Adapter object and 
+  Solar_Role_Adapter object in place of a handle string and role array,
+  respectively.  If objects are passed as the params, the objects are
+  retained in the new $_auth and $_role properties.  This is to facilitate
+  content ownership checks in the new isOwner() method.
+
+
+Solar_Access_Adapter_File
+-------------------------
+
+* [FIX] Now honors 'role *' correctly.
+
+* [CHG] When reporting file-not-found, now shows info on both the requested
+  file and the realpath file.
+
+* [CHG] Method fetch() now allows for comment lines starting with #, as well
+  as for blank lines.
+
+* [CHG] Method fetch() now returns the 'type' and 'name' values in the access
+  list array, but no longer returns the 'process' value (since it has been
+  removed from Solar_Access_Adapter).
+
+* [CHG] Method fetch() now picks up 'owner' access control types.
+
+* [ADD] Method isOwner() implemented in a brain-dead fashion to always return
+  true. This is to allow existing applications to implement ownership checks
+  at other application levels without having to override Solar_Access_Adapter
+  until they're ready.
+
+
+Solar_Access_Adapter_None
+-------------------------
+
+* [CHG] Method fetch() now returns the 'type' and 'name' values in the access
+  list array, but no longer returns the 'process' value (since it has been
+  removed from Solar_Access_Adapter).
+
+* [ADD] Method isOwner() implemented to always return false, since all other
+  permissions are false as well.
+
+
+Solar_Access_Adapter_Open
+-------------------------
+
+* [CHG] Method fetch() now returns the 'type' and 'name' values in the access
+  list array, but no longer returns the 'process' value (since it has been
+  removed from Solar_Access_Adapter).
+
+* [ADD] Method isOwner() implemented to always return true, since all other
+  permissions are true as well.
+
+
+Solar_App_Base
+--------------
+
+* [ADD] Convenience method _error() to set the action to 'error' and add a
+  translated error message.
+
+* [DEL] Removed properties $controller and $action, moving them into
+  Solar_Controller_Page.
+
+* [CHG] Now uses new $_layout_default property, instead of redefining
+  $_layout.
+
+
+Solar_App_Bookmarks
+-------------------
+
+* [CHG] In line with new Record save() boolean returns, remove try/catch
+  blocks around save().
+
+* [CHG] Use the new _error() method instead of setting $errors and forwarding.
+
+* [FIX] Added security check to see if the bookmark actually exists.
+
+* [CHG] Use Solar_Model_Bookmarks, not *_Nodes_Bookmarks.
+
+* [FIX] Only set count and pages when there is pager info to be had.
+
+
+Solar/App/Public/styles
+-----------------------
+
+* [CHG] Combine all Solar-specific overrides of the Stenhouse CSS Framework
+  into a single solar.css file. This should probably become a standard for
+  other vendors as well; i.e., have a base CSS file named for the vendor.
+
+
+Solar_Auth
+----------
+
+* [ADD] Constants for the various auth statuses.
+
+
+Solar_Auth_Adapter
+------------------
+
+* [CHG] Now that the Solar arch-class registers a response object, use it.
+
+* [CHG] Now that Solar_Auth has constants available, use them.
+
+* [FIX] Now honors the 'allow' setting.
+
+* [REF] Refactor to add explaining vars and reformat condition blocks; logical
+  flow is the same, just a little cleaner-looking.
+
+
+Solar_Auth_Adapter_Sql
+----------------------
+
+* [ADD] New config key 'hash_algo' lets you define the hashing algorithm for
+  the password. Thanks, neste1.
+
+
+Solar_Cache_Adapter
+-------------------
+
+* [ADD] Method increment() on all adapters, to increment a value in the cache.
+
+
+Solar_Cache_Adapter_File
+------------------------
+
+* [FIX] Don't specify byte-length in fwrite() call; the whole $data will be
+  written regardless of length, so this helps soothe multi-byte woes. Thanks,
+  Antti Holvikari.
+
+* [FIX] Honor "life = 0" as a lifetime of "forever" (vice immediate
+  expiration). Thanks, Rodrigo Moraes.
+
+* [CHG] New config param 'hash' allows you to turn hashing of the entry key on
+  and off (default 'true', on).
+
+* [FIX] Method add() now checks _isExpired().
+
+
+Solar_Cache_Adapter_Memcache
+----------------------------
+
+* [FIX] Typo 'faliure' changed to 'failure' for callback config element.
+
+
+Solar_Cli_Base
+--------------
+
+* [CHG] Send error output using _errln(), not _outln().
+
+* [CHG] When displaying version, use the vendor name, not hard-coded Solar
+  name.
+
+
+Solar_Cli_Make(App|Model|Test)
+------------------------------
+
+* [CHG] Change placeholders from ':name' to '{:name}'. Thanks, Alejandro
+  Garcia, for the patch.
+
+
+Solar_Cli_MakeDocs
+------------------
+
+*  [FIX] Make the class and package dirs options required.  Thanks, Zined.
+
+
+Solar_Cli_MakeModel
+-------------------
+
+* [FIX] Method _loadTempates() now properly prefixes PHP tags to the template
+  text. Thanks, neste1.
+
+* [FIX] Make the class directory if it doesn't exist. Thanks for the patch,
+  Andreas Ravnestad.
+
+* [CHG] Use 0755 for directories, not 0777.
+
+* [FIX] Now honors the "extends" option.
+
+* [FIX] Now correctly descends from Solar_Cli_Base.  Thanks, Nate Abele.
+
+* [CHG] Find support directory relative to current class, not the current file.
+  This will help with extended classes.
+
+* [CHG] Default --target directory is now $system/include, not just "up 2
+  levels".
+
+* [REF] Major internal refactoring to make process more clear.
+
+* [ADD] New flag `--connect` to let you specify whether or not to connect to a
+  database. E.g., --connect=no to avoid connecting. The practical effect is
+  that Setup/ table_cols.php won't be changed (although it will create an
+  empty set of table cols if needed).  Thanks, Edward Z. Yang, for the report
+  that led to this feature.
+
+* [ADD] New template 'model-inherit' is used when the parent class does not
+  end in '_Model'. The practical effect is to avoid any table_name/table_cols
+  setup, as that setup should be inherited from the parent.
+
+
+Solar_Cli_MakeTests
+-------------------
+
+* [FIX] Only add the opening PHP tag on 'class' files.
+
+
+Solar_Cli_RunTests
+------------------
+
+* [ADD] Add boolean filters on the 'only' flag.
+
+
+Solar_Controller_Command
+------------------------
+
+* [CHG] Slightly better Solar_Controller_Console error reporting.
+
+* [CHG] Use PHP_EOL for OS-specific newline, instead of hard-coded unix
+  newline char
+
+* [CHG] Allow for '%%' as a literal percent sign in the output color control
+  code shortcuts.
+
+* [ADD] Method _escape() to denature ASCII control codes, as well as %-signs
+  that might interfere with VT100 output.
+
+* [FIX] Use strtr(), not str_replace(), in _escape() and _vt100() methods, so
+  that the replacements happen in a single pass. Thanks, Edward Z. Yang, for
+  this patch, and for the report that led to the _escape() method from the
+  last commit.
+
+
+Solar_Controller_Console
+------------------------
+
+* [CHG] Sort the command list alphabetically.
+
+
+Solar_Controller_Front
+----------------------
+
+* [ADD] Per conversation with Antti Holvikari, add a 'disabled' config key to
+  list page-names (not class names) that should be disabled. Also, the pages
+  are not treated as not-found; instead, they are passed to the default page
+  as action names, so the default action can see use the information. (This is
+  the same behavior as when a page-name is not recognized, and the name is
+  left in place as an action on the default page.)
+
+* [FIX] Force page name to lower-case for comparisons; helps prevent "Foo",
+  "fOO", "FoO", etc. matching to a disabled "foo" page. Thanks for the catch,
+  Nate Abele.
+
+* [CHG] Now, when a static routing leads to a page-controller, sets that
+  page-controller name using setController(). This is so that static routes
+  leading to the same controller have the route name recognized correctly by
+  the page-controller.
+
+* [FIX] Method _notFound() now uses the registered response object instead of
+  creating its own.
+
+
+Solar_Controller_Page
+---------------------
+
+* [BRK] Renaming property $_name to $_controller.
+
+* [ADD] Method _preRender() now populates new public properties $controller
+  and $action for the view. Note that internal to the page-controller, you
+  should use the protected $_controller and $_action, since the public
+  versions of these are for use by the view and don't get populated until
+  render-time.
+
+* [BRK] Subtle BC breaks to default-action handling, per feedback from Leo
+  Chiao and others.
+
+    * [BRK] Previously, the page-controller would invoke the default action if
+      the requested action could not be found, and would only fall back to
+      _forwardActionMethod() if the default action itself could not be found.
+  
+      Now, the default action is invoked **only if the requested action is
+      blank**. This means that if the requested action does not exist, the
+      default action **no longer takes its place**. This is a subtle change,
+      but may break existing behaviors depending on it.
+
+    * [BRK] Renamed method _forwardActionMethod() to _notFound() to make its
+      purpose more clear. Changed signature to use two args, $action and
+      $params. This method still executes when the requested action cannot be
+      found.
+
+* [FIX] Per talks w/Antti Holvikari, use `trim($var) != ''` instead of `$var`
+  to allow for a string '0' in the format.
+
+* [CHG] In method _render(), if both $_view and $_layout are empty, skip
+  rendering entirely.
+
+* [CHG] Now that the Solar arch-class registers a response object, use it.
+
+* [FIX] In method _load(), use trim() and strict inequality to allow for
+  string-zero params and formats. Thanks, James Kilbride, for the report.
+
+* [BRK] Added property $_layout_default. Use this to set the default layout,
+  instead of merely redefining $_layout. Note that if you do not set
+  $_layout_default, you won't see *any* layout for the default format.
+
+* [CHG] Property $_format_type now has an 'xhtml' key, with a value of
+  'application/xthml+xml'.
+
+* [CHG] Property $_format_default is now null instead of 'xhtml', because of
+  the new $_format_type addition of 'xhtml' -- we don't want to force the
+  Content-Type to XHTML by default.
+
+* [ADD] Property _$format_layout to map formats to layouts.  An empty (null/
+  false/nonexistent) value for a format means that no layout will be used; a
+  boolean true value means that the default layout will be used; a string 
+  value indicated the name of the layout to be used.
+
+* [REF] Split the monolithic _load() method into five separate support
+  methods: _loadQueryInfoFormat(), _loadAction(), _fixFormat(), _fixLayout(),
+  and _fixInfo().
+
+* [ADD] Method _fixLayout() now examines $this->_format and compares it to 
+  $this->_format_layout, and attempts to set $this->_layout based on those
+  values.
+
+* [REF] Shorten some lines and add explaining vars.
+
+* [ADD] Method setController(), to forcibly set the value of $_controller.
+
+Solar_Dir
+---------
+
+* [ADD] Methods mkdir() and rmdir() to mimic the PHP functions, but throw
+  exceptions instead of issuing warnings.
+
+
+Solar_Docs_Apiref
+-----------------
+
+* [FIX] Default logging should be to echo the message.
+
+
+Solar_Docs_Phpdoc
+-----------------
+
+* [FIX] Methods parseTodo(), parseSee(), parseAuthor(), and parseCopyright()
+  no longer generate an info item when they are empty.
+
+* [FIX] Method parseDeprec() now calls the correct support method (typo fix).
+
+
+Solar_Filter
+------------
+
+* [REF] Refactored data-element filtering out of applyChain() and into its own
+  support method _applyChain().
+
+* [CHG] Method _applyChain() now uses the locale key provided by the new
+  Solar_Filter_Abstract::getInvalid() method, instead of only the method name
+  being passed to _chainLocale().
+
+* [REF] Moved portions of applyChain() into support method _applyChain() to
+  keep the logic in one place.
+
+* [CHG] To avoid lazy-loading related elements in Record objects, the
+  applyChain() method now loops through the chain-filter keys, instead of
+  hitting every single data element regardless of whether or not it has
+  filters on it. This is a change back to the original implementation from
+  revision 2766 in Sep 2008; not sure why I swapped it to look at the data
+  elements directly in the next revision after that (2793).
+
+* [CHG] Possible break? In method applyChain(), when a validation fails on an
+  element, no more filters are processed on that element (as vs processing
+  every filter regardless of validation of previous filters).
+
+* [FIX] Initialize properties to arrays, and cast to array as needed, to avoid
+  notices. Thanks, Antti.
+
+* [BRK] Per recommendation of Jeff Moore, renaming memory-releasing
+  __destruct() method to free().
+
+  
+Solar_Filter_Abstract
+---------------------
+
+* [ADD] New property $_invalid and methods _resetInvalid() and getInvalid() so
+  that "validate" filters know what their own invalidation message is.
+
+* [ADD] Method _invalid() to encapsulate the 'set and return false' idiom.
+
+
+Solar_Filter_SanitizeIso(Date|Time|Timestamp)
+---------------------------------------------
+
+* [ADD] These filters now accept the date/time/timestamp value as an array
+  of parts keyed on their date() format characters (Y, m, d, H, i, s) and
+  convert that array to a string.
+
+
+Solar_Filter_ValidateIso(Date|Time|Timestamp)
+---------------------------------------------
+
+* [ADD] These filters now accept the date/time/timestamp value as an array of
+  parts keyed on their date() format characters (Y, m, d, H, i, s) and will
+  validate them after internally converting to a string.
+
+
+Solar_Filter_ValidateEmail
+--------------------------
+
+* [BRK] No longer validates 'email@host' ... you must use a fully-qualified
+  domain name. Thanks, Jeff Surgeson and JB, for pointing this out and making
+  the proper RFC recommendations.
+
+
+Solar_Form
+----------
+
+* [FIX] In methods addFilter() and addFilters(), the $array parameter should
+  default to null. Thanks, Oscar Merida.
+
+* [CHG] Method _populate() now checks the source value to see if it's a 
+  sequential array.  If so, it assigns the sequential array directly to
+  the element, instead of attempting to descend into the array to get
+  more source values.
+
+* [CHG] Method _populate() now checks the element type; if a multiple-select,
+  and the source value is empty, it forces the element value to an empty
+  array.  This is to allow for multiple-selects that have no options selected.
+  Thanks to James Kilbride for the report, and for testing the fixes.
+  
+* [CHG] Per notes from Jeff Moore, when adding elements, do not remove 'extra'
+  element keys. This lets you add custom keys if you want them.
+
+* [ADD] Method getValue() to get a single element value.
+
+* [ADD] Method setAttribs() to set attributes on a single element.
+
+* [ADD] Method setType() to set the type of a single element (if it exists).
+
+* [ADD] Method setFilterLocaleObj(), to set the locale object for the internal
+  filter class. Essentially a convenience method to let you change the locale
+  without having to separately factory and inject a filter object. Thanks,
+  Benjamin Kaineder, for the suggestion.
+
+* [FIX] Rename from "Obj" to "Object" for consistency. Thanks, Benjamin
+  Kaineder.
+
+* [CHG] Now that date/time/timestamp are recognized as arrays by the filter
+  class, make an allowance for them as array values when populating the form.
+  Thanks, Kilbride, for the report.
+
+
+Solar_Form_Load_Model
+---------------------
+
+* [FIX] Now that the validation feedback message is not part of the filter
+  array, use the correct index for validateInKeys and validateInList. Thanks,
+  Antti Holvikari.
+
+* [ADD] Added "don't load special columns" logic into method fetch(), taken
+  from Solar_Sql_Model_Record::form(). This means no primary, created,
+  updated, inherit, or sequence cols.
+
+* [FIX] Get array keys of rebuilt list, not original cols.
+
+* [FIX] Better setting of default values. Previously, if a column (e.g. a
+  calculated col) was not in the model but asked for in the form, you'd get a
+  notice about it. This just sets a null value instead.
+
+* [CHG] When a 'validateUpload' filter is present, change the input type to
+  'file'.
+
+
+Solar_Getopt
+------------
+
+* [DEL] Usage of 'strict' is unexpected in almost all situations; get rid of
+  it.
+
+
+Solar_Http_Request
+------------------
+
+* [CHG] Now uses the curl adapter by default when the curl extension is
+  loaded.
+
+
+Solar_Http_Request_Adapter
+--------------------------
+
+* [ADD] Method setReferer() to make setting the Referer header easier.
+
+* [ADD] Method setCookies() to let you add multiple cookie values all at once.
+
+* [BRK] Method fetch() now fetches *only* the last response.
+
+* [ADD] Method fetchAll() fetches all responses (the equivalent of the old
+  fetch(true) call).
+
+* [FIX] Now correctly constructs the Cookie header.
+
+* [CHG] Method setHeader() exception message is now tied to the disallowed
+  header label.
+
+* [FIX] In method _prepareRequest(), use the correct property name for
+  $_content_type. Thanks, Rodrigo Moraes.
+
+* [CHG] To allow use of different authorization schemes, **do not** disallow
+  'Authorization' via setHeader(). Thanks, anttih, for the request leading to
+  this.
+
+* [CHG] In the interest of setting header values in an array loop, the
+  setHeader() method no longer prevents setting of content-type, http,
+  referer, or user-agent, and instead calls the related methods internally.
+  Still prevents setting of cookie values, though.
+
+* [FIX] Method setMaxRedirects() now honors an explicit null, rather than
+  converting to a zero. Thanks, Edward Z. Yang, for the report.
+
+* [CHG] Method _prepareRequest() now returns a Solar_Uri object as the first
+  element, instead of a URI string.
+
+
+Solar_Http_Request_Adapter_Stream
+---------------------------------
+
+* [CHG] Add 'ignore_errors' context flag. This only helps on PHP 5.3 and
+  later. Thanks, Antti H, for helping to work through this.
+
+* [FIX] In the _prepare() method, check for $var === null, not merely ! $var,
+  so we can honor integer zero and boolean false. Thanks, Edward Z. Yang, for
+  the collaborative fix.
+
+
+Solar_Http_Response
+-------------------
+
+* [ADD] 2 new methods, redirect() and redirectNoCache(), to consolidate
+  redirection logic.
+
+* [FIX] Full MIME escaping for HTTP headers is screwy; just sanitize against
+  CR and LF. Thanks, Antti Holvikari, for the report and patch.
+
+
+Solar_Inflect
+-------------
+
+* [ADD] Resurrecting the old Solar_Inflect class.
+
+* [ADD] New inflections based on dashes, not underscores.
+
+* [ADD] Method toDashes(), to convert any string to lowercase dashed format.
+
+
+Solar_Log_Adapter_(Echo|File)
+-----------------------------
+
+* [FIX] Both adapters should use the same format string. Thanks, Cyberlot, for
+  the report.
+
+
+Solar_Mail_Message
+------------------
+
+* [ADD] Method setTransport() to inject a tranport programmatically.
+
+
+Solar_Mail_Transport_Adapter_Smtp
+---------------------------------
+
+* [FIX] Explicitly add a $_smtp property.
+
+* [ADD] Method setSmtp() to set the the $_smtp dependency.
+
+* [FIX] Method _send() is now protected, not public.
+
+* [FIX] Lazy-load $_smtp at _send() time, instead of at the constructor.
+  Thanks, Benjamin Kaineder, for the report that led to this fix.
+
+
+Solar_Markdown
+--------------
+
+* [FIX] Fix error where literal-text numbers are mis-interpreted as encoded
+  Markdown numbers. Thanks, Jeff Moore, for the report that led to this fix.
+
+
+Solar_Model_(Areas|Nodes|Taggings|Tags)
+---------------------------------------
+    
+* [CHG] Now that inflection is in place, we don't need to specify the
+  foreign_class and foreign_key values explicitly.
+
+
+Solar_Model_Nodes
+-----------------
+
+* [FIX] In method _newSelectByTags(), the $params should be a *reference*, so
+  the fixed params are retained by the calling code.
+
+* [DEL] Method _newSelectByTags() is now entirely unnecessary, because the
+  new Solar_Sql_Model::newSelect() method now adds all types of eager joins
+  for us via $params.
+
+* [REF] Refactored method fetchAllByTags() to use only fetchAll($params),
+  instead of building a custom SELECT and running it through the previous
+  model _fetchAll() support method.
+
+* [BRK] Add column 'publish' to support alternative publication dates.
+
+* [FIX] In fetchAllByTags(), fix a problem where 'eager' may not be an array
+  before we manipulate it. Thanks, Antti Holvikari, for the report that led to
+  this fix.
+  
+Solar_Model_Nodes_Record
+------------------------
+
+* [ADD] Post-delete method, thanks anttih.
+
+* [FIX] In method __getTagsAsString(), check to make sure we actually have
+  some tags to iterate through. Thanks, Antti Holvikari, for the report and
+  the fix.
+
+* [FIX] Method _postSave() is now protected, not public.
+
+
+Solar_Model_Tags
+----------------
+
+* [FIX] The has-many-nodes-through-taggings relation now uses the correct
+  'through_key' value.
+
+* [DEL] Method _newSelectWithCount() is now entirely unnecessary, because the
+  new Solar_Sql_Model::newSelect() method now adds all types of eager joins
+  for us via $params.
+
+* [REF] Refactored method fetchAllWithCount() to use only fetchAll($params),
+  instead of building a custom SELECT and running it through the previous
+  model _fetchAll() support method.
+
+* [REF] Refactored method fetchAllByOwnerHandle() to use only
+  fetchAllWithCount($params), instead of building a custom SELECT and running
+  it through the previous model _fetchAll() support method.
+
+
+Solar_Registry
+--------------
+
+* [FIX] Enforce singleton pattern.
+
+
+Solar_Request
+-------------
+
+* [CHG] Added support for Google's X-HTTP-Method-Override headers for
+  determining PUT and DELETE requests. Thanks for the patch, Clay Loveless.
+
+* [ADD] Because the normal $_FILES array is completely different from $_GET,
+  $_POST, etc, added method _rebuildFiles() to restructure the $files property
+  to look just like $get, $post, etc.
+
+* [ADD] Method postAndFiles() to get the combined results of $_POST **and**
+  $_FILES. Useful when working with models and file uploads.
+
+* [FIX] Call-time pass-by-reference is deprecated. Thanks to Jeff Surgeson for
+  reporting, and Antti Holvikari for confirming.
+
+
+Solar_Role_Adapter
+------------------
+
+* [ADD] Magic method __call() to take "isRoleName()" and convert to
+  "is('role_name')".
+
+
+Solar_Session
+-------------
+
+* [ADD] Static property $handler to keep the handler object.
+
+* [ADD] Static method setHandler() to inject the session save handler object.
+
+* [ADD] Session object now fully supports save-session-handler adapters.
+  Includes a native adapter and an SQL adapter. Thanks, Antti Holvikari, for
+  these additions.
+
+* [ADD] Method hasFlash(), to see if a flash key exists already or not. This
+  lets you check if the key exists without having to read (and thus destroy)
+  it.
+
+
+Solar_Smtp_Adapter_CramM5Auth
+-----------------------------
+
+* [FIX] Apparently hash_hmac() doesn't work for this; adding code lifted from
+  Zend Framework to handle it.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [CHG] Method query() now intercepts and wraps PDO exceptions when preparing
+  the query.
+
+* [FIX] In method quote(), quote *all* scalars, including numerics. Thanks,
+  Jeff Moore.
+
+* [CHG] Exceptions now include a 'data' key to see what data was bound to the
+  query.
+
+* [CHG] Profile info now includes a third element: the data passed to the
+  query.
+
+* [FIX] In method _sqlColdef(), empty-string and zero values for $default are
+  now honored.
+
+* [CHG] In method _sqlSelect(), 'distinct' now defaults to null instead of
+  false, in line with change to Solar_Sql_Select::distinct() behavior.
+
+* [FIX] In method _sqlSelect(), the default parts now include a 'join' key.
+  Seeing as the method is almost exclusively used by Solar_Sql_Select-based
+  queries, this was unlikely to be a real problem, but completeness demands
+  it.
+
+* [FIX] Fixes cache conflicts across multiple connections. Patch from Rodrigo
+  Moraes; thanks, Rodrigo. :-)
+
+* [ADD] Method getCacheKeyPrefix() so model caches can keep connections
+  separate.
+
+* [CHG] Method fetchTableList() now caches to the key "table_list", vice
+  "fetchTableList()".
+
+* [CHG] Method fetchTableCols() now caches to the key "tables/$table/cols",
+  vice "fetchTableCols()/$table".
+
+* [REF] Refactor "profile" element addition into its own method, and add a
+  backtrace to the profile elements so you can see what generated the query.
+
+* [ADD] All SQL adapters now have the methods necessary to quote identifier
+  names, and do so automatically in all convenience methods except the
+  fetch*() methods.
+  
+  For fetches, use Solar_Sql_Select to get the benefit of automatic identifier
+  quoting. This means that Solar_Sql_Model gets the benefit of automatic
+  identifier quoting as well, since it uses Solar_Sql_Select exclusively.
+    
+    * [ADD] Method quoteName() places identifier quotes around the passed name.
+      For MySQL, "table alias" becomes "`table` `alias`", "(SELECT ...) alias"
+      becomes "(SELECT ...) `alias`", "table.column" becomes "`table`.`column`",
+      and all others are quoted as-is e.g., "foo" becomes "`foo`").
+
+    * [ADD] Method quoteNamesIn() places identifier quotes around
+      fully-qualified "table.col" names in an SQL snippet (such as a WHERE or
+      HAVING clause). This method recognizes string literals, and as such
+      should not quote identifiers within strings. (I'm still a bit uncertain
+      that string-literal recognition is perfect, but I've tried it on my
+      latest production system and it appears to be working fine. )
+  
+      E.g., the snippet 'foo.bar = CONCAT("baz", dib.gir, "zi.m\\\'s")' will
+      be quoted as '`foo`.`bar` = CONCAT("baz", `dib`.`gir`, "zi.m\\\'s")'.
+  
+      Note that this **does not** quote standalone names; you have to use
+      "table.col" and not just "col" for the method to quote it.
+
+    * [CHG] Method insert() quotes the table name and data column names in the
+      data
+
+    * [CHG] Method update() quotes the table name, data column names, and
+      names in the WHERE clause
+
+    * [CHG] Method delete() quotes the table name and names in the WHERE
+      clause
+
+    * [CHG] Method fetchTableCols() quotes the table name
+
+    * [CHG] Method createTable() quotes the table and column names
+
+    * [CHG] Method dropTable() quotes the table name
+
+    * [CHG] Methods (add|drop)Column() both quote the table and column names
+
+    * [CHG] Method createIndex() quotes the table name, index name, and column
+      names
+
+    * [CHG] Method dropIndex() quotes the table name and index name
+
+    * [CHG] Methods (create|drop|next)Sequence() all quote the sequence name
+
+* [CHG] Method _checkIdentifier() method no longer checks for reserved words,
+  but still checks to make sure that the names starts with a letter, doesn't
+  have 2 or more underscores in a row, and is no longer than 30 chars.
+
+* [CHG] Method _quoteName() no longer quotes '*' values. Thanks, Antti
+  Holvikari, for suggesting this. However, note that _quoteNamesIn() still
+  does not recognize 'table.*' ... still thinking about how to do that
+  elegantly.
+
+* Various internal refactorings to make extension somewhat easier.  May break
+  custom vendor adapters.
+
+    * [CHG] Rename method _dsn() to _buildDsn()
+
+    * [ADD] Method _setDsn() to set the DSN (internal-only)
+
+    * [ADD] Method setCacheKeyPrefix()
+    
+* [REF] Refactor prepare-and-bind to their own methods.
+
+* [FIX] Use the prepared statement query string, not the (missing) statement
+  text.
+
+* [ADD] Method _setup() for follow-on to the constructor in extended classes.
+
+* [ADD] Methods getCache() and setCache() to work with the internal cache
+  dependency object.
+
+* [CHG] Use 4-spaces instead of tabs when building SELECT statements.
+
+* [FIX] In method _bind(), fix regular expression to find placeholders
+  separated only by commas, not just comma-and-space. Thanks, Kalkin, for the
+  report.
+
+Solar_Sql_Adapter_Mysql
+-----------------------
+
+* [ADD] Per talk w/James Kilbride, adding 'sock' config key to specify the
+  Unix socket. The Mysql adapter now honors it as well.
+
+* [CHG] Method _sqlCreateTable() now appends "DEFAULT CHARSET=utf8" and
+  "COLLATE=utf8_bin".
+
+
+Solar_Sql_Adapter_Sqlite
+------------------------
+
+* [CHG] Method _postConnect() now sets pragma encoding UTF-8.
+
+* [FIX] In fetchTableCols(), when looking for auto-increment column, make
+  quotes around the name optional (to allow for tables created without quoting
+  the name). Also explain the regex better.
+
+* [FIX] Make _buildDsn() take an info value.
+
+* [FIX] Contra recommendation from Jeff Moore related to MySQL quotes, SQLite
+  **does** want numerics left alone, at least when doing comparisons on its
+  functions (COUNT() etc).
+
+
+Solar_Sql_Model
+---------------
+
+* [CHG] Methods _fetchAll() and _fetchAssoc(), when doing has-many eager
+  fetching, now use the SELECT statement instead of the selection params when
+  calling fetchRelatedArray(). This should make it possible to fetch related
+  records when the original SELECT statement uses WHERE conditions on joined
+  tables.
+
+* [CHG] In _fixTableName(), *do not* modify the table name if already user
+  specified. This should help with legacy table names using their own
+  capitalization rules. Thanks, James Kilbride.
+
+* [ADD] __call() method now supports 'fetchBy' as an alias of 'fetchOneBy'.
+
+* [BRK] Per recommendation of Jeff Moore, renaming memory-releasing
+  __destruct() method to free().
+  
+* [ADD] New param key 'count_pages' for fetchAll() and fetchAssoc().  When
+  true, will execute countPages() with the same params used for the fetch,
+  and will then set that information in the resulting collection.  This lets
+  you avoid making dual calls to fetchAll() and countPages(), and keeps the
+  pager information with the collection itself.
+
+* [CHG] Method insert() now calls record setStatus('inserted') after insert.
+
+* [CHG] Method update() now calls record setStatus('updated') after update.
+
+* [CHG] Method newRecord() now calls record setStatus('clean') before
+  returning the record object.
+
+* [REF] "Dry up" setting of pager information in collections. Also adds
+  'begin' and 'end' keys for pager info.
+
+* [CHG] Method update(), when passed a record object, now updates only the
+  **changed** properties, not every property regardless of whether it changed
+  or not. This is particularly in recognition of increment/decrement values,
+  which may have been altered by other processes. Also, because it's possible
+  than a update() call may end up changing no columns at all, a non-update
+  situation on a record results merely in a record refresh, not an update per
+  se.
+
+* [FIX] Get the primary-key value before removing unchanged columns from the
+  data.
+
+* [CHG] After successful insert/update, use refresh() on records, instead of
+  load(). The load() method messes with calculated cols and related values,
+  and all we really want to do it refresh the table data itself.
+
+* [FIX] Method insert() now sets the record ID so that refresh() will work as
+  expected. Thanks for the report, Jeff Surgeson.
+
+* [BRK] Several breaks of internal logic and technique, which should make the
+  system more flexible and powerful. These are mostly in response to the
+  addition of logic in the Solar_Sql_Model_Related classes.
+
+  In addition, you can now use eager has-many join tables in your select
+  params without having to write your own fetch methods to construct a special
+  SELECT object. Cf. upcoming changes in Solar_Model_Nodes and
+  Solar_Model_Tags.
+
+    * [CHG] Method __call() now gives fully-qualified names to the select
+      columns; e.g., instead of just "id", the select column is
+      "model_name.id".
+
+    * [REF] In all fetch*() methods, standardized internal variable names to 
+      $params, $select, and $result for easier comparison.
+  
+    * [BRK] Removed support methods _fetchAll() and _fetchAssoc(). Given that
+      the relation objects carry more logic now, and that $params is passed in
+      full to newSelect(), they're not needed. Wrapped their support logic
+      back into their "parent" methods fetchAll() and fetchAssoc()
+      respectively.
+
+    * [FIX] Method _setCollectionPagerInfo() now correctly sets the 'end'
+      value (was off by 1 too many).
+
+    * [CHG] Method countPages() now honors all eager joins. (Thanks, Jeff
+      Surgeson, for noting that previously it did not honor the joins; that
+      report was the driving force behind all these other changes.)
+
+    * [CHG] Method fixSelectParams()...
+
+        * Now defaults DISTINCT to null instead of false, so that existing
+          DISTINCT values are not modified unless specifically set to true or
+          false.
+
+        * Now "uniques" the requested column names.
+    
+        * Now "uniques" the requested eager joins.
+    
+    * [BRK] Method newSelect() now takes the **entire** $params array, not
+      just the 'eager' key from that array. This affords a lot more
+      consolidation of logic, and gives more power and flexibility to the
+      building process. The method is now responsible for building the whole
+      SELECT for fetch*() calls.
+  
+    * [CHG] Method newSelect() now honors **all types of eager joins**
+      (including "has many" and "has many through", although columns from the
+      has-many relations still have to be fetched separately). It does so by
+      using the "modSelectEager()" method from the relation object. This means
+      you can have selection criteria based on any eager-join relation.
+
+    * [CHG] Method insert() now sets the primary-key of the record object, not
+      just the first auto-increment key. This will help support
+      non-autoinc-based primary keys, such as sequence-based keys.
+
+* [FIX] In method newRecord(), when single-table inheritance is invoked, tell
+  the inherited record object to use the **inherited model**, not the current
+  model.
+
+* [CHG] In method _fixModelName(), the model name now takes on the table name
+  when the table name is available. Thanks, Kilbride, for the report.
+
+* [ADD] Automatic versioned data caching.
+
+* [ADD] Config key 'cache', property $_cache, and method _fixCache() to build
+  the caching object for versioned data.
+
+* [ADD] Config key 'auto_cache' turns caching-by-default on and off for all
+  fetches.
+
+* [ADD] Method _fetchResultSelect() to provide a unified way to check the
+  cache, fetch results from the database on a cache miss, and add the results
+  to the cache as needed.
+  
+* [CHG] The method fixSelectParams(), and therefor the various fetch*()
+  methods now recognize two new params: 'cache' (whether or not to use the
+  cache), and 'cache_key' (an explicit cache key to use for the fetch; the
+  default key is constructed from the params, so you generally shouldn't need
+  to specify a key).
+
+* [CHG] Methods insert(), update(), and delete() now delete cached data when
+  successful.
+
+* [FIX] Method newSelect() $params is now optional.
+
+* [ADD] Method countPages() now honors the 'cache' param.
+
+* [FIX] In method fetchNew(), use array_key_exists() vice !empty(), so that
+  you can specify false/null/zero/empty-string values.
+
+* [CHG] Now using $related fetchObject() and fetchArray(), instead of internal
+  fetchRelatedObject() and fetchRelatedArray().
+
+* [DEL] Method fetchRelatedObject() and fetchRelatedArray() extracted to
+  Solar_Sql_Model_Related.
+
+* [ADD] Method fetchArray() to fetch results as a plain PHP array, not a
+  collection object.
+
+* [DEL] Method countPagesRelated(), never actually used anywhere in the rest
+  of Solar.
+
+* [ADD] Methods fixSelectParams() and newSelect() now support new 'limit'
+  param, to override page/paging with limit count/offset values.
+
+* [CHG] Method _fixPropertyCols() now sets $_foreign_col using Solar_Inflect.
+  The assumption is that the table/model name is plural, so the foreign col
+  should be made singular.
+
+* [ADD] Inflection reference now kept internally.
+
+* [CHG] Single-table inheritance is now honored when the current model name is
+  "merely" different from the parent model name. E.g., given Solar_Model_Nodes
+  as the parent class, the parent model name is "Nodes".
+  `Solar_Model_Bookmarks extends Solar_Model_Nodes` is now recognized as
+  single table inheritance (with a model name of "Bookmarks"). (This is in
+  addition to the previous behavior, where Solar_Model_Nodes_Bookmarks is
+  still recognized as STI.)
+
+* [FIX] In method _fixTableName(), determine $base_name from the $base_class,
+  not $val (the class above $base_class).
+
+* [FIX] In method _fixStack(), look for transitions between vendors, and
+  artificially add NewVendor_Model to the stack, so that
+  single-table-inheritance between vendors works more predictably.
+
+* [CHG] Method fetch() now takes a second param for added query parameters.
+  Likely only useful for the 'eager' key.
+
+* [FIX] In method newSelect(), add 'cols' *before* adding eager join columns,
+  so as to make sure the fetchPairs() cols always appear first. Thanks, Nate
+  Abele, for the report that led to this fix.
+
+Solar_Sql_Model_Collection
+--------------------------
+
+* [FIX] Override Solar_Struct::load() so that fetchAssoc() keys are not
+  renumbered. This means that load() now replaces previous collection data,
+  instead of merging with previous data.
+
+* [ADD] New methods setPagerInfo() and getPagerInfo(), to go with the new
+  'count_pages' param for fetchAll() and fetchAssoc().
+
+* [ADD] Add pager-info keys for 'begin' and 'end', and comments.
+
+* [CHG] When calling __get() on a nonexistent key, instead of generating a
+  notice and returning null, now creates a new blank record from the model and
+  returns that instead.
+
+
+Solar_Sql_Model_Record
+----------------------
+
+* [BRK] Per recommendation of Jeff Moore, renaming memory-releasing
+  __destruct() method to free().
+
+* [BRK] Method save() now uses a try/catch block internally to capture
+  exceptions. Instead of throwing exception on failure, save() now returns
+  boolean false on failure (and boolean true on success). To retrieve the
+  thrown exception, use the new getSaveException() method.
+
+* [CHG] Split saving logic into two separate methods, _save() and
+  _saveRelated().
+
+* [ADD] Added new hook methods _preSaveRelated() and _postSaveRelated().
+
+* [ADD] Method addFilter() adds filter validation and sanitizing to *just 
+  this instance* of the record.  The added filters are honored *after* the
+  model filters when you run the filter() method.
+
+* [CHG] When fields are invalid, now looks up INVALID_* locale keys for the
+  column name as the feedback message. This lets you customize invalidation
+  messages on a per-column basis.
+
+* [ADD] Methods getPrimaryCol() and getPrimaryVal() to make automated
+  retrieval of primary-key name and value more convenient.
+
+* [DEL] Removed "don't load special columns" logic from method form(), put
+  into Solar_Form_Load_Model::fetch().
+
+* [ADD] Method form() now adds form-level feedback for invalid columns that
+  don't have form elements.  This will help diagnose save failures caused by
+  (e.g.) invalid ID columns that are not themselved form elements.
+
+* [CHG] In method form(), for invalid columns not present in the form, show
+  the element name in the feedback, not just the column name.
+
+* [ADD] Property $_initial to track the initial values for table columns.
+  This helps us find out which columns have changed and which have not.
+
+* [ADD] Method isChanged() to see if a column value has changed.
+
+* [ADD] Method getChanged() to get a list of changed columns.
+
+* [CHG] Method setStatus() now sets $_initial to the existing table-column
+  values when the status is set to inserted, updated, new, clean, etc.  The
+  values are not set when the status is dirty or invalid.
+
+* [ADD] Method increment() to increment a column value immediately at the
+  database and retain that new value in the record.
+
+* [CHG] Internal to save(), only catch
+  Solar_Sql_Model_Record_Exception_Invalid exceptions. This lets more serious
+  exceptions bubble up, such as query-failed operations.
+
+* [ADD] Method saveInTransaction(), to wrap the save and save-related calls in
+  a transaction.
+
+* [CHG] Modifications to load() method.
+
+    * [REF] Renamed local var $data to $load to make it more clear what the
+      loading data is, and what $this->_data is.
+    
+    * [FIX] Now sets table column values **before** setting any other values.
+    
+    * [FIX] Double-underscores in the middle of a load key are still treated
+      as a has-one or belongs-to eager record, but double-underscores **at the
+      very start** of the key are no longer treated as such. This allows keys
+      such as "__foo", "__bar", etc.
+    
+* [CHG] Method toArray() now includes calculated columns.
+    
+* [FIX] Method refresh() now explicitly sets only table columns (as expected
+  from documentation) instead of using load().
+
+* [BRK] Method locale() now addresses the **model** locale strings. This helps
+  keep locale string with the model class, not the record class.
+
+* [CHG] Now that Solar_Filter only loops through filter keys, not every single
+  data key regardless of whether or not it has filters on it, the lazy-load
+  flag is no longer needed.
+
+* [ADD] Method load() now adds placeholders for calculate-cols.
+
+* [CHG] Method refresh() now attempts to refresh regardless of current status.
+  Also, takes a param to set the status after refreshing.
+
+* [CHG] In method form(), if no $cols are passed, now uses only fetch cols and
+  calculate cols (previously would use all table cols, and no others).
+
+* [CHG] Now uses $related fetchObject() instead of $model
+  fetchRelatedObject().
+
+* [DEL] Methods getRelatedPage() and setRelatedPage(), as these are never
+  actually called from anywhere, and do not have the necessary support in
+  Solar_Sql_Model.
+
+* [FIX] In method load(), when loading related models, free the model object
+  to avoid memory leaks. Thanks, Nicholas Sloan, for the report that led to
+  this fix.
+
+* [CHG] In method refresh(), throw an exception instead of failing silently
+  when the record cannot be refreshed due to a missing ID.
+
+
+Solar_Sql_Model_Related
+-----------------------
+
+* [CHG] Method newSelect() now accepts a Solar_Sql_Select object for finding
+  the native set of IDs to fetch related records for. When a Select is passed,
+  _modSelect() now clears all its columns and selects on the $native_col
+  column for the JOIN.
+
+* [ADD] Methods fetchArray() and fetchObject() to handle fetching data from
+  the related (foreign) model.
+
+* [ADD] Property $_fetch_object to tell the fetchObject() method the type of
+  object to return ('record' or 'collection').
+
+* [ADD] Method modSelectCountPages() to modify the count-pages SELECT from a
+  native model.  This helps to make sure that eager-joins are honored when
+  counting pages.
+
+* [ADD] Abstract method modSelectEager() to modify the fetch*() SELECT from a
+  native model.  This pulls the logic for eager-joins out of the model object
+  and puts it in the relation object.
+
+* [ADD] Support method _modSelectEager() to handle most types of eager joins,
+  with (has-one/belongs-to) or without (has-many) columns.
+
+* [ADD] Inflection logic to set default values for foreign keys, etc.
+
+* [ADD] Method _fixForeignKey() sets the 'foreign_key' value based on the
+  related name.
+
+* [ADD] Method _setForeignClass() sets the $foreign_class property based on
+  the related name.
+
+* [ADD] Method dump() to help with debugging.
+
+* [FIX] In method load(), instead of constructing a new model instance, use
+  the model instance from the relationship object. This fixes a bug where
+  $model->free() would release the cache object too early.
+
+Solar_Sql_Model_Related_HasMany
+-------------------------------
+
+* [CHG] Method newSelect() now accepts a Solar_Sql_Select object for finding
+  the native set of IDs to fetch related records for. When a Select is passed,
+  _modSelect() now clears all its columsn and selects on the $native_col
+  column for the JOIN.
+
+* [ADD] Property $_fetch_object to tell the fetchObject() method to return a
+  collection.
+
+* [FIX] In _setForeignClass(), pass the relationship name through inflection.
+  Thanks, Edward Z. Yang, for the report that led to this fix.
+
+
+Solar_Sql_Select
+----------------
+
+* [ADD] New method cols() lets you select columns without regard to a FROM or
+  JOIN clause. That is, it just adds to the list of columns to be selected.
+
+* [CHG] Methods multiWhere() and multiHaving() now honor individual conditions
+  starting with "AND" or "OR". The previous behavior of using a default
+  operator for conditions remains in place, with the one change that explicit
+  "AND" or "OR" operators at the start of a condition will override the
+  default operator.
+
+* [BRK] Method distinct() now **does not** change the value of DISTINCT when 
+  the flag is null.
+
+* [CHG] Method countPages() now has modified implementation. To support all
+  manner of weirdness in the original query, such as COUNT() with GROUP BY and
+  HAVING COUNT() (as with tagging), we now wrap the original query as an
+  inner/subselect within an outer query. The outer query counts the rows on
+  the inner query. However, the method still uses the previous, more-efficient
+  strategy for counting records when there is no COUNT() in the WHERE or
+  HAVING clauses.
+
+* [FIX] In countPages(), track DISTINCT on the original query. DISTINCT with
+  JOINs doesn't always work the same when you just have the one column (the
+  counting column).
+
+* [CHG] When building original/alias names for "from", "join", and "select",
+  **do not** use AS, because it conflicts with Oracle. Thanks, James Kilbride.
+
+* [ADD] Now quotes identifier names automatically in the appropriate manner
+  when these methods are used: where(), orWhere(), group(), having(),
+  orHaving(), order(), fetch(), _buildFrom(), _buildJoin(), and
+  _buildSelect().
+
+* [FIX] In fetch() method, do not alias a '*' column name (fixes '* AS *'
+  error).
+
+* [REF] Refactor common table-name and table-cols discovery to a single
+  method.
+
+* [FIX] When counting in a subselect, do not alias the column being counted.
+  This is to soothe SQLite.
+
+* [FIX] remove method disambiguate() since it no longer has an adapter
+  corollary.
+
+Solar_Struct
+------------
+
+* [CHG] When calling __get() on a nonexistent key, now throws an exception so
+  you can trace for debugging, instead of a simple PHP notice.
+
+* [CHG] Method __get(), when throwing NO_SUCH_KEY exception, now tells you the
+  offending key name.
+
+* [CHG] When reporting "no such key", now gives the class name and the list of
+  available keys.
+
+Solar_Test
+----------
+
+* [ADD] Method assertType().  Thanks for the patch, Rodrigo Moraes.
+
+
+Solar_Uri
+---------
+
+* [FIX] Per talks w/Antti Holvikari, use `trim($var) == ''` instead of `!
+  $var` to allow for a string '0' in the format and fragment portions.
+
+* [FIX] In method get(), use trim() and strict inequality to allow for
+  string-zero params and fragments.
+
+* [CHG] Only set $this->_request if not already set. Child classes (e.g.
+  Solar_Uri_Action, in a forthcoming commit) may have already set it.
+
+* [FIX] In setPath(), when $spec is empty, $path is now correctly empty
+  instead of `0 => ''`. Thanks, Antti, for the patch.
+
+* [CHG] Makes $query a virtual public property, and implements some checking
+  against the origin query string, so that if you don't examine or modify the
+  $query property, you always get back the exact same query string you set to
+  begin with. The parse_str() and http_build_query() methods mess with the
+  query string *just enough* to make them a problem in some edge cases. Thanks
+  to Edward Z. Yang for the report and the patch.
+
+
+Solar_Uri_Action
+----------------
+
+* [CHG] When using Apache mod_rewrite, you can now add `SetEnv
+  SOLAR_URI_ACTION_PATH /` and the Solar_Uri_Action class will use that as its
+  default 'path' config value. You can still override in Solar.config.php.
+  This is a convenience for those swapping over from non-rewrite environments
+  to rewrite-aware environments, especially in first-time setup.
+
+
+Solar_User
+----------
+
+* [REF] Refactor so that the construction and loading process is less
+  monolithic.
+
+* [CHG] When loading the "access" object, now sends the auth and role objects
+  directly instead of the handle string and role list array.
+
+
+Solar_View_Helper_(Action|ActionImage)
+--------------------------------------
+
+* [REF] Refactor to use the new actionHref() helper for href values.
+
+
+Solar_View_Helper_(Anchor|AnchorImage)
+--------------------------------------
+
+* [REF] Refactor to use the new href() helper for href values.
+
+
+Solar_View_Helper_Attribs
+-------------------------
+
+* [CHG] Only output attributes that are not blank.  Thanks, Clay Loveless.
+
+
+Solar_View_Helper_Form
+----------------------
+
+* [ADD] Added 'descr' support.
+
+* [ADD] Method addProcess() to add a submit button named 'process' with an
+  auto-translated locale key. Convenient for adding 'save', 'delete', etc.
+  buttons.
+
+* [ADD] Method addProcessGroup() to add a group of process buttons.
+
+* [CHG] No longer need to use getTextRaw() to set label values in form
+  elements; instead, just pass the locale key.
+
+* [FIX] Now catches the right exception when an element helper is not found,
+  allowing it to correctly fall back to the "text" element.
+
+* [CHG] For fieldset legends, now automatically applies getText() to the
+  legend value.
+
+* [CHG] Allow for input-(date|time|timestamp) CSS classes.
+
+* [FIX] Close element groups implicitly at the end of a form. Thanks, Clay
+  Loveless.
+
+
+Solar_View_Helper_FormFile
+--------------------------
+
+* [CHG] Now ignores the "value" entirely, since it never actually gets
+  outputted to the browser.
+
+
+Solar_View_Helper_FormSelect
+----------------------------
+
+* [CHG] Now prefixes the multiple-select elements with a hidden element to
+  represent "no options selected", much the same as with the checkbox helper.
+  Thanks to James Kilbride for the report, and for testing the fixes.
+
+* [ADD] Now supports <optgroup> collections when the option label is an array.
+  Thanks for the patch, Rodrigo Moraes.
+
+
+Solar_View_Helper_Timestamp
+---------------------------
+
+* [ADD] Config key `strftime` to tell the _process() method to use strftime()
+  instead of date(). Thanks, Rodrigo Moraes, for the report leading to this.

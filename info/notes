@@ -1,0 +1,120 @@
+* Removed classes
+
+    * Solar_Test_Assert, moved functionality to Solar_Test
+
+* Added classes
+
+    * Solar_Test
+    
+    * Solar_Test_Suite
+    
+    * Solar_User_Access and related drivers:  Open, None, File (still
+      need Sql, Ini, etc)
+    
+* General
+
+    * Changed testing methodology away from .phpt to something more
+      like SimpleTest/PHPUnit ... Solar_Test.
+    
+    * Added many new tests, e.g. for Solar_Sql and the drivers.
+    
+* Solar_App
+
+    * Adds default _preAction() method to check user privileges for the
+      page-class and action
+    
+    * Adds default $errors public property for tracking page errors
+    
+* Solar_Test_Example
+
+    * Moved support class methods out of test files and into the example
+      class (e.g., validation and filter callbacks)
+
+* Solar_Sql
+
+    * BC BREAK:  createIndex() now takes params $table, $name, $unique
+      (true/false), and $cols (array of col names) ... previously, took
+      $table, $name, $info.
+      
+    * BC BREAK: query() now always returns boolean true for schema
+      manipulation commands (CREATE, ALTER, DROP) ... this is to hide
+      inconsistencies in how backends report "number of rows affected".
+    
+    * Bugfix: query() now honors the array binding-data properly.
+    
+    * Bugfix: select('statement') now works properly (typo).
+    
+    * Bugfix: createSequence() now works properly (was passing $this
+      instead of $name).
+    
+    * Bugfix: addColumn now works properly (was omitting the column
+      name in the command).
+    
+* Solar_Sql_Driver_*
+    
+    * Added driver-specific dropIndex() support.
+    
+    * Solar_Sql_Driver_Mysql::createSequence() now creates sequence
+      tables as InnoDB instead of MyISAM.
+      
+* Solar_Sql_Table
+
+    * _autoSetup() now massages $this->_idx for proper index info, and
+      uses new Solar_Sql::createIndex() params.
+    
+* Solar_Uri
+
+    * changed "public function pathEncode()" to "protected function
+      _pathEncode()"
+      
+    * When auto-discovering the current URI, it adds "example.com" as a
+      dummy host name if $_SERVER['HTTP_HOST'] is empty, then removes
+      it after parsing the URL.  This is to avoid notices about parsing
+      errors.
+      
+* Solar_User
+
+    * Now has public $access property for Solar_User_Access functions
+
+* Solar_View
+
+    * Added methods getHelperPath(), getTemplatePath()
+    
+    * The newHelper() method now properly returns a new standalone
+      helper, instead of re-instantiating the internal copy of that
+      helper.  Also, you can now pass a runtime $config as the second
+      parameter.
+
+* Solar_View_Helper_...
+
+    * Anchor: now returns just the HREF if no text specified
+    
+    * Attribs: now skips empty values, returns '' if no attribs found
+    
+    * Form:
+    
+        * Now adds 'descr' to all elements
+        
+        * Removed $_disable and setDisable() (not honored yet)
+        
+        * Method addFeedback() is now properly fluent (returns $this)
+        
+        * Added method getStatus()
+
+    * FormButton: streamlined output concatenation
+    
+    * FormOptions: no longer indents the options list
+    
+    * FormRadio: no longer adds extra newline after first hidden value
+    
+    * FormSelect: streamlined output concatenation
+    
+    * Image: loads Solar_View_Helper class now
+    
+    * LinkStylesheet: adds 'media="screen"' attrib if not otherwise
+      specified
+    
+    * Style: adds 'media="screen"' attrib if not otherwise specified
+    
+    * Timestamp default format is now "Y-m-d\TH:i:s".
+    

@@ -1,0 +1,10 @@
+* Solar_Controller_Page
+
+    * Fixed helper stack elements for Vendor_App_Helper in _getView()
+      and _getLayout(); thanks, Rodrigo Moraes.
+
+* Solar_Sql_Table
+
+    * Method fetchNew() now honors $this->_row_class instead of
+      hardcoded 'Solar_Sql_Row'
+

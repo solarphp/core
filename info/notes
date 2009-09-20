@@ -1,0 +1,125 @@
+* General
+
+    * Solar.config.php
+
+        * [FIX] now uses 'name' key for sqlite adapter; thanks, Micahel Caplan
+    
+        * [CHG] updated example config file per note from Travis
+
+* Solar
+
+    * [ADD] Added loadInterface() method per notes from Antti, Rodrigo, and
+      Clay. Thanks guys.
+
+    * [ADD] Method Solar::temp() to get the system temporary directory, with
+      an optional sub-path added to it.
+
+* Solar_Auth
+
+    * [ADD] Added $uid property and session store key in support of numeric
+      user IDs reported by adapters.
+
+* Solar_Auth_Adapter
+
+    * [ADD] Added $_uid property and getUid() method to support numeric user
+      ID values (as opposed to string handles).
+
+* Solar_Auth_Adapter_Ini
+
+    * [ADD] Added support for 'email', 'moniker', 'uri', and 'uid' values.
+
+* Solar_Auth_Adapter_Sql
+
+    * [ADD] Added support for 'uid' values.
+
+* Solar_Auth_Adapter_Typekey
+
+    * [ADD] Added pseudo-support for 'uid' values. (TypeKey doesn't actually
+      return such a value, but it's needed for consistency with other
+      adapters.)
+
+* Solar_Cache_Adapter_File
+    
+    * [CHG] Updated to use new Solar::temp() functionality.
+
+* Solar_Content_Abstract
+
+    * [FIX] In fetchTags() method, deconflicted 'name' to 'tags.name' in GROUP
+      and ORDER clauses. Thanks for the patch, Travis Swicegood.
+
+* Solar_Controller_Page
+
+    * [ADD] New $_helper_class property lets you add helper classes between
+      the "Solar" final fallback and the vendor- and app-specific helpers.
+    
+    * [CHG] The _render() method now gives better exception information when a
+      template is not found, and uses ERR_TEMPLATE_NOT_FOUND instead of
+      ERR_VIEW_NOT_FOUND (to distinguish from PartialNotFound).
+    
+    * [CHG] The _getView() method no longer adds Solar_View_Helper to the
+      class stack; Solar_View automatically sets that as the final fallback
+      regardless.
+
+* Solar_Docs_Apiref
+
+    * [CHG] Now uses the $_ignore property again to ignore certain
+      undocumented internal (PHP) classes, especially the Exception class.
+    
+    * [CHG] No more tracking of internal classes.
+    
+    * [CHG] Removed "fake" doc array for internal Exception class.
+    
+* Solar_Exception
+
+    * [ADD] Method getInfo() now takes an optional key, to get the value of
+      just one info key (default is still to get the entire array).
+    
+* Solar_Model_Nodes
+
+    * [BRK] The "unique_in_area" multiple index has changed; please update the
+      "nodes" table manually.
+
+      Previously, it was a unique index on "area_id" and "name". This causes
+      problems when you have two different node types with the same name. As a
+      result, the name has changed to "area_type_name" and is a unique index
+      on "area_id", "type", and "name".
+      
+      To update existing tables, issue two SQL commands similar to these:
+      
+      DROP INDEX nodes__unique_in_area__i ON nodes;
+      CREATE UNIQUE INDEX nodes__area_type_name__i ON nodes (area_id, type, name);
+
+* Solar_Sql_Adapter_*
+
+    * [CHG] The nextSequence() method now explicitly calls _connect() before
+      attempting to increment. Thanks, Michael Caplan.
+    
+    * [CHG] The quote() method no longer quotes numeric values, to soothe
+      SQLite and others.
+
+* Solar_Sql_Select
+
+    * [CHG] Methods leftJoin() and innerJoin() no longer require that you
+      select columns (thanks Antti).
+
+* Solar_View
+
+    * [CHG] Modified partial() method to return a PartialNotFound exception
+      when the requested partial is not found; this makes error-checking more
+      accurate.
+
+* Solar_View_Helper_Form
+
+    * [CHG] Form tag is now optional at fetch() time, per note from Rodrigo
+      Moraes.
+    
+    * [CHG] When an element is not found, now adds the element info to the
+      exception.
+    
+* Solar_Role_Adapter_File
+
+    * [FIX] When checking file lines, now removes all whitespace characters
+      before splitting at ":" and ",". Per bug noted by Clay where last
+      user-handle on the line was not recognized, because of the trailing
+      newline character.
+

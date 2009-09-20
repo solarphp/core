@@ -1,0 +1,280 @@
+* General
+
+    * Bugfix: in tests/run.php, throw "new" Exception (not throw
+      Exception) ... thanks Antti Holvikari.
+    
+    * MAJOR BC BREAK in how classes are configured. New configuration
+      mechanism that allows for inherited config keys (uses $_config as
+      a collection point, and $_Class_Name as the original source for
+      key/value pairs for that class).
+      
+* Schema Changes
+
+    * There is a minor schema change to Solar_Model_Nodes; be sure
+      to run "migrate/0.20.0-0.21.1/content.sql.php" to upgrade your
+      tables.
+      
+* Added new classes
+
+    * Solar_Auth_Adapter_Typekey, generously donated by Mashery.com and
+      based on work by Daiji Hirata from his PEAR Auth_TypeKey proposal.
+
+    * Solar_Struct, a greatly simplified array-structure object. Once
+      populated, you can use it like an array ($struct['foo']) or an
+      object ($struct->foo). It's one-dimensional, although the property
+      values can themselves be arrays or objects or other structs.
+      Implements ArrayAccess, Countable, and Iterator so that you can
+      call count() on it and foreach() through its properties.
+    
+    * Solar_Sql_Row, which extends Solar_Struct. It can be tied back to
+      a "source" object, which means that calling Solar_Sql_Row::save()
+      will update the source data for you and refresh the instance data
+      from that. Technically, this is a Row Data Gateway or an Active
+      Record, depending on how the source-object save() method works.
+    
+    * Solar_Sql_Rowset, which extends Solar_Sql_Row to encapsulate many
+      Solar_Sql_Row objects.
+    
+    * Solar_Test_Bench, for benchmarking method execution speeds.
+    
+* Manual
+
+    * Added more to Main/SkeletonApp
+    
+* Solar
+
+    * New fileExists() algo is 2-3x faster then previous one.
+    
+    * Method parents() can now take either a class name or an object.
+
+    * Now loads Solar_Base when Solar.php is loaded; this will let you
+      do more without having to call Solar::start().
+    
+* Solar_Access_Adapter_File
+
+    * Now trims source text so it doesn't choke on blank lines.
+    
+* Solar_Auth
+
+    * Fixed Auth master to look for *exactly* true return from
+      isLoginValid().
+
+    * Now sets status to the Adapter error code if one is provided.
+
+* Solar_Auth_Adapter
+
+    * Now forces boolean return from isLoginValid().
+
+    * Now has $_err and getErrCode() to report its own error codes.
+
+* Solar_Auth_Adapter_Htaccess
+
+    * Security fix: isLoginValid() was "return"ing exceptions, not
+      "throw"ing them, when file not found, which resulted in
+      authenticated users with blank handle, moniker, etc.  Now properly
+      throws exceptions.
+
+* Solar_Base
+
+    * Turned off automatic setting of 'log' (not used any more).
+    
+    * MAJOR BC BREAK: Uses new configuration mechanism that allows for
+      inherited config keys (uses $_config as a collection point, and
+      $_Class_Name as the original source for key/value pairs for that
+      class).
+      
+* Solar_App_Bookmarks
+
+    * Fixed View/quick.php to use proper subheading.
+    
+    * Updated to make use of Solar_Sql_Row objects instead of arrays; in
+      particular, this means using object notation ($item->id) instead
+      of array notation ($item['id']) and using the save() method on the
+      row instead of passing through the content-object save() method.
+
+    * Method tagFeedAction() now forwards properly to 'tag' (vice
+      'tags').
+
+* Solar_Auth_Adapter_Sql
+
+    * Added support for new columns: email, moniker, uri.
+
+    * Now uses Solar_Sql_Select instead of building select by hand.
+
+    * Added config key 'where' for extra conditions when selecting rows
+      for authentication.
+
+* Solar_Cache_Adapter_Memcache
+
+    * Added 'timeout' config key to allow non-default timeout latency
+      (default is 1 second).
+    
+    * Now checks for 'memcache' extension at construction time.
+    
+* Solar_Content_Abstract
+
+    * The fetch() and fetchDefault() methods now return a Solar_Sql_Row
+      object instead of an array, and are automatically tied to the
+      content object save() method.
+      
+    * The fetchAll() method now returns a Solar_Sql_Rowset object, and
+      are automatically tied to the content object save() method.
+      
+    * The fetchParts() method now returns a Solar_Sql_Rowset object.
+      However, it *does not* tie that rowset to the content object
+      save() method; the parts are likely from other content objects,
+      and so are not save-able via the current content object. (It's
+      effectively a fetch-only rowset.)
+      
+    * Renamed method fetchDefault() to fetchNew().
+
+    * Added method fetchWhere() to fetch a single row by WHERE clause,
+      updated fetch() to use fetchWhere().
+
+    * Added method fetchPartsByType().
+
+    * Method insert() now forces created timestamp.
+
+    * Method update() now forces updated timestamp.
+
+    * All fetch*() methods that return one or more nodes now add an
+      'area_name' column from a join to the 'areas' table; this helps
+      when generating links to other areas by name, not by area_id.
+
+* Solar_Controller_Page
+
+    * The _layoutInstance() method now adds Vendor_App_Example_Helper to
+      the helper class stack.
+
+    * Removed unused $_layout_dir property.
+
+    * Default $_layout is now null (vice 'twoColRight').
+    
+    * Bugfix: method fetch() now calls _postRun() instead of
+      _postAction() after the actions have run.
+    
+    * Method _forward() now sets $this->_action
+      to the requested $action on entry and exit-time, and now uses
+      $this->_action throughout instead of $action. This allows
+      _preRun() and _preAction() hooks to set $this->_action and have it
+      honored by the rest of _forward().
+      
+    * Reordered _forward() internal logic so that it allows _preRun()
+      and _preAction() to set $this->_action, and then have it honored
+      when looking up method and view names.
+      
+    * Added hook methods _preRender($view) and _postRender($output).
+
+    * When rendering layout, now assigns $this to the layout instead of
+      $view (on the theory that the view should not be doing business
+      logic on the properties).
+
+    * Renamed _viewInstance() and _layoutInstance() to _getView() and
+      _getLayout()
+    
+    * Now catches exception when view template is not found and forwards
+      to 'error' action.
+    
+* Solar_Form
+
+    * Method setStatus() now resets form-level feedback messages
+      (success for true, failure for false, no messages for null).
+
+* Solar_Form_Load_Xml
+
+    * Now "throw"s exceptions instead of "return"ing them.
+    
+* Solar_Model_Areas
+
+    * Method fetchByName() now returns a saveable Solar_Sql_Row object.
+    
+    * Added method fetchAllNames() to return an array of pairs (name =>
+      subj).
+
+* Solar_Model_Nodes
+
+    * Per talks with Clay Loveless, column 'summ' is now a CLOB; be sure
+      to run "migrate/0.20.0-0.21.1/content.sql.php" to upgrade your
+      tables.
+
+* Solar_Sql
+
+    * The select('all') method now returns a Solar_Sql_Rowset object;
+      based on Solar_Struct, it can be used as either an array or
+      object, which means existing code using select('all') should not
+      need to be modified at all.
+
+    * The new select('array') method returns a sequential array of
+      rows.
+
+    * The select('row') method now returns a Solar_Sql_Row object;
+      based on Solar_Struct, it can be used as either an array or
+      object, which means existing code using select('row') should not
+      need to be modified at all.
+
+* Solar_Sql_Table
+
+    * The select() method now checks if the selection result is derived
+      from Solar_Sql_Row; if so, it calls setSave() to inject the
+      Solar_Sql_Table object as the save() object.
+
+    * Because of the changes to Solar_Sql::select() and
+      Solar_Sql_Table::select(), the fetch() and fetchAll() methods now
+      return Solar_Sql_Row and Solar_Sql_Rowset objects (respectively)
+      instead of arrays.
+
+    * Renamed method fetchDefault() to fetchNew(), and now returns
+      a Solar_Sql_Row object instead of an array.
+
+    * The insert() method now properly converts new default
+      Solar_Sql_Row object to an array before merging.
+
+    * The update() method now ignores unknown fields when looking for
+      primary keys.
+
+    * Added fetchWhere() method.
+    
+    * In save() method, fixed 'where' clause for updates.
+    
+    * Added _postCreate() method to run after creating the table, per 
+      notes from Antti Holvikari.
+      
+* Solar_Test
+
+    * Now uses Solar_Debug_Var for export dumps.
+    
+    * Added methods assertRegex() and assertNotRegex() per request
+      from Mike Naberezny.
+
+* Solar_Test_Suite
+
+    * Now shows the test-number in the after-run report.
+
+* Solar_View
+
+    * Added special cases for partial() where the vars are from an
+      object or a Solar_Struct, vice just an array.
+    
+    * Now has its own exceptions (vice generic Solar_Exception).
+    
+* Solar_View_Helper_Form
+    
+    * All changes per discussion with Clay Loveless; thanks, Clay.
+    
+    * When CSS class not already specified, setElement() now auto-adds
+      dual CSS classes based on element type and element name.  E.g., a
+      'text' element named 'foo[bar]' gets two CSS classes,
+      'class="input-text foo-bar"'. This is to make it easier to style
+      all input types generically, and specific elements by class-name.
+
+    * IDs used to be the same as the element name, which caused problems
+      with array names ("foo[bar]"). Now converts array names to dashed
+      name ("foo-bar").
+
+    * Element IDs are auto-renamed (by numbering then) if previously
+      used in the form; e.g., 'this-id', 'this-id-1', 'this-id-2', etc.
+      This is for XTHML-Strict compliance.
+
+    * Hidden elements are placed in a "display: none" fieldset for
+      XHTML strict compliance.
+

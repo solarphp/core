@@ -1,0 +1,199 @@
+* General
+    
+    * [NEW] Solar_App_HelloAjax to show off new JavaScript helpers for
+      AJAX magic.  Thanks Clay.
+    
+    * [NEW] Solar_Cache_Adapter_Apc, _Eaccellerator, and _Xcache from
+      Rodrigo Moraes.  Thanks Rodrigo, and thanks Clay for updating the
+      Xcache adapter.
+      
+    * [NEW] Solar_Json: ext/json compatibility class, fully unit tested
+      for to mirror JSON handling behavior of PECL's ext/json, which is
+      enabled by default in PHP 5.2.0. Based on work from the 
+      Services_JSON package by Michal Migurski, Matt Knapp, and Brett
+      Stimmerman.  Thanks Clay.
+      
+    * [NEW] Solar_Json_Checker based on work by Douglas Crockford.
+      Thanks Clay.
+
+    * [NEW] Solar_Markdown: plugin-aware text-to-XHTML processor. Based
+      on original Markdown by John Gruber, and the PHP 4 port by Michel
+      Fortin.
+      
+    * [NEW] Solar_View_Helper_AnchorImage: per note from Jeff Surgeson,
+      now supports separate attribs params for anchor and image.
+      
+    * [NEW] Solar_View_Helper_Base: generates a <base href="" /> tag.
+    
+    * [NEW] Solar_View_Helper_InlineScript: inserts inline JavaScript
+      (or other script) code. Thanks Clay.
+    
+    * [NEW] Solar_View_Helper_Js: overarching JavaScript helper class
+      for effects, animations, ajax, etc. Thanks Clay.
+
+    * [NEW] Solar_View_Helper_JsLibrary: base class for JavaScript
+      library helper interfaces. Thanks Clay.
+    
+    * [NEW] Solar_View_Helper_JsPrototype: helper interface to the
+      Prototype library. Thanks Clay.
+    
+    * [NEW] Solar_View_Helper_JsScriptaculous: helper interface to the
+      Scriptaculous library. Thanks Clay.
+   
+    * [NEW] Solar_View_Helper_Title: generates a <title>...</title> tag.
+    
+* Solar
+
+    * [FIX] Solar::fileExists() had a bug that prevented it from
+      working correctly on Windows when it is encountered an absolute
+      path beginning with "/" or an include_path directory ending in "/"
+      because DIRECTORY_SEPARATOR on Windows is "\". Per note from Mike
+      Naberezny.
+    
+    * [CHG] Solar::fileExists() now checks for Windows drive letter. Per
+      email from Jeremy Cook.
+    
+    * [CHG] Solar::start() now starts a session regardless of PHP_SAPI
+      value (i.e., whether 'cli' or not).
+      
+    * [NEW] Solar::dirname() method helps to find higher-level
+      directories; e.g., you can call Solar::dirname(__FILE__, 2)
+      instead of dirname(dirname(dirname(__FILE__))).
+    
+* Solar_Access_Adapter_File
+
+    * [FIX] In fetch(), when $handle is empty, do not force to '*'.
+    
+* Solar_App_Bookmarks
+
+    * [FIX] Views now use count($this->list) to determine if there are
+      list items.
+    
+    * [FIX] Bookmarks app now properly creates 'areas' table (thanks
+      Rodrigo Moraes and Jeff Surgeson)
+      
+* Solar/App/Layout
+
+    * [NEW] File _head.php now uses meta, base, and title helpers
+      (thanks for the reminder, Jeff Surgeson).
+    
+    * [CHG] Styles default.css now using new form-helper class tags
+      (input-text, input-textarea, etc)
+    
+    * [NEW] File _head.php uses new js() helper to load additional
+      scripts; thanks Clay.
+
+* Solar/App/Public/images
+
+    * [NEW] Added "indicators/" dir with in-progress indicator images;
+      thanks Clay.
+    
+* Solar/App/Public/scripts
+
+    * [NEW] Embedding prototype and scriptaculous in the standard
+      distribution; thanks Clay.
+    
+* Solar_Auth
+
+    * [FIX] When reading adapter-provided error code, use $code, not
+      $err. Thanks, Rodrigo Moraes.
+
+* Solar_Auth_Adapter_Typekey
+
+    * [FIX] The optional Solar_Cache dependency object was not being
+      loaded correctly.
+
+* Solar_Content
+
+    * [NEW] Added new 'sql' config key for Solar_Sql dependency
+      injection (applies to the encapsulated Model objects).
+      
+* Solar_Content_Bookmarks
+
+    * [CHG] The 'summ' form element is now a textarea, and added
+      'reqire' flags to 'uri' and 'tags' elements.
+    
+* Solar_Controller_Front
+
+    * [CHG] When asking for 'page_name', 'page-name', or 'pageName', now
+      converts that to 'PageName'.
+
+* Solar_Controller_Page
+
+    * [CHG] Removed _getLayout() method, replaced with
+      _setViewLayout($view). The new method re-uses the existing
+      page-level View object and resets the template stack to look at
+      Layout templates (vice Page templates). This auto-shares helper
+      objects and assigned vars from the page-level view to the
+      layout-level. Incidentally, this takes less code and runs faster.
+      Per discussion with Clay Loveless.
+    
+    * [CHG] Non-Solar vendor views and layouts now have a final fallback
+      to the generic Solar views and layouts.
+    
+    * [CHG] Method _setViewLayout() no longer type-hints to Solar_View.
+    
+    * [FIX] Previously, $this->_name returned a value with a leading
+      underscore, now it does not.
+    
+* Solar_Flash
+
+    * [NEW] Added method reset() to clear all values.
+    
+* Solar_Form
+
+    * [NEW] Added a new key to the element hints, 'status', to track 
+      the validation status of individual elements.  (This is a ternary:
+      true if validation succeeded, false if validation failed, null if
+      validation has not been attempted.)
+      
+* Solar_Role_Adapter_File
+
+    * [FIX] In method fetch(), strpos() params were reversed.
+    
+* Solar_Sql_Rowset
+
+    * [CHG] When asking for a non-existent key from offsetGet(), returns
+      null.
+  
+* Solar_Sql_Table
+
+    * [CHG] Method update() now forces the update time (thanks Jeff
+      Surgeson).
+
+* Solar_Test_Suite
+
+    * [CHG] Now skips files that don't end in ".php", also skips dirs
+      that do not start with a capital letter.  This is to support
+      bundling of support files for tests (e.g. the Markdown torture-
+      test suite).
+    
+* Solar_View
+
+    * [FIX] Methods getHelper() and newHelper() now force first char of
+      helper name to lower case; this is to erase internal confusion
+      between "helperName" and "HelperName" when calling helpers as
+      methods.
+    
+    * [BRK] BC BREAK: The partial() method now **returns** the results
+      of the template script, rather than echoing them directly. You
+      should change all uses of `$this->partial(...)` to `echo
+      $this->partial(...)`.
+      
+* Solar_View_Helper_Action
+
+    * [CHG] Added 3rd param $attribs for href attribs, per note from
+      Rodrigo Moraes.
+      
+* Solar_View_Helper_Form
+
+    * [CHG] Combined all CSS classes for status, feedback, etc. into one
+      property.
+    
+    * [CHG] No more "*" in front of required elements; instead, adds
+      'class="require"' to the element itself, as well as the <dt> and
+      <dd> tags related to it.
+    
+    * [CHG] Element-specific classes are now assigned at addElement()
+      time, not fetch() time.
+    

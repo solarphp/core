@@ -1,0 +1,50 @@
+A double handful of bugfixes.
+
+* Solar_Cli_MakeVendor
+
+    * [FIX] Mismatched ol/ul tags are now matched properly as ul. Thanks, Jon
+      Elofson, for the report.
+    
+    * [FIX] Add closing </p> tag in browse template. Thanks, Jon Elofson, for
+      the report.
+    
+    * [FIX] In _list and _item templates, use the model locales, not the app
+      locales, when labeling columns. Thanks, Jon Elofson, for the report.
+    
+    * [FIX] In method _makeLinks(), skip links that already exists. Thanks,
+      Dmytro Konstantinov, for the report and original patch.
+
+    * [FIX] Correct the target for the tests symlink.
+    
+* Solar_Form_Load_Model
+
+    * [FIX] In method _fixOptions(), use $filter, not $v.
+
+* Solar_Sql_Adapter_Sqlite
+
+    * [FIX] In method _fetchIndexInfo(), quote the index name as an entity,
+      not as a prepared-statement bound value.
+
+* Solar_Sql_Model
+
+    * [FIX] In _fixFetchParams(), use $_fetch_cols by default (not
+      $_table_cols).
+
+* Solar_Sql_Model_Params_Fetch
+
+    * [FIX] Method limit() now properly accepts load parameters. Thanks, Jeff
+      Surgeson for the report that led to this fix.
+
+    * [FIX] Methods where() and having() now honor empty values properly for
+      conditions. Thanks, Anthony Gentile, for the report leading to this fix.
+
+* Solar_Sql_Model_Related
+
+    * [FIX] In method _fetchIntoArrayAll(), when a collated result is empty,
+      use fetchEmpty() for its value, not a hard-coded null. Thanks, Anthony
+      Gentile, for the report that led to this fix.
+
+* Solar_View_Helper_Form
+
+    * [FIX] In method addElements(), use correct needle/haystack args for
+      in_array(). Thanks, Jon Elofson, for the report.

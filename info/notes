@@ -1,0 +1,690 @@
+Solar 0.26.0 Release Notes
+==========================
+
+* [BRK] Naming standards change: "submit" is now "process".
+
+  Previously, we had "controller", "action", "submit", and submission buttons
+  were named 'submit'. Rodrigo Moraes pointed out, and Clay Loveless verified,
+  that having buttons named 'submit' makes it difficult to work in JavaScript
+  (such as calling a submit() method on a button named 'submit', etc).
+  
+  To fix this, we need a standards change. Henceforth, we will use "process"
+  in place of "submit". So the progression is now "controller", "action",
+  "process". Also, locale keys are changed from SUBMIT_* to PROCESS_*.
+  
+  This release effects the new standard across the entire Solar code base,
+  and is essentially a global search-and-replace from 'submit' to 'process'.
+  Notable exceptions are Solar_Form, Solar_View_Helper_Form,
+  Solar_View_Helper_FormSubmit.
+  
+* [CHG] Global removal of func_num_args() and func_get_arg().
+  
+  In the interest of speeding things up when possible, this change introduces
+  a new global constant: SOLAR_IGNORE_PARAM. This constant is used when we
+  need an optional method param that may or may not be present.
+  
+  Previously, we would check for added optional params using func_num_args(),
+  and then get the values of those params using func_get_arg(). The func_*()
+  functions are known to be quite slow.
+  
+  Now, we set the param default value to SOLAR_IGNORE_PARAM. If the param is
+  that value, we know it was not passed.
+  
+  Why do this instead of using null or some other empty value? Because
+  sometimes you want to pass a null or empty value; using the
+  SOLAR_IGNORE_PARAM value lets you state that normally no parameter is to be
+  passed at all.
+  
+  Hope this makes sense to everyone.
+
+* [CHG] Removed ending ?> from all scripts to avoid "headers cannot be sent,
+  output started at line X" error due to accidental trailing newlines in
+  scripts.
+
+* [CHG] Updated example .htaccess file with better rewrite rules. Also added
+  some php flag & value defaults.
+
+* [CHG] Changed "e.g." to "for example". This helps the documentation
+  generator not get stuck on the periods (which indicate the summary is
+  complete).
+
+* [NEW] Class: Solar_View_Helper_FormXhtml.
+
+* [NEW] Class: Solar_DataFilter. Using PHP's "filter" extension, combines
+  methods from Solar_Valid and Solar_Filter into a single class. Will
+  eventually replace Solar_Valid and Solar_Filter ... but not just yet.
+
+
+Solar
+-----
+
+* [CHG] Method locale() now accepts an object as the first param
+
+* [CHG] Method exception() now accepts an object as the first param
+
+* [ADD] Property $config_base to store inherited Solar_Base class configs
+
+* [CHG] Per discussions w/Travis Swicegood about testing, move cleaning of
+  globals (and config fetching) to independently-testable locations.
+  Effectively, this means two new methods: cleanGlobals() and fetchConfig().
+
+* [CHG] The factory() method now checks to see if the new object itself has a
+  `solarFactory()` method; if so, it returns the result from *that* factory.
+  This allows for factory classes to return specific adapters.
+
+* [CHG] The dependency() method no longer checks that the dependency object is
+  an instance of the $class parameter value; this is because factory classes
+  will return an adapter instance, not an instance of the factory class
+  itself.
+
+* [CHG] Method registry() doesn't check if the string $spec is registered;
+  lets the registry itself do that. We want it to fail if the string $spec is
+  not registered, not pass on to creating a new object.
+
+* [FIX] Method config() now allows empty values as valid config values
+  (changed from an empty() check to a ! isset() check; thanks, Travis
+  Swicegood).
+
+* [CHG] The fileExists() method now returns the full-path file-location it
+  found instead of boolean true. Still returns boolean false when the file is
+  not found. Thanks, Clay, for the suggestion.
+
+* [CHG] Method run() is more friendly to opcode caches (takes the include()
+  out of a conditional).
+
+* [BRK] Now uses 'solarFactory' as the Solar::factory() auto-factory method
+  name (vice 'factory').
+
+* [CHG] Solar::dump() no longer takes values by reference.
+
+
+Solar_Access
+------------
+
+* [BRK] Converted from "facade" pattern to "factory" pattern. Is now a factory
+  class, not a facade, and returns adapter instances instead of an instance of
+  itself. Although I note this as a BC-break, you should be able to continue
+  using it almost exactly the way you have; i.e., through Solar::factory().
+  The only difference should be that you get back an adapter instance instead
+  of the facade instance.
+
+
+Solar_Access_Adapter
+--------------------
+
+* [BRK] Now contains all the methods and properties previously contained in
+  the Facade wrapper. I note this as a BC break, but if you have been using
+  Solar::factory() all along, you should experience few if any problems on
+  upgrade.
+
+* [BRK] All 'submit' keys in access lists are now 'process' keys.
+
+
+Solar_Access_Adapter_File
+-------------------------
+
+* [CHG] The fetch() method now checks to see if $this->_config['file'] exists
+  and throws an exception if it does not.
+
+
+Solar_App_Bookmarks
+-------------------
+
+* [BRK] All actions and views use a 'process' name and ID for all submit buttons.
+
+* [BRK] All locale strings for SUBMIT_* are now PROCESS_*.
+
+* [BRK] All calls to _isSubmit() are now _isProcess().
+
+* [DEL] Removed methods actionUserFeed() and actionTagFeed(); replaced by new extension-aware formatting (.rss)
+
+* [ADD] New browse.rss.php view to generate RSS feeds when the .rss format is specified
+
+* [DEL] Removed "feed" view, supplanted by "browse.rss".
+
+* [CHG] Bookmark actions now assume layout is turned off for RSS format.
+
+* [CHG] Added $_action_format map to say which actions support which formats.
+
+
+Solar_Auth
+----------
+
+* [BRK] Is now a factory class, not a facade, and returns adapter
+  instances instead of an instance of itself. Although I note this as a
+  BC-break, you should be able to continue using it almost exactly the way
+  you have; i.e., through Solar::factory(). The only difference should be
+  that you get back an adapter instance instead of the facade instance.
+
+* [BRK] Moved locale files to Solar/Auth/Adapter/Locale.
+
+
+Solar_Auth_Adapter
+------------------
+
+* [BRK] Now contains all the methods and properties previously contained
+  in the facade wrapper. I note this as a BC break, but if you have been
+  using Solar::factory() all along, you should experience few if any
+  problems on upgrade.
+
+* [BRK] No more use of the 'common' config key; since adapters are
+  factoried (not behind a facade) those elements can become part of the
+  regular config array.
+
+* [CHG] Streamlined start() method internals.
+
+* [CHG] Removed _setup() method entirely, now using _loadSession()
+  intelligently.
+
+* [BRK] Renamed isLoginValid() to processLogin().
+
+* [BRK] Renamed _verify() to _processLogin(). Instead of returning true/false,
+  it should return an array of user info on success; or, on failure, return a
+  string error code or an empty value.
+
+* [NEW] Added processLogout() and _processLogout() methods.
+
+* [CHG] Removed _setInfo() method, modified reset() to take a second param
+  for user information.
+      
+* [CHG] Now forces a temporary 'ANON' state when attempting to log in.
+
+* [CHG] Method isValid() now loads the session before checking
+
+* [ADD] Added config key 'session_class'. This allows you to pick what name to
+  use as the session segment; e.g., different adapters can refer to the same
+  session values.
+
+* [CHG] Config key 'session_class' now defaults to 'Solar_Auth_Adapter', not
+  the actual adapter class name. This mimics the previous facade-based
+  behavior.
+
+* [BRK] Config keys for 'source_submit', 'submit_login', and 'submit_logout'
+  are now 'source_process', 'process_login', and 'process_logout'
+  respectively.
+
+* [NEW] Adds support for automated redirection to a specified URI on valid
+  login.
+
+
+Solar_Auth_Adapter_*
+--------------------
+
+* [CHG] Each adapter now sets public values for $this->handle, email, uri,
+  and moniker (as needed) instead of the protected versions.
+
+
+Solar_Auth_Adapter_Htpasswd
+---------------------------
+
+* [CHG] Now uses $this->_handle and $this->_passwd directly.
+
+* [BRK] Method _processLogin() now returns user info on success.
+
+
+Solar_Auth_Adapter_Ini
+----------------------
+
+* [CHG] Now uses $this->_handle and $this->_passwd directly.
+
+* [BRK] Method _processLogin() now returns user info on success.
+
+
+Solar_Auth_Adapter_Ldap
+-----------------------
+
+* [CHG] Now uses $this->_handle and $this->_passwd directly.
+
+* [BRK] Method _processLogin() now returns user info on success.
+
+* [BRK] On failure, no longer throws an exception; instead, returns a
+  string error code and text from the LDAP server.
+  
+
+Solar_Auth_Adapter_Mail
+-----------------------
+
+* [CHG] Now uses $this->_handle and $this->_passwd directly.
+
+
+Solar_Auth_Adapter_Post
+-----------------------
+
+* [CHG] Now uses $this->_handle and $this->_passwd directly.
+
+* [BRK] Method _processLogin() now returns user info on success.
+
+
+Solar_Auth_Adapter_Sql
+----------------------
+
+* [CHG] Now uses $this->_handle and $this->_passwd directly.
+
+* [BRK] Method _processLogin() now returns user info on success.
+
+
+Solar_Auth_Adapter_Typekey
+--------------------------
+
+* [CHG] All adapter-specific logic is now in _processLogin(), not isLoginValid()
+
+* [BRK] Method _processLogin() now returns user info on success.
+
+* [CHG] Method _processLogin() now returns 'ERR_TIME_WINDOW' when the
+  verification window is expired
+
+
+Solar_Cache
+-----------
+
+* [BRK] Converted Solar_Cache and all adapters from facade pattern to factory.
+  Although I note this as a BC-break, you should be able to continue using
+  Solar_Cache exactly the way you have; i.e., through Solar::factory(). The
+  only difference is that you get back a Solar_Cache_Adapter instance instead
+  of a Solar_Cache instance.
+
+
+Solar_Cache_Adapter
+-------------------
+
+* [BRK] Now contains all the methods and properties previously contained in
+  the Facade wrapper. I note this as a BC break, but if you have been using
+  Solar::factory() all along, you should experience few if any problems on
+  upgrade.
+
+Solar_Cache_Adapter_*
+---------------------
+
+* [CHG] The save()/fetch()/delete()/deleteAll() methods now check internally
+  if $this->_active is true instead of depending on the facade to check on it,
+  because we're now using factories instead of facades.
+
+* [BRK] When not active, adapters return null instead of boolean false when
+  save/fetch/delete/deleteAll methods are called.
+
+
+Solar_Cache_Adapter
+-------------------
+
+* [CHG] When you call fetch() and the cache is not active, returns null (used
+  to be boolean false)
+
+
+Solar_Cache_Adapter_File
+------------------------
+
+* [CHG] Now serializes all non-scalar values. (Previously, the adapter
+  serialized only objects and arrays).
+
+
+Solar_Cache_Adapter_Memcache
+----------------------------
+
+* [CHG] Now throws a CONNECTION_FAILED exception at construction time if it
+  cannot connect to the memcache service.
+
+
+Solar_Content
+-------------
+
+* [ADD] Added config keys for 'areas', 'nodes', and 'tags' for dependency
+  injection.  Thanks, Rodrigo Moraes.
+
+* [CHG] Now uses Solar::dependency() instead of Solar::factory() internally
+  for areas, noted, and tags models.  Thanks, Rodrigo Moraes.
+
+
+Solar_Content_Abstract
+----------------------
+
+* [BRK] Renamed fetchWhere() to fetchRow().
+
+
+Solar_Content_Bookmarks
+-----------------------
+
+* [BRK] Renamed fetchWhere() to fetchRow().
+
+
+Solar_Controller_Front
+----------------------
+
+* [ADD] Added _notFound() method to customize behavior when a page-controller
+  is not found.
+
+* [CHG] Now properly falls back to the default page-controller when the
+  requested controller is not found.
+
+* [CHG] Moved inflection of page name from fetch() to _getPageName()
+
+* [CHG] Moved handling of empty page-name from fetch() to _getPageName()
+
+* [FIX] When falling back to the default controller page, now places the
+  original page-name request on top of the URI stack to preserve it for the
+  page-controller as the first param for the default action.
+
+
+Solar_Controller_Page
+---------------------
+
+* [CHG] Setting $this->_view to an empty value turns off the view-template
+  processing, for "null" output. (Note that the null output will still be
+  inserted into a layout unless you set $this->_layout to an empty value.)
+  Thanks to Travis for the discussion that led to this implementation.
+
+* [BRK] Changed property $_submit_key to $_process_key.
+
+* [BRK] Changed method _isSubmit() to _isProcess().
+
+* [BRK] All locale string comparisons on SUBMIT_* are now on PROCESS_*.
+
+* [NEW] Supports rendering of multiple formats based on the last path-info
+  element having a dot extension. For example, "foo/bar/baz.xml" will cause
+  the _render() method to look for a "baz.xml.php" view script (instead of
+  just "baz.php"). This applies to layouts as well as views. To override the
+  format, set $this->_format as you wish (default is empty).
+
+* [CHG] Now throws an exception when the layout template is not found.
+
+* [CHG] Using a format extension now turns off layout to begin with, rather
+  than using the same layout name with a format extension. Per talk w/Clay
+  Loveless.
+
+* [CHG] Now "ignores" .php format requests, resets $this->_format to null in
+  such cases.
+
+* [CHG] Now honors only formats listed in the $_action_format array, on a
+  per-action basis. This is to fix problems where a param is a valid value,
+  but has a dot in it (such as filename.doc or example.com).
+
+* [FIX] Removes blank elements from end of info array.
+
+
+Solar_Debug_Var
+---------------
+
+* [CHG] Method dump() no longer takes values by reference
+
+
+Solar_Docs_Apiref
+-----------------
+
+* [ADD] Now collects constants from the class, albeit without their docblocks
+  (the Reflection API does not yet support that).
+
+* [NEW] Now collects the classes with @package and @subpackage tags into
+  $package and $subpackage properties, respectively. Also warns when no
+  @package tag is present.
+
+* [FIX] Pulls package name from proper location now.
+
+
+Solar_Docs_Phpdoc
+-----------------
+
+* [ADD] Added @ignore support.  Thanks for the patch, Clay Loveless.
+
+* [FIX] Narrative portions no long strip the first character. Thanks again,
+  Clay.
+
+* [CHG] Improved summary-extraction logic.
+
+* [NEW] Added more tag parsers: @author, @copyright, @deprec[ated], @license,
+  @link, @since, @version, @example, @staticvar.
+
+
+Solar/Locale/*
+--------------
+
+* [BRK] All SUBMIT_* keys are now PROCESS_* keys.
+    
+
+Solar_Log
+---------
+
+* [BRK] Converted Solar_Log and all adapters from facade pattern to factory.
+  Although I note this as a BC-break, you should be able to continue using
+  Solar_Log almost exactly the way you have; i.e., through Solar::factory().
+  The only difference should be that you get back a Solar_Log_Adapter instance
+  instead of a Solar_Log instance.
+
+
+Solar_Log_Adapter
+-----------------
+
+* [BRK] Now contains all the methods and properties previously contained in
+  the Facade wrapper. I note this as a BC break, but if you have been using
+  Solar::factory() all along, you should experience few if any problems on
+  upgrade.
+
+
+Solar_Markdown
+--------------
+
+* [CHG] Disabling "tidy" is somewhat more loose now; any empty value for the
+  'tidy' config key now turns it off, vice only a boolean false.
+
+
+Solar_Markdown_Wiki_Header
+--------------------------
+
+* [CHG] Added support for {#id-attrib} markup, like with
+  Solar_Markdown_Extra_Header.
+
+
+Solar_Markdown_Wiki_MethodSynopsis
+----------------------------------
+
+* [FIX] Now shows default parameters of integer 0.
+
+
+Solar_Request
+-------------
+
+* [BRK] Renaming "isXml()" to "isXhr()" (Xml Http Request) for clarity. Per
+  suggestion from Rodrigo Moraes.
+
+
+Solar_Role
+----------
+
+* [BRK] Converted from "facade" pattern to "factory" pattern. Is now a factory
+  class, not a facade, and returns adapter instances instead of an instance of
+  itself. Although I note this as a BC-break, you should be able to continue
+  using it almost exactly the way you have; i.e., through Solar::factory().
+  The only difference should be that you get back an adapter instance instead
+  of the facade instance.
+
+
+Solar_Role_Adapter
+------------------
+
+* [BRK] Now contains all the methods and properties previously contained in
+  the Facade wrapper. I note this as a BC break, but if you have been using
+  Solar::factory() all along, you should experience few if any problems on
+  upgrade.
+
+* [FIX] Added config key for 'refresh'.
+
+* [CHG] The load() method now takes a second param, $refresh, to force or
+  ignore a refresh regardless of the default setting.
+
+* [CHG] In line with similar issue found with Solar_Auth_Adapter, the session
+  class segment now defaults to 'Solar_Role_Adapter' (because factory returns
+  different class names).
+
+
+Solar_Role_Adapter_Sql
+----------------------
+
+* [ADD] New 'where' config key like Solar_Auth_Adapter_Sql to pass in
+  additional multiWhere() conditions.
+
+* [BRK] Default table is now 'roles' (vice 'member_roles').
+
+* [FIX] Default role_col is now 'name' (vice 'role', which is a reserved word
+  in many databases).
+
+* [FIX] Now properly performs the database fetch call (thanks, Jeff Surgeson,
+  for the bug report).
+
+
+Solar_Sql
+---------
+
+* [CHG] Moved sql exceptions down to adapter level (i.e., from
+  Solar_Sql_Exception_* to Solar_Sql_Adapter_Exception_*).
+
+* [BRK] Converted Solar_Sql and all adapters from facade pattern to factory.
+  Although I note this as a BC-break, you should be able to continue using
+  Solar_Sql almost exactly the way you have; i.e., through Solar::factory().
+  The only difference should be that you get back a Solar_Sql_Adapter instance
+  instead of a Solar_Sql instance.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [BRK] Now contains all the methods and properties previously contained
+  in the facade wrapper. I note this as a BC break, but if you have been
+  using Solar::factory() all along, you should experience few if any
+  problems on upgrade.
+
+* [BRK] The public method buildSelect() is now a protected _buildSelect().
+
+* [BRK] The exec() method is replaced by query().
+
+* [NEW] Added protected methods [_create|_drop|_next]Sequence(),
+  _dropIndex(), etc. for factory adapters to support the related public
+  methods.
+  
+* [ADD] Added quick and dirty profiling mechanism. Includes new 'profiling'
+  config key and $profile property, new method getProfile() to get the
+  underlying adapter query profile, and new method setProfiling() turns
+  profiling off and on.
+
+* [CHG] Now uses PDO prepared-statement emulation; this should be a speed
+  boost. No longer checks the query statement for "direct" non-prepared
+  execution.
+
+* [ADD] Added new fetch*() methods to eventually replace the select() method.
+
+* [CHG] Method select() now uses the fetch*() methods internally, but should
+  be maintaining backwards-compatibility.
+
+* [CHG] Methods fetchRow() and fetchOne() now automatically set LIMIT 1, thus
+  selecting a single row before returning results. Thanks to Clay Loveless and
+  Travis Swicegood for pointing out the need for this.
+
+* [CHG] Method fetchAssoc() now allows returning of a Solar_Sql_Rowset, per
+  request from Clay.
+
+* [CHG] The query() method always returns a PDOStatement now.
+
+* [BRK] Renamed method listTables() to fetchTableList().
+
+* [NEW] Added method fetchTableCols() to get the schema for a table.
+
+* [CHG] The query() method always returns a PDOStatement object.
+
+* [CHG] Now uses "emulated prepares", which speeds things up a great deal
+  in some cases, but requires PHP 5.1.3 or later for it to be useful.
+
+* [CHG] Now uses $this->_native instead of $native.
+
+* [CHG] On query failure, now throws Solar_Sql_Adapter_Exception_QueryFailed
+  instead of PDOException. Carries more info about the failure than
+  PDOException does. Suggested by Travis Swicegood.
+
+
+Solar_Sql_Adapter_Mysql
+-----------------------
+
+* [BRK] changed the native type of 'bool' from DECIMAL(1,0) to TINYINT(1)
+
+
+Solar_Sql_Adapter_Pgsql
+-----------------------
+
+* [FIX] The _nextSequence() method now properly quotes the sequence name.
+
+
+Solar_Sql_Adapter_Sqlite
+------------------------
+
+* [DEL] Removed the 'mode' config key, as it is never used.
+    
+
+Solar_Sql_Select
+----------------
+
+* [FIX] Method quoteInto() now returns the quoted value (thanks Antti
+  Holvikari).
+
+
+Solar_Sql_Table
+---------------
+
+* [ADD] New 'create' config key turns auto-creation off and on; useful in
+  production environments to reduce number of queries.
+
+* [CHG] Now lazy-connects to the database only on first query attempt, not at
+  construction time. This helps delay the database connection until actually
+  needed. See the new _connect() method and the new $_connected property.
+  Methods save(), insert(), update(), delete(), and select() honor this.
+
+* [NEW] Added _newSelect() method to create a Solar_Sql_Select tool for you,
+  injecting the same SQL connection as the table itself is using. Previously,
+  we used Solar::factory() to create Solar_Sql_Select objects on the fly, but
+  that would not inject the exact same SQL connection object. This way, you
+  don't have to remember. Thanks to Clay for pointing this out.
+
+* [CHG] Deprecated method fetchWhere(); use the new method name fetchRow()
+  instead.
+
+* [FIX] Method _autoSetup() now sets $this->_name properly from the class
+  name.
+
+* [ADD] Added method getColName() to get fully-qualified name
+  ("tablename.colname") for a column.
+
+* [ADD] Added setter methods (and __get() support) for the fetchAll() and
+  fetchRow() class values. Thanks for the suggestion, Rodrigo Moraes.
+
+
+Solar_Uri
+---------
+
+* [FIX] The setQuery() method now works when magic_quotes_gpc is turned on
+  (the parse_str() function honors that setting). Thanks to Travis for noting
+  this.
+
+
+Solar_Session
+-------------
+
+* [CHG] Now the regenerateId() method only regenerates if headers have not been sent.
+
+
+Solar_Valid
+-----------
+
+* [FIX] Use chr(255) as regex delimiter instead of English "pounds" character.
+  Thanks for noting this problem, Antti Holvikari.
+
+
+Solar_View_Helper_Js
+--------------------
+
+* Updated to Prototype 1.5.0 final.
+
+* Updated to Script.aculo.us 1.7.0 final.
+
+
+Solar_View_Helper_TypekeyLink
+-----------------------------
+
+* Adds a config key 'process_key' with a default value of 'process'. This
+  helps avoid double-logins by checking the current process value.
+
+

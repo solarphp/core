@@ -1,0 +1,780 @@
+Solar 0.28.0 Release Notes
+==========================
+
+Overall
+-------
+
+* [NEW] Solar_Http_Request: class to represent a standalone HTTP request fetch
+
+* [NEW] Solar_Http_Response: Represents an HTTP response, including headers,
+  cookies, and body content.
+
+* [NEW] Solar_Mail: Package for building and sending simple email messages with
+  text, html, and attachment parts.
+
+* [NEW] Solar_Mime: class to collect MIME-related static methods; used for mail
+  and http classes.
+
+* [NEW] Solar_Smtp: class for sending email via SMTP.
+
+* [CHG] Replaced use of md5() with hash('md5').
+
+* [DEL] Removed all Solar::loadClass(); no longer needed with spl_autoload()
+  turned on.
+
+
+
+Solar
+-----
+
+* [FIX] Now compares SOLAR_IGNORE_PARAM using ===, not just == (thanks Rodrigo
+  Moraes).
+
+* [CHG] When including Solar_Base, do not use autoload.
+
+* [CHG] The temp() method now handles directory separators better (no more
+  double-slashes).
+
+* [CHG] Method stop() now cleans up Solar internals; thanks, Clay Loveless.
+
+
+Solar_App
+---------
+
+Major organizational breaks.
+
+### Directory Structure
+
+Previously, the "base" Vendor_App page-controller organization was like this
+...
+
+    Vendor/
+        App.php
+        App/
+            Helper/
+            Public/
+                styles/
+                images/
+                scripts/
+            Layout/
+            Locale/
+            View/
+
+... and extended page-controller applications were like this:
+
+    Vendor/
+        App/
+            Example.php
+            Example/
+                Helper/
+                Layout/
+                Locale/
+                View/
+
+This made the main application directory a little messy, with the fallback
+directories directly inside it.
+
+    Vendor/
+        App.php
+        App/
+            Example.php
+            Example/
+                Helper/
+                Layout/
+                Locale/
+                View/
+            Helper/
+            Public/
+                styles/
+                images/
+                scripts/
+            Layout/
+            Locale/
+            View/
+            
+The new recommended structure for the base page-controller is this ...
+
+    Vendor/
+        App/
+            Base.php
+            Base/
+                Helper/
+                Layout/
+                Locale/
+                View/
+            Public/
+                styles/
+                images/
+                scripts/
+
+... but extended applications do not change, other than to extend from
+Vendor_App_Base instead of just Vendor_App:
+
+    Vendor/
+        App/
+            Example.php
+            Example/
+                Helper/
+                Layout/
+                Locale/
+                View/
+
+This allows extended applications to "see" their class-stack hierarchy more
+clearly, with cleaner directory structuring.
+
+    Vendor/
+        App/
+            Base.php
+            Base/
+                Helper/
+                Layout/
+                Locale/
+                View/
+            Example.php
+            Example/
+                Helper/
+                Layout/
+                Locale/
+                View/
+            Public/
+                styles/
+                images/
+                scripts/
+
+Remember, you are not required to have a base page-controller to extend from,
+although it is usually a good practice so you can have shared layouts, views,
+etc. for all your Vendor applications.
+
+### Stenhouse CSS Framework
+
+Instead of the previous table-and-CSS layout system, which was never really
+that great, Solar_App now comes with a brand-new set of CSS files for handling
+layout. The CSS framework is designed by Mike Stenhouse (thanks a lot Mike,
+these are great!).
+
+This is an extremely simple layout system, with div-blocks for ...
+
+* Header
+* Branding
+* Search
+* Footer
+* Main content
+* Sub content
+* Nav (site-wide navigation)
+* Local (page or section navigation)
+
+... and is capable of delivering these generic layouts out-of-the-box:
+
+* Vertical navigation with one content column
+* Vertical navigation with two columns of content
+* Horizontal navigation with one content column
+* Horizontal navigation with 2 columns of content
+* Horizontal navigation with local navigation and one column of content
+* Horizontal navigation with local navigation and 2 columns of content
+
+You can read more about the the Stenhouse CSS framework here:
+
+  <http://www.contentwithstyle.co.uk/Articles/17/>
+
+
+### Layouts and Layout Properties
+
+Previously, layout properties for Solar_App were in separate variables:
+
+* $this->layout_head
+* $this->layout_title
+* etc.
+
+Now there is a single $this->layout array, with element keys for each of the
+previous properties:
+
+* $this->layout['head']
+* $this->layout['title']
+* etc.
+
+There are 2 new layout properties related to the Stenhouse CSS Framework:
+
+* $this->layout_local, an array of href (key) and text (value) pairs as links
+  for local/page/section navigation, that go into the layout.
+
+* $this->layout_nav, an array of href (key) and text (value) pairs as links
+  for sitewide/main navigation, that go into the layout.
+
+Also in line with the Stenhouse CSS Framwork, the layout templates and layout
+partials have new names, reflecting their related div-block name.  Thus, we 
+now have these layout templates ...
+
+* navtop-localleft.php
+* navtop-localright.php
+
+... and these partials:
+
+_head.php
+: the <head>...</head> block
+
+_body.php
+: the <body>...</body> block with divs for main, header, content, footer,
+  local, sub, etc.
+
+_auth.php
+_extra1.php
+_extra2.php
+_footer.php
+_header.php
+_local.php
+_nav.php
+_sub.php
+: identified <div>...</div> blocks for the body
+
+
+### Bundled Apps
+
+
+The apps bundled with Solar (Hello, HelloAjax, HelloMini, and Bookmarks) have
+been updated to use these new conventions.  The Bookmarks app in particular
+has seen heavy reorganization based on the Stenhouse CSS Framework and lessons
+from Kelly Miyashiro.  (Thanks, Mike and Kelly.)
+
+Solar_App_Base
+--------------
+
+* [CHG] New property $layout_local_active tracks the currently-active local
+  navigation element.
+
+* [CHG] New property $layout_nav_active tracks the currently-active main
+  navigation element/
+
+* [CHG] Layout/_local.php now uses new $layout_local_active property.
+
+* [CHG] Layout/_nav.php now uses new $layout_nav_active property.
+
+* [CHG] Layout/_body.php now adds an "id" and "class" to the <body> tag.
+
+* [CHG] Layout/_auth.php now exits if there is no 'user' object in the registry.
+
+
+Solar_Auth_Adapter
+------------------
+
+* [FIX] Now commits the session before redirecting.
+
+
+Solar_Auth_Adapter_Ldap
+-----------------------
+
+* [SEC] Security fix to prevent LDAP injection from username and password values.
+  Default filter whitelist is now "\w" (all word chars) instead of "a-zA-Z0-9".
+
+
+Solar_Auth_Adapter_Post
+-----------------------
+
+* [CHG] Now uses Solar_Http_Request internally.
+
+* [BRK] Config key 'url' renamed to 'uri' for consistency.
+
+
+Solar_Auth_Adapter_Sql
+----------------------
+
+* [FIX] Use 'rowset', not 'all', with new SQL adapter code.
+
+
+Solar_Auth_Adapter_Typekey
+--------------------------
+
+* [CHG] Now reports a 'REPLAY' status when outside the allowed time window (vice
+  'ERR_TIME_WINDOW').
+
+
+Solar_Cache_Adapter_*
+---------------------
+
+* [ADD] New method "add()" adds a cache entry only if it does not already exist
+  in the cache.
+
+
+Solar_Cache_Adapter_File
+------------------------
+
+* [ADD] Now supports stream contexts via the new config key 'context'. Thanks
+  for the suggestion and assistance, Clay Loveless.
+
+* [CHG] Default directory mode is now 0740; using 0660 failed consistently
+  during testing.
+
+* [FIX] Now properly sets a default path when the 'path' config is empty.
+
+* [CHG] No longer uses touch() internally; instead, uses file_put_contents() to
+  create the touchfile. This is because touch() does not have context support.
+
+* [CHG] No longer uses dir() internally; instead, uses scandir(). This is
+  because dir() resources do not have context support.
+
+* [BRK] Method fetch() now returns false when the requested key is not found.
+
+
+Solar_Class_Stack
+-----------------
+
+* [CHG] Method load() now does some minimal validation on the class-name to be
+  loaded.
+
+* [CHG] Modified validity check in load().
+
+* [CHG] now show the include-path when can't find a class.
+
+* [FIX] In the midst of validating, forgot to force the name to upper-case on
+  first letter.
+
+* [ADD] Added exception classes, removed 'path' from error info.
+
+* [FIX] Method load() no longer allows empty $name param (thanks Jeff Surgeson).
+
+
+Solar_Content_Abstract
+----------------------
+
+* [CHG] Now using 'rowset' internally instead of 'all', because of new
+  fetchRowset() method in SQL adapter.
+
+
+Solar_Controller_Front
+----------------------
+
+* [BRK] Now converts **only** dashed-words to CamelCase; previously,
+  underscore_words were converted as well (but no longer).  This is to
+  standardize on naming conventions.
+
+* [CHG] Now uses a Solar_Class_Stack internally instead of a custom stack
+  solution.
+
+* [FIX] The fetch() method now recognizes a Solar_Uri_Action param, as per the
+  inline docs.
+
+* [ADD] Added explicit page-name to class-name mapping ("static routing") via
+  the $this->_config['routing'] and $this->_routing properties. This means you
+  can specify exactly what page-names go with which controller classes. The
+  static routing is used first, then falls back to the class stack to find a
+  matching controller class.
+
+* [ADD] The _notFound() method now reports an actual HTTP 1.1/404 status code,
+  and returns a minimal "not found" HTML document.
+
+* [FIX] Method fetch() now properly handles a string $spec parameter.
+
+* [BRK] Method _notFound() now returns a Solar_Http_Response object.
+
+
+Solar_Controller_Page
+---------------------
+
+* [CHG] Now uses new Solar_View_Helper_GetTextRaw::setClass() method to set the
+  translation locale class
+
+* [CHG] Method _redirect() now commits the session before redirecting
+
+
+* [CHG] No longer lower-cases the first char of the page-name.
+
+* [BRK] Now looks directly through parent classes for Helper, Layout, View,
+  etc. directories. This simplifies the searching algorithm and uses common
+  class-stack techniques from the rest of Solar.  See _addViewHelpers(),
+  _addViewTemplates(), and _setLayoutTemplates().
+
+* [BRK] The fetch() method, instead of returning only the output text from
+  the view and layout, now returns a Solar_Response object that collects
+  headers, cookies, and the body for sending at one time.
+
+* [ADD] New properties:
+
+    * `$_format_default` to specify the default format for the output
+      content-type. Default value is 'xhtml'.
+
+    * `$_view_class` to specify what class should be used for generating views
+      (default Solar_View).
+
+    * `$_view_object` as the view-class instance used for rendering views and
+      layouts.
+
+    * `$_format_type` to map format extensions (e.g. 'rss', etc) to HTTP
+      Content-Type values (e.g. 'application/rss+xml').
+    
+    * `$_charset` to set the Content-Type character set value.
+    
+* [CHG] The fetch() method now wraps its execution in a try/catch block; if an
+  exception is thrown, it is caught and passed to new method
+  _exceptionDuringFetch() for possible recovery. (Default is to re-throw the
+  exception.)
+
+* [BRK] $this->_name is now set to the "dashed" equivalent of the controller
+  name; e.g., Solar_App_FooBar becomes 'foo-bar'.  This is so we can recognize
+  the name in the URI.
+
+* [BRK] The _render() method now saves action/view/layout output to
+  $this->_response->body, instead of returning it.
+
+* [BRK] The _render() method now sets and uses a $this->_view_object
+  internally, instead of using a local $view variable.
+
+* [ADD] New method _setContentType() sets a Content-Type header in the
+  response object, based on $this->_format and $this->_format_type.
+
+* [BRK] Removed method _getView(), replaced with _addViewHelpers() and
+  _addViewTemplates(), which are called from _render() on the
+  $this->_view_object property.
+
+* [CHG] Method _redirect() now takes a second parameter, $code, to indicate
+  the HTTP response status code for the redirect.  Default is 302.
+
+* [ADD] New method _redirectNoCache() does a redirect, but turns off HTTP
+  caching in the process.  This will help with redirecting from successful
+  POST operations.
+
+* [CHG] When _forward() cannot find a method for $this->_action, it will now
+  call _forwardActionMethod() to attempt to find a fallback method.  The
+  default _forwardActionMethod() behavior is to thrown an exception, but
+  extended classes can override this an return a useful method name.
+
+* [CHG] The _forward() method now uses $this->$method() when there are 4 or
+  fewer parameters; this is 2x faster than using call_user_func_array(), which
+  is now used only when there are 5 or more paramaters.
+
+* [BRK] Method _preRender() no longer takes a $view parameter; your pre-render
+  hooks should now manipulate the $this->_view_object property as needed.
+
+* [CHG] The _preRender() method now sets the view-object GetTextRaw helper
+  class, so be sure to call your parent _preRender() methods to keep this
+  behavior.
+
+* [BRK] Method _postRender() no longer takes an $output parameter; your
+  post-render hooks should now manipulate $this->_response->body as needed.
+
+* [ADD] Method _forwardActionMethod() is called when _forward() cannot find
+  a method for $this->_action.
+
+* [ADD] Method _exceptionDuringFetch() is called when _fetch() encounters an
+  exception of any kind during its processing.
+
+* [CHG] Method render() now throws exceptions when view or layout not found,
+  instead of trying to forward to error action.
+
+* [CHG] Removed 'xhtml' content-type; it messes with the browsers too much.
+
+* [ADD] New method _setViewObject() to set up $this->_view_object.
+
+* [ADD] New methods for _renderView() and _renderLayout() to make them easier
+  to override.
+
+* [CHG] Methods _addViewHelpers(), _addViewTemplates(), and
+  _setLayoutTemplates() now operate on $this->_view_object instead of a $view
+  param.
+
+* [FIX] Method _addViewHelpers() now adds $vendor to the stack, not a literal
+  "Vendor" (thanks Jeff Surgeson and Rodrigo Moraes).
+
+* [BRK] No longer sets $this->_view_object->controller and
+  $this->_view_object->action view properties; leave that for extended classes
+  to work out.
+
+* [CHG] Method _redirect() now writes session values before sending response.
+
+* [ADD] Better action-format discovery method, _getActionFormat().
+
+* [CHG] Method _getActionFormat() now looks for 'foo-bar', 'fooBar', and 'actionFooBar'.
+
+* [CHG] Method _getActionFormat() now skips if $_action_format is completely empty.
+
+* [BRK] Method fetch() now returns a Solar_Http_Response object instead of a
+  text string.
+
+* [CHG] Method _setLayoutTemplates() is now called from _render(), not
+  _renderLayout(), in the interest of making _renderLayout() easier to override
+  (no need to call _setLayoutTemplates() in extended methods). Thanks for the
+  suggestion, Rodrigo.
+
+
+Solar_DataFilter
+----------------
+
+* [ADD] Added locale strings
+
+* [ADD] Added validations for "notInList" and "notInKeys"
+
+* [SEC] Added "/D" to all regex filters to make $ mean "end of the subject", not
+  just "end of a line". Thanks to Stefan Esser for pointing this out in his blog
+  post:
+  
+  <http://blog.php-security.org/archives/76-Holes-in-most-preg_match-filters.html>
+
+* [BRK] begand moving away from ext/filter for faster security responses
+
+* [BRK] All sanitizeString*() methods are now just sanitize*(); e.g.,
+  sanitizeStringAlpha() is now sanitizeAlpha().
+
+* [DEL] Removed sanitizeStringEmail(), incorporated into validateEmail().
+
+* [DEL] Removed sanitizeStringUri(), incorporated into validateUri().
+
+* [CHG] Methods validateEmail(), validateUri(), and validateIpv4() are now
+  userland implementations; no longer using ext/filter for these.
+
+* [ADD] Added method sanitizeIpv4() to force values to IPv4 addresses.
+
+* [BRK] removed validateIpv6(), and now validateIp() only works on IPv4
+  addresses. Will replace with something not based on ext/filter.
+
+
+Solar_Docs_Apiref
+-----------------
+
+* [CHG] Now has better tracking of missing @var elements and summary lines, and
+  missing method summary lines.
+
+* [CHG] Now uses simplified inheritance checking.
+
+* [CHG] Now reports when a class has no summary line.
+
+
+Solar_Form
+----------
+
+* [FIX] Merge config "attribs" with base attribs, so that configs do not
+  override the attribs sub-array.
+
+
+Solar_Locale
+------------
+
+* [CHG] Config key 'code' is now used to set the locale at construction time.
+  Thanks, Antti Holvikari.
+
+* [ADD] Added generic labels for "updated" and "created".
+
+* [ADD] Method fetch() now supports vsprintf() replacements. Modified
+  Solar_Base::locale() and Solar_View_Helper_GetTextRaw() to recognize the new
+  functionality. Thanks for the suggestion, Rodrigo.
+
+Solar_Log_Adapter
+-----------------
+
+* [ADD] New config option 'microtime' appends microseconds to the logged event time.
+
+
+Solar_Log_Adapter_File
+----------------------
+
+* [CHG] Should not be applying fixdir() to file names, only to dir paths ...
+  thanks, Clay Loveless.
+
+
+Solar_Markdown_Wiki_ColorCodeBlock
+----------------------------------
+
+* [FIX] Be more forgiving of trailing spaces on the closing }} line.
+
+
+Solar_Path_Stack
+---------------
+
+* [CHG] Now converts Unix dir- and path-separator chars to Windows chars, when
+  on Windows. Indirectly per suggestion from Andrew Shell; thanks.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [DEL] removed abstract _getDefault(), not needed in all adapters
+
+* [BRK] Changed $_native to $_solar_native, to emphasize that the key is the
+  Solar name, and the value is the database native name.  They no longer use
+  :size and :scope placeholders, they're just the data-type names.
+
+* [BRK] Added $_native_solar property, for reading from table descriptions and
+  converting to Solar names.
+
+* [BRK] Query exceptions now add the original PDO trace.
+
+* [BRK] The select() method has been completely removed, along with its use of
+  Solar_Sql_Row and Rowset.  Use the related fetch*() methods instead, and
+  populate the returned data arrays into an object on your own.  To convert
+  method calls ...
+
+    * select('all')             => fetchAll(), then wrap data with Solar_Sql_Rowset
+    * select('array')           => fetchAll()
+    * select('assoc')           => fetchAssoc()
+    * select('col')             => fetchCol()
+    * select('one')             => fetchValue()
+    * select('pair')            => fetchPairs()
+    * select('pairs')           => fetchPairs()
+    * select('pdo')             => fetchPdo()
+    * select('pdostatement')    => fetchPdo()
+    * select('statement')       => fetchPdo()
+    * select('result')          => **not supported**, Solar_Sql_Result is deprecated
+    * select('row')             => fetchOne(), then wrap data with Solar_Sql_Row
+    * select('string')          => fetchSql()
+
+* [BRK] The _buildSelect() and related methods are now split into three methods:
+
+    * _select() as the front-end call
+
+    * _sqlSelect() to generate the base SQL for the statement
+
+    * _modSelect() to modify the statement with a LIMIT clause using the
+      original query parts as needed
+
+* [BRK] Added _sqlCreateTable() method to generate SQL for the CREATE TABLE
+  statement.
+
+* [BRK] Trying to standardize method names: _sql*() returns SQL code, _mod*()
+  modifies code in place, and _get() processes data in some fashion to return
+  a value (vice using _build*() for all those).
+
+* [BRK] Added new methods for table-column information handling: _getDefault(),
+  _getSizeTypeScope(), _getColdef()
+
+* [BRK] Changed exception ERR_TABLE_NOT_CREATED to ERR_CREATE_TABLE.
+
+* [ADD] Two new methods, both deprecated as of their introduction: fetchRow()
+  and fetchRowset(). These are the transitional aids for fetching a
+  Solar_Sql_Row or Solar_Sql_Rowset, while moving from Table to Model.
+
+
+Solar_Sql_Adapter_Mssql
+-----------------------
+
+* [BRK] Partial commit of MS-SQL changes, incl. work from Stefan Bogdan
+
+* [CHG] Added auto-increment and primary-key modifier method
+
+
+Solar_Sql_Adapter_Mysql
+-----------------------
+
+* [BRK] Changed $_native to $_solar_native, to emphasize that the key is the
+  Solar name, and the value is the database native name.  They no longer use
+  :size and :scope placeholders, they're just the data-type names.
+
+* [BRK] Added $_native_solar property, for reading from table descriptions and
+  converting to Solar names.
+
+* [BRK] Now uses **native** DATE, TIME, and TIMESTAMP types, instead of
+  character string equivalents.
+
+* [BRK] Now uses **native** BOOLEAN type, which converts to a TINYINT(1)
+  automatically.
+
+
+Solar_Sql_Adapter_Pgsql
+-----------------------
+
+* [BRK] Changed $_native to $_solar_native, to emphasize that the key is the
+  Solar name, and the value is the database native name.  They no longer use
+  :size and :scope placeholders, they're just the data-type names.
+
+* [BRK] Added $_native_solar property, for reading from table descriptions and
+  converting to Solar names.
+
+* [BRK] Now uses **native** DATE, TIME, and TIMESTAMP types, instead of
+  character string equivalents.
+
+
+Solar_Sql_Adapter_Sqlite
+------------------------
+
+* [BRK] Changed $_native to $_solar_native, to emphasize that the key is the
+  Solar name, and the value is the database native name.  They no longer use
+  :size and :scope placeholders, they're just the data-type names.
+
+* [BRK] Added $_native_solar property, for reading from table descriptions and
+  converting to Solar names.
+
+* [BRK] In fetchTableCols(), the 'default' key now is null when the default
+  value was defined as a keyword (CURRENT_DATE, etc) as with the other adapters.
+
+
+Solar_Sql_Select
+----------------
+
+* [BRK] Now using fetch*() methods instead of select(*) method; using
+  fetchValue() instead of select('one'), and fetchSql() instead of
+  select('string').
+
+* [BRK] Now compares empty parameters to SOLAR_IGNORE_PARAM using === and !==
+  (thanks, Rodrigo Moraes).
+
+* [ADD] Method fetch() now throws exception when a requested fetch-type is not
+  available.
+
+
+Solar_Sql_Table
+---------------
+
+* [BRK] The fetchAll() method now uses 'rowset' internally, because of the new
+  fetchRowset() method in the SQL adapter.
+
+
+Solar_Test
+----------
+
+* [FIX] Method _export() now uses debug fetch() vice dump().
+
+
+Solar_Test_Bench
+----------------
+
+* [FIX] Typo; use config key 'loop', not 'loops'.  Thanks Clay.
+
+
+Solar_Test_Suite
+----------------
+
+* [CHG] added 'only' params to run() and _prepare(), to limit testing to just
+  the named class (no sub-tests)
+
+
+Solar_Uri
+---------
+
+* [ADD] New config key 'uri' -- calls set() with this value at construct-time,
+  instead of loading from current URI.
+
+* [CHG] In method fetch(), added some extra paranoia by urlencoding the scheme,
+  username, password, format, and fragment; also casts port to an int.
+
+
+Solar_View
+----------
+
+* [FIX] Now compares with SOLAR_IGNORE_PARAM with !==, instead of != (thanks
+  Rodrigo Moraes).
+
+
+Solar_View_Helper_Date
+----------------------
+
+* [CHG] Now descends from Solar_View_Helper_Timestamp, so it inherits timezone
+  awareness.
+
+Solar_View_Helper_GetText and GetTextRaw
+----------------------------------------
+
+* [BRK] No longer can you set the class of the locale in the translation string
+  itself; instead, use new method setClass().
+
+* [CHG] Now accepts a 3rd param, $replace, to call vsprintf() on the locale
+  string with the $replace values.
+
+
+Solar_View_Helper_Time
+----------------------
+
+* [CHG] Now descends from Solar_View_Helper_Timestamp, so it inherits timezone
+  awareness.
+
+Solar_View_Helper_Timestamp
+---------------------------
+
+* [ADD] Two new config keys, 'tz_origin' and 'tz_output', to automatically
+  calculate time zone differentials for offsetting input times from one timezone
+  to another.

@@ -1,0 +1,183 @@
+Solar 0.27.0 Release Notes
+==========================
+
+Using spl_autoload()
+--------------------
+
+
+Modified Solar and Solar_Class_Stack so that class_exists() and
+interface_exists() so they **do not** address autoload, because the related
+methods are already registered with spl_autoload.
+
+
+New Class: Solar_Locale
+-----------------------
+
+Because of a need to override how locale strings are populated, moving all
+Solar::locale() related methods to their own class.
+
+This is at least a partial BC break. If you have been using Solar::locale()
+directly, you now need to use Solar::$locale->fetch(). However, use of
+$this->locale() in classes extended from Solar_Base is completel unaffected.
+
+If you need to change locale codes, you used to use Solar::setLocale() and
+getLocale(); you now use Solar::$locale->setCode() and getCode().
+
+Solar::$locale is now a Solar_Locale object, not an array of strings. If you
+need direct access to the string translations array, use
+Solar::$locale->trans.
+
+Also, it now allows for explicitly blank translation strings.
+
+Finally, you can tell Solar to use a class *other* than Solar_Locale as the
+Solar::$locale object by setting $config['Solar']['locale_class'].
+
+Related Solar classes have been modified to adapt to this change.
+
+Solar
+-----
+
+* [CHG] Now registers Solar::loadClass() and loadInterface() with
+  spl_autoload(). This means you no longer have to use Solar::loadClass() in
+  your class definition files; if the class is named properly for its location
+  in the file system, spl_autoload() will now find and load it for you. In
+  line with this, loadClass() and loadInterface() uses of class_exists() **do
+  not** attempt to address autoloading.
+
+
+Solar_Base
+----------
+
+* [ADD] Added a dump() method so that classes can have their own custom
+  var_dump() functionality.
+
+
+Solar_Cache_Adapter_Memcache
+----------------------------
+
+* [ADD] New support for pools of memcache servers; many thanks, Clay Loveless.
+
+* [CHG] Internal memcache object now publically accessible; thanks, Clay
+  Loveless.
+
+
+Solar_Class_Stack
+-----------------
+
+* [CHG] Method load() now has a second param, $throw = true. When $throw =
+  false, load() merely returns boolean false when the requested class is not
+  found, instead of throwing an exception (the default behavior).
+
+* [CHG] Internal uses of class_exists() no longer attempt to address autoload,
+  because of new spl_autoload() registration of Solar::loadClass() and
+  Solar::loadInterface().
+
+
+Solar_Content_Abstract
+----------------------
+
+* [FIX] Method countPages() now honors $_paging value in non-tag queries.
+
+
+Solar_Controller_Front
+----------------------
+
+* [CHG] Now uses new Solar_Uri::$format property internally for format
+  discovery.
+
+
+Solar_Controller_Page
+----------------------
+
+* [CHG] Now uses new Solar_Uri::$format property internally for format
+  discovery.
+
+
+Solar_DataFilter
+----------------
+
+* [BRK] No more $require param at the end of methods; instead, use new method
+  setRequire() to say whether values are required or not.
+
+* [ADD] Added new method getRequire() to tell if values are currently
+  required or not.
+
+* [BRK] Renamed validateBoolean() and sanitizeBoolean() to validateBool() and
+  sanitizeBool(), respectively.
+
+* [CHG] Method validateBlank() now properly validates NULL as blank.
+
+
+Solar_Debug_Var
+---------------
+
+* [BRK] For consistency with the rest of Solar, now uses fetch() and display()
+  methods instead of just dump().
+
+* [BRK] The dump() method is now inherited from Solar_Base.
+
+
+Solar_Json
+----------
+
+* [FIX] In PHP 5.2.1, json_decode() deliberately disregards published
+  standards for decoding JSON payloads. Solar_Json now includes code to bypass
+  this behavior when using ext/json. Many thanks, Clay Loveless, for providing
+  this fix.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [FIX] For PDO in PHP 5.2.1, to better support automated binding of values.
+
+  With PDO in PHP 5.2.1 and later, we can no longer just throw an array
+  of data at the statement; we need to bind values specifically to their
+  respective placeholders.
+  
+  In addition, we can't bind one value to multiple identical named
+  placeholders; we need to bind that same value multiple times. So if
+  :foo is used three times, PDO uses :foo the first time, :foo2 the
+  second time, and :foo3 the third time.
+  
+  This query() method examins the statement for all :name placeholders
+  and attempts to bind data from the $data array.  The regular-expression
+  it uses is a little braindead; it cannot tell if the :name placeholder
+  is literal text or really a place holder.
+  
+  As such, you should *either* use the $data array for named-placeholder
+  value binding at query() time, *or* bind-as-you-go when building the 
+  statement, not both.  If you do, you are on your own to make sure
+  that nothing looking like a :name placeholder exists as literal text.
+  
+* [BRK] As a result of the combination of the new PDO behavior and the adapter
+  "fix" in response to it, question-mark placeholders are no longer supported
+  for automatic value binding at query() time.
+
+
+Solar_Sql_Result
+----------------
+
+* [CHG] DEPRECATING in favor of Row and Rowset.
+
+
+Solar_Sql_Table
+---------------
+
+* [CHG] Allows reading 'order' via __get(); thanks for the suggestion, Rodrigo Moraes.
+
+
+Solar_Struct
+------------
+* [CHG] Protected property $_valid is now $_iterator_valid, to indicate it relates to the iterator interface, not the validity of the struct data.
+
+* [BRK] Method load() now only takes one param, $data.  The $reset param which used to let you clear the internal data array is now removed.  Thus, new data being loaded is now always merged with existing data in the struct.
+
+
+Solar_Uri
+---------
+
+* [ADD] Now extracts the ".ext" format extension from the last path element
+  and stores in new $format property. Adds the format back to the last path
+  element on fetch().
+

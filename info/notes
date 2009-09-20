@@ -1,0 +1,54 @@
+* General
+
+    * Per note from Rodrigo Moraes, Solar_Sql selections of 'all' or
+      'row' now let you select the class of the return object. Defaults
+      are Solar_Sql_Rowset for 'all' and Solar_Sql_Row for 'row'.
+      Affects Solar_Sql, Solar_Sql_Rowset, Solar_Sql_Select, and
+      Solar_Sql_Table.
+
+* New classes:
+
+    * Solar_View_Helper_Meta, Solar_View_Helper_MetaName, and
+      Solar_View_Helper_MetaHttp for <meta ... /> tag construction,
+      based on work by Jeff Surgeson and Rodrigo Moraes.
+      
+* Solar_Content_Abstract
+
+    * Method delete() now deletes node parts, and disallows deletion
+      where $id is empty or zero
+    
+* Solar_Controller_Page
+
+    * Added _isSubmit() method to check submission values. Previously,
+      you would check if (Solar::post('submit') ==
+      $this->locale('SUBMIT_SAVE')). Now you use check if
+      ($this->_isSubmit('save')).
+
+* Solar_Struct
+
+    * Per email with Antti Holvikari, keys are now settable instead of
+      being set-once.
+    
+    * Method load() now lets you reset the data entirely using a second
+      $reset parameter (set to boolean true) instead of merging with
+      existing keys (the default behavior)
+
+* Solar_Sql
+
+    * Method select('all') and select('row') now support setting the
+      class of the returned object using a 4th param, $class.
+
+* Solar_Sql_Rowset
+
+    * New property $_row_class sets the class of individual row objects.
+    
+* Solar_Sql_Select
+
+    * Method fetch() has a 2nd param, $class, to set the class of 'all'
+      and 'row' return objects
+
+* Solar_Sql_Table
+
+    * Two new properties, $_all_class and $_row_class, to define what
+      fetchAll() and fetch/fetchNew/fetchWhere() should use as the
+      return class type

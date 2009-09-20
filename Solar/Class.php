@@ -155,10 +155,12 @@ class Solar_Class
         // does the directory exist?
         $dir = Solar_Dir::exists($base);
         if (! $dir) {
-            throw $this->_exception('ERR_NO_DIR_FOR_CLASS', array(
-                'class' => $class,
-                'base'  => $base,
-            ));
+            throw Solar::exception(
+                'Solar_Class',
+                'ERR_NO_DIR_FOR_CLASS',
+                'Directory does not exist',
+                array('class' => $class, 'base' => $base)
+            );
         } else {
             return Solar_Dir::fix($dir . DIRECTORY_SEPARATOR. $sub);
         }

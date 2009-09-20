@@ -79,7 +79,10 @@ class Solar_Form extends Solar_Base
      */
     protected $_default_attribs = array(
         'action'  => null,
+        'class'   => null,
+        'id'      => null,
         'method'  => 'post',
+        'name'    => null,
         'enctype' => 'multipart/form-data',
     );
     
@@ -350,7 +353,7 @@ class Solar_Form extends Solar_Base
      */
     public function setElements($list, $array = null)
     {
-        foreach ($list as $name => $info) {
+        foreach ((array) $list as $name => $info) {
             $this->setElement($name, $info, $array);
         }
     }

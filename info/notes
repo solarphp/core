@@ -1,0 +1,95 @@
+* Added classes
+
+    * Solar_Class_Map to create a class-to-filename array mapping
+
+    * Solar_Class_Stack to work with user-defined class hierarchies,
+      much like Solar_Path_Stack works with user-defined path
+      hierarchies
+    
+    * Solar_Docs_Apiref to parse the API of a class (or hierarchy of
+      class files) into an array
+      
+    * Solar_Docs_Phpdoc to parse a PHPDoc comment blocks into an array
+      (nowhere near as robust as PHPDocumentor but much easier to
+      understand the internals)
+    
+    * Solar_Log and various adapters (File, Echo, None, Multi)
+    
+    * Solar_View_Helper_ActionImage, per notes from Jeff Surgeson
+    
+* Moved classes
+
+    * Renamed Solar_PathStack to Solar_Path_Stack
+    
+* Solar
+
+    * Added files() method to pull from $_FILES (thanks, Jeff Surgeson).
+    
+    * The loadClass() method now checks for empty class names before
+      checking class_exists().
+    
+    * Added new static property $dir to report where Solar is in the
+      filesystem (effectively dirname(__FILE__) for Solar.php).
+      
+* Solar_Controller_Page
+
+    * Added new config key, 'helper_class', to let users define an 
+      additional helper class stack.  (The page-controller-specific
+      helper class still has highest priority.)
+
+* Solar_Debug_Var
+
+    * The 'output' config key now defaults to 'text' if PHP_SAPI is
+      'cli', defaults to 'html' otherwise. Thanks, Mike Naberezny.
+      
+* Solar_Debug_Timer
+
+    * The 'output' config key now defaults to 'text' if PHP_SAPI is
+      'cli', defaults to 'html' otherwise. Thanks, Mike Naberezny.
+      
+* Solar_Model_Tags
+
+    * Bugfix: the asString() method was using $tmp internally instead of
+      $tags (thanks Antti Holvikari)
+      
+* Solar_Path_Stack
+
+    * Bugfix: add() method now forcibly casts the list of paths to an
+      array (avoids "invalid value" errors when emtpies are passed)
+      
+* Solar_Test_Suite
+
+    * Now uses Solar_Log for reporting instead of echoing directly. Pass
+      a Solar_Log dependency using the 'log' config key parameter. If
+      the 'log' key is empty, builds an internal Solar_Log using the
+      "echo" adapter automatically.
+    
+    * Now properly skips files that do not start with a capital letter.
+    
+    * Removed 'quiet' behavior from run() method; if you want quietude,
+      pass a Solar_Log_Adapter_None object as the 'log' config key.
+    
+    * No more 'sub' key, use run($series) instead (where $series is the
+      class name of the sub-suite).
+    
+    * addTestMethods($class) explicitly returns false if $class does not
+      exist; if $class does exists, returns the number of methods added 
+      from it (which may be integer 0).
+
+* Solar_View
+
+    * Converted path-based helper stack to a class-based helper stack.
+      This means that instead of pointing to "my/custom/helpers", you
+      point to 'My_Custom_Helper'.  Also, you no longer need to name 
+      your helper classes 'Solar_View_Helper_*'; instead, using the
+      previous example, you can name them 'My_Custom_Helper_*'.  This
+      is for consistency and predictability when mapping class names
+      and file paths.  (Template scripts are still path-based.)
+    
+    * Due to the change from path-based helpers to class-based, the
+      add/get/setHelperPath() methods have been renamed to
+      add/get/setHelperClass().
+    
+    * Similarly, the 'helper_path' config key has been renamed to
+      'helper_class', and you should change your path-based values for
+      this key to class-based values.

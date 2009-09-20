@@ -1,0 +1,228 @@
+* General
+    
+    * [NEW] Solar_Request class acts as an interface to the $_GET,
+      $_POST, etc. superglobals. This is effectively a singleton class,
+      as it hooks in directly to the superglobals, which are themselves
+      shared across the whole PHP execution environment. (In a future
+      version, this will become a non-static class suitable for
+      dependency injection.)
+    
+    * [NEW] Solar_Session class acts as an interface to the $_SESSION
+      superglobal, and automatically segmetns $_SESSION keys by class
+      name so that different classes don't overwrite other classes'
+      keys. Includes read-once "flash" methods, so this class supersedes
+      Solar_Flash.
+    
+    * [NEW] Solar_View_Helper_TypekeyLink generates a link to the TypeKey
+      authentication site.
+    
+    * [DEL] Solar_Flash class; superseded by Solar_Session.
+    
+    * [CHG] In test.php test runnner, added small niceties for running
+      tests in a browser. Thanks Clay.
+    
+* Solar
+
+    * [BRK] All methods related to request environment removed, are
+      replaced by equivalents in Solar_Request and Solar_Session: get(),
+      post(), cookie(), server(), session(), files(), pathinfo(), and
+      related support methods.
+    
+    * [CHG] Dispelling of magic quotes has been moved to Solar_Request,
+      and operates only on Solar_Request values (not the original $_GET
+      et. al. values) ... although Solar still removes
+      register_globals() variables from the global scope.
+      
+    * [CHG] Moved code in two protected methods called only in one place
+      each to the calling location: _globalsQuotes() code to start(),
+      and _loadLocale() to locale().
+
+    * [CHG] Solar no longer starts a session automatically. Sorry to
+      keep going back and forth on this; introduction of the new
+      Solar_Session should be the final interation here.
+    
+    * [FIX] Now uses DIRECTORY_SEPARATOR to define the default config
+      file location (this helps Windows users, per note from Clay
+      Loveless).
+      
+* Solar_App and all related
+
+    * [CHG] All applications now use Solar_Request and Solar_Session
+      instead of Solar::get(), etc. and Solar_Flash.
+
+* Solar_App_Bookmarks
+
+    * [CHG] In edit view, now uses Scriptaculous effects on
+      success/failure instead of simple styling.
+    
+    * [CHG] Edit action now regognizes "add_ok" flash key, and shows
+      proper feedback message in the related view. Per notes from Jeff
+      Surgeson.
+      
+* Solar/App/Public/scripts
+
+    * [CHG] Updated to Prototype 1.5.0_rc1 and Scriptaculous 1.6.4
+    
+    * [ADD] Added minimized script versions in scripts-min/*.  To use
+      these, modify the `path` key in your JS helper configs.
+
+* Solar/App/Public/styles
+
+    * [DEL] Removed success/failure style from default stylesheet in
+      favor of Scriptaculous highlight effects. (See
+      Solar/App/Bookmarks/View/edit.php for examples.)
+      
+* Solar_Auth
+
+    * [CHG] Uses new Solar_Session and Solar_Request classes instead of
+      Solar::get(), etc. and Solar_Flash.
+    
+* Solar_Content_Abstract
+
+    * [FIX] Fixes for part-counts in content domain model. Previously,
+      if a node type has more than one kind of part, when you got a
+      count of parts, each part-type had the count of *all* part types
+      (not just its own). This was related to grouping of nodes based on
+      the node ID. So now we need to separately fetch the count of parts
+      for a node, and manually add those counts to each row. While not
+      great, it's a far cry better than using sub-selects to fetch
+      part-counts as part of a single query (which results in a
+      full-table scan at the database and thus will not scale at all).
+
+* Solar_Controller_Page
+
+    * [CHG] Now uses Solar_Request and Solar_Session instead of
+      Solar::get(), etc. and Solar_Flash.
+
+    * [FIX] Solar_Controller_Page::_render() is now protected.
+
+    * [NEW] Added Solar_Controller_Page_Exception, along with extended
+      exceptions for PropertyNotDefined and ActionNotFound.
+    
+    * [CHG] Method _isSubmit() now allows an empty $type param, which
+      will tells you if *any* submit-type was posted.
+      
+* Solar_Docs_Apiref
+
+    * [BRK] Removed $_ignore property in preparation for a better
+      solution to documenting classes based on internal PHP classes
+      (esp. Exception).  As a result, you'll see a lot more errors logged
+      on classes descended from internal PHP classes (esp. Exception).
+
+    * [CHG] Added _loadInternal() method to load fake API doc arrays for
+      internal PHP classes (e.g. Exception).
+
+* Solar_Form
+
+    * [CHG] Now uses Solar_Request instead of Solar::get(), etc.
+    
+* Solar_Log
+
+    * [BRK] Now uses the Solar standard for passing configs to adapters.
+      That is, instead all keys being passed to the adapter, now passes
+      only the `config` key to the adapter.
+
+* Solar_Markdown
+
+    * [CHG] Standard Markdown plugins for spans of type AmpsAngles,
+      EmStrong, and Break now insert HTML tokens for their tags instead
+      of HTML text; this is to help with more aggressive escaping when
+      needed by other plugins.
+
+* Solar_Markdown_Wiki
+
+    * [FIX] Security fixes to Solar_Markdown plugins to remove
+      span-level XSS vulnerabilities in Solar_Markdown_Wiki.
+
+    * [ADD] Solar_Markdown_Wiki_Escape, a span-level plugin to escape
+      HTML.
+
+    * [DEL] Removed Markdown Wiki plugins for EmStrong, Paragraph, and
+      Table; the extra escaping provided by these block-level wiki
+      plugins is now handled by the new Wiki Escape span-level plugin.
+
+    * [CHG] Added support for ATX-style ("# Title") headers in
+      Solar_Markdown_Wiki_Header
+    
+    * [CHG] Solar_Markdown_Wiki now uses a modified plugin set, based on
+      changes in standard plugins, removed Wiki plugins, and new Wiki
+      Escape plugin.
+
+* Solar_Model_Nodes
+
+    * [BRK] No longer provides default editor_ipaddr value, as usage of
+      Solar::server() has been removed entirely.
+      
+* Solar_Role
+
+    * [CHG] Converted from $_SESSION to Solar_Session.
+    
+* Solar_Struct
+
+    * [FIX] When constructing with an empty array or no data, now
+      returns an empty array instead of an array with one empty element.
+      Thanks, Jeremy Cook.
+
+* Solar_Sql
+
+    * [CHG] Method select('assoc') no longer removes the first column
+      from the result set.
+
+* Solar_Test_Suite
+
+    * [FIX] No longer forces 'text' output in the default log object;
+      this helps with browser-based testing.
+      
+* Solar_Uri
+
+    * [CHG] Now uses Solar_Request instead of Solar::get(), etc.
+    
+    * [CHG] Added better checking when URI values are forced (i.e., when
+      partial URIs are processed).
+    
+* Solar_View_Helper_Form
+
+    * [CHG] Now uses Solar_Request instead of Solar::get(), etc.
+    
+    * [FIX] When outputting a checkbox that is not in a group, it does
+      not get its own label. This prevents double-labelling of checkbox.
+      Per note from Rodrigo Moraes.
+    
+* Solar_View_Helper_Js
+
+    * [NEW] Added method addInlineScript(). Unlike regular inlineScript
+      helper, this method allows snippets of JavaScript to be added to
+      the stack that will be dumped into one single inlineScript call in
+      the document header.
+    
+    * [NEW] Now allows scripts to register the need for particular
+      stylesheets with the addStyle() method.
+
+* Solar_View_Helper_JsLibrary
+
+    * [NEW] Now allows scripts to retreive script-specific stylesheets
+      with the _fetchStyles() method.
+      
+* Solar_View_Helper_JsScriptaculous
+
+    * [FIX] Added useNamedSelector flag. Fixes issue where effect calls
+      made with true would return a JS string without a named selector,
+      but with a reference of the type used in the observe loop instead.
+
+    * [CHG] Now uses more elegant 'invoke' approach for named selectors.
+
+* Solar_View_Helper_PublicHref
+
+    * [CHG] To support literal HREF values, now checks for "://" in the
+      $spec param. Per notes from Rodrigo Moraes and Clay Loveless.
+    
+* Solar_View_Helper_Script
+
+    * [NEW] Added new `anti_cache` config key. When set to true, appends
+      a query string to the HREF, thus forcing the script to re-load 
+      from the server in place of the client-side cached version.
+      
+* Solar_View_Helper_Style
+
+    * [CHG] Removed literal HREF checking now that it's in the PublicHref
+      helper.  Per notes from Rodrigo Moraes and Clay Loveless.

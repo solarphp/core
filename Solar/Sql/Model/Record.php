@@ -1253,7 +1253,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // @todo Turn off created/updated, as they will get populated?  Also
         // turn off "inherit" values?  Or auto-set them in _preInsert() and
         // _preUpdate() ?
-        foreach ($this->_model->table_cols as $key => $info) {
+        foreach ($this->_model->fetch_cols as $key => $info) {
             if ($info['autoinc']) {
                 // autoinc are not required
                 $flag = false;

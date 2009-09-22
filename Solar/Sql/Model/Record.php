@@ -1238,12 +1238,14 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // create a filter object based on the model's filter class
         $filter = Solar::factory($this->_model->filter_class);
         
-        // set filters as specified by the model
+        // set filters as specified by the model, for the fetch columns
         foreach ($this->_model->filters as $key => $list) {
-            $filter->addChainFilters($key, $list);
+            if (! empty($this->_model->fetch_cols[$key])) {
+                $filter->addChainFilters($key, $list);
+            }
         }
         
-        // set filters added to this record
+        // set filters added to this record instance
         foreach ($this->_filters as $key => $list) {
             $filter->addChainFilters($key, $list);
         }

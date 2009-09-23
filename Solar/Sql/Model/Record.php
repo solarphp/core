@@ -1238,8 +1238,18 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // create a filter object based on the model's filter class
         $filter = Solar::factory($this->_model->filter_class);
         
+        // note which table cols are not part of the fetch cols
+        $skip = array_diff(
+            array_keys($this->_model->table_cols),
+            $this->_model->fetch_cols
+        );
+        
         // set filters as specified by the model
         foreach ($this->_model->filters as $key => $list) {
+            // skip table cols that are not part of the fetch cols
+            if (in_array($key, $skip)) {
+                continue;
+            }
             $filter->addChainFilters($key, $list);
         }
         

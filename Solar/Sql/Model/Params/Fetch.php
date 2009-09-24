@@ -320,7 +320,7 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
      */
     public function cache($flag)
     {
-        $$this->_data['cache'] = ($flag === null) ? null : (bool) $flag;
+        $this->_data['cache'] = ($flag === null) ? null : (bool) $flag;
         return $this;
     }
     

@@ -1,1 +1,30 @@
-(empty)
+* Solar_Form
+    
+    * [FIX] Form attributes for id, name, and class are now reset properly.
+      Thanks, jelofson and stloyd, for the report and patch.
+
+* Solar_Class
+    
+    * [FIX] Do not use $this for exceptions in a static method call. Thanks,
+      Richard Thomas, for the report and patch.
+
+* Solar_Sql_Model_Params_Fetch
+    
+    * [FIX] In method cache(), use $this, not $$this. Was preventing the cache
+      value from being set, so it was always null. Thanks, Anthony Gentile,
+      for the report that led to this fix.
+
+* Solar_Sql_Model_Cache:
+    
+    * [FIX] Method getCacheKey() now converts the fetch params to array
+      *before* unsetting values. Was previously unsetting the 'cache' value
+      (among others) causing cache results not to be saved in Solar_Sql_Model.
+      Thanks, Anthony Gentile, for the report that led to this fix.
+    
+    * [FIX] Default adapter is now Solar_Cache_Adapter_None, as it is in
+      Solar_Sql_Model.
+
+* Solar_Sql_Model_Record
+    
+    * [FIX] In method newFilter(), do not add filters for table cols that are
+      not part of the fetch cols. All other filters are still added.

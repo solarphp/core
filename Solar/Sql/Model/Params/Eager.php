@@ -120,11 +120,13 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
      */
     public function joinCond($cond, $val = Solar_Sql_Select::IGNORE)
     {
+        // BC-helping logic
         if (is_int($cond) && is_string($val)) {
             $cond = $val;
             $val = Solar_Sql_Select::IGNORE;
         }
         
+        // now the real logic. use triple-equals so that empties are honored.
         if ($val === Solar_Sql_Select::IGNORE) {
             $this->_data['join_cond'][] = $cond;
         } else {

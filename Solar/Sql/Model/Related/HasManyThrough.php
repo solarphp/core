@@ -234,11 +234,12 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             } else {
                 // merge join conditions
                 $join['cond'] = array_merge(
-                    $join['cond'],
+                    (array) $join['cond'],
                     (array) $eager['join_cond']
                 );
             }
         }
+        
         
         // done!
         $fetch->join($join);

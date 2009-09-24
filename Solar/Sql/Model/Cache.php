@@ -39,7 +39,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * 
      */
     protected $_Solar_Sql_Model_Cache = array(
-        'cache'  => array('adapter' => 'Solar_Cache_Adapter_Var'),
+        'cache'  => array('adapter' => 'Solar_Cache_Adapter_None'),
     );
     
     /**
@@ -155,18 +155,18 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * @return string The versioned cache entry key.
      * 
      */
-    public function entry(Solar_Sql_Model_Params_Fetch $params)
+    public function entry(Solar_Sql_Model_Params_Fetch $fetch)
     {
         $version = (int) $this->_fetchVersion();
         
-        if ($params['cache_key']) {
-            $key = $params['cache_key'];
+        if ($fetch['cache_key']) {
+            $key = $fetch['cache_key'];
         } else {
-            unset($params['cache']);
-            unset($params['cache_key']);
-            unset($params['count_pages']);
-            $serial = serialize($params->toArray());
-            $key = hash('md5', $serial);
+            $array = $fetch->toArray();
+            unset($array['cache']);
+            unset($array['cache_key']);
+            unset($array['count_pages']);
+            $key = hash('md5', serialize($array));
         }
         
         $key = $this->_prefix

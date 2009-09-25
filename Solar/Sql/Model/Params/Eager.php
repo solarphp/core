@@ -113,7 +113,10 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
      * Sets the join condition to use; note that this overrides the existing
      * join condition.
      * 
-     * @param string $cond The join type to use (null, 'left', or 'inner').
+     * @param string $cond The ON condition.
+     * 
+     * @param string $val A value to quote into the condition, replacing
+     * question-mark placeholders.
      * 
      * @return Solar_Sql_Model_Params_Eager
      * 

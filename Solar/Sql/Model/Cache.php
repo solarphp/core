@@ -150,7 +150,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * If the params include a `cache_key` entry, that value is used instead
      * of $hash.
      * 
-     * @param array $params The fetch parameters for a select.
+     * @param array $fetch The fetch parameters for a select.
      * 
      * @return string The versioned cache entry key.
      * 

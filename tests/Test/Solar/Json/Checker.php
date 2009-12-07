@@ -18,56 +18,6 @@ class Test_Solar_Json_Checker extends Solar_Test {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -92,7 +42,7 @@ class Test_Solar_Json_Checker extends Solar_Test {
     {
         $checker = Solar::factory('Solar_Json_Checker');
         
-        $dir = Solar_Class::dir('Test_Solar_Json', '_support');
+        $dir = Solar_Class::dir('Mock_Solar_Json');
         $tests = scandir($dir);
         natsort($tests);
         
@@ -109,7 +59,7 @@ class Test_Solar_Json_Checker extends Solar_Test {
     {
         $checker = Solar::factory('Solar_Json_Checker');
         
-        $dir = Solar_Class::dir('Test_Solar_Json', '_support');
+        $dir = Solar_Class::dir('Mock_Solar_Json');
         $tests = scandir($dir);
         natsort($tests);
         

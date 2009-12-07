@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateFloat extends Solar_Test {
+class Test_Solar_Filter_ValidateFloat extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateFloat extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateFloat = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateFloat');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateFloat');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the value represents a float.
@@ -100,6 +23,45 @@ class Test_Solar_Filter_ValidateFloat extends Solar_Test {
      */
     public function testValidateFloat()
     {
-        $this->todo('stub');
+        $test = array(
+            "+123456.7890",
+            12345.67890,
+            -123456789.0,
+            -123.4567890,
+            '-1.23',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateFloat($val));
+        }
+    }
+    
+    public function testValidateFloat_badOrBlank()
+    {
+        $test = array(
+            ' ', '',
+            "-abc.123",
+            "123.abc",
+            "123,456",
+            '00.00123.4560.00',
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_filter->validateFloat($val));
+        }
+    }
+    
+    public function testValidateFloat_notRequired()
+    {
+        $this->_filter->setRequire(false);
+        $test = array(
+            "", ' ',
+            "+123456.7890",
+            12345.67890,
+            -123456789.0,
+            -123.4567890,
+            '-1.23',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateFloat($val));
+        }
     }
 }

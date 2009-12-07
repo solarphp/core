@@ -3,8 +3,8 @@
  * Generic application.
  * 
  */
-class {:class} extends {:extends} {
-    
+class {:class} extends {:extends}
+{
     /**
      * 
      * The default action when no action is specified.

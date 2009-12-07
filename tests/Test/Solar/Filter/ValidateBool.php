@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateBool extends Solar_Test {
+class Test_Solar_Filter_ValidateBool extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateBool extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateBool = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateBool');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateBool');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the value is a boolean representation.
@@ -100,6 +23,51 @@ class Test_Solar_Filter_ValidateBool extends Solar_Test {
      */
     public function testValidateBool()
     {
-        $this->todo('stub');
+        $list = array(
+            true,
+            'on', 'On', 'ON',
+            'yes', 'Yes', 'YeS',
+            'y', 'Y',
+            'true', 'True', 'TrUe',
+            't', 'T',
+            1, '1',
+            false,
+            'off', 'Off', 'OfF',
+            'no', 'No', 'NO',
+            'n', 'N',
+            'false', 'False', 'FaLsE',
+            'f', 'F',
+            0, '0',
+        );
+        
+        foreach ($list as $val) {
+            $bool = $this->_filter->validateBool($val, false);
+            $this->assertTrue($bool);
+        }
+    }
+    
+    public function testValidateBool_badOrBlank()
+    {
+        $list = array(
+            'nothing', 123,
+        );
+        
+        foreach ($list as $val) {
+            $bool = $this->_filter->validateBool($val, false);
+            $this->assertFalse($bool);
+        }
+    }
+    
+    public function testValidateBool_notRequired()
+    {
+        $this->_filter->setRequire(false);
+        $list = array(
+            '', '    ',
+        );
+        
+        foreach ($list as $val) {
+            $bool = $this->_filter->validateBool($val);
+            $this->assertTrue($bool);
+        }
     }
 }

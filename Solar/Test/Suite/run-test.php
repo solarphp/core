@@ -19,7 +19,7 @@ ini_set('display_errors', true);
 
 // run the test
 try {
-    $test->setup();
+    $test->preTest();
     $test->$method();
     // even if we get through the method, it should have made at least one
     // assertion. if not, nothing was actually "tested".
@@ -30,7 +30,7 @@ try {
     // output the exception as diagnostic info
     $test->diag($e);
     // clean up
-    $test->teardown();
+    $test->postTest();
     // how to exit?
     if ($e instanceof Solar_Test_Exception) {
         // this is an "exit" exception
@@ -43,5 +43,5 @@ try {
 }
 
 // pass
-$test->teardown();
+$test->postTest();
 exit(Solar_Test::EXIT_PASS);

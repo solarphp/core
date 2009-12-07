@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Staic support methods for class information.
+ * Static support methods for class information.
  * 
  * @category Solar
  * 
@@ -64,8 +64,8 @@ class Solar_Class
             return;
         }
         
-        // convert the class name to a file path.
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
+        // convert the class name to a file path
+        $file = Solar_Class::nameToFile($name);
         
         // include the file and check for failure. we use Solar_File::load()
         // instead of require() so we can see the exception backtrace.
@@ -85,6 +85,43 @@ class Solar_Class
                 array('name' => $name, 'file' => $file)
             );
         }
+    }
+    
+    /**
+     * 
+     * Converts a namespace-and-classname to a file path.
+     * 
+     * Implements PSR-0 as defined by the PHP Project Interoperability Group.
+     * 
+     * <http://groups.google.com/group/php-standards/web/final-proposal>
+     * 
+     * @param string $spec The namespace-and-classname.
+     * 
+     * @return string The converted file path.
+     * 
+     */
+    public static function nameToFile($spec)
+    {
+        // using namespaces? (look for last namespace separator)
+        $pos = strrpos($spec, '\\');
+        if ($pos === false) {
+            // no namespace, class portion only
+            $namespace = '';
+            $class     = $spec;
+        } else {
+            // pre-convert namespace portion to file path
+            $namespace = substr($spec, 0, $pos);
+            $namespace = str_replace('\\', DIRECTORY_SEPARATOR, $namespace)
+                       . DIRECTORY_SEPARATOR;
+            
+            // class portion
+            $class = substr($spec, $pos + 1);
+        }
+        
+        // convert class underscores, and done
+        return $namespace
+             . str_replace('_',  DIRECTORY_SEPARATOR, $class)
+             . '.php';
     }
     
     /**

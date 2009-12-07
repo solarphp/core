@@ -16,54 +16,11 @@ class Test_Solar_View extends Solar_Test {
     protected $_Test_Solar_View = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_view;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    public function preTest()
     {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        $this->_view = Solar::factory('Solar_View');
     }
     
     // -----------------------------------------------------------------
@@ -79,8 +36,7 @@ class Test_Solar_View extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_View');
-        $this->assertInstance($obj, 'Solar_View');
+        $this->assertInstance($this->_view, 'Solar_View');
     }
     
     /**
@@ -90,7 +46,9 @@ class Test_Solar_View extends Solar_Test {
      */
     public function test__call()
     {
-        $this->todo('stub');
+        $expect = 'NO_SUCH_LOCALE_KEY';
+        $actual = $this->_view->getTextRaw($expect);
+        $this->assertEquals($actual, $expect);
     }
     
     /**
@@ -100,7 +58,8 @@ class Test_Solar_View extends Solar_Test {
      */
     public function test__set()
     {
-        $this->todo('stub');
+        $this->_view->foo = 'bar';
+        $this->assertTrue($this->_view->foo === 'bar');
     }
     
     /**
@@ -110,7 +69,15 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testAddHelperClass()
     {
-        $this->todo('stub');
+        $this->_view->addHelperClass('Other_Helper_Foo');
+        $this->_view->addHelperClass('Other_Helper_Bar');
+        $actual = $this->_view->getHelperClass();
+        $expect = array (
+            0 => 'Other_Helper_Bar_',
+            1 => 'Other_Helper_Foo_',
+            2 => 'Solar_View_Helper_',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -120,7 +87,16 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testAddTemplatePath()
     {
-        $this->todo('stub');
+        $this->_view->addTemplatePath('path/foo/');
+        $this->_view->addTemplatePath('path/bar/');
+        $this->_view->addTemplatePath('path/baz/');
+        $actual = $this->_view->getTemplatePath();
+        $expect = array(
+            0 => 'path/baz/',
+            1 => 'path/bar/',
+            2 => 'path/foo/',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -130,7 +106,23 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testAssign()
     {
-        $this->todo('stub');
+        $this->_view->assign('foo', 'bar');
+        $this->assertTrue($this->_view->foo === 'bar');
+    }
+    
+    public function testAssign_byArray()
+    {
+        $array = array('foo' => 'bar');
+        $this->_view->assign($array);
+        $this->assertTrue($this->_view->foo === 'bar');
+    }
+    
+    public function testAssign_byObject()
+    {
+        $obj = new StdClass();
+        $obj->foo = 'bar';
+        $this->_view->assign($obj);
+        $this->assertTrue($this->_view->foo === 'bar');
     }
     
     /**
@@ -140,7 +132,14 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testDisplay()
     {
-        $this->todo('stub');
+        $dir = Solar_Class::dir('Mock_Solar_View');
+        $this->_view->addTemplatePath($dir);
+        $this->_view->foo = 'bar';
+        ob_start();
+        $this->_view->display('test.view.php');
+        $actual = ob_get_clean();
+        $expect = 'bar';
+        $this->assertSame($expect, $actual);
     }
     
     /**
@@ -150,7 +149,10 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testEscape()
     {
-        $this->todo('stub');
+        $string = "hello <there> i'm a \"quote\"";
+        $expect = htmlspecialchars($string);
+        $actual = $this->_view->escape($string);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -160,7 +162,12 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testFetch()
     {
-        $this->todo('stub');
+        $dir = Solar_Class::dir('Mock_Solar_View');
+        $this->_view->addTemplatePath($dir);
+        $this->_view->foo = 'bar';
+        $actual = $this->_view->fetch('test.view.php');
+        $expect = 'bar';
+        $this->assertSame($expect, $actual);
     }
     
     /**
@@ -170,7 +177,10 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testGetHelper()
     {
-        $this->todo('stub');
+        // should reference the same object
+        $a = $this->_view->getHelper('getTextRaw');
+        $b = $this->_view->getHelper('getTextRaw');
+        $this->assertSame($a, $b);
     }
     
     /**
@@ -180,7 +190,11 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testGetHelperClass()
     {
-        $this->todo('stub');
+        $actual = $this->_view->getHelperClass();
+        $expect = array (
+            0 => 'Solar_View_Helper_',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -190,7 +204,10 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testGetTemplatePath()
     {
-        $this->todo('stub');
+        $this->_view->addTemplatePath(dirname(__FILE__) . '/View/templates/');
+        $actual = $this->_view->getTemplatePath();
+        $expect = array(0 => dirname(__FILE__) . '/View/templates/');
+        $this->assertSame($expect, $actual);
     }
     
     /**
@@ -200,7 +217,10 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testNewHelper()
     {
-        $this->todo('stub');
+        // should *not* reference the same object
+        $a = $this->_view->newHelper('getTextRaw');
+        $b = $this->_view->newHelper('getTextRaw');
+        $this->assertNotSame($a, $b);
     }
     
     /**
@@ -220,7 +240,13 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testSetHelperClass()
     {
-        $this->todo('stub');
+        $this->_view->setHelperClass('Other_Helper_Foo');
+        $actual = $this->_view->getHelperClass();
+        $expect = array(
+            0 => 'Other_Helper_Foo_',
+            1 => 'Solar_View_Helper_',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -230,7 +256,12 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testSetTemplatePath()
     {
-        $this->todo('stub');
+        $this->_view->setTemplatePath('path/foo/');
+        $actual = $this->_view->getTemplatePath();
+        $expect = array(
+            0 => 'path/foo/',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -240,6 +271,10 @@ class Test_Solar_View extends Solar_Test {
      */
     public function testTemplate()
     {
-        $this->todo('stub');
+        $dir = Solar_Class::dir('Mock_Solar_View');
+        $this->_view->addTemplatePath($dir);
+        $actual = $this->_view->template('test.view.php');
+        $expect = $dir . 'test.view.php';
+        $this->assertSame($expect, $actual);
     }
 }

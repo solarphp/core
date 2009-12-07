@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Plugin_Html extends Solar_Test {
+class Test_Solar_Markdown_Plugin_Html extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,72 +16,23 @@ class Test_Solar_Markdown_Plugin_Html extends Solar_Test {
     protected $_Test_Solar_Markdown_Plugin_Html = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = true;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Plugin_Html');
-        $this->assertInstance($obj, 'Solar_Markdown_Plugin_Html');
-    }
+    protected $_is_span = false;
     
     /**
      * 
@@ -90,7 +41,31 @@ class Test_Solar_Markdown_Plugin_Html extends Solar_Test {
      */
     public function testCleanup()
     {
-        $this->todo('stub');
+        $source = <<<EOT
+foo bar
+
+<div onclick="return alert('xss');">
+    <p>zim gir</p>
+</div>
+
+baz dib
+EOT;
+        $expect = <<<EOT
+foo bar
+
+
+
+<div onclick="return alert('xss');">
+    <p>zim gir</p>
+</div>
+
+
+
+baz dib
+EOT;
+        $result = $this->_plugin->parse($source);
+        $actual = $this->_plugin->cleanup($result);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -105,52 +80,24 @@ class Test_Solar_Markdown_Plugin_Html extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Removes HTML blocks and replaces with delimited tokens.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $source = <<<EOT
+foo bar
+
+<div onclick="return alert('xss');">
+    <p>zim gir</p>
+</div>
+
+baz dib
+EOT;
+        
+        $expect = "foo bar\n\s+" . $this->_token . "\n\s+baz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "/$expect/");
     }
     
     /**

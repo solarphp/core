@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Plugin_List extends Solar_Test {
+class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,82 +16,23 @@ class Test_Solar_Markdown_Plugin_List extends Solar_Test {
     protected $_Test_Solar_Markdown_Plugin_List = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = true;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Plugin_List');
-        $this->assertInstance($obj, 'Solar_Markdown_Plugin_List');
-    }
-    
-    /**
-     * 
-     * Test -- Cleans up the source text after all parsing occurs.
-     * 
-     */
-    public function testCleanup()
-    {
-        $this->todo('stub');
-    }
+    protected $_is_span = false;
     
     /**
      * 
@@ -105,62 +46,41 @@ class Test_Solar_Markdown_Plugin_List extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Makes ordered (numbered) and unordered (bulleted) XHTML lists.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Prepares the source text before any parsing occurs.
-     * 
-     */
-    public function testPrepare()
-    {
-        $this->todo('stub');
+        $source = array();
+        $source[] = 'foo';
+        $source[] = "";
+        $source[] = "* foo";
+        $source[] = "* bar";
+        $source[] = "* baz";
+        $source[] = "";
+        $source[] = "bar";
+        $source[] = "";
+        $source[] = "1. dib";
+        $source[] = "2. zim";
+        $source[] = "3. gir";
+        $source[] = "";
+        $source[] = "baz";
+        $source = implode("\n", $source). "\n\n";
+        
+        $expect = array();
+        $expect[] = 'foo';
+        $expect[] = "";
+        $expect[] = $this->_token;
+        $expect[] = "";
+        $expect[] = 'bar';
+        $expect[] = "";
+        $expect[] = $this->_token;
+        $expect[] = "";
+        $expect[] = 'baz';
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
     
     /**
@@ -181,5 +101,69 @@ class Test_Solar_Markdown_Plugin_List extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+    // parse a pair of simple lists
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "* foo";
+        $source[] = "* bar";
+        $source[] = "* baz";
+        $source[] = "";
+        $source[] = "sep";
+        $source[] = "";
+        $source[] = "1. dib";
+        $source[] = "2. zim";
+        $source[] = "3. gir";
+        $source = implode("\n", $source). "\n\n";
+        
+        $expect = array();
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "foo" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "bar" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "baz" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul');
+        $expect[] = "";
+        $expect[] = "sep";
+        $expect[] = "";
+        $expect[] = $this->_tag('ol');
+        $expect[] = $this->_tag('li') . "dib" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "zim" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "gir" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ol');
+        $expect = implode("\n*", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    // parse a nested list series
+    public function testRender_nested()
+    {
+        $source[] = "* foo";
+        $source[] = "\t* bar";
+        $source[] = "\t* baz";
+        $source[] = "* dib";
+        $source[] = "\t* zim";
+        $source[] = "\t* gir";
+        $source = implode("\n", $source). "\n\n";
+        
+        $expect = array();
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "foo";
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "bar" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "baz" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul') . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "dib";
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "zim" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "gir" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul') . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul');
+        $expect = implode('\s*', $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertRegex($actual, "@$expect@");
     }
 }

@@ -21,21 +21,11 @@ class Test_Solar_Access_Adapter_File extends Test_Solar_Access_Adapter {
     protected $_Test_Solar_Access_Adapter_File = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
+    protected function _preConfig()
     {
-        $dir = Solar_Class::dir('Test_Solar_Access_Adapter', '_support');
-        $this->_config['file'] = $dir . 'access.txt';
-        parent::setup();
+        parent::_preConfig();
+        $dir = Solar_Class::dir('Mock_Solar_Access_Adapter');
+        $file = $dir . 'access.txt';
+        $this->_Test_Solar_Access_Adapter_File['file'] = $file;
     }
 }

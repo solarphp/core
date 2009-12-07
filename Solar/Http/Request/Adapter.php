@@ -91,8 +91,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @config string ssl_passphrase Passphrase to open the certificate file.
      * 
-     * @config bool ssl_verify_peer Whther or not to verify the peer SSL
+     * @config bool ssl_verify_peer Whether or not to verify the peer SSL
      * certificate.
+     * 
+     * @config bool auto_set_length Whether or not to automatically set the
+     * Content-Length header.
      * 
      * @var array
      * 
@@ -110,6 +113,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         'ssl_local_cert'  => null,
         'ssl_passphrase'  => null,
         'ssl_verify_peer' => null,
+        'auto_set_length' => true,
     );
     
     /**
@@ -365,6 +369,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             'proxy',
             'timeout',
             'uri',
+            'user_agent',
             'version',
             'ssl_cafile',
             'ssl_capath',
@@ -473,18 +478,25 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Sets a cookie value in $this->_cookies to add to the request.
      * 
-     * @param string $key The name of the cookie.
+     * @param string $name The name of the cookie.
      * 
-     * @param string $val The value of the cookie; will be URL-encoded at
-     * fetch() time.
+     * @param string|array $spec If a string, the value of the cookie; if an
+     * array, uses the 'value' key for the cookie value.  Either way, the 
+     * value will be URL-encoded at fetch() time.
      * 
      * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
-    public function setCookie($key, $val = '')
+    public function setCookie($name, $spec = null)
     {
-        $key = str_replace(array("\r", "\n"), '', $key);
-        $this->_cookies[$key] = $val;
+        if (is_scalar($spec)) {
+            $value = (string) $spec;
+        } else {
+            $value = $spec['value'];
+        }
+        
+        $name = str_replace(array("\r", "\n"), '', $name);
+        $this->_cookies[$name] = $value;
         return $this;
     }
     
@@ -501,8 +513,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function setCookies($cookies)
     {
-        foreach ($cookies as $key => $val) {
-            $this->setCookie($key, $val);
+        foreach ($cookies as $name => $spec) {
+            $this->setCookie($name, $spec);
         }
         return $this;
     }
@@ -1022,11 +1034,13 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             $list['Content-Type'] = $content_type;
         }
         
-        // force the content-length
-        if ($content) {
-            $list['Content-Length'] = strlen($content);
-        } else {
-            unset($list['Content-Length']);
+        // auto-set the content-length
+        if ($this->_config['auto_set_length']) {
+            if ($content) {
+                $list['Content-Length'] = strlen($content);
+            } else {
+                unset($list['Content-Length']);
+            }
         }
         
         // force the user-agent header if needed

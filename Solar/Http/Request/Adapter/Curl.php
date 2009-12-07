@@ -53,15 +53,6 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
         $meta = curl_getinfo($ch);
         curl_close($ch);
         
-        // // did it time out?
-        // if ($meta['timed_out']) {
-        //     throw $this->_exception('ERR_CONNECTION_TIMEOUT', array(
-        //         'uri'     => $uri,
-        //         'meta'    => $meta,
-        //         'content' => $content,
-        //     ));
-        // }
-        
         // get the header lines from the response
         $headers = explode(
             "\r\n",

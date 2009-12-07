@@ -1,14 +1,14 @@
 <?php
 /**
  * 
- * Abstract class test.
+ * Abstract adapter class test.
  * 
  */
-class Test_Solar_Log_Adapter extends Solar_Test {
+abstract class Test_Solar_Log_Adapter extends Solar_Test {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,62 +16,54 @@ class Test_Solar_Log_Adapter extends Solar_Test {
     protected $_Test_Solar_Log_Adapter = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * The adapter class to instantiate.
+     * 
+     * @var array
+     * 
+     */
+    protected $_adapter_class;
     
     /**
      * 
-     * Constructor.
+     * The adapter instance.
      * 
-     * @param array $config User-defined configuration parameters.
+     * @var array
      * 
      */
-    public function __construct($config = null)
+    protected $_adapter;
+    
+    /**
+     * 
+     * Sets $_adapter_class based on the test class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
     {
-        $this->skip('abstract class');
-        parent::__construct($config);
+        parent::_postConstruct();
+        
+        // Test_Vendor_Foo => Vendor_Foo
+        $this->_adapter_class = substr(get_class($this), 5);
     }
     
     /**
      * 
-     * Destructor; runs after all methods are complete.
+     * Creates an adapter instance.
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
+     * @return void
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
+        $this->_adapter = Solar::factory(
+            $this->_adapter_class,
+            $this->_config
+        );
     }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
     
     /**
      * 
@@ -80,8 +72,7 @@ class Test_Solar_Log_Adapter extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Log_Adapter');
-        $this->assertInstance($obj, 'Solar_Log_Adapter');
+        $this->assertInstance($this->_adapter, $this->_adapter_class);
     }
     
     /**
@@ -91,7 +82,17 @@ class Test_Solar_Log_Adapter extends Solar_Test {
      */
     public function testGetEvents()
     {
-        $this->todo('stub');
+        // default is always "*"
+        $log = Solar::factory($this->_adapter_class);
+        $actual = $log->getEvents();
+        $expect = array('*');
+        $this->assertSame($actual, $expect);
+        
+        // set some new ones
+        $expect = array('foo', 'bar', 'baz');
+        $log->setEvents($expect);
+        $actual = $log->getEvents();
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -111,6 +112,19 @@ class Test_Solar_Log_Adapter extends Solar_Test {
      */
     public function testSetEvents()
     {
-        $this->todo('stub');
+        $expect = array('foo', 'bar', 'baz');
+        $this->_adapter->setEvents($expect);
+        $actual = $this->_adapter->getEvents();
+        $this->assertSame($actual, $expect);
     }
+    
+    public function testSetEvents_string()
+    {
+        $expect = array('foo', 'bar', 'baz');
+        $string = implode(', ', $expect);
+        $this->_adapter->setEvents($string);
+        $actual = $this->_adapter->getEvents();
+        $this->assertSame($actual, $expect);
+    }
+    
 }

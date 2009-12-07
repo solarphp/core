@@ -41,36 +41,14 @@ class Test_Solar_Session extends Solar_Test {
     
     /**
      * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         $this->_session = Solar::factory('Solar_Session');
         $this->_session->setClass($this->_class);
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     // -----------------------------------------------------------------

@@ -14,7 +14,23 @@
  * @version $Id$
  * 
  */
-abstract class Solar_Access_Adapter extends Solar_Base {
+abstract class Solar_Access_Adapter extends Solar_Base
+{
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config array owner_method An array of key-value pairs to map object
+     * class to a method in that class to determine if a user is the owner
+     * of that object. The key is the class name, the value is the method
+     * name within that class.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Access_Adapter = array(
+        'owner_method' => array(),
+    );
     
     /**
      * 
@@ -42,6 +58,34 @@ abstract class Solar_Access_Adapter extends Solar_Base {
      * 
      */
     protected $_role;
+    
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config array owner_method An array of key-value pairs to map object
+     * class to a method in that class to determine if a user is the owner
+     * of that object. The key is the class name, the value is the method
+     * name within that class.
+     * 
+     * @var array
+     * 
+     */
+    protected $_owner_method = array();
+    
+    /**
+     * 
+     * Post-construct hook to retain owner-method values.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
+    {
+        if ($this->_config['owner_method']) {
+            $this->_owner_method = (array) $this->_config['owner_method'];
+        }
+    }
     
     /**
      * 
@@ -95,7 +139,7 @@ abstract class Solar_Access_Adapter extends Solar_Base {
      * all values.  For handle types, use '+' to indicate any non-empty
      * handle (i.e., any authenticated user).
      * 
-     * @param mixed $content A content item (application-specific) to check
+     * @param mixed $object An object instance (application-specific) to check
      * ownership on.
      * 
      * @return bool True if the current handle or role is allowed 
@@ -104,14 +148,14 @@ abstract class Solar_Access_Adapter extends Solar_Base {
      * @see isOwner()
      * 
      */
-    public function isAllowed($class = '*', $action = '*', $content = null)
+    public function isAllowed($class = '*', $action = '*', $object = null)
     {
         foreach ($this->list as $info) {
-            $class_match   = ($info['class']   == $class   || $info['class']  == '*');
-            $action_match  = ($info['action']  == $action  || $info['action'] == '*');
+            $class_match   = ($info['class']  == $class  || $info['class']  == '*');
+            $action_match  = ($info['action'] == $action || $info['action'] == '*');
             if ($class_match && $action_match) {
                 // do we also need to be the owner?
-                if ($info['type'] == 'owner' && ! $this->isOwner($content)) {
+                if ($info['type'] == 'owner' && ! $this->isOwner($object)) {
                     // not the owner, skip to the next control item
                     continue;
                 }
@@ -156,13 +200,27 @@ abstract class Solar_Access_Adapter extends Solar_Base {
     
     /**
      * 
-     * Checks to see if the current user is the owner of application-specific
-     * content.
+     * Checks to see if the current user is the owner of a particular object.
      * 
-     * @param mixed $content The content to check ownership of.
+     * Only works when loaded with Auth and Role objects.
+     * 
+     * @param mixed $object The object to check ownership of.
      * 
      * @return bool
      * 
      */
-    abstract public function isOwner($content);
+    public function isOwner($object)
+    {
+        if (! $this->_auth || ! $this->_role) {
+            return false;
+        }
+        
+        foreach ($this->_owner_method as $class => $method) {
+            if ($object instanceof $class) {
+                return $object->$method($this->_auth, $this->_role);
+            }
+        }
+        
+        return false;
+    }
 }

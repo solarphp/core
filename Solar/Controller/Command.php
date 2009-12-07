@@ -410,10 +410,8 @@ class Solar_Controller_Command extends Solar_Base
      */
     protected function _outln($text = null, $num = 1, $replace = null)
     {
-        fwrite(
-            $this->_stdout,
-            $this->_vt100($text, $num, $replace) . PHP_EOL
-        );
+        $text .= PHP_EOL;
+        $this->_out($text, $num, $replace);
     }
     
     /**

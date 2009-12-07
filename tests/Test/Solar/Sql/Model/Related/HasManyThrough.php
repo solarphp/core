@@ -18,59 +18,62 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
+    
+    public function test_nativeWithoutEagerSameAsWithEager()
+    {
+        $nodes = $this->_catalog->getModel('nodes');
+        
+        // no eager
+        $plain = $nodes->fetchAllAsArray();
+        $expect = count($plain);
+        
+        // eager "normal"
+        $eager = $nodes->fetchAllAsArray(array(
+            'eager' => array(
+                'tags' => array(
+                    'join_flag' => true, // force the join
+                ),
+            ),
+        ));
+        
+        $actual = count($eager);
+        $this->assertEquals($actual, $expect);
+        
+        // foreign "false"
+        $eager = $nodes->fetchAllAsArray(array(
+            'eager' => array(
+                'tags_false' => array(
+                    'join_flag' => true, // force the join
+                ),
+            ),
+        ));
+        $actual = count($eager);
+        
+        // normal, through "false"
+        $eager = $nodes->fetchAllAsArray(array(
+            'eager' => array(
+                'tags_through_false' => array(
+                    'join_flag' => true, // force the join
+                ),
+            ),
+        ));
+        $actual = count($eager);
+        $this->assertEquals($actual, $expect);
+        
+        // foreign "false" through "false"
+        $eager = $nodes->fetchAllAsArray(array(
+            'eager' => array(
+                'tags_false_through_false' => array(
+                    'join_flag' => true, // force the join
+                ),
+            ),
+        ));
+        $actual = count($eager);
+        $this->assertEquals($actual, $expect);
+    }
     
     /**
      * 
@@ -128,28 +131,28 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
                 2 => "summ",
             ),
             "foreign_alias" => "tags",
-            "foreign_class" => "Solar_Example_Model_Tags",
+            "foreign_class" => "Mock_Solar_Model_Tags",
             "foreign_col" => "id",
             "foreign_key" => "id",
+            "foreign_name" => "tags",
             "foreign_primary_col" => "id",
             "foreign_table" => "test_solar_tags",
             "merge" => "client",
             "name" => "tags",
             "native_alias" => "nodes",
             "native_by" => "wherein",
-            "native_class" => "Solar_Example_Model_Nodes",
+            "native_class" => "Mock_Solar_Model_Nodes",
             "native_col" => "id",
-            "order" => array(
-                0 => "tags.id",
-            ),
+            "order" => array(),
             "through" => "taggings",
             "through_alias" => "taggings",
             "through_foreign_col" => "tag_id",
             "through_key" => null,
             "through_native_col" => "node_id",
             "through_table" => "test_solar_taggings",
+            "through_conditions" => array(),
             "type" => "has_many_through",
-            "where" => array(),
+            "conditions" => array(),
             "wherein_max" => 100,
         );
         
@@ -220,7 +223,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         
         // lazy-fetch the taggings and check that the node_id's match
         $taggings = $node->taggings;
-        $this->assertInstance($taggings, 'Solar_Example_Model_Taggings_Collection');
+        $this->assertInstance($taggings, 'Mock_Solar_Model_Taggings_Collection');
         foreach ($taggings as $tagging) {
             $this->assertEquals($tagging->node_id, $node->id);
         }
@@ -231,7 +234,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         
         // lazy fetch the tags through the taggings
         $tags = $node->tags;
-        $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+        $this->assertInstance($tags, 'Mock_Solar_Model_Tags_Collection');
         
         // make sure the tags/taggings counts match
         $this->assertEquals(count($taggings), count($tags));
@@ -254,7 +257,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         
         // a second check should *not* make a new SQL call
         $tags = $node->tags;
-        $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+        $this->assertInstance($tags, 'Mock_Solar_Model_Tags_Collection');
         $count3 = count($this->_sql->getProfile());
         $this->assertEquals($count3, $count2);
     }
@@ -272,12 +275,12 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
             
             // get the taggings
             $taggings = $node->taggings;
-            $this->assertInstance($taggings, 'Solar_Example_Model_Taggings_Collection');
+            $this->assertInstance($taggings, 'Mock_Solar_Model_Taggings_Collection');
             $extra_calls ++;
             
             // get the tags
             $tags = $node->tags;
-            $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+            $this->assertInstance($tags, 'Mock_Solar_Model_Tags_Collection');
             $extra_calls ++;
             
             // make sure the taggings/tags counts match
@@ -308,9 +311,9 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         // a second check should *not* make new SQL calls
         foreach ($node_coll as $node) {
             $taggings = $node->taggings;
-            $this->assertInstance($taggings, 'Solar_Example_Model_Taggings_Collection');
+            $this->assertInstance($taggings, 'Mock_Solar_Model_Taggings_Collection');
             $tags = $node->tags;
-            $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+            $this->assertInstance($tags, 'Mock_Solar_Model_Tags_Collection');
         }
         
         $count_final = count($this->_sql->getProfile());
@@ -335,7 +338,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         // get the tags, make sure there are some.
         // (can't tell how many there should have been without taggings.)
         $tags = $node->tags;
-        $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+        $this->assertInstance($tags, 'Mock_Solar_Model_Tags_Collection');
         $this->assertTrue(count($tags) > 0);
         
         // should have been no extra SQL calls
@@ -356,7 +359,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         // (can't tell how many there should have been without taggings.)
         foreach ($node_coll as $node) {
             $tags = $node->tags;
-            $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+            $this->assertInstance($tags, 'Mock_Solar_Model_Tags_Collection');
             $this->assertTrue(count($tags) > 0);
         }
         
@@ -395,5 +398,125 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         // should have been no extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
+    }
+    
+    /**
+     * 
+     * Test -- Fetches the related collection for a native ID or record.
+     * 
+     */
+    public function testFetch()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches an empty value for the related.
+     * 
+     */
+    public function testFetchEmpty()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches a new related collection.
+     * 
+     */
+    public function testFetchNew()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Are the related "foreign" and "through" collections valid?
+     * 
+     */
+    public function testIsInvalid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is this related to many records?
+     * 
+     */
+    public function testIsMany()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is this related to one record?
+     * 
+     */
+    public function testIsOne()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fixes the native fetch params and eager params; then, if the join_flag is set on the eager, calles _modEagerFetch() to modify the native fetch params based on the eager params.
+     * 
+     */
+    public function testModEagerFetch()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Modifies the parent result array to add eager records.
+     * 
+     */
+    public function testModEagerResult()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns foreign data as a collection object.
+     * 
+     */
+    public function testNewObject()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Pre-save hook for saving related records or collections from a native record.
+     * 
+     */
+    public function testPreSave()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Saves the related "through" collection *and* the foreign collection from a native record.
+     * 
+     */
+    public function testSave()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Gets the foreign-model WHERE conditions and merges with the WHERE conditions on this relationship.
+     * 
+     */
+    public function testGetForeignWhereMods()
+    {
+        $this->todo('stub');
     }
 }

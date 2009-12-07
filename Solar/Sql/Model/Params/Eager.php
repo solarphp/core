@@ -33,7 +33,7 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
         'wherein_max'          => null,
         'cols_prefix'          => null,
         'join_type'            => null,
-        'join_cond'            => array(),
+        'conditions'           => array(),
         'join_flag'            => null,
         'join_only'            => null,
     );
@@ -121,7 +121,7 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
      * @return Solar_Sql_Model_Params_Eager
      * 
      */
-    public function joinCond($cond, $val = Solar_Sql_Select::IGNORE)
+    public function addCondition($cond, $val = Solar_Sql_Select::IGNORE)
     {
         // BC-helping logic
         if (is_int($cond) && is_string($val)) {
@@ -131,9 +131,9 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
         
         // now the real logic. use triple-equals so that empties are honored.
         if ($val === Solar_Sql_Select::IGNORE) {
-            $this->_data['join_cond'][] = $cond;
+            $this->_data['conditions'][] = $cond;
         } else {
-            $this->_data['join_cond'][$cond] = $val;
+            $this->_data['conditions'][$cond] = $val;
         }
         return $this;
     }
@@ -244,7 +244,7 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
         ));
 
         $this->_loadTwo($data, array(
-            'join_cond'   => 'joinCond',
+            'conditions'   => 'addCondition',
         ));
     }
 }

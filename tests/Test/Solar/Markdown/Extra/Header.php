@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Extra_Header extends Solar_Test {
+class Test_Solar_Markdown_Extra_Header extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,82 +16,23 @@ class Test_Solar_Markdown_Extra_Header extends Solar_Test {
     protected $_Test_Solar_Markdown_Extra_Header = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = true;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Extra_Header');
-        $this->assertInstance($obj, 'Solar_Markdown_Extra_Header');
-    }
-    
-    /**
-     * 
-     * Test -- Cleans up the source text after all parsing occurs.
-     * 
-     */
-    public function testCleanup()
-    {
-        $this->todo('stub');
-    }
+    protected $_is_span = false;
     
     /**
      * 
@@ -105,62 +46,25 @@ class Test_Solar_Markdown_Extra_Header extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Turns ATX- and setext-style headers into XHTML header tags.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Prepares the source text before any parsing occurs.
-     * 
-     */
-    public function testPrepare()
-    {
-        $this->todo('stub');
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Top-Level Header";
+        $source[] = "================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = $this->_token . "\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
     
     /**
@@ -181,5 +85,161 @@ class Test_Solar_Markdown_Extra_Header extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Top-Level Header";
+        $source[] = "================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>Top-Level Header</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_sub()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Sub-Level Header";
+        $source[] = "----------------";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h2>Sub-Level Header</h2>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_withId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Top-Level Header {#top}";
+        $source[] = "=======================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1 id=\"top\">Top-Level Header</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_subWithId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Sub-Level Header {#sub}";
+        $source[] = "-----------------------";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h2 id=\"sub\">Sub-Level Header</h2>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_atx()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "# 1";
+        $source[] = "## 2";
+        $source[] = "### 3";
+        $source[] = "#### 4";
+        $source[] = "##### 5";
+        $source[] = "###### 6";
+        $source[] = "####### 7";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>1</h1>\n";
+        $expect[] = "<h2>2</h2>\n";
+        $expect[] = "<h3>3</h3>\n";
+        $expect[] = "<h4>4</h4>\n";
+        $expect[] = "<h5>5</h5>\n";
+        $expect[] = "<h6>6</h6>\n";
+        $expect[] = "<h6># 7</h6>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_atxTrailingHashes()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "# 1 #";
+        $source[] = "# 2 ##";
+        $source[] = "# 5 ###";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>1</h1>\n";
+        $expect[] = "<h1>2</h1>\n";
+        $expect[] = "<h1>5</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_atxWithId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "### Header {#atx}";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h3 id=\"atx\">Header</h3>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testRender_atxTrailingHashesWithId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "### Header ### {#atx}";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h3 id=\"atx\">Header</h3>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_render($source);
+        $this->assertSame($expect, $actual);
     }
 }

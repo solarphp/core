@@ -528,11 +528,7 @@ class Solar_Filter extends Solar_Base
             return $this->_data;
         }
         
-        if ($this->_data instanceof Solar_Struct && isset($this->_data[$key])) {
-            return $this->_data[$key];
-        }
-        
-        if (array_key_exists($key, $this->_data)) {
+        if ($this->dataKeyExists($key)) {
             return $this->_data[$key];
         }
         
@@ -569,6 +565,28 @@ class Solar_Filter extends Solar_Base
     public function getDataKey()
     {
         return $this->_data_key;
+    }
+    
+    /**
+     * 
+     * Does the requested key exist in the data?
+     * 
+     * @param string $key Checks to see if the data array has this key in it.
+     * 
+     * @return bool True if the data key is present, false if not.
+     * 
+     */
+    public function dataKeyExists($key = null)
+    {
+        if ($this->_data instanceof Solar_Struct && isset($this->_data[$key])) {
+            return true;
+        }
+        
+        if (array_key_exists($key, $this->_data)) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**
@@ -685,11 +703,18 @@ class Solar_Filter extends Solar_Base
         
         // is this key required?
         if (! empty($this->_chain_require[$key])) {
+            // required
             $this->setRequire(true);
         } else {
+            // not required
             $this->setRequire(false);
+            // if not present, skip it entirely
+            if (! $this->dataKeyExists($key)) {
+                return;
+            }
         }
         
+        // apply the filter chain
         foreach ((array) $this->_chain_filters[$key] as $params) {
             
             // take the method name off the top of the params ...

@@ -132,10 +132,13 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      * 
      * Returns a list of all tables in the database.
      * 
+     * @param string $schema Fetch tbe list of tables in this schema; 
+     * when empty, uses the default schema.
+     * 
      * @return array All table names in the database.
      * 
      */
-    protected function _fetchTableList() 
+    protected function _fetchTableList($schema) 
     {
          return $this->fetchCol('SELECT LOWER(TABLE_NAME) FROM USER_TABLES');
     }
@@ -146,10 +149,12 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      * 
      * @param string $table The table name to fetch columns for.
      * 
+     * @param string $schema The schema in which the table resides.
+     * 
      * @return array An array of table column information.
      * 
      */
-    protected function _fetchTableCols($table)
+    protected function _fetchTableCols($table, $schema)
     {
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);
@@ -287,10 +292,12 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      * 
      * @param string $table The table name to fetch indexes for.
      * 
+     * @param string $schema The schema in which the table resides.
+     * 
      * @return array An array of table indexes.
      * 
      */
-    protected function _fetchIndexInfo($table)
+    protected function _fetchIndexInfo($table, $schema)
     {
         throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
     }

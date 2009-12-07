@@ -16,54 +16,11 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
     protected $_Test_Solar_Docs_Phpdoc = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_phpdoc;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    public function preTest()
     {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        $this->_phpdoc = Solar::factory('Solar_Docs_Phpdoc');
     }
     
     // -----------------------------------------------------------------
@@ -90,7 +47,211 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $source = '
+            /**
+             * 
+             * This is the initial summary line; note how it passes over
+             * two lines. Fuller description of the method.  Lorem ipsum
+             * dolor sit amet, consectetuer adipiscing elit. Nunc porta
+             * libero quis orci.
+             * 
+             * @param string $var1 Parameter summary for $var1.  Lorem ipsum
+             * dolor sit amet, consectetuer adipiscing elit.
+             * 
+             * @param object No variable name.
+             * 
+             * @param int
+             * 
+             * @param array $var4
+             * 
+             * @return object Return summary.
+             * 
+             * @throws Solar_Exception Throws summary.
+             * 
+             * @see Some other item.
+             * 
+             * @todo Do this later.
+             * 
+             */';
+    
+        $expect = array(
+            'summ' => "This is the initial summary line; note how it passes over two lines.",
+            'narr' => "Fuller description of the method.  Lorem ipsum\ndolor sit amet, consectetuer adipiscing elit. Nunc porta\nlibero quis orci.",
+            'tech' => array(
+                'param' => array(
+                    'var1' => array(
+                        'type' => 'string',
+                        'summ' => 'Parameter summary for $var1.  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                    ),
+                    1 => array(
+                        'type' => 'object',
+                        'summ' => 'No variable name.',
+                    ),
+                    2 => array(
+                        'type' => 'int',
+                        'summ' => '',
+                    ),
+                    'var4' => array(
+                        'type' => 'array',
+                        'summ' => '',
+                    ),
+                ),
+                'return' => array(
+                    'type' => 'object',
+                    'summ' => 'Return summary.',
+                ),
+                'see' => array('Some other item.'),
+                'todo' => array('Do this later.'),
+                'throws' => array(
+                    array(
+                        'type' => 'Solar_Exception',
+                        'summ' => 'Throws summary.',
+                    ),
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertEquals($actual, $expect);
+    }
+    
+    public function testParse_compressed()
+    {
+        $source = '
+            /**
+             * This is the initial summary line; note how it passes over
+             * two lines. Fuller description of the method.  Lorem ipsum
+             * dolor sit amet, consectetuer adipiscing elit. Nunc porta
+             * libero quis orci.
+             * 
+             * @param string $var1 Parameter summary for $var1.  Lorem ipsum
+             * dolor sit amet, consectetuer adipiscing elit.
+             * @param object No variable name.
+             * @param int
+             * @param array $var4
+             * @return object Return summary.
+             * @throws Solar_Exception Throws summary.
+             * @see Some other item.
+             * @todo Do this later.
+             */';
+    
+        $expect = array(
+            'summ' => "This is the initial summary line; note how it passes over two lines.",
+            'narr' => "Fuller description of the method.  Lorem ipsum\ndolor sit amet, consectetuer adipiscing elit. Nunc porta\nlibero quis orci.",
+            'tech' => array(
+                'param' => array(
+                    'var1' => array(
+                        'type' => 'string',
+                        'summ' => 'Parameter summary for $var1.  Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                    ),
+                    1 => array(
+                        'type' => 'object',
+                        'summ' => 'No variable name.',
+                    ),
+                    2 => array(
+                        'type' => 'int',
+                        'summ' => '',
+                    ),
+                    'var4' => array(
+                        'type' => 'array',
+                        'summ' => '',
+                    ),
+                ),
+                'return' => array(
+                    'type' => 'object',
+                    'summ' => 'Return summary.',
+                ),
+                'see' => array('Some other item.'),
+                'todo' => array('Do this later.'),
+                'throws' => array(
+                    array(
+                        'type' => 'Solar_Exception',
+                        'summ' => 'Throws summary.',
+                    ),
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertEquals($actual, $expect);
+    }
+    
+    public function testParse_noTechData()
+    {
+        $source = '
+            /**
+             * This is the initial summary line; note how it passes over
+             * two lines. No technical data follows.
+             */';
+         
+        $expect = array(
+            'summ' => "This is the initial summary line; note how it passes over two lines.",
+            'narr' => "No technical data follows.",
+            'tech' => array(),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_summ()
+    {
+        $source = '
+            /**
+             * This is the initial summary line.
+             * 
+             * This is the narrative; note how is passes over multiple lines
+             * of the block.
+             */';
+         
+        $expect = array(
+            'summ' => "This is the initial summary line.",
+            'narr' => "This is the narrative; note how is passes over multiple lines\nof the block.",
+            'tech' => array(),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_summNoPunctNoNarr()
+    {
+        $source = '
+            /**
+             * This is the initial summary line with no punctuation
+             */';
+         
+        $expect = array(
+            'summ' => "This is the initial summary line with no punctuation",
+            'narr' => "",
+            'tech' => array(),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual, $expect);
+        // $this->assertTrue(true);
+    }
+    
+    public function testParse_summNoPunctWithNarr()
+    {
+        $source = '
+            /**
+             * This is the initial summary line with no punctuation
+             * 
+             * This is the narrative; note how is passes over multiple lines
+             * of the block.
+             *
+             * And how it has extra newlines.
+             */';
+         
+        $expect = array(
+            'summ' => "This is the initial summary line with no punctuation",
+            'narr' => "This is the narrative; note how is passes over multiple lines\nof the block.\n\nAnd how it has extra newlines.",
+            'tech' => array(),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -110,7 +271,30 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseCategory()
     {
-        $this->todo('stub');
+        $source = '
+            /**
+             * @category Test
+             */';
+        
+        $expect = array('category' => 'Test');
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParseCategory_extraSpaces()
+    {
+        $source = '
+            /**
+             * @category Test with extra characters
+             */';
+        
+        // should ignore extra spaces
+        $expect = array('category' => 'Test');
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+        
     }
     
     /**
@@ -200,7 +384,29 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParsePackage()
     {
-        $this->todo('stub');
+        $source = '
+            /**
+             * @package Test_Solar
+             */';
+        
+        $expect = array('package' => 'Test_Solar');
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParsePackage_extraSpaces()
+    {
+        $source = '
+            /**
+             * @package Test_Solar with extra characters
+             */';
+        
+        // should ignore extra spaces
+        $expect = array('package' => 'Test_Solar');
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -210,7 +416,65 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseParam()
     {
-        $this->todo('stub');
+        // full line
+        $source = '
+            /**
+             * @param string $var1 Parameter summary.
+             */';
+        
+        $expect = array(
+            'param' => array(
+                'var1' => array(
+                    'type' => 'string',
+                    'summ' => 'Parameter summary.',
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParseParam_noSummary()
+    {
+        // partial line, no summary
+        $source = '
+            /**
+             * @param string $var1
+             */';
+        
+        $expect = array(
+            'param' => array(
+                'var1' => array(
+                    'type' => 'string',
+                    'summ' => '',
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParseParam_noVariable()
+    {
+        // partial line, no variable
+        $source = '
+            /**
+             * @param string Parameter summary.
+             */';
+        
+        $expect = array(
+            'param' => array(
+                0 => array(
+                    'type' => 'string',
+                    'summ' => 'Parameter summary.',
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -220,7 +484,40 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseReturn()
     {
-        $this->todo('stub');
+        // full line
+        $source = '
+            /**
+             * @return string Return summary.
+             */';
+        
+        $expect = array(
+            'return' => array(
+                'type' => 'string',
+                'summ' => 'Return summary.',
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParseReturn_noSummary()
+    {
+        // partial line
+        $source = '
+            /**
+             * @return string
+             */';
+    
+        $expect = array(
+            'return' => array(
+                'type' => 'string',
+                'summ' => '',
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -230,7 +527,17 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseSee()
     {
-        $this->todo('stub');
+        $source = '
+            /**
+             * @see See summary.
+             */';
+    
+        $expect = array(
+            'see' => array('See summary.'),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -260,7 +567,29 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseSubpackage()
     {
-        $this->todo('stub');
+        $source = '
+            /**
+             * @subpackage Test_Solar_Docs
+             */';
+        
+        $expect = array('subpackage' => 'Test_Solar_Docs');
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParseSubpackage_extraSpaces()
+    {
+        $source = '
+            /**
+             * @subpackage Test_Solar_Docs with extra characters
+             */';
+        
+        // should ignore extra spaces
+        $expect = array('subpackage' => 'Test_Solar_Docs');
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -270,7 +599,44 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseThrows()
     {
-        $this->todo('stub');
+        // full line
+        $source = '
+            /**
+             * @throws Solar_Exception Throws summary.
+             */';
+        
+        $expect = array(
+            'throws' => array(
+                array(
+                    'type' => 'Solar_Exception',
+                    'summ' => 'Throws summary.',
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
+    
+    public function testParseThrows_noSummary()
+    {
+        // no summary
+        $source = '
+            /**
+             * @throws Solar_Exception
+             */';
+        
+        $expect = array(
+            'throws' => array(
+                array(
+                    'type' => 'Solar_Exception',
+                    'summ' => '',
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -280,7 +646,18 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseTodo()
     {
-        $this->todo('stub');
+        // todo lines
+        $source = '
+            /**
+             * @todo Todo summary.
+             */';
+    
+        $expect = array(
+            'todo' => array('Todo summary.'),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
     }
     
     /**
@@ -290,9 +667,52 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
      */
     public function testParseVar()
     {
-        $this->todo('stub');
+        // full line
+        $source = '
+            /**
+             * 
+             * This is the initial summary line; note how it passes over
+             * two lines. Fuller description of the variable.  Lorem ipsum
+             * dolor sit amet.
+             * 
+             * @var float
+             * 
+             */';
+    
+        $expect = array(
+            'summ' => "This is the initial summary line; note how it passes over two lines.",
+            'narr' => "Fuller description of the variable.  Lorem ipsum\ndolor sit amet.",
+            'tech' => array(
+                'var' => array(
+                    'type' => 'float',
+                    'summ' => '',
+                ),
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual, $expect);
     }
     
+    public function testParseVar_noSummary()
+    {
+        // partial line
+        $source = '
+            /**
+             * @var string
+             */
+            ';
+        
+        $expect = array(
+            'var' => array(
+                'type' => 'string',
+                'summ' => '',
+            ),
+        );
+        
+        $actual = $this->_phpdoc->parse($source);
+        $this->assertSame($actual['tech'], $expect);
+    }
     /**
      * 
      * Test -- Parses one @version line into $this->_info.

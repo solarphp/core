@@ -49,35 +49,13 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
     
     /**
      * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         $this->_adapter = Solar::factory($this->_adapter_class, $this->_config);
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     // -----------------------------------------------------------------
@@ -332,7 +310,7 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
     public function testSave_object()
     {
         $id = 'coyote';
-        $data = Solar::factory('Solar_Example');
+        $data = Solar::factory('Mock_Solar_Example');
         $this->assertTrue($this->_adapter->save($id, $data));
         $this->assertEquals($this->_adapter->fetch($id), $data);
     }
@@ -354,5 +332,25 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
         // turn it back on
         $this->_adapter->setActive(true);
         $this->assertTrue($this->_adapter->isActive());
+    }
+    
+    /**
+     * 
+     * Test -- Fetches data if it exists; if not, uses a callback to create the data and adds it to the cache in a race-condition-safe way.
+     * 
+     */
+    public function testFetchOrAdd()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches data if it exists; if not, uses a callback to create the data and saves it to the cache.
+     * 
+     */
+    public function testFetchOrSave()
+    {
+        $this->todo('stub');
     }
 }

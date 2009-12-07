@@ -16,54 +16,31 @@ abstract class Test_Solar_View_Helper extends Solar_Test {
     protected $_Test_Solar_View_Helper = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_helper;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected $_helper_name;
+    
+    protected $_helper_class;
+    
+    protected $_request;
+    
+    protected $_view;
+    
+    protected function _postConstruct()
     {
-        parent::__construct($config);
+        parent::_postConstruct();
+        
+        // "Test_Solar_View_Helper_" = 23
+        $this->_helper_name  = substr(get_class($this), 23);
+        $this->_helper_class = substr(get_class($this), 5);
+        $this->_request      = Solar_Registry::get('request');
+        $this->_view         = Solar::factory('Solar_View');
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    public function preTest()
     {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        parent::preTest();
+        $this->_helper = $this->_view->getHelper($this->_helper_name);
     }
     
     // -----------------------------------------------------------------
@@ -79,9 +56,6 @@ abstract class Test_Solar_View_Helper extends Solar_Test {
      */
     public function test__construct()
     {
-        $view = Solar::factory('Solar_View');
-        $class = substr(get_class($this), 5);
-        $obj = Solar::factory($class, array('_view' => $view));
-        $this->assertInstance($obj, $class);
+        $this->assertInstance($this->_helper, $this->_helper_class);
     }
 }

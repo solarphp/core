@@ -133,13 +133,13 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         $class_file = $map->fetch($class);
         foreach ($class_file as $class => $file) {
             
-            // tell the user what class we're on
-            $this->_out("$class: "); 
-            
             // if this is an exception class, skip it
             if (strpos($class, '_Exception')) {
-                $this->_outln("skip (exception class)");
+                $this->_outln("$class: skip (exception class)");
                 continue;
+            } else {
+                // tell the user what class we're on
+                $this->_outln("$class"); 
             }
             
             // load the class and get its API reference
@@ -150,17 +150,20 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
             // set the file name, creating if needed
             $this->_setFile($class, $api);
             
-            // get the code currently in the file
-            $this->_code = file_get_contents($this->_file);
+            // skip adding methods on adapter classes; they should get their
+            // methods from the parent class
+            $pos = strrpos($class, '_Adapter_');
+            if ($pos === false) {
             
-            // add new test methods
-            $this->_addTestMethods($api);
+                // get the code currently in the file
+                $this->_code = file_get_contents($this->_file);
             
-            // write the file back out again
-            file_put_contents($this->_file, $this->_code);
+                // add new test methods
+                $this->_addTestMethods($api);
             
-            // done with this class
-            $this->_outln(' ;');
+                // write the file back out again
+                file_put_contents($this->_file, $this->_code);
+            }
         }
         
         // done with all classes.
@@ -253,24 +256,26 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         // use the right code template
         if ($api['abstract']) {
             $code = $this->_tpl['classAbstract'];
-        } elseif (! empty($api['methods']['solarFactory'])) { 
-            $code = $this->_tpl['classFactory'];
         } elseif (in_array('Solar_Factory', $api['from'])) {
             $code = $this->_tpl['classFactory'];
         } else {
             $code = $this->_tpl['classConcrete'];
         }
         
-        // use the right "extends" for adapter classes.
-        // extends this to helpers and abstracts?
-        // note that this still writes the new methods, when they should
-        // be inherited from the parent test instead.
+        // use the right template for adapter abstract classes
+        if (substr($class, -8) == '_Adapter') {
+            $code = $this->_tpl['classAdapterAbstract'];
+        }
+        
+        // use the right "extends" for adapter concrete classes
         $pos = strrpos($class, '_Adapter_');
-        if ($pos) {
-            $code = $this->_tpl['classAdapter'];
-            $extends = 'Test_' . substr($class, 0, $pos + 8);
-        } else {
+        if ($pos === false) {
+            // normal test extends
             $extends = 'Solar_Test';
+        } else {
+            // adapter extends: Test_Foo_Adapter_Bar extends Test_Foo_Adapter
+            $extends = 'Test_' . substr($class, 0, $pos + 8);
+            $code = $this->_tpl['classAdapterConcrete'];
         }
         
         // do replacements
@@ -283,7 +288,6 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         // write the file
         file_put_contents($this->_file, $code);
     }
-    
     
     /**
      * 
@@ -318,17 +322,15 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         // look for methods and add them if needed
         foreach ($api['methods'] as $name => $info) {
             
-            $this->_outln($name);
-            
             // is this an ignored method?
             if (in_array($name, $ignore)) {
-                $this->_out('.');
+                $this->_outln("    . $name");
                 continue;
             }
             
             // is this a public method?
             if ($info['access'] != 'public') {
-                $this->_out('.');
+                $this->_outln("    . $name");
                 continue;
             };
             
@@ -336,10 +338,10 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
             $test_name = 'test' . ucfirst($name);
             
             // does the test-method definition already exist?
-            $def = "public function {$test_name}()";
+            $def = "function {$test_name}()";
             $pos = strpos($this->_code, $def);
             if ($pos) {
-                $this->_out('.');
+                $this->_outln("    . $name");
                 continue;
             }
             
@@ -359,7 +361,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
             
             // append to the test code
             $this->_code .= $test_code;
-            $this->_out('+');
+            $this->_outln("    + $name");
         }
         
         // append the last brace

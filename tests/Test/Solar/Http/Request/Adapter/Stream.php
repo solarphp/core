@@ -39,38 +39,6 @@ class Test_Solar_Http_Request_Adapter_Stream extends Test_Solar_Http_Request_Ada
         $this->todo('need adapter-specific config');
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
     // -----------------------------------------------------------------
     // 
     // Test methods.

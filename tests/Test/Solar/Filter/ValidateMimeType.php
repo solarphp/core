@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateMimeType extends Solar_Test {
+class Test_Solar_Filter_ValidateMimeType extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateMimeType extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateMimeType = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateMimeType');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateMimeType');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the value is formatted as a MIME type.
@@ -100,6 +23,52 @@ class Test_Solar_Filter_ValidateMimeType extends Solar_Test {
      */
     public function testValidateMimeType()
     {
-        $this->todo('stub');
+        $test = array(
+            'text/plain',
+            'text/xhtml+xml',
+            'application/vnd.ms-powerpoint',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateMimeType($val));
+        }
+    }
+    
+    public function testValidateMimeType_limitedTypes()
+    {
+        // only certain types allowed
+        $allowed = array('text/plain', 'text/html', 'text/xhtml+xml');
+        $this->assertTrue($this->_filter->validateMimeType('text/html', $allowed));
+        $this->assertFalse($this->_filter->validateMimeType('application/vnd.ms-powerpoint', $allowed));
+    }
+    
+    public function testValidateMimeType_badOrBlank()
+    {
+        $test = array(
+            ' ', '',
+            'text/',
+            '/something',
+            0, 1, 2, 5,
+            '0', '1', '2', '5',
+            "Seven 8 nine",
+            "non:alpha-numeric's",
+            'someThing8else',
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_filter->validateMimeType($val));
+        }
+    }
+    
+    public function testValidateMimeType_notRequired()
+    {
+        $this->_filter->setRequire(false);
+        $test = array(
+            '', ' ',
+            'text/plain',
+            'text/xhtml+xml',
+            'application/vnd.ms-powerpoint',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateMimeType($val));
+        }
     }
 }

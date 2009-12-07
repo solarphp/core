@@ -197,9 +197,23 @@ class Solar_View_Helper_Head extends Solar_View_Helper
      * 
      * Adds a <meta> tag.
      * 
+     * {{code: php
+     *     // inside a view:
+     *     $this->head()->addMeta(array(
+     *         'foo' => 'bar',
+     *         'baz' => 'dib',
+     *     ));
+     *     
+     *     // when $this->head()->fetch() is called, that will output a meta tag:
+     *     // <meta name="foo" bar="baz dib" />
+     * }}
      * @param array $attribs Attributes for the tag.
      * 
      * @return Solar_View_Helper_Head
+     * 
+     * @see addMetaName()
+     * 
+     * @see addMetaHttp()
      * 
      */
     public function addMeta($attribs)
@@ -210,7 +224,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
-     * Adds a <meta> HTTP-Equivalent tag.
+     * Adds a `<meta http-equiv="" content="">` tag.
      * 
      * @param string $http_equiv The equivalent HTTP header label.
      * 
@@ -230,11 +244,11 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
-     * Adds a <meta> name tag.
+     * Adds a `<meta name="" content="">` tag.
      * 
-     * @param string $name The meta "name" label.
+     * @param string $name The meta "name" value.
      * 
-     * @param string $content The meta "name" value.
+     * @param string $content The meta "content" value.
      * 
      * @return Solar_View_Helper_Head
      * 
@@ -280,7 +294,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
-     * Adds a <style> tag as part of the "baseline" (foundation) styles.
+     * Adds a <link> tag as part of the "baseline" (foundation) styles.
      * Generally used by layouts, not views.
      * 
      * @param string $href The file HREF for the style source.
@@ -300,7 +314,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
-     * Adds a <style> tag as part of the "additional" (override) styles.
+     * Adds a <link> tag as part of the "additional" (override) styles.
      * Generally used by views, not layouts.  If the file has already been
      * added, it does not get added again.
      * 
@@ -410,12 +424,12 @@ class Solar_View_Helper_Head extends Solar_View_Helper
         
         // baseline styles
         foreach ((array) $this->_style_base as $val) {
-            $html[] = $this->_view->style($val[0], $val[1]);
+            $html[] = $this->_view->linkStylesheet($val[0], $val[1]);
         }
         
         // additional styles
         foreach ((array) $this->_style as $val) {
-            $html[] = $this->_view->style($val[0], $val[1]);
+            $html[] = $this->_view->linkStylesheet($val[0], $val[1]);
         }
         
         // baseline scripts

@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Wiki_Link extends Solar_Test {
+class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,72 +16,25 @@ class Test_Solar_Markdown_Wiki_Link extends Solar_Test {
     protected $_Test_Solar_Markdown_Wiki_Link = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = false;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
+    protected $_is_span = true;
     
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Wiki_Link');
-        $this->assertInstance($obj, 'Solar_Markdown_Wiki_Link');
-    }
+    protected $_encode = "\x1BSolar_Markdown_Wiki_Link:.*?\x1B";
     
     /**
      * 
@@ -125,62 +78,47 @@ class Test_Solar_Markdown_Wiki_Link extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Parses the source text for wiki page and interwiki links.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $source = 'foo [[page name]] bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = "foo {$this->_encode} bar";
+        $this->assertRegex($actual, "@$expect@");
     }
     
-    /**
-     * 
-     * Test -- Prepares the source text before any parsing occurs.
-     * 
-     */
-    public function testPrepare()
+    public function testParse_frag()
     {
-        $this->todo('stub');
+        $source = 'foo [[page name#frag]] bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = "foo {$this->_encode} bar";
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testParse_text()
+    {
+        $source = 'foo [[page name | text]] bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = "foo {$this->_encode} bar";
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testParse_atch()
+    {
+        $source = 'foo [[page name atch]]es bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = "foo {$this->_encode} bar";
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testParse_combo()
+    {
+        $source = 'foo [[page name#frag | display]]s bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = "foo {$this->_encode} bar";
+        $this->assertRegex($actual, "@$expect@");
     }
     
     /**
@@ -241,5 +179,155 @@ class Test_Solar_Markdown_Wiki_Link extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+    
+    public function testRender()
+    {
+        $source = 'foo [[page name]] bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="/wiki/read/Page_name">page name</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_frag()
+    {
+        $source = 'foo [[page name#frag]] bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="/wiki/read/Page_name#frag">page name#frag</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_text()
+    {
+        $source = 'foo [[page name | text]] bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="/wiki/read/Page_name">text</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_atch()
+    {
+        $source = 'foo [[page name atch]]es bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="/wiki/read/Page_name_atch">page name atches</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_combo()
+    {
+        $source = 'foo [[page name#frag | display]]s bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="/wiki/read/Page_name#frag">displays</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_comboCollapse()
+    {
+        $source = 'foo [[page name#frag | ]]s bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="/wiki/read/Page_name#frag">page names</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_interwiki()
+    {
+        $source = 'foo [[php::print()]] bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="http://php.net/print()">php::print()</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_interwikiFrag()
+    {
+        $source = 'foo [[php::print() #anchor]] bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="http://php.net/print()#anchor">php::print()#anchor</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_interwikiText()
+    {
+        $source = 'foo [[php::print() | other]] bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="http://php.net/print()">other</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_interwikiAtch()
+    {
+        $source = 'foo [[php::print]]ers bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="http://php.net/print">php::printers</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_interwikiCombo()
+    {
+        $source = 'foo [[php::print()#anchor | print]]ers bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="http://php.net/print()#anchor">printers</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_interwikiComboCollapse()
+    {
+        $source = 'foo [[php::print#anchor | ]]ers bar';
+        $actual = $this->_render($source);
+        $expect = 'foo <a href="http://php.net/print#anchor">printers</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_manyPerLine()
+    {
+        $source = 'foo [[page one]] '
+                . 'bar [[page two]] '
+                . 'baz [[page three]] '
+                . 'dib';
+        
+        $expect = 'foo <a href="/wiki/read/Page_one">page one</a> '
+                . 'bar <a href="/wiki/read/Page_two">page two</a> '
+                . 'baz <a href="/wiki/read/Page_three">page three</a> '
+                . 'dib';
+        
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_interwikiManyPerLine()
+    {
+        $source = 'foo [[php::print()]] '
+                . 'bar [[php::echo | ]] '
+                . 'baz [[php::phpinfo()]] '
+                . 'dib';
+        
+        $expect = 'foo <a href="http://php.net/print()">php::print()</a> '
+                . 'bar <a href="http://php.net/echo">echo</a> '
+                . 'baz <a href="http://php.net/phpinfo()">php::phpinfo()</a> '
+                . 'dib';
+        
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_mixed()
+    {
+        $source = 'foo [[page one]] '
+                . 'bar [[php::print()]] '
+                . 'baz [[page two]] '
+                . 'dib [[php::echo | ]] '
+                . 'zim [[page three]] '
+                . 'gir [[php::phpinfo()]] '
+                . 'irk';
+        
+        $expect = 'foo <a href="/wiki/read/Page_one">page one</a> '
+                . 'bar <a href="http://php.net/print()">php::print()</a> '
+                . 'baz <a href="/wiki/read/Page_two">page two</a> '
+                . 'dib <a href="http://php.net/echo">echo</a> '
+                . 'zim <a href="/wiki/read/Page_three">page three</a> '
+                . 'gir <a href="http://php.net/phpinfo()">php::phpinfo()</a> '
+                . 'irk';
+                
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
     }
 }

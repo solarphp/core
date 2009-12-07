@@ -1,19 +1,14 @@
 <?php
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
- * Adapter class test.
+ * Concrete adapter class test.
  * 
  */
 class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -21,100 +16,75 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     protected $_Test_Solar_Log_Adapter_Multi = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        $this->todo('need adapter-specific config');
+        // easier to do this here than as a property, since we use functions.
+        $this->_Test_Solar_Log_Adapter_Multi = array(
+            'adapters' => array(
+                array(
+                    'adapter' => 'Solar_Log_Adapter_File',
+                    'events'  => 'debug',
+                    'file'    => Solar_File::tmp('test_solar_log_adapter_multi.debug.log'),
+                    'format'  => '%e %m',
+                ),
+                array(
+                    'adapter' => 'Solar_Log_Adapter_File',
+                    'events'  => 'info, notice',
+                    'file'    => Solar_File::tmp('test_solar_log_adapter_multi.other.log'),
+                    'format'  => '%e %m',
+                ),
+            ),
+        );
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    public function preTest()
     {
-        parent::__destruct();
+        parent::preTest();
+        @unlink($this->_config['adapters'][0]['file']);
+        @unlink($this->_config['adapters'][1]['file']);
     }
     
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
+    public function postTest()
     {
-        parent::setup();
+        parent::postTest();
+        @unlink($this->_config['adapters'][0]['file']);
+        @unlink($this->_config['adapters'][1]['file']);
     }
     
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Log_Adapter_Multi');
-        $this->assertInstance($obj, 'Solar_Log_Adapter_Multi');
-    }
-    
-    /**
-     * 
-     * Test -- Gets the list of events this adapter recognizes.
-     * 
-     */
-    public function testGetEvents()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Saves (writes) an event and message to the log.
-     * 
-     */
     public function testSave()
     {
-        $this->todo('stub');
+        $class = get_class($this);
+        $this->_adapter->save($class, 'info', 'some information');
+        $this->_adapter->save($class, 'debug', 'a debug description');
+        $this->_adapter->save($class, 'notice', 'note this message');
+        
+        // the debug log
+        $actual = file_get_contents($this->_config['adapters'][0]['file']);
+        
+        $expect = "debug a debug description\n";
+        $this->assertSame($actual, $expect);
+        
+        // the other log
+        $actual = file_get_contents($this->_config['adapters'][1]['file']);
+        $expect = "info some information\nnotice note this message\n";
+        $this->assertSame($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Sets the list of events this adapter recognizes.
-     * 
-     */
-    public function testSetEvents()
+    public function testSave_notRecognized()
     {
-        $this->todo('stub');
+        $class = get_class($this);
+        $this->_adapter->save($class, 'debug', 'recognized');
+        $this->_adapter->save($class, 'info', 'recognized');
+        $this->_adapter->save($class, 'qwert', 'not recognized');
+        
+        // the debug log
+        $actual = file_get_contents($this->_config['adapters'][0]['file']);
+        $expect = "debug recognized\n";
+        $this->assertSame($actual, $expect);
+        
+        // the other log
+        $actual = file_get_contents($this->_config['adapters'][1]['file']);
+        $expect = "info recognized\n";
+        $this->assertSame($actual, $expect);
     }
 }

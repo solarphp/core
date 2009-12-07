@@ -163,7 +163,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin
      * @return string The replacement text.
      * 
      */
-    function _parseInline($matches)
+    protected function _parseInline($matches)
     {
         $alt_text = $this->_escape($matches[2]);
         $href     = $this->_escape($matches[3]);

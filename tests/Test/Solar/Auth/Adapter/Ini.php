@@ -16,13 +16,19 @@ class Test_Solar_Auth_Adapter_Ini extends Test_Solar_Auth_Adapter {
     protected $_Test_Solar_Auth_Adapter_Ini = array(
     );
     
-    public function setup()
+    protected function _preConfig()
     {
-        $dir = Solar_Class::dir('Test_Solar_Auth_Adapter', '_support');
-        $this->_config['file'] = $dir . 'users.ini';
+        parent::_preConfig();
+        $dir  = Solar_Class::dir('Mock_Solar_Auth_Adapter_Ini');
+        $file = $dir . 'users.ini';
+        $this->_Test_Solar_Auth_Adapter_Ini['file'] = $file;
+    }
+    
+    protected function _postConstruct()
+    {
+        parent::_postConstruct();
         $this->_moniker = 'Paul M. Jones';
-        $this->_email = 'pmjones@solarphp.com';
-        $this->_uri = 'http://paul-m-jones.com';
-        parent::setup();
+        $this->_email   = 'pmjones@solarphp.com';
+        $this->_uri     = 'http://paul-m-jones.com';
     }
 }

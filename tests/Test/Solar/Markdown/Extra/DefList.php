@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Extra_DefList extends Solar_Test {
+class Test_Solar_Markdown_Extra_DefList extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,82 +16,60 @@ class Test_Solar_Markdown_Extra_DefList extends Solar_Test {
     protected $_Test_Solar_Markdown_Extra_DefList = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = true;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
+    protected $_is_span = false;
     
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
+    protected $_basic = "
+Apple
+:   Pomaceous fruit of plants of the genus Malus in 
+    the family Rosaceae.
+
+Orange
+:   The fruit of an evergreen tree of the genus Citrus.
+";
     
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
+    protected $_lazy = "
+Apple
+:   Pomaceous fruit of plants of the genus Malus in 
+the family Rosaceae.
+
+Orange
+:   The fruit of an evergreen tree of the genus Citrus.
+";
     
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_multi_def = "
+Apple
+:   Pomaceous fruit of plants of the genus Malus in 
+    the family Rosaceae.
+:   An american computer company.
+
+Orange
+:   The fruit of an evergreen tree of the genus Citrus.
+";
     
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Extra_DefList');
-        $this->assertInstance($obj, 'Solar_Markdown_Extra_DefList');
-    }
-    
-    /**
-     * 
-     * Test -- Cleans up the source text after all parsing occurs.
-     * 
-     */
-    public function testCleanup()
-    {
-        $this->todo('stub');
-    }
+    protected $_multi_term = "
+Term 1
+Term 2
+:   Definition a
+
+Term 3
+:   Definition b
+";
     
     /**
      * 
@@ -105,63 +83,41 @@ class Test_Solar_Markdown_Extra_DefList extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Processes source text to find definition lists.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $source = "foo bar\n$this->_basic\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
     
-    /**
-     * 
-     * Test -- Prepares the source text before any parsing occurs.
-     * 
-     */
-    public function testPrepare()
+    public function testParse_lazy()
     {
-        $this->todo('stub');
+        $source = "foo bar\n$this->_lazy\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
+    
+    public function testParse_multiDef()
+    {
+        $source = "foo bar\n$this->_multi_def\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testParse_multiTerm()
+    {
+        $source = "foo bar\n$this->_multi_term\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
     
     /**
      * 
@@ -181,5 +137,75 @@ class Test_Solar_Markdown_Extra_DefList extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+    
+    public function testRender()
+    {
+        $source = $this->_basic;
+        $actual = $this->_render($source);
+        $expect = '
+<dl>
+<dt>Apple</dt>
+<dd>Pomaceous fruit of plants of the genus Malus in 
+the family Rosaceae.</dd>
+
+<dt>Orange</dt>
+<dd>The fruit of an evergreen tree of the genus Citrus.</dd>
+</dl>
+';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_lazy()
+    {
+        $source = $this->_lazy;
+        $actual = $this->_render($source);
+        $expect = '
+<dl>
+<dt>Apple</dt>
+<dd>Pomaceous fruit of plants of the genus Malus in 
+the family Rosaceae.</dd>
+
+<dt>Orange</dt>
+<dd>The fruit of an evergreen tree of the genus Citrus.</dd>
+</dl>
+';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_multiDef()
+    {
+        $source = $this->_multi_def;
+        $actual = $this->_render($source);
+        $expect = '
+<dl>
+<dt>Apple</dt>
+<dd>Pomaceous fruit of plants of the genus Malus in 
+the family Rosaceae.</dd>
+
+<dd>An american computer company.</dd>
+
+<dt>Orange</dt>
+<dd>The fruit of an evergreen tree of the genus Citrus.</dd>
+</dl>
+';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_multiTerm()
+    {
+        $source = $this->_multi_term;
+        $actual = $this->_render($source);
+        $expect = '
+<dl>
+<dt>Term 1</dt>
+<dt>Term 2</dt>
+<dd>Definition a</dd>
+
+<dt>Term 3</dt>
+<dd>Definition b</dd>
+</dl>
+';
+        $this->assertSame(trim($actual), trim($expect));
     }
 }

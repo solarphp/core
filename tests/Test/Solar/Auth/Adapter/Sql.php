@@ -18,7 +18,7 @@ class Test_Solar_Auth_Adapter_Sql extends Test_Solar_Auth_Adapter {
     
     protected $_sql;
     
-    public function setup()
+    public function preTest()
     {
         $this->_sql = Solar::factory(
             'Solar_Sql',
@@ -38,7 +38,7 @@ class Test_Solar_Auth_Adapter_Sql extends Test_Solar_Auth_Adapter {
         
         $this->_sql->query($cmd);
         
-        $dir = Solar_Class::dir('Test_Solar_Auth_Adapter', '_support');
+        $dir = Solar_Class::dir('Mock_Solar_Auth_Adapter_Ini');
         $insert = parse_ini_file($dir . 'users.ini', true);
         foreach ($insert as $handle => $data) {
             $data['handle'] = $handle;
@@ -56,6 +56,6 @@ class Test_Solar_Auth_Adapter_Sql extends Test_Solar_Auth_Adapter {
         $this->_config['moniker_col'] = 'moniker';
         $this->_config['uri_col']     = 'uri';
         
-        parent::setup();
+        parent::preTest();
     }
 }

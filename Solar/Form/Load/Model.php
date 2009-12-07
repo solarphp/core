@@ -163,7 +163,7 @@ class Solar_Form_Load_Model extends Solar_Base
     {
         // if not specified, set the array_name to the model name
         if (empty($array_name)) {
-            $this->_array_name = $this->_model->model_name;
+            $this->_array_name = $this->_model->array_name;
         } else {
             $this->_array_name = $array_name;
         }

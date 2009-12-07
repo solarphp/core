@@ -24,47 +24,13 @@ class Test_Solar_Sql_Select extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         Solar_Registry::set('sql', 'Solar_Sql');
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     // -----------------------------------------------------------------
@@ -460,6 +426,86 @@ class Test_Solar_Sql_Select extends Solar_Test {
      * 
      */
     public function testWhere()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Sets a *compound* limit count and offset to the query; used only in UNION (etc) queries.
+     * 
+     */
+    public function testCompoundLimit()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Sets the *compound* limit and count by page number; used only in UNION (etc) queries.
+     * 
+     */
+    public function testCompoundLimitPage()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Adds a *compound* row order to the query; used only in UNION (etc) queries.
+     * 
+     */
+    public function testCompoundOrder()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Adds an INNER JOIN sub-select and columns to the query.
+     * 
+     */
+    public function testInnerJoinSelect()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Adds a LEFT JOIN sub-select and columns to the query.
+     * 
+     */
+    public function testLeftJoinSelect()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Adds multiple JOINs to the query.
+     * 
+     */
+    public function testMultiJoin()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Takes the current select properties and prepares them for UNION with the next set of select properties.
+     * 
+     */
+    public function testUnion()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Takes the current select properties and prepares them for UNION ALL with the next set of select properties.
+     * 
+     */
+    public function testUnionAll()
     {
         $this->todo('stub');
     }

@@ -47,14 +47,17 @@ class Solar_View_Helper_ActionHref extends Solar_View_Helper
      * @return string
      * 
      */
-    public function actionHref($spec)
+    public function actionHref($spec = null)
     {
         if ($spec instanceof Solar_Uri_Action) {
             // already an action uri object
             $href = $spec->get();
-        } else {
+        } elseif ($spec) {
             // build-and-fetch the string as an action spec
             $href = $this->_uri->quick($spec);
+        } else {
+            // empty spec, use current action
+            $href = $this->_uri->get();
         }
         
         return $this->_view->escape($href);

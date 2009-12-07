@@ -530,10 +530,7 @@ class Solar_Uri extends Solar_Base
         
         // add the rest of the URI. we use trim() instead of empty() on string
         // elements to allow for string-zero values.
-        return $uri
-             . $this->_config['path']
-             . (empty($this->path)           ? '' : $this->_pathEncode($this->path))
-             . (trim($this->format) === ''   ? '' : '.' . urlencode($this->format))
+        return $uri . $this->getPath()
              . (empty($query)                ? '' : '?' . $query)
              . (trim($this->fragment) === '' ? '' : '#' . urlencode($this->fragment));
     }
@@ -628,6 +625,22 @@ class Solar_Uri extends Solar_Base
         }
         
         $this->_setFormatFromPath();
+    }
+    
+    /**
+     * 
+     * Returns the path array as a string, including the format.
+     * 
+     * @return string The path string.
+     * 
+     */
+    public function getPath()
+    {
+        // we use trim() instead of empty() on string elements
+        // to allow for string-zero values.
+        return $this->_config['path']
+             . (empty($this->path)         ? '' : $this->_pathEncode($this->path))
+             . (trim($this->format) === '' ? '' : '.' . urlencode($this->format));
     }
     
     /**

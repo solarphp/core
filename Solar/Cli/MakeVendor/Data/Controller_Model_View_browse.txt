@@ -1,5 +1,5 @@
-<h1><?php echo $this->escape(ucwords($this->controller)); ?></h1>
-<h2><?php echo $this->getText('HEADING_BROWSE'); ?></h2>
+<h2><?php echo $this->escape(ucwords($this->controller)); ?></h2>
+<h3><?php echo $this->getText('HEADING_BROWSE'); ?></h3>
 
 <?php
     if (! $this->list) {
@@ -14,4 +14,14 @@
     }
 ?>
 
-<p><?php echo $this->action("{$this->controller}/add", 'ACTION_ADD'); ?></p>
+<?php
+    $allowed = $this->user->access->isAllowed(
+        $this->controller_class,
+        'add'
+    );
+    
+    if ($allowed) {
+        $action = $this->action("/{$this->controller}/add", 'ACTION_ADD');
+        echo "<p>$action</p>";
+    }
+?>

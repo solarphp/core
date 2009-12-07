@@ -85,23 +85,23 @@ class Solar_Test extends Solar_Base
     
     /**
      * 
-     * Setup before each method test.
+     * Runs before each test method; used for preparing state.
      * 
      * @return void
      * 
      */
-    public function setup()
+    public function preTest()
     {
     }
     
     /**
      * 
-     * Teardown after each method test.
+     * Runs after each test method; used for restoring state.
      * 
      * @return void
      * 
      */
-    public function teardown()
+    public function postTest()
     {
     }
     

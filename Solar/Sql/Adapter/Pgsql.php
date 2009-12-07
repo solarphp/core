@@ -103,90 +103,104 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
      * 
      * Returns a list of all tables in the database.
      * 
+     * @param string $schema Fetch tbe list of tables in this schema; 
+     * when empty, uses the default schema.
+     * 
      * @return array All table names in the database.
      * 
      */
-    protected function _fetchTableList()
+    protected function _fetchTableList($schema)
     {
-        $cmd = "
-            SELECT DISTINCT table_name
-            FROM information_schema.tables
-            WHERE table_schema != 'pg_catalog'
-            AND table_schema != 'information_schema'";
-             
-        return $this->fetchCol($cmd);
+        if ($schema) {
+            $cmd = "
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema = :schema
+            ";
+        } else {
+            $cmd = "
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema != 'pg_catalog'
+                AND table_schema != 'information_schema'
+            ";
+        }
+        
+        return $this->fetchCol($cmd, array('schema' => $schema));
     }
     
     /**
      * 
      * Describes the columns in a table.
      * 
-     * @param string $table The table to describe.
+     * @param string $table The table name to fetch columns for.
+     * 
+     * @param string $schema The schema in which the table resides.
      * 
      * @return array
      * 
      */
-    protected function _fetchTableCols($table)
+    protected function _fetchTableCols($table, $schema)
     {
         //          name         |            type             | require | primary |                           default                           
         // ----------------------+-----------------------------+---------+---------+-------------------------------------------------------------
-        //  test_autoinc_primary | integer                     | t       | t       | nextval('test_describe_test_autoinc_primary_seq'::regclass)
-        //  test_require         | integer                     | t       |         | 
-        //  test_bool            | boolean                     | f       |         | 
-        //  test_char            | character(7)                | f       |         | 
-        //  test_varchar         | character varying(7)        | f       |         | 
-        //  test_smallint        | smallint                    | f       |         | 
-        //  test_int             | integer                     | f       |         | 
-        //  test_bigint          | bigint                      | f       |         | 
-        //  test_numeric_size    | numeric(5,0)                | f       |         | 
-        //  test_numeric_scope   | numeric(5,3)                | f       |         | 
-        //  test_float           | double precision            | f       |         | 
-        //  test_clob            | text                        | f       |         | 
-        //  test_date            | date                        | f       |         | 
-        //  test_time            | time without time zone      | f       |         | 
-        //  test_timestamp       | timestamp without time zone | f       |         | 
-        //  test_default_null    | character(7)                | f       |         | 
-        //  test_default_string  | character(7)                | f       |         | 'literal'::bpchar
-        //  test_default_integer | integer                     | f       |         | 7
-        //  test_default_numeric | numeric(5,3)                | f       |         | 12.345
-        //  test_default_ignore  | timestamp without time zone | f       |         | now()
-        //  test_default_varchar | character varying(17)       | f       |         | 'literal'::character varying
-        //  test_default_date    | date                        | f       |         | '1979-11-07'::date
+        //  test_autoinc_primary | integer                     | (true)  | p       | nextval('test_describe_test_autoinc_primary_seq'::regclass)
+        //  test_require         | integer                     | (true)  |         | 
+        //  test_bool            | boolean                     | (false) |         | 
+        //  test_char            | character(7)                | (false) |         | 
+        //  test_varchar         | character varying(7)        | (false) |         | 
+        //  test_smallint        | smallint                    | (false) |         | 
+        //  test_int             | integer                     | (false) |         | 
+        //  test_bigint          | bigint                      | (false) |         | 
+        //  test_numeric_size    | numeric(5,0)                | (false) |         | 
+        //  test_numeric_scope   | numeric(5,3)                | (false) |         | 
+        //  test_float           | double precision            | (false) |         | 
+        //  test_clob            | text                        | (false) |         | 
+        //  test_date            | date                        | (false) |         | 
+        //  test_time            | time without time zone      | (false) |         | 
+        //  test_timestamp       | timestamp without time zone | (false) |         | 
+        //  test_default_null    | character(7)                | (false) |         | 
+        //  test_default_string  | character(7)                | (false) |         | 'literal'::bpchar
+        //  test_default_integer | integer                     | (false) |         | 7
+        //  test_default_numeric | numeric(5,3)                | (false) |         | 12.345
+        //  test_default_ignore  | timestamp without time zone | (false) |         | now()
+        //  test_default_varchar | character varying(17)       | (false) |         | 'literal'::character varying
+        //  test_default_date    | date                        | (false) |         | '1979-11-07'::date
         
         // modified from Zend_Db_Adapter_Pdo_Pgsql
         $cmd = "
             SELECT
                 a.attname AS name,
-                format_type(a.atttypid, a.atttypmod) AS type,
+                FORMAT_TYPE(a.atttypid, a.atttypmod) AS type,
                 a.attnotnull AS require,
-                (SELECT 't'
-                    FROM pg_index
-                    WHERE c.oid = pg_index.indrelid
-                    AND pg_index.indkey[0] = a.attnum
-                    AND pg_index.indisprimary = 't'
-                ) AS primary,
-                (SELECT pg_attrdef.adsrc
-                    FROM pg_attrdef
-                    WHERE c.oid = pg_attrdef.adrelid
-                    AND pg_attrdef.adnum=a.attnum
-                ) AS default
-            FROM
-                pg_attribute a,
-                pg_class c,
-                pg_type t
-            WHERE
-                c.relname = :table
-                AND a.attnum > 0
-                AND a.attrelid = c.oid
-                AND a.atttypid = t.oid
-            ORDER BY
-                a.attnum";
+                co.contype AS primary,
+                d.adsrc AS default
+            FROM pg_attribute AS a
+            JOIN pg_class AS c ON a.attrelid = c.oid
+            JOIN pg_namespace AS n ON c.relnamespace = n.oid
+            JOIN pg_type AS t ON a.atttypid = t.oid
+            LEFT OUTER JOIN pg_constraint AS co
+                ON (co.conrelid = c.oid AND a.attnum = ANY(co.conkey) AND co.contype = 'p')
+            LEFT OUTER JOIN pg_attrdef AS d
+                ON (d.adrelid = c.oid AND d.adnum = a.attnum)
+            WHERE a.attnum > 0 AND c.relname = :table
+        ";
+        
+        if ($schema) {
+            $cmd .= " AND n.nspname = :schema";
+        }
+        
+        $cmd .= "\n            ORDER BY a.attnum";
         
         // where the description will be stored
         $descr = array();
         
         // get the column descriptions
-        $cols = $this->fetchAll($cmd, array('table' => $table));
+        $cols = $this->fetchAll($cmd, array(
+            'table' => $table,
+            'schema' => $schema,
+        ));
+        
         if (! $cols) {
             throw $this->_exception('ERR_QUERY_FAILED');
         }
@@ -201,8 +215,8 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
                 'size'    => ($size  ? (int) $size  : null),
                 'scope'   => ($scope ? (int) $scope : null),
                 'default' => $this->_getDefault($val['default']),
-                'require' => (bool) ($val['require'] == 't'),
-                'primary' => (bool) ($val['primary'] == 't'),
+                'require' => (bool) ($val['require']),
+                'primary' => (bool) ($val['primary']),
                 'autoinc' => (bool) (substr($val['default'], 0, 7) == 'nextval'),
             );
         }
@@ -217,10 +231,12 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
      * 
      * @param string $table The table name to fetch indexes for.
      * 
+     * @param string $schema The schema in which the table resides.
+     * 
      * @return array An array of table indexes.
      * 
      */
-    protected function _fetchIndexInfo($table)
+    protected function _fetchIndexInfo($table, $schema)
     {
         // strip non-word characters to try and prevent SQL injections,
         // then quote it to avoid reserved-word issues
@@ -229,8 +245,8 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
         // where the index info will be stored
         $info = array();
         
-        // get all indexed columns. thank, Robert Treat, <robert@omniti.com>
-        $stmt = "
+        // get all indexed columns. thanks, Robert Treat <robert@omniti.com>
+        $cmd = "
             SELECT
                 i.relname AS indexname,
                 attname AS column,
@@ -242,12 +258,16 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
                 FROM pg_index
             ) xx ON indrelid = attrelid and attnum::text=any(xx.x)
             JOIN pg_class i ON oid = indexrelid
-            WHERE
-                indisprimary = false
-                AND t.relname = :table";
+            JOIN pg_namespace AS n ON t.relnamespace = n.oid
+            WHERE indisprimary = false AND t.relname = :table";
         
-        $list = $this->fetchAll($stmt, array(
+        if ($schema) {
+            $cmd .= " AND n.nspname = :schema";
+        }
+        
+        $list = $this->fetchAll($cmd, array(
             'table' => $table,
+            'schema' => $schema,
         ));
         
         if (! $list) {

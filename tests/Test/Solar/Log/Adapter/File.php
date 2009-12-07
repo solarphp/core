@@ -1,120 +1,60 @@
 <?php
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
- * Adapter class test.
+ * Concrete adapter class test.
  * 
  */
 class Test_Solar_Log_Adapter_File extends Test_Solar_Log_Adapter {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
      */
     protected $_Test_Solar_Log_Adapter_File = array(
+        'file' => null,
+        'format' => '%e %m',
+        'events' => array('info', 'debug', 'notice'),
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        $this->todo('need adapter-specific config');
+        $file = Solar_File::tmp('test_solar_log_adapter_file.log');
+        $this->_Test_Solar_Log_Adapter_File['file'] = $file;
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    public function preTest()
     {
-        parent::__destruct();
+        parent::preTest();
+        @unlink($this->_config['file']);
     }
     
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
+    public function postTest()
     {
-        parent::setup();
+        parent::postTest();
+        @unlink($this->_config['file']);
     }
     
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Log_Adapter_File');
-        $this->assertInstance($obj, 'Solar_Log_Adapter_File');
-    }
-    
-    /**
-     * 
-     * Test -- Gets the list of events this adapter recognizes.
-     * 
-     */
-    public function testGetEvents()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Saves (writes) an event and message to the log.
-     * 
-     */
     public function testSave()
     {
-        $this->todo('stub');
+        $class = get_class($this);
+        $this->_adapter->save($class, 'info', 'some information');
+        $this->_adapter->save($class, 'debug', 'a debug description');
+        $this->_adapter->save($class, 'notice', 'note this message');
+        $actual = file_get_contents($this->_config['file']);
+        $expect = "info some information\ndebug a debug description\nnotice note this message\n";
+        $this->assertSame($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Sets the list of events this adapter recognizes.
-     * 
-     */
-    public function testSetEvents()
+    public function testSave_notRecognized()
     {
-        $this->todo('stub');
+        $class = get_class($this);
+        $this->_adapter->save($class, 'info', 'recognized');
+        $this->_adapter->save($class, 'qwert', 'not recognized');
+        $actual = file_get_contents($this->_config['file']);
+        $expect = "info recognized\n";
+        $this->assertEquals($actual, $expect);
     }
 }

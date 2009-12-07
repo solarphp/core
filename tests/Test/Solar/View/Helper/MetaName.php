@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_MetaName extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,9 @@ class Test_Solar_View_Helper_MetaName extends Test_Solar_View_Helper {
      */
     public function testMetaName()
     {
-        $this->todo('stub');
+        $attribs = array('foo' => 'bar');
+        $actual = $this->_view->metaName('foo', 'bar');
+        $expect = '<meta name="foo" content="bar" />';
+        $this->assertSame($actual, $expect);
     }
 }

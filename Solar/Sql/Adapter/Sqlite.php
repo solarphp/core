@@ -182,15 +182,27 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      * 
      * Returns a list of all tables in the database.
      * 
+     * @param string $schema Fetch tbe list of tables in this attached
+     * database; when empty, uses the main database.
+     * 
      * @return array All table names in the database.
      * 
      */
-    protected function _fetchTableList()
+    protected function _fetchTableList($schema)
     {
-        // copied from PEAR DB
-        $cmd = "SELECT name FROM sqlite_master WHERE type='table' " .
-            "UNION ALL SELECT name FROM sqlite_temp_master " .
-            "WHERE type='table' ORDER BY name";
+        if ($schema) {
+            $cmd = "
+                SELECT name FROM {$schema}.sqlite_master WHERE type = 'table'
+                ORDER BY name
+            ";
+        } else {
+            $cmd = "
+                SELECT name FROM sqlite_master WHERE type = 'table'
+                UNION ALL
+                SELECT name FROM sqlite_temp_master WHERE type = 'table'
+                ORDER BY name
+            ";
+        }
         
         return $this->fetchCol($cmd);
     }
@@ -199,12 +211,14 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      * 
      * Describes the columns in a table.
      * 
-     * @param string $table The table to describe.
+     * @param string $table The table name to fetch columns for.
+     * 
+     * @param string $schema The attached database in which the table resides.
      * 
      * @return array
      * 
      */
-    protected function _fetchTableCols($table)
+    protected function _fetchTableCols($table, $schema)
     {
         // sqlite> create table areas (id INTEGER PRIMARY KEY AUTOINCREMENT,
         //         name VARCHAR(32) NOT NULL);
@@ -216,18 +230,24 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);
         
+        if ($schema) {
+            // sanitize and add a dot
+            $schema = preg_replace('/[^\w]/', '', $table) . '.';
+        }
+        
         // where the description will be stored
         $descr = array();
         
         // get the CREATE TABLE sql; need this for finding autoincrement cols
-        $create_table = $this->fetchValue(
-            "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = :table",
-            array('table' => $table)
-        );
+        $cmd = "
+            SELECT sql FROM {$schema}sqlite_master
+            WHERE type = 'table' AND name = :table
+        ";
+        $create_table = $this->fetchValue($cmd, array('table' => $table));
         
         // get the column descriptions
         $table = $this->quoteName($table);
-        $cols = $this->fetchAll("PRAGMA TABLE_INFO($table)");
+        $cols = $this->fetchAll("PRAGMA {$schema}TABLE_INFO($table)");
         if (! $cols) {
             throw $this->_exception('ERR_QUERY_FAILED');
         }
@@ -320,10 +340,12 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      * 
      * @param string $table The table name to fetch indexes for.
      * 
+     * @param string $schema The attached database in which the table resides.
+     * 
      * @return array An array of table indexes.
      * 
      */
-    protected function _fetchIndexInfo($table)
+    protected function _fetchIndexInfo($table, $schema)
     {
         // sqlite> PRAGMA INDEX_LIST('nodes');
         // seq|name|unique
@@ -339,12 +361,17 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);
         
+        if ($schema) {
+            // sanitize and add a dot
+            $schema = preg_replace('/[^\w]/', '', $table) . '.';
+        }
+        
         // where the index info will be stored
         $info = array();
         
         // get all indexes on the table
         $tmp = $this->_quoteName($table);
-        $list = $this->fetchAll("PRAGMA INDEX_LIST($tmp)");
+        $list = $this->fetchAll("PRAGMA {$schema}INDEX_LIST($tmp)");
         
         if (! $list) {
             // no indexes
@@ -371,7 +398,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             
             // what cols in the index?
             $tmp = $this->_quoteName($item['name']);
-            $cols = $this->fetchAll("PRAGMA INDEX_INFO($tmp)");
+            $cols = $this->fetchAll("PRAGMA {$schema}INDEX_INFO($tmp)");
             
             // collect column info
             foreach ($cols as $col) {

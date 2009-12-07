@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateRangeLength extends Solar_Test {
+class Test_Solar_Filter_ValidateRangeLength extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateRangeLength extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateRangeLength = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateRangeLength');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateRangeLength');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the length of the value is within a given range.
@@ -100,6 +23,47 @@ class Test_Solar_Filter_ValidateRangeLength extends Solar_Test {
      */
     public function testValidateRangeLength()
     {
-        $this->todo('stub');
+        $min = 4;
+        $max = 6;
+        
+        // good
+        $test = array(
+            "abcd",
+            "abcde",
+            "abcdef",
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateRangeLength($val, $min, $max));
+        }
+    }
+    
+    public function testValidateRangeLength_badOrBlank()
+    {
+        $min = 4;
+        $max = 6;
+        $test = array(
+            "", " ",
+            'a', 'ab', 'abc',
+            'abcdefg', 'abcdefgh', 'abcdefghi', 
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_filter->validateRangeLength($val, $min, $max));
+        }
+    }
+    
+    public function testValidateRangeLength_notRequired()
+    {
+        $min = 4;
+        $max = 6;
+        $this->_filter->setRequire(false);
+        $test = array(
+            "", ' ',
+            "abcd",
+            "abcde",
+            "abcdef",
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateRangeLength($val, $min, $max));
+        }
     }
 }

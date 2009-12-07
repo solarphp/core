@@ -18,10 +18,10 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
     
     // no such thing as a valid login with the 'none' adapter
     
-    public function setup()
+    public function preTest()
     {
         $this->_handle = null;
-        parent::setup();
+        parent::preTest();
     }
     
     public function testIsValid()

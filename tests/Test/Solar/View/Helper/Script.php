@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_Script extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,8 @@ class Test_Solar_View_Helper_Script extends Test_Solar_View_Helper {
      */
     public function testScript()
     {
-        $this->todo('stub');
+        $actual = $this->_view->script('clientside.js');
+        $expect = '<script src="/public/clientside.js" type="text/javascript"></script>';
+        $this->assertSame($actual, $expect);
     }
 }

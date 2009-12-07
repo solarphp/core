@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Extra_Table extends Solar_Test {
+class Test_Solar_Markdown_Extra_Table extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,82 +16,45 @@ class Test_Solar_Markdown_Extra_Table extends Solar_Test {
     protected $_Test_Solar_Markdown_Extra_Table = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = true;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
+    protected $_is_span = false;
     
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
+    protected $_plain = "
+First Header  | Second Header
+------------- | -------------
+Content A     | Content C    
+Content B     | Content D    
+";
     
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
+    protected $_pipes = "
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content A     | Content C     |
+| Content B     | Content D     |
+";
     
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_align = "
+| Left      | Right     |
+| :-------- | --------: |
+| Content A | Content C |
+| Content B | Content D |
+";
     
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Extra_Table');
-        $this->assertInstance($obj, 'Solar_Markdown_Extra_Table');
-    }
-    
-    /**
-     * 
-     * Test -- Cleans up the source text after all parsing occurs.
-     * 
-     */
-    public function testCleanup()
-    {
-        $this->todo('stub');
-    }
     
     /**
      * 
@@ -105,62 +68,31 @@ class Test_Solar_Markdown_Extra_Table extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Transforms Markdown syntax to XHTML tables.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $source = "foo bar\n$this->_plain\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
-    
-    /**
-     * 
-     * Test -- Prepares the source text before any parsing occurs.
-     * 
-     */
-    public function testPrepare()
+   
+    public function testParse_pipes()
     {
-        $this->todo('stub');
+        $source = "foo bar\n$this->_pipes\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+   
+    public function testParse_align()
+    {
+        $source = "foo bar\n$this->_align\nbaz dib";
+        $expect = "foo bar\n\n$this->_token\n\nbaz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
     
     /**
@@ -181,5 +113,89 @@ class Test_Solar_Markdown_Extra_Table extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+    
+    public function testRender()
+    {
+        $source = $this->_plain;
+        $actual = $this->_render($source);
+        
+        $expect = '
+<table>
+    <thead>
+        <tr>
+            <th>First Header</th>
+            <th>Second Header</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Content A</td>
+            <td>Content C</td>
+        </tr>
+        <tr>
+            <td>Content B</td>
+            <td>Content D</td>
+        </tr>
+    </tbody>
+</table>';
+        
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_pipes()
+    {
+        $source = $this->_pipes;
+        $actual = $this->_render($source);
+        
+        $expect = '
+<table>
+    <thead>
+        <tr>
+            <th>First Header</th>
+            <th>Second Header</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Content A</td>
+            <td>Content C</td>
+        </tr>
+        <tr>
+            <td>Content B</td>
+            <td>Content D</td>
+        </tr>
+    </tbody>
+</table>';
+        
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testRender_align()
+    {
+        $source = $this->_align;
+        $actual = $this->_render($source);
+        
+        $expect = '
+<table>
+    <thead>
+        <tr>
+            <th align="left">Left</th>
+            <th align="right">Right</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="left">Content A</td>
+            <td align="right">Content C</td>
+        </tr>
+        <tr>
+            <td align="left">Content B</td>
+            <td align="right">Content D</td>
+        </tr>
+    </tbody>
+</table>';
+        
+        $this->assertSame(trim($actual), trim($expect));
     }
 }

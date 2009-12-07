@@ -39,38 +39,6 @@ class Test_Solar_Sql_Adapter_Oracle extends Test_Solar_Sql_Adapter {
         $this->todo('need adapter-specific config');
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
     // -----------------------------------------------------------------
     // 
     // Test methods.

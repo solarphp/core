@@ -26,56 +26,6 @@ class Test_Solar extends Solar_Test {
 
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -100,14 +50,14 @@ class Test_Solar extends Solar_Test {
      */
     public function testCallbacks()
     {
-        $file = Solar_Class::dir($this) . '_support/callbacks.php';
+        $file = Solar_Class::dir('Mock_Solar') . 'callbacks.php';
         Solar::callbacks($file);
         $this->assertTrue($GLOBALS['SOLAR_CALLBACKS']);
     }
     
     public function testCallbacks_function()
     {
-        $file = Solar_Class::dir($this) . '_support/callbacks-function.php';
+        $file = Solar_Class::dir('Mock_Solar') . 'callbacks-function.php';
         Solar_File::load($file);
         Solar::callbacks(array(
             array(null, 'solar_callbacks_function')
@@ -117,7 +67,7 @@ class Test_Solar extends Solar_Test {
     
     public function testCallbacks_staticMethod()
     {
-        $file = Solar_Class::dir($this) . '_support/callbacks-static-method.php';
+        $file = Solar_Class::dir('Mock_Solar') . 'callbacks-static-method.php';
         Solar_File::load($file);
         Solar::callbacks(array(
             array('Solar_Callbacks_Static_Method', 'callback')
@@ -127,7 +77,7 @@ class Test_Solar extends Solar_Test {
     
     public function testCallbacks_instanceMethod()
     {
-        $file = Solar_Class::dir($this) . '_support/callbacks-instance-method.php';
+        $file = Solar_Class::dir('Mock_Solar') . 'callbacks-instance-method.php';
         Solar_File::load($file);
         $instance = Solar::factory('Solar_Callbacks_Instance_Method');
         Solar::callbacks(array(
@@ -161,16 +111,16 @@ class Test_Solar extends Solar_Test {
     public function testDependency()
     {
         // a direct dependency object
-        $expect = Solar::factory('Solar_Example');
-        $actual = Solar::dependency('Solar_Example', $expect);
+        $expect = Solar::factory('Mock_Solar_Example');
+        $actual = Solar::dependency('Mock_Solar_Example', $expect);
         $this->assertSame($actual, $expect);
     }
     
     public function testDependency_registry()
     {
-        $expect = Solar::factory('Solar_Example');
+        $expect = Solar::factory('Mock_Solar_Example');
         Solar_Registry::set('example', $expect);
-        $actual = Solar::dependency('Solar_Example', 'example');
+        $actual = Solar::dependency('Mock_Solar_Example', 'example');
         $this->assertSame($actual, $expect);
     }
     
@@ -180,11 +130,11 @@ class Test_Solar extends Solar_Test {
         // the "right" factoried object.
         $key = __FUNCTION__;
         $val = rand();
-        $actual = Solar::dependency('Solar_Example', array(
+        $actual = Solar::dependency('Mock_Solar_Example', array(
             $key => $val,
         ));
         
-        $this->assertInstance($actual, 'Solar_Example');
+        $this->assertInstance($actual, 'Mock_Solar_Example');
         $this->assertEquals($actual->getConfig($key), $val);
     }
     
@@ -221,9 +171,9 @@ class Test_Solar extends Solar_Test {
      */
     public function testFactory()
     {
-        $class = 'Solar_Example';
+        $class = 'Mock_Solar_Example';
         $this->assertFalse(class_exists($class, false));
-        $actual = Solar::factory('Solar_Example');
+        $actual = Solar::factory('Mock_Solar_Example');
         $this->assertInstance($actual, $class);
     }
     

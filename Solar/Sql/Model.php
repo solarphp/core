@@ -91,8 +91,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * When data values for this model are part of an array, use this name
-     * as the array key for those values.
+     * The model name is the short form of the class name; this is generally
+     * a plural.
      * 
      * When inheritance is enabled, the default is the $_inherit_name value,
      * otherwise, the default is the $_table_name.
@@ -101,6 +101,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_model_name;
+    
+    /**
+     * 
+     * When a record from this model is part of an form element array, use
+     * this name as the array key for it; by default, this is the singular
+     * of the model name.
+     * 
+     * @var string
+     * 
+     */
+    protected $_array_name;
     
     // -----------------------------------------------------------------
     //
@@ -522,7 +533,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * The default order when fetching rows.
+     * By default, order by this column when fetching rows.
      * 
      * @var array
      * 
@@ -531,7 +542,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * The number of rows per page when selecting.
+     * The default number of rows per page when selecting.
      * 
      * @var int
      * 
@@ -1296,7 +1307,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return array The modified WHERE array.
      *
      */   
-    public function getWhereMods($alias = null)
+    public function getConditions($alias = null)
     {
         // default to the model name for the alias
         if (! $alias) {
@@ -1342,7 +1353,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         $use_default_order = ! $fetch['order'] && $fetch['order'] !== false;
-        if ($use_default_order) {
+        if ($use_default_order && $this->_order) {
             $fetch->order("{$fetch['alias']}.{$this->_order}");
         };
         
@@ -1360,7 +1371,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             $fetch['cols']
         );
         
-        $select->multiWhere($this->getWhereMods($fetch['alias']));
+        $select->multiWhere($this->getConditions($fetch['alias']));
         
         // all the other pieces
         $select->distinct($fetch['distinct'])
@@ -2025,10 +2036,10 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixStack();
         $this->_fixTableName();
         $this->_fixModelName();
+        $this->_fixArrayName();
         $this->_fixIndex();
         $this->_fixTableCols(); // also creates table if needed
         $this->_fixPrimaryCol();
-        $this->_fixOrder();
         $this->_fixPropertyCols();
         $this->_fixCalculateCols();
         $this->_fixFilterClass();
@@ -2290,7 +2301,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fixes the array-name and table-alias for user input to this model.
+     * Fixes the model-name and table-alias for user input to this model.
      * 
      * @return void
      * 
@@ -2321,15 +2332,17 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fixes the default order when fetching records from this model.
+     * Fixes the array-name for this model.
      * 
      * @return void
      * 
      */
-    protected function _fixOrder()
+    protected function _fixArrayName()
     {
-        if (! $this->_order) {
-            $this->_order = $this->_primary_col;
+        if (! $this->_array_name) {
+            $this->_array_name = $this->_inflect->toSingular(
+                $this->_model_name
+            );
         }
     }
     

@@ -1,19 +1,14 @@
 <?php
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
- * Adapter class test.
+ * Concrete adapter class test.
  * 
  */
 class Test_Solar_Role_Adapter_None extends Test_Solar_Role_Adapter {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -21,140 +16,90 @@ class Test_Solar_Role_Adapter_None extends Test_Solar_Role_Adapter {
     protected $_Test_Solar_Role_Adapter_None = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        $this->todo('need adapter-specific config');
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Role_Adapter_None');
-        $this->assertInstance($obj, 'Solar_Role_Adapter_None');
-    }
-    
-    /**
-     * 
-     * Test -- Provides magic "isRoleName()" to map to "is('role_name')".
-     * 
-     */
-    public function test__call()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Fetch the roles.
-     * 
-     */
     public function testFetch()
     {
-        $this->todo('stub');
+        $expect = array();
+        $actual = $this->_adapter->fetch('pmjones');
+        $this->assertEquals($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Check to see if a user is in a role.
-     * 
-     */
-    public function testIs()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Check to see if a user is in all of the listed roles.
-     * 
-     */
-    public function testIsAll()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Check to see if a user is in any of the listed roles.
-     * 
-     */
-    public function testIsAny()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Load the list of roles for the given user from the adapter.
-     * 
-     */
     public function testLoad()
     {
-        $this->todo('stub');
+        $this->_adapter->load('pmjones');
+        $expect = array();
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Resets the role list to nothing.
-     * 
-     */
+    public function testLoad_refresh()
+    {
+        // load the first time
+        $this->_adapter->load('pmjones');
+        $expect = array();
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+        
+        // foribly refresh
+        $this->_adapter->load('boshag', true);
+        $expect = array();
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+    }
+    
     public function testReset()
     {
-        $this->todo('stub');
+        // load the first time
+        $this->_adapter->load('pmjones');
+        $expect = array();
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+        
+        // reset to empty
+        $this->_adapter->reset();
+        $expect = array();
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+    }
+    
+    public function testIs()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->is('admin');
+        $this->assertFalse($actual);
+    }
+    
+    public function testIs_not()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->is('no-such-role');
+        $this->assertFalse($actual);
+    }
+    
+    public function testIsAny()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAny(array('no-such-role', 'root'));
+        $this->assertFalse($actual);
+    }
+    
+    public function testIsAny_not()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAny(array('no-such-role', 'no-other-role'));
+        $this->assertFalse($actual);
+    }
+    
+    public function testIsAll()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAll(array('admin', 'root'));
+        $this->assertFalse($actual);
+    }
+    
+    public function testIsAll_not()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAll(array('admin', 'root', 'no-such-role'));
+        $this->assertFalse($actual);
     }
 }

@@ -25,12 +25,12 @@ $dirs = array(
     "/script/$vendor",
 );
 
-$root = false;
+$system = false;
 $file = __FILE__;
 foreach ($dirs as $dir) {
     $len = -1 * strlen($dir);
     if (substr($file, $len) == $dir) {
-        $root = substr($file, 0, $len);
+        $system = substr($file, 0, $len);
         break;
     }
 }
@@ -64,8 +64,8 @@ foreach ($argv as $val) {
  * Override with the value of --include-path, if any.
  * 
  */
-if ($root) {
-    $include = "$root/include:.";
+if ($system) {
+    $include = "$system/include:.";
 } else {
     $include = get_include_path();
 }
@@ -109,16 +109,11 @@ if ($verbose) {
  * 
  * Discover the config file.
  * 
- * Look first for Vendor.config.php, fall back to Solar.config.php.
- * 
  * Override with the value of --config, if any.
  * 
  */
-if ($root) {
-    $config = "$root/config/$vendor.config.php";
-    if (! file_exists($config) || ! is_readable($config)) {
-        $config = "$root/config/Solar.config.php";
-    }
+if ($system) {
+    $config = "$system/config.php";
 } else {
     $config = false;
 }

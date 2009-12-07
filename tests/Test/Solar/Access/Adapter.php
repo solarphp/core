@@ -26,51 +26,17 @@ abstract class Test_Solar_Access_Adapter extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
         // remove "Test_" prefix
         $this->_class = substr(get_class($this), 5);
         
         $this->_access = Solar::factory($this->_class, $this->_config);
         
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        parent::preTest();
     }
     
     // -----------------------------------------------------------------

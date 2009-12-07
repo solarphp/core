@@ -1644,7 +1644,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
         
         // put into this array in the form
-        $array_name = $this->_model->model_name;
+        $array_name = $this->_model->array_name;
         
         // build the form
         $form = Solar::factory('Solar_Form');
@@ -1853,5 +1853,29 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $related = $this->_model->getRelated($name);
         $new = $related->fetchNew($data);
         return $new;
+    }
+    
+    /**
+     * 
+     * Convenience method for getting a dump of the record, or one of its
+     * properties, or an external variable.
+     * 
+     * @param mixed $var If null, dump $this; if a string, dump $this->$var;
+     * otherwise, dump $var.
+     * 
+     * @param string $label Label the dump output with this string.
+     * 
+     * @return void
+     * 
+     */
+    public function dump($var = null, $label = null)
+    {
+        if ($var) {
+            return parent::dump($var, $label);
+        }
+        
+        $clone = clone($this);
+        unset($clone->_model);
+        parent::dump($clone, $label);
     }
 }

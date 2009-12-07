@@ -24,7 +24,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     
     protected $_catalog_config = array(
         'classes' => array(
-            'Solar_Example_Model',
+            'Mock_Solar_Model',
         ),
     );
     
@@ -38,36 +38,12 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         
         // set up an SQL connection
         $this->_sql = Solar::factory(
@@ -88,16 +64,6 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         
         // populate everything
         $this->_populateAll();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     protected function _populateAll()
@@ -799,5 +765,135 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $this->assertEquals($record->id, 2);
         $this->assertEquals($record->seq_foo, 2);
         $this->assertEquals($record->seq_bar, 3);
+    }
+    
+    /**
+     * 
+     * Test -- Returns a string representation of the object.
+     * 
+     */
+    public function test__toString()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Frees memory used by this struct.
+     * 
+     */
+    public function testFree()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns the SQL status of this record at the database.
+     * 
+     */
+    public function testGetSqlStatus()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Initialize the record object.
+     * 
+     */
+    public function testInit()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Initialize the record object as a "new" record; as with init(), this is effectively a "first load" method.
+     * 
+     */
+    public function testInitNew()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Has this record been deleted?
+     * 
+     */
+    public function testIsDeleted()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is the struct dirty?
+     * 
+     */
+    public function testIsDirty()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is the record or one of its relateds invalid?
+     * 
+     */
+    public function testIsInvalid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is the record new?
+     * 
+     */
+    public function testIsNew()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a new filter object with the filters from the record model.
+     * 
+     */
+    public function testNewFilter()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a new Solar_Form object pre-populated with column properties, values, and filters ready for processing (all based on the model for this record).
+     * 
+     */
+    public function testNewForm()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Create a new record related to this one.
+     * 
+     */
+    public function testNewRelated()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a string representation of the struct.
+     * 
+     */
+    public function testToString()
+    {
+        $this->todo('stub');
     }
 }

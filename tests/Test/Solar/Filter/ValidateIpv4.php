@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateIpv4 extends Solar_Test {
+class Test_Solar_Filter_ValidateIpv4 extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateIpv4 extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateIpv4 = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateIpv4');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateIpv4');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the value is a legal IPv4 address.
@@ -100,6 +23,54 @@ class Test_Solar_Filter_ValidateIpv4 extends Solar_Test {
      */
     public function testValidateIpv4()
     {
-        $this->todo('stub');
+        $test = array(
+            '141.225.185.101',
+            '255.0.0.0',
+            '0.255.0.0',
+            '0.0.255.0',
+            '0.0.0.255',
+            '127.0.0.1',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateIpv4($val));
+        }
+    }
+    
+    public function testValidateIpv4_badOrBlank()
+    {
+        $test = array(
+            ' ', '',
+            '127.0.0.1234',
+            '127.0.0.0.1',
+            '256.0.0.0',
+            '0.256.0.0',
+            '0.0.256.0',
+            '0.0.0.256',
+            '1.',
+            '1.2.',
+            '1.2.3.',
+            '1.2.3.4.',
+            'a.b.c.d',
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_filter->validateIpv4($val));
+        }
+    }
+    
+    public function testValidateIpv4_notRequired()
+    {
+        $this->_filter->setRequire(false);
+        $test = array(
+            "", ' ',
+            '141.225.185.101',
+            '255.0.0.0',
+            '0.255.0.0',
+            '0.0.255.0',
+            '0.0.0.255',
+            '127.0.0.1',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateIpv4($val));
+        }
     }
 }

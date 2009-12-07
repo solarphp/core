@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateIsoDate extends Solar_Test {
+class Test_Solar_Filter_ValidateIsoDate extends Test_Solar_Filter_ValidateIsoTimestamp {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateIsoDate extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateIsoDate = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateIsoDate');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateIsoDate');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the value is an ISO 8601 date string.
@@ -100,16 +23,49 @@ class Test_Solar_Filter_ValidateIsoDate extends Solar_Test {
      */
     public function testValidateIsoDate()
     {
-        $this->todo('stub');
+        $test = array(
+            '0001-01-01',
+            '1970-08-08',
+            '1979-11-07',
+            '2004-02-29',
+            '9999-12-31',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateIsoDate($val));
+        }
     }
     
-    /**
-     * 
-     * Test -- Validates that the value is an ISO 8601 timestamp string.
-     * 
-     */
-    public function testValidateIsoTimestamp()
+    public function testValidateIsoDate_badOrBlank()
     {
-        $this->todo('stub');
+        $test = array(
+            ' ', '',
+            '1-2-3',
+            '0001-1-1',
+            '1-01-1',
+            '1-1-01',
+            '0000-00-00',
+            '0000-01-01',
+            '0010-20-40',
+            '2005-02-29',
+            '9999.12:31',
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_filter->validateIsoDate($val));
+        }
+    }
+    
+    public function testValidateIsoDate_notRequired()
+    {
+        $this->_filter->setRequire(false);
+        $test = array(
+            "", ' ',
+            '0001-01-01',
+            '1970-08-08',
+            '1979-11-07',
+            '9999-12-31',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateIsoDate($val));
+        }
     }
 }

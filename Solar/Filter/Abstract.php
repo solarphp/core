@@ -88,14 +88,15 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
     {
         $parts = explode('_', get_class($this));
         $name = end($parts);
-        if (substr($name, 0, 8 != 'Validate')) {
+        if (substr($name, 0, 8) != 'Validate') {
             // skip it, sanitizers don't use error messages.
-            $this->error = null;
+            $this->_invalid = null;
+            return;
         }
         
         // 'validateFooBar' => 'invalidFooBar'
         $name = 'invalid' . substr($name, 8);
-    
+        
         // 'invalidFoobar' => 'INVALID_FOO_BAR'
         $name = strtoupper(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
         

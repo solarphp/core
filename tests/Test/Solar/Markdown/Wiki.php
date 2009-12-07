@@ -8,7 +8,7 @@ class Test_Solar_Markdown_Wiki extends Solar_Test {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,61 +16,25 @@ class Test_Solar_Markdown_Wiki extends Solar_Test {
     protected $_Test_Solar_Markdown_Wiki = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_markdown;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected function _tidy($text)
     {
-        parent::__construct($config);
+        // tidy up the text
+        $tidy = new tidy;
+        $tidy->parseString($text, array(), 'utf8');
+        $tidy->cleanRepair();
+        
+        // get only the body portion
+        $body = tidy_get_body($tidy);
+        return $body->value;
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    public function preTest()
     {
-        parent::__destruct();
+        parent::preTest();
+        $this->_markdown = Solar::factory('Solar_Markdown_Wiki');
     }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
     
     /**
      * 
@@ -79,18 +43,9 @@ class Test_Solar_Markdown_Wiki extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Markdown_Wiki');
-        $this->assertInstance($obj, 'Solar_Markdown_Wiki');
-    }
-    
-    /**
-     * 
-     * Test -- Support method for encode().
-     * 
-     */
-    public function test_encode()
-    {
-        $this->todo('stub');
+        $actual = Solar::factory('Solar_Markdown_Wiki');
+        $expect = 'Solar_Markdown_Wiki';
+        $this->assertInstance($actual, $expect);
     }
     
     /**
@@ -210,7 +165,19 @@ class Test_Solar_Markdown_Wiki extends Solar_Test {
      */
     public function testRender()
     {
-        $this->todo('stub');
+        if (! extension_loaded('tidy')) {
+            $this->skip("Tidy extension not loaded");
+        }
+        
+        $dir = Solar_Class::dir('Mock_Solar_Markdown_Wiki');
+        $text_file = $dir . 'basic.text';
+        $html_file = $dir . 'basic.html';
+        
+        $source = file_get_contents($text_file);
+        $actual = $this->_tidy($this->_markdown->transform($source));
+        $expect = $this->_tidy(file_get_contents($html_file));
+        
+        $this->assertSame($actual, $expect);
     }
     
     /**

@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_Style extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,19 @@ class Test_Solar_View_Helper_Style extends Test_Solar_View_Helper {
      */
     public function testStyle()
     {
-        $this->todo('stub');
+        $actual = $this->_view->style('styles.css');
+        $expect = '<style type="text/css" media="screen">'
+                . '@import url("/public/styles.css");</style>';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testStyle_remote()
+    {
+        $actual = $this->_view->style('http://something.com/path/to/styles.css');
+        
+        $expect = '<style type="text/css" media="screen">'
+                . '@import url("http://something.com/path/to/styles.css");</style>';
+                
+        $this->assertSame($actual, $expect);
     }
 }

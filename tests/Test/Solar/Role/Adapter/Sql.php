@@ -1,160 +1,67 @@
 <?php
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
- * Adapter class test.
+ * Concrete adapter class test.
  * 
  */
 class Test_Solar_Role_Adapter_Sql extends Test_Solar_Role_Adapter {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
      */
     protected $_Test_Solar_Role_Adapter_Sql = array(
+        'sql'        => null,
+        'table'      => 'roles',
+        'handle_col' => 'handle',
+        'role_col'   => 'name',
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_sql;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected function _postConfig()
     {
-        $this->todo('need adapter-specific config');
+        parent::_postConfig();
+        
+        $this->_sql = Solar::factory(
+            'Solar_Sql',
+            array(
+                'adapter' => 'Solar_Sql_Adapter_Sqlite',
+                'name'    => ':memory:',
+            )
+        );
+        
+        $this->_config['sql'] = $this->_sql;
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    public function preTest()
     {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Role_Adapter_Sql');
-        $this->assertInstance($obj, 'Solar_Role_Adapter_Sql');
-    }
-    
-    /**
-     * 
-     * Test -- Provides magic "isRoleName()" to map to "is('role_name')".
-     * 
-     */
-    public function test__call()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Fetches the roles for a user.
-     * 
-     */
-    public function testFetch()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Check to see if a user is in a role.
-     * 
-     */
-    public function testIs()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Check to see if a user is in all of the listed roles.
-     * 
-     */
-    public function testIsAll()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Check to see if a user is in any of the listed roles.
-     * 
-     */
-    public function testIsAny()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Load the list of roles for the given user from the adapter.
-     * 
-     */
-    public function testLoad()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Resets the role list to nothing.
-     * 
-     */
-    public function testReset()
-    {
-        $this->todo('stub');
+        parent::preTest();
+        
+        // create the table
+        $cmd = "CREATE TABLE {$this->_config['table']} (
+            {$this->_config['handle_col']} VARCHAR(255),
+            {$this->_config['role_col']}   CHAR(32)
+        )";
+        
+        $this->_sql->query($cmd);
+        
+        // get the roles
+        $dir = Solar_Class::dir('Mock_Solar_Role_Adapter_Sql');
+        $file = $dir . 'roles.ini';
+        $roles = parse_ini_file($file, true);
+        
+        // insert the roles
+        foreach ($roles as $role => $val) {
+            $handles = explode(',', $val['handles']);
+            foreach ($handles as $handle) {
+                $data[$this->_config['handle_col']] = trim($handle);
+                $data[$this->_config['role_col']]   = trim($role);
+                $this->_sql->insert('roles', $data);
+            }
+        }
     }
 }

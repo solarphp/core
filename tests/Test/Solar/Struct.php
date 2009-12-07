@@ -16,56 +16,6 @@ class Test_Solar_Struct extends Solar_Test {
     protected $_Test_Solar_Struct = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
     protected function _newStruct()
     {
         $struct = Solar::factory(
@@ -225,32 +175,6 @@ class Test_Solar_Struct extends Solar_Test {
     
     /**
      * 
-     * Test -- Iterator: get the current value for the array pointer.
-     * 
-     */
-    public function testCurrent()
-    {
-        $struct = $this->_newStruct();
-        $actual = $struct->current();
-        $expect = 'bar';
-        $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
-     * Test -- Iterator: get the current key for the array pointer.
-     * 
-     */
-    public function testKey()
-    {
-        $struct = $this->_newStruct();
-        $actual = $struct->key();
-        $expect = 'foo';
-        $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
      * Test -- Loads the struct with data from an array or another struct.
      * 
      */
@@ -264,25 +188,6 @@ class Test_Solar_Struct extends Solar_Test {
         );
         $struct->load($expect);
         $actual = $struct->toArray();
-        $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
-     * Test -- Iterator: move to the next position.
-     * 
-     */
-    public function testNext()
-    {
-        $struct = $this->_newStruct();
-        $struct->next();
-        
-        $actual = $struct->key();
-        $expect = 'baz';
-        $this->assertSame($actual, $expect);
-        
-        $actual = $struct->current();
-        $expect = 'dib';
         $this->assertSame($actual, $expect);
     }
     
@@ -350,39 +255,6 @@ class Test_Solar_Struct extends Solar_Test {
     
     /**
      * 
-     * Test -- Iterator: move to the first position.
-     * 
-     */
-    public function testRewind()
-    {
-        $struct = $this->_newStruct();
-        
-        // next() to the end
-        $struct->next();
-        $struct->next();
-        
-        $actual = $struct->key();
-        $expect = 'zim';
-        $this->assertSame($actual, $expect);
-        
-        $actual = $struct->current();
-        $expect = 'gir';
-        $this->assertSame($actual, $expect);
-        
-        // rewind and check
-        $struct->rewind();
-        
-        $actual = $struct->key();
-        $expect = 'foo';
-        $this->assertSame($actual, $expect);
-        
-        $actual = $struct->current();
-        $expect = 'bar';
-        $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
      * Test -- Returns a copy of the object data as an array.
      * 
      */
@@ -396,30 +268,6 @@ class Test_Solar_Struct extends Solar_Test {
             'zim' => 'gir',
         );
         $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
-     * Test -- Iterator: is the current position valid?
-     * 
-     */
-    public function testValid()
-    {
-        // foo
-        $struct = $this->_newStruct();
-        $this->assertTrue($struct->valid());
-        
-        // bar
-        $struct->next();
-        $this->assertTrue($struct->valid());
-        
-        // baz
-        $struct->next();
-        $this->assertTrue($struct->valid());
-        
-        // done!
-        $struct->next();
-        $this->assertFalse($struct->valid());
     }
     
     public function test_iterator()

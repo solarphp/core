@@ -1089,6 +1089,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // set the current action on entry
         $this->_action = $action;
         
+        // make sure params is an array
+        settype($params, 'array');
+        
         // run this before every action, may change the requested action.
         $this->_preAction();
         
@@ -1343,10 +1346,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_view_object->getHelper('getTextRaw')->setClass($class);
         
         // inject special vars into the view
-        $this->_view_object->controller = $this->_controller;
-        $this->_view_object->action     = $this->_action;
-        $this->_view_object->layout     = $this->_layout;
-        $this->_view_object->errors     = $this->_errors;
+        $this->_view_object->controller_class = get_class($this);
+        $this->_view_object->controller       = $this->_controller;
+        $this->_view_object->action           = $this->_action;
+        $this->_view_object->layout           = $this->_layout;
+        $this->_view_object->errors           = $this->_errors;
     }
     
     /**

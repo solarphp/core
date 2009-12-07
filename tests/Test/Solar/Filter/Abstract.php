@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_Filter_Abstract extends Solar_Test {
+abstract class Test_Solar_Filter_Abstract extends Solar_Test {
     
     /**
      * 
@@ -16,55 +16,27 @@ class Test_Solar_Filter_Abstract extends Solar_Test {
     protected $_Test_Solar_Filter_Abstract = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_filter;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected $_plugin;
+    
+    protected $_plugin_name;
+    
+    protected $_plugin_class;
+    
+    public function _postConstruct()
     {
-        $this->skip('abstract class');
-        parent::__construct($config);
+        parent::_postConstruct();
+        $this->_plugin_name  = substr(get_class($this), 18);
+        $this->_plugin_class = substr(get_class($this), 5);
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    public function preTest()
     {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        parent::preTest();
+        $this->_filter = Solar::factory('Solar_Filter');
+        $this->_plugin = $this->_filter->getFilter($this->_plugin_name);
+        $this->_filter->setRequire(true);
     }
     
     // -----------------------------------------------------------------
@@ -80,8 +52,7 @@ class Test_Solar_Filter_Abstract extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Filter_Abstract');
-        $this->assertInstance($obj, 'Solar_Filter_Abstract');
+        $this->assertInstance($this->_plugin, $this->_plugin_class);
     }
     
     /**
@@ -91,6 +62,22 @@ class Test_Solar_Filter_Abstract extends Solar_Test {
      */
     public function testGetInvalid()
     {
-        $this->todo('stub');
+        if (substr($this->_plugin_name, 0, 8) == 'Sanitize') {
+            // sanitizers don't have invalidation strings
+            $expect = null;
+        } else {
+            // 'ValidateFooBar' => 'invalidFooBar'
+            $expect = 'invalid' . substr($this->_plugin_name, 8);
+    
+            // 'invalidFoobar' => 'INVALID_FOO_BAR'
+            $expect = strtoupper(preg_replace(
+                '/([a-z])([A-Z])/',
+                '$1_$2',
+                $expect
+            ));
+        }
+        
+        $actual = $this->_plugin->getInvalid();
+        $this->assertSame($actual, $expect);
     }
 }

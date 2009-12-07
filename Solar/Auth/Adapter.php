@@ -21,12 +21,14 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Default configuration values.
      * 
      * @config int expire Authentication lifetime in seconds; zero is
-     *   forever.  Default is 10800 (3 hours). If this value is greater than
-     *   the PHP ini setting for `session.cache_expire`, it will throw an
-     *   exception; note that the ini setting is in *minutes*.
+     *   forever.  Default is 14400 (4 hours). If this value is greater than
+     *   the non-zero PHP ini setting for `session.cookie_lifetime`, it will
+     *   throw an exception.
      * 
      * @config int idle Maximum allowed idle time in seconds; zero is
-     *   forever.  Default is 1800 (30 minutes).
+     *   forever.  Default is 1440 (24 minutes). If this value is greater than
+     *   the the PHP ini setting for `session.gc_maxlifetime`, it will throw
+     *   an exception.
      * 
      * @config bool allow Whether or not to allow automatic login/logout at start()
      *   time. Default true.
@@ -67,8 +69,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_Solar_Auth_Adapter = array(
-        'expire'         => 10800,
-        'idle'           => 1800,
+        'expire'         => 14400,
+        'idle'           => 1440,
         'allow'          => true,
         'cache' => array(
             'adapter' => 'Solar_Cache_Adapter_Session',
@@ -215,13 +217,22 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         parent::_postConfig();
         
-        // error if the configured expiry or idle times are longer than the
-        // PHP session.cache_expire value (convert minutes to seconds).
-        $php_expire = ini_get('session.cache_expire') * 60;
-        if ($this->_config['expire'] > $php_expire) {
-            throw $this->_exception('ERR_PHP_SESSION_CACHE_EXPIRE', array(
-                'session.cache_expire' => $php_expire,
-                'solar_auth_expire' => $this->_config['expire'],
+        // check max life before garbage collection on server vs. idle time
+        $gc_maxlife = ini_get('session.gc_maxlifetime');
+        if ($gc_maxlife < $this->_config['idle']) {
+            throw $this->_exception('ERR_PHP_SESSION_IDLE', array(
+                'session.gc_maxlifetime' => $gc_maxlife,
+                'solar_auth_idle'      => $this->_config['idle'],
+            ));
+        }
+        
+        // check life at client vs. exipire time;
+        // if life at client is zero, cookie never expires.
+        $cookie_life = ini_get('session.cookie_lifetime');
+        if ($cookie_life > 0 && $cookie_life < $this->_config['expire']) {
+            throw $this->_exception('ERR_PHP_SESSION_EXPIRE', array(
+                'session.cookie_lifetime' => $cookie_life,
+                'solar_auth_expire'       => $this->_config['expire'],
             ));
         }
         
@@ -237,7 +248,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // make sure the source is either 'get' or 'post'.
         $is_get_or_post = $this->_config['source'] == 'get' 
                        || $this->_config['source'] == 'post';
-                       
+        
         if (! $is_get_or_post) {
             // default to post
             $this->_config['source'] = 'post';

@@ -24,7 +24,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
     
     protected $_catalog_config = array(
         'classes' => array(
-            'Solar_Example_Model',
+            'Mock_Solar_Model',
         ),
     );
     
@@ -39,36 +39,12 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         
         // set up an SQL connection
         $this->_sql = Solar::factory(
@@ -89,16 +65,6 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         
         // populate tables
         $this->_populateAll();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     protected function _populateAll()
@@ -611,6 +577,156 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      * 
      */
     public function testValid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a string representation of the object.
+     * 
+     */
+    public function test__toString()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches a new record and appends it to the collection.
+     * 
+     */
+    public function testAppendNew()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Deletes each record in the collection one-by-one.
+     * 
+     */
+    public function testDeleteAll()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Deletes a record from the database and removes it from the collection.
+     * 
+     */
+    public function testDeleteOne()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Frees memory used by this struct.
+     * 
+     */
+    public function testFree()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns an array of all values for a single column in the collection.
+     * 
+     */
+    public function testGetColVals()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns an array of invalidation messages from each invalid record,  keyed on the record offset within the collection.
+     * 
+     */
+    public function testGetInvalid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns an array of the invalid record objects within the collection, keyed on the record offset within the collection.
+     * 
+     */
+    public function testGetInvalidRecords()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns an array of the unique primary keys contained in this  collection.
+     * 
+     */
+    public function testGetPrimaryVals()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Given a record object, looks up its offset value in the collection.
+     * 
+     */
+    public function testGetRecordOffset()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is the struct dirty?
+     * 
+     */
+    public function testIsDirty()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Are there any invalid records in the collection?
+     * 
+     */
+    public function testIsInvalid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Removes all records from the collection but **does not** delete them from the database.
+     * 
+     */
+    public function testRemoveAll()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Removes one record from the collection but **does not** delete it from the database.
+     * 
+     */
+    public function testRemoveOne()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a string representation of the struct.
+     * 
+     */
+    public function testToString()
     {
         $this->todo('stub');
     }

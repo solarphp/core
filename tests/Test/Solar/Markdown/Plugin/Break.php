@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
+class Test_Solar_Markdown_Plugin_Break extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,61 +16,23 @@ class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
     protected $_Test_Solar_Markdown_Plugin_Break = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = false;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_is_span = true;
     
     /**
      * 
@@ -79,8 +41,9 @@ class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Markdown_Plugin_Break');
-        $this->assertInstance($obj, 'Solar_Markdown_Plugin_Break');
+        $actual = Solar::factory('Solar_Markdown_Plugin_Break');
+        $expect = 'Solar_Markdown_Plugin_Break';
+        $this->assertInstance($actual, $expect);
     }
     
     /**
@@ -90,7 +53,10 @@ class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
      */
     public function testCleanup()
     {
-        $this->todo('stub');
+        $source = "foo bar baz";
+        $expect = $source;
+        $actual = $this->_plugin->cleanup($source);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -105,52 +71,15 @@ class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Adds <br /> tags to each line ending with two or more spaces.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $source = "line\nline \nline  \nline   \n";
+        $expect = "line\nline \nline{$this->_token}\nline{$this->_token}\n";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
     
     /**
@@ -160,7 +89,10 @@ class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
      */
     public function testPrepare()
     {
-        $this->todo('stub');
+        $source = "foo bar baz";
+        $expect = $source;
+        $actual = $this->_plugin->prepare($source);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -181,5 +113,13 @@ class Test_Solar_Markdown_Plugin_Break extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+    
+    public function testRender()
+    {
+        $source = "line\nline \nline  \nline   \n";
+        $expect = "line\nline \nline<br />\nline<br />\n";
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
     }
 }

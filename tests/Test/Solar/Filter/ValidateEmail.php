@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_ValidateEmail extends Solar_Test {
+class Test_Solar_Filter_ValidateEmail extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_ValidateEmail extends Solar_Test {
     protected $_Test_Solar_Filter_ValidateEmail = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_ValidateEmail');
-        $this->assertInstance($obj, 'Solar_Filter_ValidateEmail');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Validates that the value is an email address.
@@ -100,6 +23,49 @@ class Test_Solar_Filter_ValidateEmail extends Solar_Test {
      */
     public function testValidateEmail()
     {
-        $this->todo('stub');
+        $test = array(
+            "pmjones@solarphp.net",
+            "no.body@no.where.com",
+            "any-thing@gmail.com",
+            "any_one@hotmail.com",
+            "nobody1234567890@yahoo.co.uk",
+            "something+else@example.com",
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateEmail($val));
+        }
+    }
+    
+    public function testValidateEmail_badOrBlank()
+    {
+        $test = array(
+            "something @ somewhere.edu",
+            "the-name.for!you",
+            "non:alpha@example.com",
+            "",
+            "\t\n",
+            " ",
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_filter->validateEmail($val));
+        }
+    }
+    
+    public function testValidateEmail_notRequired()
+    {
+        $this->_filter->setRequire(false);
+        $test = array(
+            "",
+            "\t\n",
+            " ",
+            "pmjones@solarphp.net",
+            "no.body@no.where.com",
+            "any-thing@gmail.com",
+            "any_one@hotmail.com",
+            "nobody1234567890@yahoo.co.uk",
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_filter->validateEmail($val));
+        }
     }
 }

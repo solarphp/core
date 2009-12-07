@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_View_Helper_Date extends Test_Solar_View_Helper {
+class Test_Solar_View_Helper_Date extends Test_Solar_View_Helper_Timestamp {
     
     /**
      * 
@@ -15,56 +15,6 @@ class Test_Solar_View_Helper_Date extends Test_Solar_View_Helper {
      */
     protected $_Test_Solar_View_Helper_Date = array(
     );
-    
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
     
     // -----------------------------------------------------------------
     // 
@@ -79,16 +29,34 @@ class Test_Solar_View_Helper_Date extends Test_Solar_View_Helper {
      */
     public function testDate()
     {
-        $this->todo('stub');
+        $string = 'Nov 7, 1979';
+        $actual = $this->_view->date($string);
+        $expect = '1979-11-07';
+        $this->assertSame($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Outputs a formatted timestamp using [[php::date() | ]] format codes.
-     * 
-     */
-    public function testTimestamp()
+    public function testDate_int()
     {
-        $this->todo('stub');
+        $int = strtotime('Nov 7, 1979');
+        $actual = $this->_view->date($int);
+        $expect = '1979-11-07';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testDate_reformat()
+    {
+        $string = 'Nov 7, 1979';
+        $actual = $this->_view->date($string, 'U');
+        $expect = strtotime($string);
+        $this->assertEquals($actual, $expect);
+    }
+    
+    public function testDate_configFormat()
+    {
+        $helper = $this->_view->newHelper('date', array('format' => 'U'));
+        $string = 'Nov 7, 1979';
+        $actual = $helper->date($string);
+        $expect = strtotime($string);
+        $this->assertEquals($actual, $expect);
     }
 }

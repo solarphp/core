@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_Anchor extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,55 @@ class Test_Solar_View_Helper_Anchor extends Test_Solar_View_Helper {
      */
     public function testAnchor()
     {
-        $this->todo('stub');
+        // no translation key
+        $actual = $this->_view->anchor(
+            '/path/to/script.php', 'example'
+        );
+        $expect = '<a href="/path/to/script.php">example</a>';
+        $this->assertSame($actual, $expect);
+        
+        // translation key
+        $actual = $this->_view->anchor(
+            '/path/to/script.php', 'ACTION_BROWSE'
+        );
+        $expect = '<a href="/path/to/script.php">Browse</a>';
+        $this->assertSame($actual, $expect);
+        
+        // with attribs
+        $actual = $this->_view->anchor(
+            '/path/to/script.php',
+            'ACTION_BROWSE',
+            array('foo' => 'bar')
+        );
+        $expect = '<a href="/path/to/script.php" foo="bar">Browse</a>';
+        $this->assertSame($actual, $expect);
+        
+    }
+    
+    public function testAnchor_uri()
+    {
+        $uri = Solar::factory('Solar_Uri');
+        
+        $uri->setPath('/path/to/script.php');
+        $uri->setQuery('page=1');
+        
+        // no translation key
+        $actual = $this->_view->anchor($uri, 'example');
+        $expect = '<a href="/path/to/script.php?page=1">example</a>';
+        $this->assertSame($actual, $expect);
+        
+        // translation key
+        $actual = $this->_view->anchor($uri, 'ACTION_BROWSE');
+        $expect = '<a href="/path/to/script.php?page=1">Browse</a>';
+        $this->assertSame($actual, $expect);
+        
+        // with attribs
+        $actual = $this->_view->anchor(
+            $uri,
+            'ACTION_BROWSE',
+            array('foo' => 'bar')
+        );
+        $expect = '<a href="/path/to/script.php?page=1" foo="bar">Browse</a>';
+        $this->assertSame($actual, $expect);
     }
 }

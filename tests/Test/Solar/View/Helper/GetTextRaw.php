@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_GetTextRaw extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,7 +29,16 @@ class Test_Solar_View_Helper_GetTextRaw extends Test_Solar_View_Helper {
      */
     public function testGetTextRaw()
     {
-        $this->todo('stub');
+        $actual = $this->_view->getTextRaw('ACTION_BROWSE');
+        $expect = 'Browse';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testGetTextRaw_badLocaleKey()
+    {
+        $actual = $this->_view->getTextRaw('no such "locale" key');
+        $expect = 'no such "locale" key';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -89,6 +48,15 @@ class Test_Solar_View_Helper_GetTextRaw extends Test_Solar_View_Helper {
      */
     public function testSetClass()
     {
-        $this->todo('stub');
+        $this->todo('convert to new format');
+        
+        // $example = Solar::factory('Solar_Example');
+        // 
+        // $helper = $this->_view->getHelper('getTextRaw');
+        // $helper->setClass('Solar_Example');
+        // 
+        // $actual = $this->_view->getTextRaw('HELLO_WORLD');
+        // $expect = 'hello world';
+        // $this->assertSame($actual, $expect);
     }
 }

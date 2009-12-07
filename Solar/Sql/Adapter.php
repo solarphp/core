@@ -1874,15 +1874,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Returns a list of database tables from the cache; if the cache entry
      * is not available, queries the database for the list of tables.
      * 
+     * @param string $schema Fetch tbe list of tables in this database
+     * schema; when empty, uses the current or default schema.
+     * 
      * @return array A sequential array of table names in the database.
      * 
      */
-    public function fetchTableList()
+    public function fetchTableList($schema = null)
     {
-        $key = $this->_getCacheKey('table_list');
+        if ($schema) {
+            $key = $this->_getCacheKey("table_list/$schema");
+        } else {
+            $key = $this->_getCacheKey("table_list");
+        }
+        
         $result = $this->_cache->fetch($key);
         if (! $result) {
-            $result = $this->_fetchTableList();
+            $result = $this->_fetchTableList($schema);
             $this->_cache->add($key, $result);
         }
         return $result;
@@ -1892,10 +1900,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Returns a list of database tables.
      * 
+     * @param string $schema Fetch tbe list of tables in this database
+     * schema; when empty, uses the current or default schema.
+     * 
      * @return array A sequential array of table names in the database.
      * 
      */
-    abstract protected function _fetchTableList();
+    abstract protected function _fetchTableList($schema);
     
     /**
      * 
@@ -1903,17 +1914,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * entry is not available, queries the database for the column
      * descriptions.
      * 
-     * @param string $table The table name to fetch columns for.
+     * @param string $spec The table or schema.table to fetch columns for.
      * 
      * @return array An array of table columns.
      * 
      */
-    public function fetchTableCols($table)
+    public function fetchTableCols($spec)
     {
-        $key = $this->_getCacheKey("table/$table/cols");
+        $key = $this->_getCacheKey("table/$spec/cols");
         $result = $this->_cache->fetch($key);
         if (! $result) {
-            $result = $this->_fetchTableCols($table);
+            list($schema, $table) = $this->_splitSchemaIdent($spec);
+            $result = $this->_fetchTableCols($table, $schema);
             $this->_cache->add($key, $result);
         }
         return $result;
@@ -1925,10 +1937,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * @param string $table The table name to fetch columns for.
      * 
+     * @param string $schema The schema in which the table resides.
+     * 
      * @return array An array of table columns.
      * 
      */
-    abstract protected function _fetchTableCols($table);
+    abstract protected function _fetchTableCols($table, $schema);
     
     /**
      * 
@@ -1985,17 +1999,19 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Returns an array describing table indexes from the cache; if the cache
      * entry is not available, queries the database for the index information.
      * 
-     * @param string $table The table name to fetch indexes for.
+     * @param string $spec The table or schema.table name to fetch indexes
+     * for.
      * 
      * @return array An array of table indexes.
      * 
      */
-    public function fetchIndexInfo($table)
+    public function fetchIndexInfo($spec)
     {
-        $key = $this->_getCacheKey("table/$table/index");
+        $key = $this->_getCacheKey("table/$spec/index");
         $result = $this->_cache->fetch($key);
         if (! $result) {
-            $result = $this->_fetchIndexInfo($table);
+            list($schema, $table) = $this->_splitSchemaIdent($spec);
+            $result = $this->_fetchIndexInfo($table, $schema);
             $this->_cache->add($key, $result);
         }
         return $result;
@@ -2007,10 +2023,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * @param string $table The table name to fetch indexes for.
      * 
+     * @param string $schema The schema in which the table resides.
+     * 
      * @return array An array of table indexes.
      * 
      */
-    abstract protected function _fetchIndexInfo($table);
+    abstract protected function _fetchIndexInfo($table, $schema);
     
     // -----------------------------------------------------------------
     // 
@@ -2046,8 +2064,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @param array $cols Array of columns to create.
      * 
      * @return string An SQL string.
-     * 
-     * @todo Instead of stacking errors, stack info, then throw in exception.
      * 
      */
     public function createTable($table, $cols)
@@ -2504,25 +2520,54 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Check if a table, column, or index name is a valid portable identifier.
+     * Check if a table, index, or column name is a valid portable identifier.
+     * Throws an exception on failure.
      * 
      * @param string $type The indentifier type: table, index, sequence, etc.
      * 
      * @param string $name The identifier name to check.
      * 
-     * @return bool True if valid, false if not.
+     * @return void
      * 
      */
     protected function _checkIdentifier($type, $name)
     {
+        if ($type == 'column') {
+            $this->_checkIdentifierColumn($name);
+        } else {
+            list($schema, $ident) = $this->_splitSchemaIdent($name);
+            if ($schema) {
+                $this->_checkIdentifierPart($type, $name, $schema);
+            }
+            $this->_checkIdentifierPart($type, $name, $ident);
+        }
+    }
+    
+    /**
+     * 
+     * Checks one part of a dotted identifier (schema.table, database.table,
+     * etc).  Throws an exception on failure.
+     * 
+     * @param string $type The identifier type (table, index, etc).
+     * 
+     * @param string $name The full identifier name (with dots, if any).
+     * 
+     * @param string $part The part of the name that we're checking.
+     * 
+     * @return void
+     * 
+     */
+    protected function _checkIdentifierPart($type, $name, $part)
+    {
         // validate identifier length
-        $len = strlen($name);
+        $len = strlen($part);
         if ($len < 1 || $len > $this->_maxlen) {
             throw $this->_exception(
                 'ERR_IDENTIFIER_LENGTH',
                 array(
                     'type' => $type,
                     'name' => $name,
+                    'part' => $part,
                     'min'  => 1,
                     'max'  => $this->_maxlen,
                 )
@@ -2538,21 +2583,60 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 array(
                     'type'  => $type,
                     'name'  => $name,
+                    'part'  => $part,
                     'regex' => $regex,
                 )
             );
         }
+    }
+    
+    /**
+     * 
+     * Checks a column name.
+     * 
+     * @param string $name The column name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _checkIdentifierColumn($name)
+    {
+        $this->_checkIdentifierPart('column', $name, $name);
         
-        // must not have two or more underscores in a row
+        // also, must not have two or more underscores in a row
         if (strpos($name, '__') !== false) {
             throw $this->_exception(
                 'ERR_IDENTIFIER_UNDERSCORES',
                 array(
-                    'type'  => $type,
+                    'type'  => 'column',
                     'name'  => $name,
+                    'part'  => $part,
                     'regex' => $regex,
                 )
             );
         }
+    }
+    
+    /**
+     * 
+     * Splits a `schema.table` identifier into its component parts.
+     * 
+     * @param string $spec The `table` or `schema.table` identifier.
+     * 
+     * @return array A sequential array where element 0 is the schema and
+     * element 1 is the table name.
+     * 
+     */
+    protected function _splitSchemaIdent($spec)
+    {
+        $pos = strpos($spec, '.');
+        if ($pos !== false) {
+            $schema = substr($spec, 0, $pos);
+            $ident  = substr($spec, $pos + 1);
+        } else {
+            $schema = null;
+            $ident  = $spec;
+        }
+        return array($schema, $ident);
     }
 }

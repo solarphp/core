@@ -571,6 +571,10 @@ class Solar_Form extends Solar_Base
         // prepare the name as an array key
         $name = $this->_prepareName($name, $array);
         
+        // mark the status of the form as a whole; do this first so that
+        // the very first non-element invalid feedback does not get dropped.
+        $this->setStatus(false);
+        
         // does the element exist?
         if (empty($this->elements[$name])) {
             
@@ -590,9 +594,6 @@ class Solar_Form extends Solar_Base
             $this->elements[$name]['status'] = false;
             
         }
-        
-        // mark the status of the form as a whole
-        $this->setStatus(false);
     }
     
     /**

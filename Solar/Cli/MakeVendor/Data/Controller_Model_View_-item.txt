@@ -19,7 +19,11 @@ $css_id = $this->escape(
 );
 
 // the table cols to show
-$cols = array_keys($item->getModel()->table_cols);
+if ($this->item_cols) {
+    $cols = $this->item_cols;
+} else {
+    $cols = array_keys($item->getModel()->table_cols);
+}
 ?>
 <dl id="<?php echo $css_id ?>" class="<?php echo $css_class ?>"><?php
 

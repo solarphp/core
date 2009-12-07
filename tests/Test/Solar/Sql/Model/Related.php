@@ -24,7 +24,7 @@ abstract class Test_Solar_Sql_Model_Related extends Solar_Test {
     
     protected $_catalog_config = array(
         'classes' => array(
-            'Solar_Example_Model',
+            'Mock_Solar_Model',
         ),
     );
     
@@ -40,36 +40,12 @@ abstract class Test_Solar_Sql_Model_Related extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         
         // set up an SQL connection
         $this->_sql = Solar::factory(
@@ -94,16 +70,6 @@ abstract class Test_Solar_Sql_Model_Related extends Solar_Test {
         
         // populate everything
         $this->_populateAll();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     protected function _newRelated($native_model, $opts)
@@ -360,4 +326,134 @@ abstract class Test_Solar_Sql_Model_Related extends Solar_Test {
         $this->todo('stub');
     }
     
+    
+    /**
+     * 
+     * Test -- Fetches the related record or collection for a native ID or record.
+     * 
+     */
+    public function testFetch()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetch an empty value appropriate for this association.
+     * 
+     */
+    public function testFetchEmpty()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches a new record or collection object.
+     * 
+     */
+    public function testFetchNew()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Is the related record or collection valid?
+     * 
+     */
+    public function testIsInvalid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is this related to many records?
+     * 
+     */
+    public function testIsMany()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Is this related to one record?
+     * 
+     */
+    public function testIsOne()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Fixes the native fetch params and eager params; then, if the join_flag is set on the eager, calles _modEagerFetch() to modify the native fetch params based on the eager params.
+     * 
+     */
+    public function testModEagerFetch()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Modifies the parent result array to add eager records.
+     * 
+     */
+    public function testModEagerResult()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Packages foreign data as a record or collection object.
+     * 
+     */
+    public function testNewObject()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Pre-save hook for saving related records or collections from a native record.
+     * 
+     */
+    public function testPreSave()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Saves a related record or collection from a native record.
+     * 
+     */
+    public function testSave()
+    {
+        $this->skip('abstract method');
+    }
+    
+    /**
+     * 
+     * Test -- Gets the foreign-model WHERE conditions and merges with the WHERE conditions on this relationship.
+     * 
+     */
+    public function testGetForeignWhereMods()
+    {
+        $this->todo('stub');
+    }
+    
+    public function test_nativeWithoutEagerSameAsWithEager()
+    {
+        $this->todo('stub');
+    }
+    
+    public function test_eagerSameAsLazy()
+    {
+        $this->todo('stub');
+    }
 }

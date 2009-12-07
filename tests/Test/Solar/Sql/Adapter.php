@@ -25,6 +25,9 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     protected $_table_def = array(
         'id' => array(
             'type' => 'int',
+            'require' => true,
+            'primary' => true,
+            'autoinc' => true,
         ),
         'name' => array(
             'type' => 'varchar',
@@ -52,34 +55,17 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     // 
     // -----------------------------------------------------------------
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    protected function _preConfig()
     {
-        parent::__construct($config);
-        
         if ($this->_extension && ! extension_loaded($this->_extension)) {
             $this->skip("'$this->_extension' extension not loaded");
         }
-        
-        $this->_adapter_class = substr(get_class($this), 5);
     }
     
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
+    protected function _postConstruct()
     {
-        parent::__destruct();
+        parent::_postConstruct();
+        $this->_adapter_class = substr(get_class($this), 5);
     }
     
     /**
@@ -87,9 +73,9 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         $this->_adapter = Solar::factory($this->_adapter_class, $this->_config);
         
         // drop existing table
@@ -115,10 +101,10 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
      * Setup; runs after each test method.
      * 
      */
-    public function teardown()
+    public function postTest()
     {
         $this->_adapter = null;
-        parent::teardown();
+        parent::postTest();
     }
     
     protected function _insertData()
@@ -894,7 +880,14 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
      */
     public function testLastInsertId()
     {
-        $this->todo('stub');
+        $data = array('name' => 'Zim');
+        
+        $result = $this->_adapter->insert($this->_table_name, $data);
+        $this->assertEquals($result, 1);
+        
+        $actual = $this->_adapter->lastInsertId($this->_table_name, 'id');
+        $expect = 1;
+        $this->assertEquals($actual, $expect);
     }
     
     /**
@@ -1063,5 +1056,15 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $expect = array('id' => '1', 'name' => 'Bar');
         $actual = $this->_adapter->fetchOne("SELECT * FROM $this->_table_name WHERE id = 1");
         $this->assertEquals($actual, $expect);
+    }
+    
+    /**
+     * 
+     * Test -- Returns an array describing table indexes from the cache; if the cache entry is not available, queries the database for the index information.
+     * 
+     */
+    public function testFetchIndexInfo()
+    {
+        $this->todo('stub');
     }
 }

@@ -153,16 +153,16 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Additional WHERE clauses when fetching records.
+     * Additional conditions when fetching related records.
      * 
      * @var string|array
      * 
      */
-    public $where;
+    public $conditions;
     
     /**
      * 
-     * Additional ORDER clauses when fetching records.
+     * Additional ORDER clauses when fetching related records.
      * 
      * @var string|array
      * 
@@ -180,6 +180,17 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     public $foreign_key;
+    
+    /**
+     * 
+     * The virtual element called `foreign_name` automatically sets the
+     * `foreign_class` by looking up the foreign_name in the model catalog.
+     * The virtual element is used  only when foreign_class is not set.
+     * 
+     * @var string
+     * 
+     */
+    public $foreign_name;
     
     /**
      * 
@@ -305,7 +316,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $this->_setForeignClass($opts);
         $this->_setForeignModel($opts);
         $this->_setCols($opts);
-        $this->_setWhere($opts);
+        $this->_setConditions($opts);
         $this->_setOrder($opts);
         $this->_setMerge($opts);
         $this->_setNativeBy($opts);
@@ -496,19 +507,20 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Sets additional WHERE clauses from the relationship definition.
+     * Sets additional conditions from the relationship definition; these are
+     * used in the WHERE and/or JOIN ON conditions.
      * 
      * @param array $opts The user-defined relationship options.
      * 
      * @return void
      * 
      */
-    protected function _setWhere($opts)
+    protected function _setConditions($opts)
     {
-        if (empty($opts['where'])) {
-            $this->where = array();
+        if (empty($opts['conditions'])) {
+            $this->conditions = array();
         } else {
-            $this->where = (array) $opts['where'];
+            $this->conditions = (array) $opts['conditions'];
         }
     }
     
@@ -524,8 +536,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     protected function _setOrder($opts)
     {
         if (empty($opts['order'])) {
-            // default to the foreign primary key
-            $this->order = array("{$this->foreign_alias}.{$this->_foreign_model->primary_col}");
+            $this->order = array();
         } else {
             $this->order = (array) $opts['order'];
         }
@@ -646,7 +657,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         }
         
         // if a join condition is present, always join to the main fetch
-        if ($eager['join_cond']) {
+        if ($eager['conditions']) {
             $eager->joinFlag(true);
         }
         
@@ -674,7 +685,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Mofifies the native fetch params based on the eager params.
+     * Modifies the native fetch with an eager join so that the foreign table
+     * is joined properly.
      * 
      * @param Solar_Sql_Model_Params_Eager $eager The eager params.
      * 
@@ -685,20 +697,25 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * @see modEagerFetch()
      * 
      */
-    protected function _modEagerFetch($eager, $fetch) 
+    abstract protected function _modEagerFetch($eager, $fetch);
+    
+    /**
+     * 
+     * Gets the foreign-model WHERE conditions and merges with the
+     * WHERE conditions on this relationship.
+     * 
+     * @param string $alias The alias to use for the foreign table.
+     * 
+     * @return array An array of WHERE conditions.
+     * 
+     */
+    public function getForeignConditions($alias)
     {
-        // add any eager joins to the fetch
-        $this->_modEagerFetchJoin($eager, $fetch);
-        
-        // extra WHERE clauses
         $where = array_merge(
-            $this->where, 
-            $this->_foreign_model->getWhereMods($eager['alias'])
+            $this->conditions,
+            $this->_foreign_model->getConditions($alias)
         );
-        
-        foreach ($where as $cond => $val) {
-            $fetch->where($cond, $val);
-        }
+        return $where;
     }
     
     /**
@@ -737,9 +754,14 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             $native_id = $spec;
         }
         
-        $where = $this->where;
+        $where = array();
         $cond  = "{$this->foreign_alias}.{$this->foreign_col} = ?";
         $where[$cond] = $native_id;
+        
+        $where = array_merge(
+            $where,
+            $this->getForeignConditions($this->foreign_alias)
+        );
         
         $fetch = array(
             'alias' => $this->foreign_alias,
@@ -833,10 +855,15 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      */
     protected function _fetchIntoArrayOne($eager, &$array)
     {
-        $where = $this->where;
+        $where = array();
         
         $col = "{$eager['alias']}.{$this->foreign_col}";
         $where["$col = ?"] = $array[$this->native_col];
+        
+        $where = array_merge(
+            $where,
+            $this->getForeignConditions($eager['alias'])
+        );
         
         $params = array(
             'alias' => $eager['alias'],
@@ -875,12 +902,19 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $use_select = $eager['native_by'] == 'select'
                    || count($array) > $eager['wherein_max'];
         
+        $join = null;
+        $where = null;
         if ($use_select) {
             $join  = $this->_getNativeBySelect($eager, $fetch, $col);
-            $where = $this->where;
+            $join['cond'] = array_merge(
+                $join['cond'],
+                $this->getForeignConditions($eager['alias'])
+            );
         } else {
-            $join  = null;
-            $where = $this->_getNativeByWherein($eager, $array, $col);
+            $where = array_merge(
+                $this->_getNativeByWherein($eager, $array, $col),
+                $this->getForeignConditions($eager['alias'])
+            );
         }
         
         $params = array(
@@ -984,8 +1018,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $list = array_keys($list);
         
         // tack it on to the end of the baseline relationship where clauses
-        $where = $this->where;
-        $where["$col IN (?)"] = $list;
+        $where = array("$col IN (?)" => $list);
         
         // done!
         return $where;

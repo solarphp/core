@@ -16,10 +16,11 @@ class Test_Solar_Auth_Adapter_Htpasswd extends Test_Solar_Auth_Adapter {
     protected $_Test_Solar_Auth_Adapter_Htpasswd = array(
     );
     
-    public function setup()
+    protected function _preConfig()
     {
-        $dir = Solar_Class::dir('Test_Solar_Auth_Adapter', '_support');
-        $this->_config['file'] = $dir . 'users.htpasswd';
-        parent::setup();
+        parent::_preConfig();
+        $dir  = Solar_Class::dir('Mock_Solar_Auth_Adapter_Htpasswd');
+        $file = $dir . 'users.htpasswd';
+        $this->_Test_Solar_Auth_Adapter_Htpasswd['file'] = $file;
     }
 }

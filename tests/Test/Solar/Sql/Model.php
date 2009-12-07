@@ -24,7 +24,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
     
     protected $_catalog_config = array(
         'classes' => array(
-            'Solar_Example_Model',
+            'Mock_Solar_Model',
         ),
     );
     
@@ -39,36 +39,12 @@ class Test_Solar_Sql_Model extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         
         // set up an SQL connection
         $this->_sql = Solar::factory(
@@ -85,16 +61,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // register the connection and catalog
         Solar_Registry::set('sql', $this->_sql);
         Solar_Registry::set('model_catalog', $this->_catalog);
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     /**
@@ -127,7 +93,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
     {
         $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $this->assertInstance($model, 'Solar_Sql_Model');
-        $this->assertInstance($model, 'Solar_Example_Model_TestSolarSpecialCols');
+        $this->assertInstance($model, 'Mock_Solar_Model_TestSolarSpecialCols');
         
         // did it create the table automatically?
         $list = $this->_sql->fetchTableList();
@@ -138,13 +104,13 @@ class Test_Solar_Sql_Model extends Solar_Test {
     {
         $model_a = $this->_catalog->newModel('TestSolarSpecialCols');
         $this->assertInstance($model_a, 'Solar_Sql_Model');
-        $this->assertInstance($model_a, 'Solar_Example_Model_TestSolarSpecialCols');
+        $this->assertInstance($model_a, 'Mock_Solar_Model_TestSolarSpecialCols');
         
         $count_before = count($this->_sql->getProfile());
         
         $model_b = $this->_catalog->newModel('TestSolarSpecialCols');
         $this->assertInstance($model_b, 'Solar_Sql_Model');
-        $this->assertInstance($model_b, 'Solar_Example_Model_TestSolarSpecialCols');
+        $this->assertInstance($model_b, 'Mock_Solar_Model_TestSolarSpecialCols');
         $this->assertNotSame($model_a, $model_b);
         
         $count_after = count($this->_sql->getProfile());
@@ -194,7 +160,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // call the magic method
         $record = $model->fetchByName('z');
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->id, 11);
         $this->assertEquals($record->name, 'z');
         
@@ -209,7 +175,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // call the magic method
         $record = $model->fetchByNameAndSeqFoo('z', 88);
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->id, 11);
         $this->assertEquals($record->name, 'z');
         $this->assertEquals($record->seq_foo, '88');
@@ -225,7 +191,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // call the magic method
         $record = $model->fetchOneByName('z');
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->id, 11);
         $this->assertEquals($record->name, 'z');
         
@@ -240,7 +206,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // call the magic method
         $record = $model->fetchOneByNameAndSeqFoo('z', 88);
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->id, 11);
         $this->assertEquals($record->name, 'z');
         $this->assertEquals($record->seq_foo, '88');
@@ -256,7 +222,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // call the magic method
         $collection = $model->fetchAllByName('z');
         $this->assertInstance($collection, 'Solar_Sql_Model_Collection');
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarSpecialCols_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarSpecialCols_Collection');
         $this->assertEquals(count($collection), 10);
         foreach ($collection as $key => $record) {
             $this->assertEquals($record->id, $key + 11);
@@ -274,7 +240,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // call the magic method
         $collection = $model->fetchAllByNameAndSeqFoo('z', 88);
         $this->assertInstance($collection, 'Solar_Sql_Model_Collection');
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarSpecialCols_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarSpecialCols_Collection');
         $this->assertEquals(count($collection), 5);
         foreach ($collection as $key => $record) {
             $this->assertEquals($record->id, $key + 11);
@@ -304,16 +270,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         } catch (Solar_Exception $e) {
             // do nothing, this is the expected case :-)
         }
-    }
-    
-    /**
-     * 
-     * Test -- Returns a data result and the select used to fetch the data.
-     * 
-     */
-    public function test_fetchResultSelect()
-    {
-        $this->todo('stub');
     }
     
     /**
@@ -383,14 +339,14 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $record = $model->fetch(3);
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->name, 'c'); // make sure it's the right one ;-)
         
         // fetch by array to get a Collection
         $list = array(2, 3, 5, 7);
         $collection = $model->fetch($list);
         $this->assertInstance($collection, 'Solar_Sql_Model_Collection');
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarSpecialCols_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarSpecialCols_Collection');
         $this->assertEquals(count($collection), 4);
         foreach ($collection as $record) {
             // make sure they're the right ones ;-)
@@ -414,7 +370,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         
         // tests
         $this->assertInstance($collection, 'Solar_Sql_Model_Collection');
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarSpecialCols_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarSpecialCols_Collection');
         $this->assertEquals(count($collection), 5);
         foreach ($collection as $record) {
             // make sure they're the right ones ;-)
@@ -427,33 +383,24 @@ class Test_Solar_Sql_Model extends Solar_Test {
      * Test -- Fetches an array of rows by arbitrary parameters.
      * 
      */
-    public function testFetchArray()
-    {
-        $this->todo('stub');
-    }
-    
-    public function testFetchAssocAsArray()
+    public function testFetchAllAsArray()
     {
         // insert a set of records
         $this->_populateSpecialColsTable();
         
         // fetch by some WHERE clause
         $model = $this->_catalog->getModel('TestSolarSpecialCols');
-        $array = $model->fetchAssocAsArray(array(
-            'where' => 'id > 5',
-            'order' => 'name',
-            'cols' => array(
-                'name', 'id', 'seq_foo'
-            ),
-        ));
+        $array = $model->fetchAllAsArray(array('where' => 'id > 5'));
         
         // generic
+        $this->assertTrue(is_array($array));
         $this->assertEquals(count($array), 5);
         
-        // specific: array keys should be on 'name', not 'id'
-        $actual = array_keys($array);
-        $expect = array('f', 'g', 'h', 'i', 'j');
-        $this->assertSame($actual, $expect);
+        // specific
+        foreach ($array as $key => $val) {
+            // make sure they're the right ones ;-)
+            $this->assertEquals($val['name'], chr($val['id'] + 96));
+        }
     }
     
     /**
@@ -478,11 +425,36 @@ class Test_Solar_Sql_Model extends Solar_Test {
         
         // generic
         $this->assertInstance($collection, 'Solar_Sql_Model_Collection');
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarSpecialCols_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarSpecialCols_Collection');
         $this->assertEquals(count($collection), 5);
         
         // specific: array keys should be on 'name', not 'id'
         $array = $collection->toArray();
+        $actual = array_keys($array);
+        $expect = array('f', 'g', 'h', 'i', 'j');
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testFetchAssocAsArray()
+    {
+        // insert a set of records
+        $this->_populateSpecialColsTable();
+        
+        // fetch by some WHERE clause
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
+        $array = $model->fetchAssocAsArray(array(
+            'where' => 'id > 5',
+            'order' => 'name',
+            'cols' => array(
+                'name', 'id', 'seq_foo'
+            ),
+        ));
+        
+        // generic
+        $this->assertTrue(is_array($array));
+        $this->assertEquals(count($array), 5);
+        
+        // specific: array keys should be on 'name', not 'id'
         $actual = array_keys($array);
         $expect = array('f', 'g', 'h', 'i', 'j');
         $this->assertSame($actual, $expect);
@@ -547,8 +519,28 @@ class Test_Solar_Sql_Model extends Solar_Test {
         ));
         
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->name, 'c'); // make sure it's the right one ;-)
+    }
+    
+    /**
+     * 
+     * Test -- The same as fetchOne(), but returns an array instead of a record object.
+     * 
+     */
+    public function testFetchOneAsArray()
+    {
+        // insert a set of records
+        $this->_populateSpecialColsTable();
+        
+        // fetch by number to get a Record
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
+        $array = $model->fetchOneAsArray(array(
+            'where' => array('name = ?' => 'c'),
+        ));
+        
+        $this->assertTrue(is_array($array));
+        $this->assertEquals($array['name'], 'c'); // make sure it's the right one ;-)
     }
     
     /**
@@ -589,7 +581,21 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testFetchValue()
     {
-        $this->todo('stub');
+        // insert a set of records
+        $this->_populateSpecialColsTable();
+        
+        // fetch by some WHERE clause
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
+        $actual = $model->fetchValue(array(
+            'where' => 'id = 5',
+            'order' => 'name',
+            'cols' => array(
+                'name',
+            ),
+        ));
+        
+        $expect = 'e';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -701,12 +707,12 @@ class Test_Solar_Sql_Model extends Solar_Test {
         
         $model = $this->_catalog->getModel('TestSolarFoo');
         $collection = $model->newCollection($data);
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarFoo_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarFoo_Collection');
         
         // the Foo_Bar model doesn't have its own collection, should fall back to foo
         $model = $this->_catalog->getModel('TestSolarBar');
         $collection = $model->newCollection($data);
-        $this->assertInstance($collection, 'Solar_Example_Model_TestSolarFoo_Collection');
+        $this->assertInstance($collection, 'Mock_Solar_Model_TestSolarFoo_Collection');
         
         // the Dib mode has no collection and is not inherited, should fall back to Solar_Sql
         $model = $this->_catalog->getModel('TestSolarDib');
@@ -734,7 +740,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // non-inherited
         $model = $this->_catalog->getModel('TestSolarFoo');
         $record = $model->newRecord($data);
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarFoo_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarFoo_Record');
     }
     
     public function testNewRecord_inherit()
@@ -751,7 +757,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         
         $model = $this->_catalog->getModel('TestSolarFoo');
         $record = $model->newRecord($data);
-        $this->assertInstance($record, 'Solar_Example_Model_TestSolarBar_Record');
+        $this->assertInstance($record, 'Mock_Solar_Model_TestSolarBar_Record');
     }
     
     public function testNewRecord_inheritNoSuchClass()
@@ -944,5 +950,45 @@ class Test_Solar_Sql_Model extends Solar_Test {
         } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Sql_Adapter_Exception_QueryFailed');
         }
+    }
+    
+    /**
+     * 
+     * Test -- Returns the number of rows affected by the last INSERT, UPDATE, or DELETE.
+     * 
+     */
+    public function testGetAffectedRows()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns the fully-qualified primary key name.
+     * 
+     */
+    public function testGetPrimary()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a WHERE clause array of conditions to use when fetching from this model; e.g., single-table inheritance.
+     * 
+     */
+    public function testGetWhereMods()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Does this model have single-table inheritance values?
+     * 
+     */
+    public function testIsInherit()
+    {
+        $this->todo('stub');
     }
 }

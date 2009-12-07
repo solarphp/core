@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Plugin_Image extends Solar_Test {
+class Test_Solar_Markdown_Plugin_Image extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,82 +16,23 @@ class Test_Solar_Markdown_Plugin_Image extends Solar_Test {
     protected $_Test_Solar_Markdown_Plugin_Image = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = false;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Plugin_Image');
-        $this->assertInstance($obj, 'Solar_Markdown_Plugin_Image');
-    }
-    
-    /**
-     * 
-     * Test -- Cleans up the source text after all parsing occurs.
-     * 
-     */
-    public function testCleanup()
-    {
-        $this->todo('stub');
-    }
+    protected $_is_span = true;
     
     /**
      * 
@@ -105,62 +46,15 @@ class Test_Solar_Markdown_Plugin_Image extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Span plugin to place image tags.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Prepares the source text before any parsing occurs.
-     * 
-     */
-    public function testPrepare()
-    {
-        $this->todo('stub');
+        $source = 'foo bar ![alt text](/path/to/image) baz dib';
+        $expect = "foo bar $this->_token baz dib";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
     }
     
     /**
@@ -181,5 +75,41 @@ class Test_Solar_Markdown_Plugin_Image extends Solar_Test {
     public function testSetMarkdown()
     {
         $this->todo('stub');
+    }
+    
+    public function testRender()
+    {
+        $source = 'foo bar ![alt text](/path/to/image) baz dib';
+        $expect = 'foo bar <img src="/path/to/image" alt="alt text" /> baz dib';
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_inlineWithTitle()
+    {
+        $source = 'foo bar ![alt text](/path/to/image "with title") baz dib';
+        $expect = 'foo bar <img src="/path/to/image" alt="alt text" title="with title" /> baz dib';
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_reference()
+    {
+        $this->_markdown->setLink('alt text', '/path/to/image', 'with title');
+        
+        $source = 'foo bar ![alt text][] baz dib';
+        $expect = 'foo bar <img src="/path/to/image" alt="alt text" title="with title" /> baz dib';
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testRender_referenceDifferentAlt()
+    {
+        $this->_markdown->setLink('alt text', '/path/to/image', 'with title');
+        
+        $source = 'foo bar ![inline text][alt text] baz dib';
+        $expect = 'foo bar <img src="/path/to/image" alt="inline text" title="with title" /> baz dib';
+        $actual = $this->_render($source);
+        $this->assertSame($actual, $expect);
     }
 }

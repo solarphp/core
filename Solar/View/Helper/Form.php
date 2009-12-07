@@ -1070,9 +1070,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             return;
         }
         
-        if ($this->_decorator['elem']) {
-            $html[] = $this->_indent(1, "<{$this->_decorator['elem']}>");
-        }
+        $this->_buildDecoratorBegin($html, 'elem', 1);
     }
     
     /**
@@ -1090,9 +1088,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             return;
         }
         
-        if ($this->_decorator['elem']) {
-            $html[] = $this->_indent(1, "</{$this->_decorator['elem']}>");
-        }
+        $this->_buildDecoratorEnd($html, 'elem', 1);
     }
     
     /**
@@ -1114,8 +1110,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         // does the element have an ID?
         if (! empty($info['attribs']['id'])) {
             $attribs['for'] = $info['attribs']['id'];
+            $attribs['class'][] = $info['attribs']['id'];
         }
         
+        // add a class for the element
         // is the element required?
         if ($info['require']) {
             $attribs['class'][] = $this->_css_class['require'];
@@ -1158,20 +1156,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         }
         
         // open the label decorator
-        if ($this->_decorator['label']) {
-            $attribs = array('class' => array());
-            if ($info['require']) {
-                $attribs['class'][] = 'require';
-            }
-            if ($info['invalid']) {
-                $attribs['class'][] = 'invalid';
-            }
-            $decorator = '<'
-                       . $this->_decorator['label']
-                       . $this->_view->attribs($attribs)
-                       . '>';
-            $html[] = $this->_indent(2, $decorator);
-        }
+        $this->_buildDecoratorBegin($html, 'label', 2, $info);
         
         // modify information **just for the label portion**
         $this->_buildElementLabelInfo($info);
@@ -1185,9 +1170,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         }
         
         // close the label decorator
-        if ($this->_decorator['label']) {
-            $html[] = $this->_indent(2, "</{$this->_decorator['label']}>");
-        }
+        $this->_buildDecoratorEnd($html, 'label', 2, $info);
     }
     
     /**
@@ -1244,20 +1227,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         }
         
         // open the value decorator
-        if ($this->_decorator['value']) {
-            $attribs = array('class' => array());
-            if ($info['require']) {
-                $attribs['class'][] = 'require';
-            }
-            if ($info['invalid']) {
-                $attribs['class'][] = 'invalid';
-            }
-            $decorator = '<'
-                       . $this->_decorator['value']
-                       . $this->_view->attribs($attribs)
-                       . '>';
-            $html[] = $this->_indent(2, $decorator);
-        }
+        $this->_buildDecoratorBegin($html, 'value', 2, $info);
         
         // add the element
         $html[] = $this->_indent(3, $element);
@@ -1271,9 +1241,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         }
         
         // close the decorator
-        if ($this->_decorator['value']) {
-            $html[] = $this->_indent(2, "</{$this->_decorator['value']}>");
-        }
+        $this->_buildDecoratorEnd($html, 'value', 2, $info);
     }
     
     /**
@@ -1348,9 +1316,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             return;
         }
         
-        if ($this->_decorator['list']) {
-            $html[] = $this->_indent(1, "<{$this->_decorator['list']}>");
-        }
+        $this->_buildDecoratorBegin($html, 'list', 1);
         $this->_in_elemlist = true;
     }
     
@@ -1370,9 +1336,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             return;
         }
         
-        if ($this->_decorator['list']) {
-            $html[] = $this->_indent(1, "</{$this->_decorator['list']}>");
-        }
+        $this->_buildDecoratorEnd($html, 'list', 1);
         $this->_in_elemlist = false;
     }
     
@@ -1419,22 +1383,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         
         $this->_buildElementListBegin($html);
         $this->_buildElementBegin($html);
-        
-        if ($this->_decorator['label']) {
-            $html[] = $this->_indent(2, "<{$this->_decorator['label']}>");
-        }
-        
+        $this->_buildDecoratorBegin($html, 'label', 2);
         
         $label = $this->_view->formLabel(array('label' => $label));
         $html[] = $this->_indent(3, $label);
         
-        if ($this->_decorator['label']) {
-            $html[] = $this->_indent(2, "</{$this->_decorator['label']}>");
-        }
-        
-        if ($this->_decorator['value']) {
-            $html[] = $this->_indent(2, "<{$this->_decorator['value']}>");
-        }
+        $this->_buildDecoratorEnd($html, 'label', 2);
+        $this->_buildDecoratorBegin($html, 'value', 2);
         
         $this->_group_invalid = null;
         $this->_in_group = true;
@@ -1461,9 +1416,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             $this->_group_invalid = null;
         }
 
-        if ($this->_decorator['value']) {
-            $html[] = $this->_indent(2, "</{$this->_decorator['value']}>");
-        }
+        $this->_buildDecoratorEnd($html, 'value', 2);
         
         $this->_in_group = false;
         $this->_buildElementEnd($html);
@@ -1563,6 +1516,81 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $html[] = $this->_indent(1, "</fieldset>");
     }
     
+    /**
+     * 
+     * Builds the beginning of a decorator.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $type The decorator type to use: 'list', 'elem', 'label',
+     * or 'value'.
+     * 
+     * @param int $indent Indent the decorator this many times.
+     * 
+     * @param array $info For 'label' and 'value' decorators, the label or
+     * value information array.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildDecoratorBegin(&$html, $type, $indent, $info = null)
+    {
+        if (! $this->_decorator[$type]) {
+            return;
+        }
+        
+        $attribs = array('class' => array());
+        
+        if (! empty($info['attribs']['id'])) {
+            $attribs['class'][] = $info['attribs']['id'];
+        } else {
+            $attribs['class'][] = $type;
+        }
+        
+        if (! empty($info['require'])) {
+            $attribs['class'][] = 'require';
+        }
+        
+        if (! empty($info['invalid'])) {
+            $attribs['class'][] = 'invalid';
+        }
+        
+        $decorator = '<'
+                   . $this->_decorator[$type]
+                   . $this->_view->attribs($attribs)
+                   . '>';
+        
+        $html[] = $this->_indent($indent, $decorator);
+    }
+    
+    /**
+     * 
+     * Builds the end of a decorator.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $type The decorator type to use: 'list', 'elem', 'label',
+     * or 'value'.
+     * 
+     * @param int $indent Indent the decorator this many times.
+     * 
+     * @param array $info For 'label' and 'value' decorators, the label or
+     * value information array.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildDecoratorEnd(&$html, $type, $indent, $info = null)
+    {
+        if (! $this->_decorator[$type]) {
+            return;
+        }
+        
+        $decorator = "</{$this->_decorator[$type]}>";
+        
+        $html[] = $this->_indent($indent, $decorator);
+    }
+
     /**
      * 
      * Use this suffix string on all labels; for example, ": ".

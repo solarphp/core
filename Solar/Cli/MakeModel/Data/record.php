@@ -3,5 +3,6 @@
  * A single {:class} record.
  * 
  */
-class {:class}_Record extends {:extends}_Record {
+class {:class}_Record extends {:extends}_Record
+{
 }

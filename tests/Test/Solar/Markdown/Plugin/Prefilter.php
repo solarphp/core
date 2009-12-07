@@ -4,11 +4,11 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Markdown_Plugin_Prefilter extends Solar_Test {
+class Test_Solar_Markdown_Plugin_Prefilter extends Test_Solar_Markdown_Plugin {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,81 +16,30 @@ class Test_Solar_Markdown_Plugin_Prefilter extends Solar_Test {
     protected $_Test_Solar_Markdown_Plugin_Prefilter = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * Is the plugin expected to be a block processor?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = false;
     
     /**
      * 
-     * Constructor.
+     * Is the plugin expected to be a span processor?
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
+     * @var bool
      * 
      */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
+    protected $_is_span = false;
     
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Markdown_Plugin_Prefilter');
-        $this->assertInstance($obj, 'Solar_Markdown_Plugin_Prefilter');
-    }
-    
-    /**
-     * 
-     * Test -- Cleans up the source text after all parsing occurs.
-     * 
-     */
     public function testCleanup()
     {
-        $this->todo('stub');
+        $text = 'foo bar baz dib zim gir';
+        $actual = $this->_plugin->cleanup($text);
+        $expect = $text;
+        $this->assertSame($actual, $text);
     }
     
     /**
@@ -105,52 +54,15 @@ class Test_Solar_Markdown_Plugin_Prefilter extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a block-level plugin?
-     * 
-     */
-    public function testIsBlock()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "cleanup" phase?
-     * 
-     */
-    public function testIsCleanup()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Run this plugin during the "prepare" phase?
-     * 
-     */
-    public function testIsPrepare()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Is this a span-level plugin?
-     * 
-     */
-    public function testIsSpan()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
      * Test -- Parses the source text and replaces with HTML or tokens.
      * 
      */
     public function testParse()
     {
-        $this->todo('stub');
+        $text = 'foo bar baz dib zim gir';
+        $actual = $this->_plugin->parse($text);
+        $expect = $text;
+        $this->assertSame($actual, $text);
     }
     
     /**
@@ -160,7 +72,42 @@ class Test_Solar_Markdown_Plugin_Prefilter extends Solar_Test {
      */
     public function testPrepare()
     {
-        $this->todo('stub');
+        $text = "Basic text\r\nwith dos lines\nand\t\ttabs\n \n \nand blank lines";
+        $expect = "Basic text\nwith dos lines\nand     tabs\n\n\nand blank lines\n\n\n";
+        $actual = $this->_plugin->prepare($text);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testPrepare_unixNewlines()
+    {
+        $text = "\r\n\r\r\n";
+        $expect = "\n\n\n\n\n\n";
+        $actual = $this->_plugin->prepare($text);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testPrepare_addNewlines()
+    {
+        $text = '';
+        $expect = "\n\n\n";
+        $actual = $this->_plugin->prepare($text);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testPrepare_tabsToSpaces()
+    {
+        $text = "1\t\t22\t\t333\t\t4444\t";
+        $expect = "1       22      333     4444    \n\n\n";
+        $actual = $this->_plugin->prepare($text);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testPrepare_blankLines()
+    {
+        $text = "foo\n  \t  \nbar";
+        $expect = "foo\n\nbar\n\n\n";
+        $actual = $this->_plugin->prepare($text);
+        $this->assertSame($actual, $expect);
     }
     
     /**

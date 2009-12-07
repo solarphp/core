@@ -99,12 +99,19 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
      */
     protected function _setForeignClass($opts)
     {
+        $catalog = $this->_native_model->catalog;
+        
+        // a little magic
+        if (empty($opts['foreign_class']) && ! empty($opts['foreign_name'])) {
+            $this->foreign_name = $opts['foreign_name'];
+            $opts['foreign_class'] = $catalog->getClass($this->foreign_name);
+        }
+        
         if (empty($opts['foreign_class'])) {
             // no class given.  convert 'foo_bar' to 'foo_bars' ...
-            $plural = $this->_inflect->toPlural($opts['name']);
+            $this->foreign_name = $this->_inflect->toPlural($opts['name']);
             // ... then use the plural form of the name to get the class.
-            $catalog = $this->_native_model->catalog;
-            $this->foreign_class = $catalog->getClass($plural);
+            $this->foreign_class = $catalog->getClass($this->foreign_name);
         } else {
             $this->foreign_class = $opts['foreign_class'];
         }
@@ -196,8 +203,8 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Modifies the native fetch with an eager join so that columns are
-     * selected from the foreign table.
+     * Modifies the native fetch with an eager join so that the foreign table
+     * is joined properly and foreign columns are selected.
      * 
      * @param Solar_Sql_Model_Params_Eager $eager The eager params.
      * 
@@ -205,8 +212,10 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
      * 
      * @return void
      * 
+     * @see modEagerFetch()
+     * 
      */
-    protected function _modEagerFetchJoin($eager, $fetch)
+    protected function _modEagerFetch($eager, $fetch)
     {
         // the basic join array
         $join = array(
@@ -220,22 +229,12 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         $join['cond'][] = "{$fetch['alias']}.{$this->native_col} = "
                 . "{$eager['alias']}.{$this->foreign_col}";
         
-        // extra conditions for the parent fetch
-        if ($eager['join_cond']) {
-            // what type of join?
-            if ($join['type'] == 'left') {
-                // convert the eager conditions to a WHERE clause
-                foreach ((array) $eager['join_cond'] as $cond => $val) {
-                    $fetch->where($cond, $val);
-                }
-            } else {
-                // merge join conditions
-                $join['cond'] = array_merge(
-                    $join['cond'],
-                    (array) $eager['join_cond']
-                );
-            }
-        }
+        // foreign and eager conditions
+        $join['cond'] = array_merge(
+            $join['cond'],
+            $this->getForeignConditions($eager['alias']),
+            (array) $eager['conditions']
+        );
         
         // what columns to fetch?
         if (! $eager['cols']) {

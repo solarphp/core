@@ -18,56 +18,6 @@ class Test_Solar_Class_Map extends Solar_Test {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -90,57 +40,57 @@ class Test_Solar_Class_Map extends Solar_Test {
      */
     public function testFetch()
     {
-        $dir  = Solar_Class::dir('Solar', '..');
+        $dir  = Solar_Class::dir('Solar', '../tests');
         $base = realpath($dir);
         
         $map = Solar::factory('Solar_Class_Map');
         $map->setBase($base);
         
-        $actual = $map->fetch('Solar_Example');
+        $actual = $map->fetch('Mock_Solar');
         $expect = array(
-            "Solar_Example" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example.php",
-            "Solar_Example_Controller_Page" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Controller/Page.php",
-            "Solar_Example_Exception" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Exception.php",
-            "Solar_Example_Exception_CustomCondition" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Exception/CustomCondition.php",
-            "Solar_Example_Model_Areas" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Areas.php",
-            "Solar_Example_Model_Areas_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Areas/Collection.php",
-            "Solar_Example_Model_Areas_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Areas/Record.php",
-            "Solar_Example_Model_Bookmarks" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Bookmarks.php",
-            "Solar_Example_Model_Bookmarks_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Bookmarks/Collection.php",
-            "Solar_Example_Model_Bookmarks_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Bookmarks/Record.php",
-            "Solar_Example_Model_Comments" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Comments.php",
-            "Solar_Example_Model_Comments_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Comments/Collection.php",
-            "Solar_Example_Model_Comments_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Comments/Record.php",
-            "Solar_Example_Model_Metas" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Metas.php",
-            "Solar_Example_Model_Metas_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Metas/Collection.php",
-            "Solar_Example_Model_Metas_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Metas/Record.php",
-            "Solar_Example_Model_Nodes" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Nodes.php",
-            "Solar_Example_Model_Nodes_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Nodes/Collection.php",
-            "Solar_Example_Model_Nodes_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Nodes/Record.php",
-            "Solar_Example_Model_Pages" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Pages.php",
-            "Solar_Example_Model_Pages_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Pages/Collection.php",
-            "Solar_Example_Model_Pages_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Pages/Record.php",
-            "Solar_Example_Model_Taggings" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Taggings.php",
-            "Solar_Example_Model_Taggings_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Taggings/Collection.php",
-            "Solar_Example_Model_Taggings_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Taggings/Record.php",
-            "Solar_Example_Model_Tags" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Tags.php",
-            "Solar_Example_Model_Tags_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Tags/Collection.php",
-            "Solar_Example_Model_Tags_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Tags/Record.php",
-            "Solar_Example_Model_TestSolarBar" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarBar.php",
-            "Solar_Example_Model_TestSolarBar_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarBar/Record.php",
-            "Solar_Example_Model_TestSolarDib" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarDib.php",
-            "Solar_Example_Model_TestSolarFoo" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarFoo.php",
-            "Solar_Example_Model_TestSolarFoo_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarFoo/Collection.php",
-            "Solar_Example_Model_TestSolarFoo_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarFoo/Record.php",
-            "Solar_Example_Model_TestSolarSpecialCols" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarSpecialCols.php",
-            "Solar_Example_Model_TestSolarSpecialCols_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarSpecialCols/Collection.php",
-            "Solar_Example_Model_TestSolarSpecialCols_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarSpecialCols/Record.php",
-            "Solar_Example_Model_TestSolarSqlDescribe" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarSqlDescribe.php",
-            "Solar_Example_Model_TestSolarSqlDescribe_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarSqlDescribe/Collection.php",
-            "Solar_Example_Model_TestSolarSqlDescribe_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/TestSolarSqlDescribe/Record.php",
-            "Solar_Example_Model_Users" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Users.php",
-            "Solar_Example_Model_Users_Collection" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Users/Collection.php",
-            "Solar_Example_Model_Users_Record" =>  "/Users/pmjones/Sites/dev/solar/system/trunk/source/solar/Solar/Example/Model/Users/Record.php",
+            "Mock_Solar_Controller_Page"                        =>  "$base/Mock/Solar/Controller/Page.php",
+            "Mock_Solar_Example"                                =>  "$base/Mock/Solar/Example.php",
+            "Mock_Solar_Exception"                              =>  "$base/Mock/Solar/Exception.php",
+            "Mock_Solar_Exception_CustomCondition"              =>  "$base/Mock/Solar/Exception/CustomCondition.php",
+            "Mock_Solar_Model_Areas"                            =>  "$base/Mock/Solar/Model/Areas.php",
+            "Mock_Solar_Model_Areas_Collection"                 =>  "$base/Mock/Solar/Model/Areas/Collection.php",
+            "Mock_Solar_Model_Areas_Record"                     =>  "$base/Mock/Solar/Model/Areas/Record.php",
+            "Mock_Solar_Model_Bookmarks"                        =>  "$base/Mock/Solar/Model/Bookmarks.php",
+            "Mock_Solar_Model_Bookmarks_Collection"             =>  "$base/Mock/Solar/Model/Bookmarks/Collection.php",
+            "Mock_Solar_Model_Bookmarks_Record"                 =>  "$base/Mock/Solar/Model/Bookmarks/Record.php",
+            "Mock_Solar_Model_Comments"                         =>  "$base/Mock/Solar/Model/Comments.php",
+            "Mock_Solar_Model_Comments_Collection"              =>  "$base/Mock/Solar/Model/Comments/Collection.php",
+            "Mock_Solar_Model_Comments_Record"                  =>  "$base/Mock/Solar/Model/Comments/Record.php",
+            "Mock_Solar_Model_Metas"                            =>  "$base/Mock/Solar/Model/Metas.php",
+            "Mock_Solar_Model_Metas_Collection"                 =>  "$base/Mock/Solar/Model/Metas/Collection.php",
+            "Mock_Solar_Model_Metas_Record"                     =>  "$base/Mock/Solar/Model/Metas/Record.php",
+            "Mock_Solar_Model_Nodes"                            =>  "$base/Mock/Solar/Model/Nodes.php",
+            "Mock_Solar_Model_Nodes_Collection"                 =>  "$base/Mock/Solar/Model/Nodes/Collection.php",
+            "Mock_Solar_Model_Nodes_Record"                     =>  "$base/Mock/Solar/Model/Nodes/Record.php",
+            "Mock_Solar_Model_Pages"                            =>  "$base/Mock/Solar/Model/Pages.php",
+            "Mock_Solar_Model_Pages_Collection"                 =>  "$base/Mock/Solar/Model/Pages/Collection.php",
+            "Mock_Solar_Model_Pages_Record"                     =>  "$base/Mock/Solar/Model/Pages/Record.php",
+            "Mock_Solar_Model_Taggings"                         =>  "$base/Mock/Solar/Model/Taggings.php",
+            "Mock_Solar_Model_Taggings_Collection"              =>  "$base/Mock/Solar/Model/Taggings/Collection.php",
+            "Mock_Solar_Model_Taggings_Record"                  =>  "$base/Mock/Solar/Model/Taggings/Record.php",
+            "Mock_Solar_Model_Tags"                             =>  "$base/Mock/Solar/Model/Tags.php",
+            "Mock_Solar_Model_Tags_Collection"                  =>  "$base/Mock/Solar/Model/Tags/Collection.php",
+            "Mock_Solar_Model_Tags_Record"                      =>  "$base/Mock/Solar/Model/Tags/Record.php",
+            "Mock_Solar_Model_TestSolarBar"                     =>  "$base/Mock/Solar/Model/TestSolarBar.php",
+            "Mock_Solar_Model_TestSolarBar_Record"              =>  "$base/Mock/Solar/Model/TestSolarBar/Record.php",
+            "Mock_Solar_Model_TestSolarDib"                     =>  "$base/Mock/Solar/Model/TestSolarDib.php",
+            "Mock_Solar_Model_TestSolarFoo"                     =>  "$base/Mock/Solar/Model/TestSolarFoo.php",
+            "Mock_Solar_Model_TestSolarFoo_Collection"          =>  "$base/Mock/Solar/Model/TestSolarFoo/Collection.php",
+            "Mock_Solar_Model_TestSolarFoo_Record"              =>  "$base/Mock/Solar/Model/TestSolarFoo/Record.php",
+            "Mock_Solar_Model_TestSolarSpecialCols"             =>  "$base/Mock/Solar/Model/TestSolarSpecialCols.php",
+            "Mock_Solar_Model_TestSolarSpecialCols_Collection"  =>  "$base/Mock/Solar/Model/TestSolarSpecialCols/Collection.php",
+            "Mock_Solar_Model_TestSolarSpecialCols_Record"      =>  "$base/Mock/Solar/Model/TestSolarSpecialCols/Record.php",
+            "Mock_Solar_Model_TestSolarSqlDescribe"             =>  "$base/Mock/Solar/Model/TestSolarSqlDescribe.php",
+            "Mock_Solar_Model_TestSolarSqlDescribe_Collection"  =>  "$base/Mock/Solar/Model/TestSolarSqlDescribe/Collection.php",
+            "Mock_Solar_Model_TestSolarSqlDescribe_Record"      =>  "$base/Mock/Solar/Model/TestSolarSqlDescribe/Record.php",
+            "Mock_Solar_Model_Users"                            =>  "$base/Mock/Solar/Model/Users.php",
+            "Mock_Solar_Model_Users_Collection"                 =>  "$base/Mock/Solar/Model/Users/Collection.php",
+            "Mock_Solar_Model_Users_Record"                     =>  "$base/Mock/Solar/Model/Users/Record.php",
         );
         
         $this->assertSame($actual, $expect);

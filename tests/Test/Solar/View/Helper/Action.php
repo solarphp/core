@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_Action extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,46 @@ class Test_Solar_View_Helper_Action extends Test_Solar_View_Helper {
      */
     public function testAction()
     {
-        $this->todo('stub');
+        // no translation key
+        $actual = $this->_view->action('/controller/action/id', 'example');
+        $expect = '<a href="/index.php/controller/action/id">example</a>';
+        $this->assertSame($expect, $actual);
+        
+        // translation key
+        $actual = $this->_view->action('/controller/action/id', 'ACTION_BROWSE');
+        $expect = '<a href="/index.php/controller/action/id">Browse</a>';
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testAction_attribs()
+    {
+        $attribs = array('foo' => 'bar');
+        
+        // no translation key
+        $actual = $this->_view->action('/controller/action/id', 'example', $attribs);
+        $expect = '<a href="/index.php/controller/action/id" foo="bar">example</a>';
+        $this->assertSame($expect, $actual);
+        
+        // translation key
+        $actual = $this->_view->action('/controller/action/id', 'ACTION_BROWSE', $attribs);
+        $expect = '<a href="/index.php/controller/action/id" foo="bar">Browse</a>';
+        $this->assertSame($expect, $actual);
+    }
+    
+    public function testAction_uri()
+    {
+        $uri = Solar::factory('Solar_Uri_Action');
+        $uri->setPath('/controller/action/id');
+        $uri->setQuery('page=1');
+        
+        // no translation key
+        $actual = $this->_view->action($uri, 'example');
+        $expect = '<a href="/index.php/controller/action/id?page=1">example</a>';
+        $this->assertSame($expect, $actual);
+        
+        // translation key
+        $actual = $this->_view->action($uri, 'ACTION_BROWSE');
+        $expect = '<a href="/index.php/controller/action/id?page=1">Browse</a>';
+        $this->assertSame($expect, $actual);
     }
 }

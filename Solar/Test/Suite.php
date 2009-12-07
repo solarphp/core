@@ -316,7 +316,6 @@ class Solar_Test_Suite extends Solar_Base
                 'fail', 'todo', 'skip',
             ));
             if ($continue) {
-                // go on to next class
                 continue;
             }
             
@@ -377,16 +376,18 @@ class Solar_Test_Suite extends Solar_Base
         // strip the 'Test_' prefix, then get the vendor name
         $vendor = Solar_Class::vendor(substr($class, 5));
         
-        // look for a config/test/Vendor.config.php file
-        $path = "$system/config/test/$vendor.config.php";
+        // the dashes version
+        $dashes = Solar_Registry::get('inflect')->camelToDashes($vendor);
+        
+        // look for a config/run-tests/vendor.php file
+        $path = "$system/config/run-tests/$dashes.php";
         $file = Solar_File::exists($path);
         if ($file) {
             return $file;
         }
         
-        // look for a source/vendor/tests/config.php file
-        $dash = Solar_Registry::get('inflect')->camelToDashes($vendor);
-        $path = "$system/source/$dash/tests/config.php";
+        // look for a source/vendor/config/run-tests.php file
+        $path = "$system/source/$dashes/config/run-tests.php";
         $file = Solar_File::exists($path);
         if ($file) {
             return $file;
@@ -421,8 +422,13 @@ class Solar_Test_Suite extends Solar_Base
         if ($exit != Solar_Test::EXIT_PASS) {
             $this->_done($exit, $class, $php->getLastLine());
             $count = count($this->_tests[$class]);
-            $this->_log("# Skip $count test methods in $class");
-            $this->_info['done'] += $count - 1;
+            $type = $this->_test_result;
+            $this->_log("# " . ucfirst($type) . ": $count test methods in $class");
+            $k = $count - 1;
+            for ($i = 0; $i < $k; $i ++) {
+                $this->_info['done'] ++;
+                $this->_info[$type]["{$class}::{$i}"] = array(null, "$type constructor");
+            }
         }
     }
     

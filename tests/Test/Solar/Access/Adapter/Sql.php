@@ -21,30 +21,12 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
     protected $_Test_Solar_Access_Adapter_Sql = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
     /**
      * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
         $this->_sql = Solar::factory(
             'Solar_Sql',
@@ -68,7 +50,7 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
         
         $this->_sql->query($cmd);
         
-        $dir = Solar_Class::dir('Test_Solar_Access_Adapter', '_support');
+        $dir = Solar_Class::dir('Mock_Solar_Access_Adapter');
         $lines = file_get_contents($dir . 'access.txt');
         $rows = explode("\n", $lines);
         $pos = 0;
@@ -94,16 +76,6 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
             $pos ++;
         }
         
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        parent::preTest();
     }
 }

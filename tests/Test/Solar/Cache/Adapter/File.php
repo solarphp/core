@@ -23,13 +23,13 @@ class Test_Solar_Cache_Adapter_File extends Test_Solar_Cache_Adapter {
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
         if (is_null($this->_config['path'])) {
             $this->_config['path'] = Solar_Dir::tmp('/Solar_Cache_Testing/');
         }
         
-        parent::setup();
+        parent::preTest();
         
         /**
          * @todo remove requirement that deleteAll() actually work here

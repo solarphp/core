@@ -156,17 +156,10 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     public function getColVals($col)
     {
-        // the list of values
         $list = array();
-        
-        // iterate over $_data, not $this, so we don't screw up any external
-        // iterations.
-        foreach ($this->_data as $key => $val) {
-            $record = $this->__get($key);
+        foreach ($this as $key => $record) {
             $list[$key] = $record->$col;
         }
-        
-        // done
         return $list;
     }
     
@@ -281,8 +274,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     public function toArray()
     {
         $data = array();
-        $clone = clone($this);
-        foreach ($clone as $key => $record) {
+        foreach ($this as $key => $record) {
             $data[$key] = $record->toArray();
         }
         return $data;
@@ -345,6 +337,18 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     protected function _postSave()
     {
+    }
+    
+    /**
+     * 
+     * Are there any records in the collection?
+     * 
+     * @return bool True if empty, false if not.
+     * 
+     */
+    public function isEmpty()
+    {
+        return empty($this->_data);
     }
     
     /**

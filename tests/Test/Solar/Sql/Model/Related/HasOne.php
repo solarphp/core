@@ -16,6 +16,37 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     protected $_Test_Solar_Sql_Model_Related_HasOne = array(
     );
     
+    public function test_nativeWithoutEagerSameAsWithEager()
+    {
+        $nodes = $this->_catalog->getModel('nodes');
+        
+        // no eager
+        $plain = $nodes->fetchAllAsArray();
+        $expect = count($plain);
+        
+        // eager "normal"
+        $eager = $nodes->fetchAllAsArray(array(
+            'eager' => array(
+                'meta' => array(
+                    'join_flag' => true, // force the join
+                ),
+            ),
+        ));
+        $actual = count($eager);
+        $this->assertEquals($actual, $expect);
+        
+        // eager "false" (i.e. eager that gets no records)
+        $eager = $nodes->fetchAllAsArray(array(
+            'eager' => array(
+                'meta_false' => array(
+                    'join_flag' => true, // force the join
+                ),
+            ),
+        ));
+        $actual = count($eager);
+        $this->assertEquals($actual, $expect);
+    }
+    
     /**
      * 
      * Test -- Fetches foreign data as an array.
@@ -72,22 +103,21 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
                 5 => "comment_count",
             ),
             "foreign_alias" => "meta",
-            "foreign_class" => "Solar_Example_Model_Metas",
+            "foreign_class" => "Mock_Solar_Model_Metas",
             "foreign_col" => "node_id",
             "foreign_key" => "node_id",
+            "foreign_name" => "metas",
             "foreign_primary_col" => "id",
             "foreign_table" => "test_solar_metas",
             "merge" => "server",
             "name" => "meta",
             "native_alias" => "nodes",
             "native_by" => "wherein",
-            "native_class" => "Solar_Example_Model_Nodes",
+            "native_class" => "Mock_Solar_Model_Nodes",
             "native_col" => "id",
-            "order" => array(
-                0 => "meta.id",
-            ),
+            "order" => array(),
             "type" => "has_one",
-            "where" => array(),
+            "conditions" => array(),
             "wherein_max" => 100,
         );
         
@@ -160,7 +190,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         // lazy-fetch the meta; make sure it's an meta record with the right
         // ID
         $meta = $node->meta;
-        $this->assertInstance($meta, 'Solar_Example_Model_Metas_Record');
+        $this->assertInstance($meta, 'Mock_Solar_Model_Metas_Record');
         $this->assertEquals($meta->node_id, $node->id);
         
         // the reference to $meta should result in one extra SQL call
@@ -169,7 +199,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         
         // a second check should *not* make a new SQL call
         $meta = $node->meta;
-        $this->assertInstance($meta, 'Solar_Example_Model_Metas_Record');
+        $this->assertInstance($meta, 'Mock_Solar_Model_Metas_Record');
         $this->assertEquals($meta->node_id, $node->id);
         $count_final = count($this->_sql->getProfile());
         $this->assertEquals($count_final, $count_after);
@@ -185,7 +215,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         // lazy-fetch each meta
         foreach ($collection as $node) {
             $meta = $node->meta;
-            $this->assertInstance($meta, 'Solar_Example_Model_Metas_Record');
+            $this->assertInstance($meta, 'Mock_Solar_Model_Metas_Record');
             $this->assertEquals($meta->node_id, $node->id);
         }
         
@@ -196,7 +226,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         // a second check should *not* make new SQL calls
         foreach ($collection as $node) {
             $meta = $node->meta;
-            $this->assertInstance($meta, 'Solar_Example_Model_Metas_Record');
+            $this->assertInstance($meta, 'Mock_Solar_Model_Metas_Record');
             $this->assertEquals($meta->node_id, $node->id);
         }
         
@@ -220,7 +250,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         
         // look at the meta
         $meta = $node->meta;
-        $this->assertInstance($meta, 'Solar_Example_Model_Metas_Record');
+        $this->assertInstance($meta, 'Mock_Solar_Model_Metas_Record');
         $this->assertEquals($meta->node_id, $node->id);
         
         // **should not** have been an extra SQL call
@@ -240,12 +270,132 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         // look at each meta
         foreach ($collection as $node) {
             $meta = $node->meta;
-            $this->assertInstance($meta, 'Solar_Example_Model_Metas_Record');
+            $this->assertInstance($meta, 'Mock_Solar_Model_Metas_Record');
             $this->assertEquals($meta->node_id, $node->id);
         }
         
         // **should not** have been extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
+    }
+    
+    /**
+     * 
+     * Test -- Fetches the related record or collection for a native ID or record.
+     * 
+     */
+    public function testFetch()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches an empty value for the related.
+     * 
+     */
+    public function testFetchEmpty()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches a new related record.
+     * 
+     */
+    public function testFetchNew()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is the related record or collection valid?
+     * 
+     */
+    public function testIsInvalid()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is this related to many records?
+     * 
+     */
+    public function testIsMany()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Is this related to one record?
+     * 
+     */
+    public function testIsOne()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fixes the native fetch params and eager params; then, if the join_flag is set on the eager, calles _modEagerFetch() to modify the native fetch params based on the eager params.
+     * 
+     */
+    public function testModEagerFetch()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Modifies the parent result array to add eager records.
+     * 
+     */
+    public function testModEagerResult()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns a record object populated with the passed data; if data is  empty, returns a brand-new record object.
+     * 
+     */
+    public function testNewObject()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Pre-save hook for saving related records or collections from a native record.
+     * 
+     */
+    public function testPreSave()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Saves a related record from a native record.
+     * 
+     */
+    public function testSave()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Gets the foreign-model WHERE conditions and merges with the WHERE conditions on this relationship.
+     * 
+     */
+    public function testGetForeignWhereMods()
+    {
+        $this->todo('stub');
     }
 }

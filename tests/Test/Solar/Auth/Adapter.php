@@ -40,36 +40,12 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
         
         // remove "Test_" prefix
         $this->_class = substr(get_class($this), 5);
@@ -79,16 +55,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         
         // get a new adapter
         $this->_auth = Solar::factory($this->_class, $this->_config);
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     protected function _fakePostLogin_valid()
@@ -323,4 +289,44 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->todo('stub');
     }
 
+    
+    /**
+     * 
+     * Test -- Magic get for pseudo-public properties as defined by [[$_magic]].
+     * 
+     */
+    public function test__get()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Magic set for pseudo-public properties as defined by [[$_magic]].
+     * 
+     */
+    public function test__set()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Retrieve the status text from the cache and then deletes it, making it act like a read-once session flash value.
+     * 
+     */
+    public function testGetStatusText()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Tells whether authentication processing is allowed.
+     * 
+     */
+    public function testIsAllowed()
+    {
+        $this->todo('stub');
+    }
 }

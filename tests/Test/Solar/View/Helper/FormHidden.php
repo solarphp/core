@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_FormHidden extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,13 @@ class Test_Solar_View_Helper_FormHidden extends Test_Solar_View_Helper {
      */
     public function testFormHidden()
     {
-        $this->todo('stub');
+        $info = array(
+            'name'  => 'test',
+            'value' => '"something\'s quoted"',
+        );
+        
+        $actual = $this->_view->formHidden($info);
+        $expect = '<input type="hidden" name="test" value="&quot;something\'s quoted&quot;" />';
+        $this->assertSame($actual, $expect);
     }
 }

@@ -26,12 +26,30 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
     
     /**
      * 
+     * The record columns to show for the item.
+     * 
+     * @var array
+     * 
+     */
+    public $item_cols = array();
+    
+    /**
+     * 
      * A collection of records.
      * 
      * @var Solar_Sql_Model_Collection
      * 
      */
     public $list;
+    
+    /**
+     * 
+     * The record columns to show for the list.
+     * 
+     * @var array
+     * 
+     */
+    public $list_cols = array();
     
     /**
      * 
@@ -73,6 +91,23 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
     
     /**
      * 
+     * Use only these columns for the form in the given action, and when 
+     * loading record data for that action.
+     * 
+     * When empty, uses all columns.
+     * 
+     * The format is `'action' => array('col', 'col', 'col' ...)`.
+     * 
+     * @var array
+     * 
+     */
+    protected $_form_cols = array(
+        'add'  => array(),
+        'edit' => array(),
+    );
+    
+    /**
+     * 
      * An instance of the model catalog.
      * 
      * @var Solar_Sql_Model_Catalog
@@ -91,32 +126,14 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
     
     /**
      * 
-     * Use only these columns in the form, and when loading record data.
-     * 
-     * When empty, uses all columns.
-     * 
-     * @var array
-     * 
-     */
-    protected $_record_cols = array();
-    
-    /**
-     * 
      * Which columns to use when building a search query.
+     * 
+     * Search will be disabled if there are no columns listed here.
      * 
      * @var array
      * 
      */
     protected $_search_cols = array();
-    
-    /**
-     * 
-     * Whether or not to use access controls for actions in this controller.
-     * 
-     * @var bool
-     * 
-     */
-    protected $_use_acl = false;
     
     /**
      * 
@@ -129,19 +146,6 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
     {
         // parent logic
         parent::_setup();
-        
-        // register these if they are not already present
-        $registry = array(
-            'sql'           => 'Solar_Sql',
-            'user'          => 'Solar_User',
-            'model_catalog' => 'Solar_Sql_Model_Catalog',
-        );
-        
-        foreach ($registry as $name => $class) {
-            if (! Solar_Registry::exists($name)) {
-                Solar_Registry::set($name, $class);
-            }
-        }
         
         // set properties from registry
         $this->_model = Solar_Registry::get('model_catalog');
@@ -400,10 +404,6 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
      */
     protected function _isUserAllowed()
     {
-        if (! $this->_use_acl) {
-            return true;
-        }
-        
         $allowed = $this->user->access->isAllowed(
             get_class($this),
             $this->_action,
@@ -468,7 +468,7 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
      */
     protected function _setList($fetch = null)
     {
-        if ($this->_order && ! $fetch['order']) {
+        if ($this->_order && empty($fetch['order'])) {
             $fetch['order'] = $this->_order;
         }
         
@@ -500,20 +500,34 @@ abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
      */
     protected function _loadItem()
     {
-        $data = $this->_request->post($this->model_name, array());
-        $this->item->load($data, $this->_record_cols);
+        $model      = $this->_model->getModel($this->model_name);
+        $array_name = $model->array_name;
+        $data       = $this->_request->post($array_name, array());
+        
+        $cols = array();
+        if (! empty($this->_form_cols[$this->_action])) {
+            $cols = $this->_form_cols[$this->_action];
+        }
+        
+        $this->item->load($data, $cols);
     }
     
     /**
      * 
-     * Sets $this->form using $this->item and $this->_record_cols for the form hints..
+     * Sets $this->form using $this->item and $this->_form_cols for the form
+     * hints.
      * 
      * @return Solar_Form
      * 
      */
     protected function _setFormItem()
     {
-        $this->form = $this->item->newForm($this->_record_cols);
+        $cols = array();
+        if (! empty($this->_form_cols[$this->_action])) {
+            $cols = $this->_form_cols[$this->_action];
+        }
+        
+        $this->form = $this->item->newForm($cols);
         return $this->form;
     }
     

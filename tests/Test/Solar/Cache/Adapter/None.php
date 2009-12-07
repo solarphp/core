@@ -228,7 +228,7 @@ class Test_Solar_Cache_Adapter_None extends Test_Solar_Cache_Adapter {
     public function testSave_object()
     {
         $id = 'coyote';
-        $data = Solar::factory('Solar_Example');
+        $data = Solar::factory('Mock_Solar_Example');
         $this->assertTrue($this->_adapter->save($id, $data));
         $this->assertFalse($this->_adapter->fetch($id));
     }

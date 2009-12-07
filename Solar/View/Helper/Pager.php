@@ -43,7 +43,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
      * @config string next_class The CSS class for the next-page <a> tag. Default is 'next'.
      * 
      * @config string style_href An HREF to the pager stylesheet to load. Default is
-     *   'Solar/styles/pager.css'.
+     *   'Solar/View/Helper/Pager/style.css'.
      * 
      * @var array
      * 
@@ -57,7 +57,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
         'prev_class' => 'prev',
         'curr_class' => 'curr',
         'next_class' => 'next',
-        'style_href' => 'Solar/styles/pager.css',
+        'style_href' => 'Solar/View/Helper/Pager/style.css',
     );
     
     /**

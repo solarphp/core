@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_SanitizeBool extends Solar_Test {
+class Test_Solar_Filter_SanitizeBool extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_SanitizeBool extends Solar_Test {
     protected $_Test_Solar_Filter_SanitizeBool = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_SanitizeBool');
-        $this->assertInstance($obj, 'Solar_Filter_SanitizeBool');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Forces the value to a boolean.
@@ -100,6 +23,36 @@ class Test_Solar_Filter_SanitizeBool extends Solar_Test {
      */
     public function testSanitizeBool()
     {
-        $this->todo('stub');
+        $list = array(
+            true,
+            'on', 'On', 'ON',
+            'yes', 'Yes', 'YeS',
+            'y', 'Y',
+            'true', 'True', 'TrUe',
+            't', 'T',
+            1, '1',
+            'not empty',
+        );
+        
+        foreach ($list as $val) {
+            $bool = $this->_filter->sanitizeBool($val);
+            $this->assertTrue($bool);
+        }
+        
+        $list = array(
+            false,
+            'off', 'Off', 'OfF',
+            'no', 'No', 'NO',
+            'n', 'N',
+            'false', 'False', 'FaLsE',
+            'f', 'F',
+            0, '0',
+            '', '    ',
+        );
+        
+        foreach ($list as $val) {
+            $bool = $this->_filter->sanitizeBool($val);
+            $this->assertFalse($bool);
+        }
     }
 }

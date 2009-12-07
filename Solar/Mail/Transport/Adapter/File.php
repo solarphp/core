@@ -48,7 +48,7 @@ class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter
         parent::_preConfig();
         
         if (Solar::$system) {
-            $tmp = Solar::$system . '/mail/';
+            $tmp = Solar::$system . '/tmp/mail/';
         } else {
             $tmp = Solar_Dir::tmp('/Solar_Mail_Transport_Adapter_File/');
         }

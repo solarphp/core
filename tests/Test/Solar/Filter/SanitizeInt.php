@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Filter_SanitizeInt extends Solar_Test {
+class Test_Solar_Filter_SanitizeInt extends Test_Solar_Filter_Abstract {
     
     /**
      * 
@@ -16,83 +16,6 @@ class Test_Solar_Filter_SanitizeInt extends Solar_Test {
     protected $_Test_Solar_Filter_SanitizeInt = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Filter_SanitizeInt');
-        $this->assertInstance($obj, 'Solar_Filter_SanitizeInt');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the value of the $_invalid property.
-     * 
-     */
-    public function testGetInvalid()
-    {
-        $this->todo('stub');
-    }
-    
     /**
      * 
      * Test -- Forces the value to an integer.
@@ -100,6 +23,16 @@ class Test_Solar_Filter_SanitizeInt extends Solar_Test {
      */
     public function testSanitizeInt()
     {
-        $this->todo('stub');
+        $before = 'abc ... 123.45 ,.../';
+        $after = $this->_filter->sanitizeInt($before);
+        $this->assertSame($after, 12345);
+        
+        $before = 'a-bc .1. alkasldjf 23 aslk.45 ,.../';
+        $after = $this->_filter->sanitizeInt($before);
+        $this->assertSame($after, -12345);
+        
+        $before = '1E5';
+        $after = $this->_filter->sanitizeInt($before);
+        $this->assertSame($after, 100000);
     }
 }

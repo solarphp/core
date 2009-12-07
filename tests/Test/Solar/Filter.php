@@ -16,54 +16,9 @@ class Test_Solar_Filter extends Solar_Test {
     protected $_Test_Solar_Filter = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
+    public function preTest()
     {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
+        $this->_filter = Solar::factory('Solar_Filter');
     }
     
     // -----------------------------------------------------------------
@@ -79,8 +34,7 @@ class Test_Solar_Filter extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Filter');
-        $this->assertInstance($obj, 'Solar_Filter');
+        $this->assertInstance($this->_filter, 'Solar_Filter');
     }
     
     /**
@@ -130,7 +84,122 @@ class Test_Solar_Filter extends Solar_Test {
      */
     public function testApplyChain()
     {
-        $this->todo('stub');
+        // required, but no filter
+        $this->_filter->setChainRequire('foo');
+        
+        // one filter
+        $this->_filter->addChainFilter('bar', 'validateInt');
+        
+        // many filters
+        $this->_filter->addChainFilters('baz', array(
+            'sanitizeInt',
+            array('validateRange', 1, 9),
+        ));
+        
+        // required, one filter
+        $this->_filter->setChainRequire('dib');
+        $this->_filter->addChainFilter('dib', 'validateInt');
+        
+        // required, many filters
+        $this->_filter->setChainRequire('zim');
+        $this->_filter->addChainFilters('zim', array(
+            'sanitizeInt',
+            array('validateRange', 1, 9),
+        ));
+        
+        /**
+         * expected output after being sanitized
+         */
+        $expect = array(
+            'foo' => 'anything',
+            'bar' => 123,
+            'baz' => 4,
+            'dib' => 678,
+            'zim' => 7,
+        );
+        
+        /**
+         * apply filter with "valid" user input
+         */
+        
+        // user input
+        $data = array(
+            'foo' => 'anything',
+            'bar' => 123,
+            'baz' => 4.5,
+            'dib' => 678,
+            'zim' => 7.9,
+        );
+        
+        // valid?
+        $valid = $this->_filter->applyChain($data);
+        $this->assertTrue($valid);
+        
+        // should have sanitized the data in-place
+        $this->assertSame($data, $expect);
+        
+        /**
+         * apply filter with invalid user input
+         */
+        
+        // user input
+        $data = array(
+            'foo' => 'anything',
+            'bar' => 'abc',         // validateInt
+            'baz' => 123,           // validateRange
+            'dib' => 456,
+            'zim' => -78,           // validateRange
+        );
+        
+        // valid?
+        $valid = $this->_filter->applyChain($data);
+        $this->assertFalse($valid);
+        
+        // get the list of invalid elements
+        $invalid = $this->_filter->getChainInvalid();
+        $keys = array_keys($invalid);
+        $this->assertSame($keys, array('bar', 'baz', 'zim'));
+        
+        /**
+         * apply filter with missing requires
+         */
+        
+        // user input
+        $data = array(
+            'foo' => null,
+            'bar' => 123,
+            'baz' => 4.5,
+            'dib' => '',
+        );
+        
+        // valid?
+        $valid = $this->_filter->applyChain($data);
+        $this->assertFalse($valid);
+        
+        // get the list of invalid elements
+        $invalid = $this->_filter->getChainInvalid();
+        $keys = array_keys($invalid);
+        $this->assertSame($keys, array('foo', 'dib', 'zim'));
+        
+        /**
+         * apply filter with invalid user input and missing requires
+         */
+        
+        // user input
+        $data = array(
+            'bar' => 'abc',         // validateInt
+            'baz' => 123,           // validateRange
+            'dib' => 4.5,
+        );
+        
+        // valid?
+        $valid = $this->_filter->applyChain($data);
+        $this->assertFalse($valid);
+        
+        // get the list of invalid elements
+        $invalid = $this->_filter->getChainInvalid();
+        $keys = array_keys($invalid);
+        $this->assertEquals($keys, array('foo', 'zim', 'bar', 'baz', 'dib'));
     }
     
     /**

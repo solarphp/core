@@ -73,8 +73,8 @@
  * @version $Id$
  * 
  */
-class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterator {
-    
+class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, IteratorAggregate
+{
     /**
      * 
      * Default configuration values.
@@ -105,15 +105,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      */
     protected $_data_keylock = false;
-    
-    /**
-     * 
-     * Iterator: is the current position valid?
-     * 
-     * @var array
-     * 
-     */
-    protected $_iterator_valid = false;
     
     /**
      * 
@@ -334,13 +325,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         
         // heavy lifting
         $this->_load($data);
-        
-        // set iterator validity
-        if ($this->_data) {
-            $this->_iterator_valid = true;
-        } else {
-            $this->_iterator_valid = false;
-        }
     }
     
     /**
@@ -473,62 +457,26 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Iterator: get the current value for the array pointer.
+     * IteratorAggregate: returns an external iterator for this struct.
      * 
-     * @return mixed
+     * @return Solar_Struct_Iterator
      * 
      */
-    public function current()
+    public function getIterator()
     {
-        return $this->__get($this->key());
+        return new Solar_Struct_Iterator($this);
     }
     
     /**
      * 
-     * Iterator: get the current key for the array pointer.
+     * Returns all the keys for this struct.
      * 
-     * @return mixed
-     * 
-     */
-    public function key()
-    {
-        return key($this->_data);
-    }
-    
-    /**
-     * 
-     * Iterator: move to the next position.
-     * 
-     * @return void
+     * @return array
      * 
      */
-    public function next()
+    public function getKeys()
     {
-        $this->_iterator_valid = (next($this->_data) !== false);
-    }
-    
-    /**
-     * 
-     * Iterator: move to the first position.
-     * 
-     * @return void
-     * 
-     */
-    public function rewind()
-    {
-        $this->_iterator_valid = (reset($this->_data) !== false);
-    }
-    
-    /**
-     * 
-     * Iterator: is the current position valid?
-     * 
-     * @return void
-     * 
-     */
-    public function valid()
-    {
-        return $this->_iterator_valid;
+        return array_keys($this->_data);
     }
     
     /**

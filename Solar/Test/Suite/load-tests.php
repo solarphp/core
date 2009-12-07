@@ -21,7 +21,7 @@ function solar_load_test_files($dir)
 error_reporting(E_ALL|E_STRICT);
 
 // look in this directory for tests
-$dir = $_SERVER['argv'][1];
+$dir = rtrim($_SERVER['argv'][1], DIRECTORY_SEPARATOR);
 
 // starting with this class
 $class = $_SERVER['argv'][2];

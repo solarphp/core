@@ -151,6 +151,10 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         // write files in the View dir
         $this->_writeViews();
         
+        // link public dir for app
+        $link_public = Solar::factory('Solar_Cli_LinkPublic');
+        $link_public->exec($class);
+        
         // done!
         $this->_outln("Done.");
     }
@@ -205,7 +209,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
             $this->_outln('App directory exists.');
         }
         
-        $list = array('Layout', 'Locale', 'View');
+        $list = array('Layout', 'Locale', 'Public', 'View');
         
         foreach ($list as $sub) {
             if (! file_exists("$dir/$sub")) {

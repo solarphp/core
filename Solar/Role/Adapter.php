@@ -116,7 +116,12 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function getList()
     {
-        return $this->_cache->fetch('list', array());
+        $list = $this->_cache->fetch('list');
+        if (! $list) {
+            $list = array();
+        }
+        
+        return $list;
     }
     
     /**
@@ -149,7 +154,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     public function addList($list)
     {
         settype($list, 'array');
-        $data = $this->_cache->fetch('list', array());
+        $data = $this->getList();
         foreach ($list as $val) {
             $data[] = (string) $val;
         }
@@ -167,7 +172,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function add($val)
     {
-        $data = $this->_cache->fetch('list', array());
+        $data = $this->getList();
         $data[] = $val;
         $this->_cache->save('list', $data);
     }

@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_View_Helper_Time extends Test_Solar_View_Helper {
+class Test_Solar_View_Helper_Time extends Test_Solar_View_Helper_Timestamp {
     
     /**
      * 
@@ -15,56 +15,6 @@ class Test_Solar_View_Helper_Time extends Test_Solar_View_Helper {
      */
     protected $_Test_Solar_View_Helper_Time = array(
     );
-    
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
     
     // -----------------------------------------------------------------
     // 
@@ -79,16 +29,34 @@ class Test_Solar_View_Helper_Time extends Test_Solar_View_Helper {
      */
     public function testTime()
     {
-        $this->todo('stub');
+        $string = '12:34';
+        $actual = $this->_view->time($string);
+        $expect = '12:34:00';
+        $this->assertSame($actual, $expect);
     }
     
-    /**
-     * 
-     * Test -- Outputs a formatted timestamp using [[php::date() | ]] format codes.
-     * 
-     */
-    public function testTimestamp()
+    public function testTime_int()
     {
-        $this->todo('stub');
+        $int = strtotime('Nov 7, 1970 12:34pm');
+        $actual = $this->_view->time($int);
+        $expect = '12:34:00';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testTime_reformat()
+    {
+        $string = 'Nov 7, 1970, 11:45pm';
+        $actual = $this->_view->time($string, 'H:i');
+        $expect = '23:45';
+        $this->assertEquals($actual, $expect);
+    }
+    
+    public function testTime_configFormat()
+    {
+        $helper = $this->_view->newHelper('time', array('format' => 'H:i'));
+        $string = 'Nov 7, 1970, 12:34:56';
+        $actual = $helper->time($string);
+        $expect = '12:34';
+        $this->assertEquals($actual, $expect);
     }
 }

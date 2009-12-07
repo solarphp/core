@@ -18,56 +18,6 @@ class Test_Solar_View_Helper_PublicHref extends Test_Solar_View_Helper {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -79,6 +29,32 @@ class Test_Solar_View_Helper_PublicHref extends Test_Solar_View_Helper {
      */
     public function testPublicHref()
     {
-        $this->todo('stub');
+        $actual = $this->_view->publicHref('/path/to/file');
+        $expect = '/public/path/to/file';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testPublicHref_uri()
+    {
+        $uri = Solar::factory('Solar_Uri_Public');
+        $uri->setPath('/path/to/file');
+        $uri->setQuery('page=1');
+        
+        $actual = $this->_view->publicHref($uri);
+        $expect = '/public/path/to/file?page=1';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testPublicHref_raw()
+    {
+        // should escape
+        $actual = $this->_view->publicHref('/path/to/<file>');
+        $expect = '/public/path/to/&lt;file&gt;';
+        $this->assertSame($actual, $expect);
+        
+        // should not escape
+        $actual = $this->_view->publicHref('/path/to/<file>', true);
+        $expect = '/public/path/to/<file>';
+        $this->assertSame($actual, $expect);
     }
 }

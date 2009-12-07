@@ -65,19 +65,16 @@ class Solar_Debug_Var extends Solar_Base
     
     /**
      * 
-     * Modifies $this->_config after it has been built.
+     * Modifies the default config.
      * 
      * @return void
      * 
      */
-    protected function _postConfig()
+    protected function _preConfig()
     {
-        parent::_postConfig();
-        if (empty($this->_config['output'])) {
-            $mode = (PHP_SAPI == 'cli') ? 'text' 
-                                        : 'html';
-            $this->_config['output'] = $mode;
-        }
+        parent::_preConfig();
+        $output = (PHP_SAPI == 'cli') ? 'text' : 'html';
+        $this->_Solar_Debug_Var['output'] = $output;
     }
     
     /**
@@ -103,11 +100,6 @@ class Solar_Debug_Var extends Solar_Base
         // get the output
         $output = $label . $this->fetch($var);
         
-        // was this for HTML?
-        if (strtolower($this->_config['output']) == 'html') {
-            $output = '<pre>' . htmlspecialchars($output) . '</pre>';
-        }
-        
         // done
         echo $output;
     }
@@ -118,9 +110,6 @@ class Solar_Debug_Var extends Solar_Base
      * 
      * Buffers the [[php::var_dump | ]] for a variable and applies some
      * simple formatting for readability.
-     * 
-     * Note that this overrides the Solar_Base::dump()
-     * behavior entirely.
      * 
      * @param mixed $var The variable to dump.
      * 
@@ -133,6 +122,11 @@ class Solar_Debug_Var extends Solar_Base
         var_dump($var);
         $output = ob_get_clean();
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
+        
+        if (strtolower($this->_config['output']) == 'html') {
+            $output = '<pre>' . htmlspecialchars($output) . '</pre>';
+        }
+        
         return $output;
     }
 }

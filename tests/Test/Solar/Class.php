@@ -18,56 +18,6 @@ class Test_Solar_Class extends Solar_Test {
     
     // -----------------------------------------------------------------
     // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
-    public function setup()
-    {
-        parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
     // Test methods.
     // 
     // -----------------------------------------------------------------
@@ -90,14 +40,14 @@ class Test_Solar_Class extends Solar_Test {
      */
     public function testAutoload()
     {
-        $this->assertFalse(class_exists('Solar_Example', false));
-        Solar_Class::autoload('Solar_Example');
-        $this->assertTrue(class_exists('Solar_Example', false));
+        $this->assertFalse(class_exists('Mock_Solar_Example', false));
+        Solar_Class::autoload('Mock_Solar_Example');
+        $this->assertTrue(class_exists('Mock_Solar_Example', false));
     }
     
     public function testAutoload_emptyClass()
     {
-        $this->assertFalse(class_exists('Solar_Example', false));
+        $this->assertFalse(class_exists('Mock_Solar_Example', false));
         try {
             Solar_Class::autoload('');
             $this->fail('Should throw exception on empty class name.');
@@ -171,35 +121,35 @@ class Test_Solar_Class extends Solar_Test {
      */
     public function testParents()
     {
-        $actual = Solar_Class::parents('Solar_Example_Exception_CustomCondition');
+        $actual = Solar_Class::parents('Mock_Solar_Exception_CustomCondition');
         $expect = array(
             'Exception',
             'Solar_Exception',
-            'Solar_Example_Exception',
+            'Mock_Solar_Exception',
         );
         $this->assertSame($actual, $expect);
     }
     
     public function testParents_withObject()
     {
-        $object = Solar::factory('Solar_Example_Exception_CustomCondition');
+        $object = Solar::factory('Mock_Solar_Exception_CustomCondition');
         $actual = Solar_Class::parents($object);
         $expect = array(
             'Exception',
             'Solar_Exception',
-            'Solar_Example_Exception',
+            'Mock_Solar_Exception',
         );
         $this->assertSame($actual, $expect);
     }
     
     public function testParents_includeSelf()
     {
-        $actual = Solar_Class::parents('Solar_Example_Exception_CustomCondition', true);
+        $actual = Solar_Class::parents('Mock_Solar_Exception_CustomCondition', true);
         $expect = array(
             'Exception',
             'Solar_Exception',
-            'Solar_Example_Exception',
-            'Solar_Example_Exception_CustomCondition',
+            'Mock_Solar_Exception',
+            'Mock_Solar_Exception_CustomCondition',
         );
         $this->assertSame($actual, $expect);
     }

@@ -3,8 +3,8 @@
  * Inherited model class.
  * 
  */
-class {:class} extends {:extends} {
-    
+class {:class} extends {:extends}
+{
     /**
      * 
      * Model-specific setup.

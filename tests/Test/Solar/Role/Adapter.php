@@ -1,14 +1,14 @@
 <?php
 /**
  * 
- * Abstract class test.
+ * Abstract adapter class test.
  * 
  */
-class Test_Solar_Role_Adapter extends Solar_Test {
+abstract class Test_Solar_Role_Adapter extends Solar_Test {
     
     /**
      * 
-     * Configuration values.
+     * Default configuration values.
      * 
      * @var array
      * 
@@ -16,62 +16,54 @@ class Test_Solar_Role_Adapter extends Solar_Test {
     protected $_Test_Solar_Role_Adapter = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    /**
+     * 
+     * The adapter class to instantiate.
+     * 
+     * @var array
+     * 
+     */
+    protected $_adapter_class;
     
     /**
      * 
-     * Constructor.
+     * The adapter instance.
      * 
-     * @param array $config User-defined configuration parameters.
+     * @var array
      * 
      */
-    public function __construct($config = null)
+    protected $_adapter;
+    
+    /**
+     * 
+     * Sets $_adapter_class based on the test class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConstruct()
     {
-        $this->skip('abstract class');
-        parent::__construct($config);
+        parent::_postConstruct();
+        
+        // Test_Vendor_Foo => Vendor_Foo
+        $this->_adapter_class = substr(get_class($this), 5);
     }
     
     /**
      * 
-     * Destructor; runs after all methods are complete.
+     * Creates an adapter instance.
      * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
+     * @return void
      * 
      */
-    public function setup()
+    public function preTest()
     {
-        parent::setup();
+        parent::preTest();
+        $this->_adapter = Solar::factory(
+            $this->_adapter_class,
+            $this->_config
+        );
     }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
     
     /**
      * 
@@ -80,8 +72,7 @@ class Test_Solar_Role_Adapter extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Role_Adapter');
-        $this->assertInstance($obj, 'Solar_Role_Adapter');
+        $this->assertInstance($this->_adapter, $this->_adapter_class);
     }
     
     /**
@@ -96,12 +87,44 @@ class Test_Solar_Role_Adapter extends Solar_Test {
     
     /**
      * 
+     * Test -- Appends a single role to the existing list of roles.
+     * 
+     */
+    public function testAdd()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Appends a list of roles to the existing list of roles.
+     * 
+     */
+    public function testAddList()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
      * Test -- Adapter-specific method to find roles for loading.
      * 
      */
     public function testFetch()
     {
-        $this->skip('abstract method');
+        $expect = array('admin', 'root');
+        $actual = $this->_adapter->fetch('pmjones');
+        $this->assertEquals($actual, $expect);
+    }
+    
+    /**
+     * 
+     * Test -- Gets the list of all loaded roles for the user.
+     * 
+     */
+    public function testGetList()
+    {
+        $this->todo('stub');
     }
     
     /**
@@ -111,7 +134,16 @@ class Test_Solar_Role_Adapter extends Solar_Test {
      */
     public function testIs()
     {
-        $this->todo('stub');
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->is('admin');
+        $this->assertTrue($actual);
+    }
+    
+    public function testIs_not()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->is('no-such-role');
+        $this->assertFalse($actual);
     }
     
     /**
@@ -121,7 +153,16 @@ class Test_Solar_Role_Adapter extends Solar_Test {
      */
     public function testIsAll()
     {
-        $this->todo('stub');
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAll(array('admin', 'root'));
+        $this->assertTrue($actual);
+    }
+    
+    public function testIsAll_not()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAll(array('admin', 'root', 'no-such-role'));
+        $this->assertFalse($actual);
     }
     
     /**
@@ -131,7 +172,16 @@ class Test_Solar_Role_Adapter extends Solar_Test {
      */
     public function testIsAny()
     {
-        $this->todo('stub');
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAny(array('no-such-role', 'root'));
+        $this->assertTrue($actual);
+    }
+    
+    public function testIsAny_not()
+    {
+        $this->_adapter->load('pmjones');
+        $actual = $this->_adapter->isAny(array('no-such-role', 'no-other-role'));
+        $this->assertFalse($actual);
     }
     
     /**
@@ -141,7 +191,25 @@ class Test_Solar_Role_Adapter extends Solar_Test {
      */
     public function testLoad()
     {
-        $this->todo('stub');
+        $this->_adapter->load('pmjones');
+        $expect = array('admin', 'root');
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+    }
+    
+    public function testLoad_refresh()
+    {
+        // load the first time
+        $this->_adapter->load('pmjones');
+        $expect = array('admin', 'root');
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+        
+        // foribly refresh
+        $this->_adapter->load('boshag', true);
+        $expect = array('admin');
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
     }
     
     /**
@@ -150,6 +218,26 @@ class Test_Solar_Role_Adapter extends Solar_Test {
      * 
      */
     public function testReset()
+    {
+        // load the first time
+        $this->_adapter->load('pmjones');
+        $expect = array('admin', 'root');
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+        
+        // reset to empty
+        $this->_adapter->reset();
+        $expect = array();
+        $actual = $this->_adapter->getList();
+        $this->assertEquals($actual, $expect);
+    }
+    
+    /**
+     * 
+     * Test -- Sets the list, overriding what is there already.
+     * 
+     */
+    public function testSetList()
     {
         $this->todo('stub');
     }

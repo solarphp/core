@@ -616,22 +616,31 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
             $this->_target . str_replace('_', '/', $class) . '/Locale'
         );
         
+        // does the locale file already exist?
         $file = $dir . DIRECTORY_SEPARATOR . 'en_US.php';
-        
         if (file_exists($file)) {
             $this->_outln('Locale file for en_US already exists.');
             return;
         }
         
-        // get the table cols
+        // where should the table_cols file be?
         $incl = Solar_Dir::fix(
             $this->_target . str_replace('_', '/', $class) . '/Setup/table_cols.php'
         );
-        $cols = include($incl);
+        
+        // does it exist?
+        if (! file_exists($incl)) {
+            $this->_outln('Not creating locale file; no Setup/table_cols.php file.');
+            return;
+        }
+        
+        // get the table cols
+        $cols = include $incl;
         
         // create a label value & descr placeholder for each column
         $list = array_keys($cols);
         $label = array();
+        $descr = array();
         foreach ($list as $col) {
             $key = strtoupper("LABEL_{$col}");
             $label[$key] = ucwords(str_replace('_', ' ', $col));

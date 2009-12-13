@@ -78,8 +78,8 @@ class Solar_Form_Load_Model extends Solar_Base
      * 
      * @param Solar_Sql_Model $model Load form elements from this model object.
      * 
-     * @param array $load Which model columns to load as form elements, 
-     * default '*' for all columns.
+     * @param array $load Which model columns to load as form elements. If
+     * empty or '*', uses all fetch and calculate columns.
      * 
      * @param string $array_name Load the model columns as elements of this
      * array-name within the form.
@@ -87,8 +87,12 @@ class Solar_Form_Load_Model extends Solar_Base
      * @return array An array of form attributes and elements.
      * 
      */
-    public function fetch($model, $load = '*', $array_name = null)
+    public function fetch($model, $load = null, $array_name = null)
     {
+        if (! $load) {
+            $load = '*';
+        }
+        
         $this->_setModel($model);
         $this->_setLoad($load);
         $this->_setArrayName($array_name);

@@ -624,9 +624,8 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         }
         
         // where should the table_cols file be?
-        $incl = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class) . '/Setup/table_cols.php'
-        );
+        $incl = Solar_Dir::fix($this->_target . str_replace('_', '/', $class))
+              . 'Setup/table_cols.php';
         
         // does it exist?
         if (! file_exists($incl)) {

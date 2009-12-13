@@ -1635,14 +1635,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function newForm($cols = null)
     {
-        // use all columns?
-        if (empty($cols)) {
-            $cols = array_merge(
-                $this->_model->fetch_cols,
-                array_keys($this->_model->calculate_cols)
-            );
-        }
-        
         // put into this array in the form
         $array_name = $this->_model->array_name;
         

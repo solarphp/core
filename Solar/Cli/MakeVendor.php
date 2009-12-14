@@ -58,10 +58,10 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         '/{:dashes}/{:studly}/Controller/Page/Locale',
         '/{:dashes}/{:studly}/Controller/Page/Public',
         '/{:dashes}/{:studly}/Controller/Page/View',
-        '/{:dashes}/{:studly}/Controller/Model/Layout',
-        '/{:dashes}/{:studly}/Controller/Model/Locale',
-        '/{:dashes}/{:studly}/Controller/Model/Public',
-        '/{:dashes}/{:studly}/Controller/Model/View',
+        '/{:dashes}/{:studly}/Controller/Bread/Layout',
+        '/{:dashes}/{:studly}/Controller/Bread/Locale',
+        '/{:dashes}/{:studly}/Controller/Bread/Public',
+        '/{:dashes}/{:studly}/Controller/Bread/View',
     );
     
     /**

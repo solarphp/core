@@ -4,7 +4,7 @@
  * Base page-controller class for models.
  * 
  */
-abstract class {:vendor}_Controller_Model extends {:vendor}_Controller_Page
+abstract class {:vendor}_Controller_Bread extends {:vendor}_Controller_Page
 {
     /**
      * 

@@ -376,8 +376,8 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         // look at the vendor name and find a controller class
         $vendor = Solar_Class::vendor($class);
         if ($this->_model_name) {
-            $name = "{$vendor}_Controller_Model";
-            $file = $this->_target . "$vendor/Controller/Model.php";
+            $name = "{$vendor}_Controller_Bread";
+            $file = $this->_target . "$vendor/Controller/Bread.php";
         } else {
             $name = "{$vendor}_Controller_Page";
             $file = $this->_target . "$vendor/Controller/Page.php";

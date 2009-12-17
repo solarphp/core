@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 class Solar_Filter_ValidateSame extends Solar_Filter_Abstract

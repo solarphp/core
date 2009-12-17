@@ -15,7 +15,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Dir.php 4105 2009-09-28 20:26:00Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Symlink

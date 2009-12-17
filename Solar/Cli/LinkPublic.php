@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: MakeVendor.php 4038 2009-09-18 01:18:31Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Cli_LinkPublic extends Solar_Cli_Base

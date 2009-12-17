@@ -37,7 +37,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter
      * @config string uid_col Name of the column with the numeric user ID ("user_id").
      * 
      * @config string hash_algo The hashing algorithm for the password.  Default is 'md5'.
-     *   See [[php::hash_alogos() | ]] for a list of accepted algorithms.
+     *   See [[php::hash_algos() | ]] for a list of accepted algorithms.
      * 
      * @config string salt A salt prefix to make cracking passwords harder.
      * 

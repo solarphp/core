@@ -1,6 +1,10 @@
 Overview
 --------
 
+* [BRK] The default config file location is now SYSTEM/config.php, not
+  SYSTEM/config/Solar.config.php. You will need to move your config file;
+  be sure to check on how many times you nest dirname(__FILE__) in it.
+  
 * [BRK] Rename relationship definition 'where' and eager param 'join_cond' to
   'conditions'. This is a break.
 

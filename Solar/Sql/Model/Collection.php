@@ -587,12 +587,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         }
     }
     
-    // -----------------------------------------------------------------
-    //
-    // ArrayAccess
-    //
-    // -----------------------------------------------------------------
-    
     /**
      * 
      * ArrayAccess: set a key value; appends to the array when using []
@@ -615,5 +609,25 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         }
         
         return $this->__set($key, $val);
+    }
+    
+    /**
+     * 
+     * Overrides normal locale() to use the **model** locale strings.
+     * 
+     * @param string $key The key to get a locale string for.
+     * 
+     * @param string $num If 1, returns a singular string; otherwise, returns
+     * a plural string (if one exists).
+     * 
+     * @param array $replace An array of replacement values for the string.
+     * 
+     * @return string The locale string, or the original $key if no
+     * string found.
+     * 
+     */
+    public function locale($key, $num = 1, $replace = null)
+    {
+        return $this->_model->locale($key, $num, $replace);
     }
 }

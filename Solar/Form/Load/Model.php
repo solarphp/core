@@ -20,6 +20,28 @@ class Solar_Form_Load_Model extends Solar_Base
 {
     /**
      * 
+     * Default configuration values.
+     * 
+     * @config int default_text_size The default 'size' attribute for text
+     * elements.
+     * 
+     * @config int default_textarea_rows The default 'rows' attribute for
+     * textarea elements.
+     * 
+     * @config int default_textarea_rows The default 'cols' attribute for
+     * textarea elements.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Form_Load_Model = array(
+        'default_text_size'     => 60,
+        'default_textarea_rows' => 18,
+        'default_textarea_cols' => 60,
+    );
+    
+    /**
+     * 
      * The model we use for getting information about columns for elements.
      * 
      * @var Solar_Sql_Model
@@ -689,14 +711,28 @@ class Solar_Form_Load_Model extends Solar_Base
             $elem['attribs']['maxlength'] = $col['size'];
         }
         
-        // for textarea, add rows and cols
-        $fix_rows_cols = $elem['type'] == 'textarea'
-                      && empty($elem['attribs']['rows'])
-                      && empty($elem['attribs']['cols']);
+        // for text elements, set size
+        $fix_size = $elem['type'] == 'text'
+                      && empty($elem['attribs']['size']);
         
-        if ($fix_rows_cols) {
-            $elem['attribs']['rows'] = 18;
-            $elem['attribs']['cols'] = 60;
+        if ($fix_size) {
+            $elem['attribs']['size'] = $this->_config['default_text_size'];
+        }
+        
+        // for textarea elements, fix rows
+        $fix_rows = $elem['type'] == 'textarea'
+                 && empty($elem['attribs']['rows']);
+        
+        if ($fix_rows) {
+            $elem['attribs']['rows'] = $this->_config['default_textarea_rows'];
+        }
+        
+        // for textarea elements, fix cols
+        $fix_cols = $elem['type'] == 'textarea'
+                 && empty($elem['attribs']['cols']);
+        
+        if ($fix_cols) {
+            $elem['attribs']['cols'] = $this->_config['default_textarea_cols'];
         }
     }
     

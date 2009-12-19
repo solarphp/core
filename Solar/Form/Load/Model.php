@@ -688,6 +688,16 @@ class Solar_Form_Load_Model extends Solar_Base
             /** @todo Add +1 or +2 to 'size' for numeric types? */
             $elem['attribs']['maxlength'] = $col['size'];
         }
+        
+        // for textarea, add rows and cols
+        $fix_rows_cols = $elem['type'] == 'textarea'
+                      && empty($elem['attribs']['rows'])
+                      && empty($elem['attribs']['cols']);
+        
+        if ($fix_rows_cols) {
+            $elem['attribs']['rows'] = 18;
+            $elem['attribs']['cols'] = 60;
+        }
     }
     
     /**

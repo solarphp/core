@@ -282,12 +282,6 @@ class Solar_Form extends Solar_Base
         $action = $this->_request->server('REQUEST_URI');
         $this->_default_attribs['action'] = $action;
         
-        // now merge attribute configs to defaults
-        $this->_default_attribs = array_merge(
-            $this->_config['attribs'],
-            $this->_default_attribs
-        );
-        
         // reset everything
         $this->reset();
     }
@@ -857,7 +851,12 @@ class Solar_Form extends Solar_Base
      */
     public function reset()
     {
-        $this->attribs    = $this->_default_attribs;
+        // attribs should be the default set, plus config overrides
+        $this->attribs = array_merge(
+            $this->_default_attribs,
+            $this->_config['attribs']
+        );
+        
         $this->elements   = array();
         $this->feedback   = array();
         $this->_filters   = array();

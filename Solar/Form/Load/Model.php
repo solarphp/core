@@ -28,7 +28,7 @@ class Solar_Form_Load_Model extends Solar_Base
      * @config int default_textarea_rows The default 'rows' attribute for
      * textarea elements.
      * 
-     * @config int default_textarea_rows The default 'cols' attribute for
+     * @config int default_textarea_cols The default 'cols' attribute for
      * textarea elements.
      * 
      * @var array

@@ -713,7 +713,7 @@ class Solar_Form_Load_Model extends Solar_Base
         
         // for text elements, set size
         $fix_size = $elem['type'] == 'text'
-                      && empty($elem['attribs']['size']);
+                 && empty($elem['attribs']['size']);
         
         if ($fix_size) {
             $elem['attribs']['size'] = $this->_config['default_text_size'];

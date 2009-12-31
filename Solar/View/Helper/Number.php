@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View
+ * @package Solar_View_Helper
  * 
  * @author Jeff Moore <jeff@procata.com>
  * 

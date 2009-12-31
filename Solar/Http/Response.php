@@ -105,6 +105,8 @@ class Solar_Http_Response extends Solar_Base
      *     Expires: 1
      * }}
      * 
+     * @var bool
+     * 
      * @see setNoCache()
      * 
      * @see redirectNoCache()
@@ -478,6 +480,8 @@ class Solar_Http_Response extends Solar_Base
      * @see setNoCache()
      * 
      * @see redirectNoCache()
+     * 
+     * @return void
      * 
      */
     public function setNoCache($flag = true)

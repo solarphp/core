@@ -94,6 +94,26 @@ class Solar_Http_Response extends Solar_Base
     
     /**
      * 
+     * Should the response disable browser caching?
+     * 
+     * When true, the response will send these headers:
+     * 
+     * {{code:
+     *     Pragma: no-cache
+     *     Cache-Control: no-store, no-cache, must-revalidate
+     *     Cache-Control: post-check=0, pre-check=0
+     *     Expires: 1
+     * }}
+     * 
+     * @see setNoCache()
+     * 
+     * @see redirectNoCache()
+     * 
+     */
+    protected $_no_cache = false;
+    
+    /**
+     * 
      * Sends all headers and cookies, then returns the body.
      * 
      * @return string
@@ -304,8 +324,9 @@ class Solar_Http_Response extends Solar_Base
         $key = Solar_Mime::headerLabel($key);
         
         // get the value
-        if (array_key_exists($key, $this->_headers)) {
-            return $this->_headers[$key];
+        $headers = $this->getHeaders();
+        if (array_key_exists($key, $headers)) {
+            return $headers[$key];
         }
     }
     
@@ -318,7 +339,18 @@ class Solar_Http_Response extends Solar_Base
      */
     public function getHeaders()
     {
-        return $this->_headers;
+        $headers = $this->_headers;
+        
+        if ($this->_no_cache) {
+            $headers['Pragma'] = 'no-cache';
+            $headers['Cache-Control'] = array(
+                'no-store, no-cache, must-revalidate',
+                'post-check=0, pre-check=0',
+            );
+            $headers['Expires'] = '1';
+        }
+        
+        return $headers;
     }
     
     /**
@@ -430,6 +462,31 @@ class Solar_Http_Response extends Solar_Base
     
     /**
      * 
+     * Should the response disable HTTP caching?
+     * 
+     * When true, the response will send these headers:
+     * 
+     * {{code:
+     *     Pragma: no-cache
+     *     Cache-Control: no-store, no-cache, must-revalidate
+     *     Cache-Control: post-check=0, pre-check=0
+     *     Expires: 1
+     * }}
+     * 
+     * @param bool $flag When true, disable browser caching.
+     * 
+     * @see setNoCache()
+     * 
+     * @see redirectNoCache()
+     * 
+     */
+    public function setNoCache($flag = true)
+    {
+        $this->_no_cache = (bool) $flag;
+    }
+    
+    /**
+     * 
      * Sends all headers and cookies, then prints the response content.
      * 
      * @return void
@@ -519,14 +576,7 @@ class Solar_Http_Response extends Solar_Base
      * In those cases, use redirectNoCache() to turn off HTTP caching, so
      * that the re-POST warning does not occur.
      * 
-     * This method sends the following headers before setting Location:
-     * 
-     * {{code: php
-     *     header("Pragma: no-cache");
-     *     header("Cache-Control: no-store, no-cache, must-revalidate");
-     *     header("Cache-Control: post-check=0, pre-check=0", false);
-     *     header("Expires: 1");
-     * }}
+     * This method calls [[setNoCache()]] to disable caching.
      * 
      * @param Solar_Uri_Action|string $spec The URI to redirect to.
      * 
@@ -537,29 +587,12 @@ class Solar_Http_Response extends Solar_Base
      * 
      * @see <http://www.theserverside.com/tt/articles/article.tss?l=RedirectAfterPost>
      * 
+     * @see setNoCache()
+     * 
      */
     public function redirectNoCache($spec, $code = '303')
     {
-        // reset pragma header
-        $this->setHeader('Pragma', 'no-cache');
-        
-        // reset cache-control
-        $this->setHeader(
-            'Cache-Control',
-            'no-store, no-cache, must-revalidate'
-        );
-        
-        // append cache-control
-        $this->setHeader(
-            'Cache-Control',
-            'post-check=0, pre-check=0',
-            false
-        );
-        
-        // force immediate expiration
-        $this->setHeader('Expires', 1);
-        
-        // continue with redirection
+        $this->setNoCache();
         return $this->redirect($spec, $code);
     }
     
@@ -586,7 +619,7 @@ class Solar_Http_Response extends Solar_Base
         header($status, true, $this->_status_code);
         
         // send each of the remaining headers
-        foreach ($this->_headers as $key => $list) {
+        foreach ($this->getHeaders() as $key => $list) {
             
             // sanitize and skip empty keys
             $key = Solar_Mime::headerLabel($key);

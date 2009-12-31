@@ -111,15 +111,6 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
-     * Send no-cache headers as meta-http equivalents?
-     * 
-     * @var array
-     * 
-     */
-    protected $_no_cache = false;
-    
-    /**
-     * 
      * Main helper method; fluent interface.
      * 
      * @return Solar_View_Helper_Head
@@ -399,11 +390,6 @@ class Solar_View_Helper_Head extends Solar_View_Helper
         return $this;
     }
     
-    public function setNoCache($flag = true)
-    {
-        $this->_no_cache = (bool) $flag;
-    }
-    
     /**
      * 
      * Builds and returns all the tags for the <head> section.
@@ -424,14 +410,6 @@ class Solar_View_Helper_Head extends Solar_View_Helper
         // metas
         foreach ((array) $this->_meta as $val) {
             $html[] = $this->_view->meta($val);
-        }
-        
-        // no-cache?
-        if ($this->_no_cache) {
-            $html[] = $this->_view->metaHttp('Cache-Control', 'no-store, no-cache, must-revalidate');
-            $html[] = $this->_view->metaHttp('Cache-Control', 'post-check=0, pre-check=0');
-            $html[] = $this->_view->metaHttp('Pragma', 'no-cache');
-            $html[] = $this->_view->metaHttp('Expires', '1');
         }
         
         // base

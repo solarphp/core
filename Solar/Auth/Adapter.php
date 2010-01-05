@@ -658,9 +658,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->reset($code);
         
         // callback?
-        if ($this->_config['login_callback']) {
+        if ($this->_config['logout_callback']) {
             call_user_func(
-                $this->_config['login_callback'],
+                $this->_config['logout_callback'],
                 $this
             );
         }

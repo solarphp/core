@@ -907,7 +907,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         if ($use_select) {
             $join  = $this->_getNativeBySelect($eager, $fetch, $col);
             $join['cond'] = array_merge(
-                $join['cond'],
+                (array) $join['cond'],
                 $this->getForeignConditions($eager['alias'])
             );
         } else {

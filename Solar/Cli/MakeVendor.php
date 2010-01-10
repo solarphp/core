@@ -184,8 +184,8 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
             $this->_outln("done.");
         }
         
-        // write a "tests/config.php" file
-        $file = "$system/source/{$this->_dashes}/tests/config.php";
+        // write a "config/run-tests.php" file
+        $file = "$system/source/{$this->_dashes}/config/run-tests.php";
         if (file_exists($file)) {
             $this->_outln("File $file exists.");
         } else {

@@ -376,12 +376,18 @@ abstract class {:vendor}_Controller_Bread extends {:vendor}_Controller_Page
             return;
         }
         
+        // force the term string to lower-case, and replace spaces with
+        // wildcards, to allow a very generous result set.
+        $term = strtolower($this->search_term);
+        $term = str_replace(' ', '%', $term);
+        
         // build the where clause and bind values
         $where = array();
         $bind  = array();
         foreach ($this->_search_cols as $col) {
-            $where[]    = "$col LIKE :$col";
-            $bind[$col] = "%{$this->search_term}%";
+            // force lower-case comparison
+            $where[]    = "LOWER({$this->model_name}.{$col}) LIKE :$col";
+            $bind[$col] = "%{$term}%";
         }
         
         // build the fetch params

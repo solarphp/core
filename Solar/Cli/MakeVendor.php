@@ -47,6 +47,7 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
      */
     protected $_dirs = array(
         '/{:dashes}/script',
+        '/{:dashes}/config',
         '/{:dashes}/docs',
         '/{:dashes}/tests',
         '/{:dashes}/tests/Test',
@@ -179,6 +180,17 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
             $text = str_replace('{:php}', '<?php', $text);
             $text = str_replace('{:vendor}', $this->_studly, $text);
             
+            $this->_out("Writing $file ... ");
+            file_put_contents($file, $text);
+            $this->_outln("done.");
+        }
+        
+        // write a "config/default.php" file
+        $file = "$system/source/{$this->_dashes}/config/default.php";
+        if (file_exists($file)) {
+            $this->_outln("File $file exists.");
+        } else {
+            $text = "<?php\n\$config = array();\nreturn \$config;\n";
             $this->_out("Writing $file ... ");
             file_put_contents($file, $text);
             $this->_outln("done.");

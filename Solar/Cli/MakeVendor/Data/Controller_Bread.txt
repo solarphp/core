@@ -557,7 +557,11 @@ abstract class {:vendor}_Controller_Bread extends {:vendor}_Controller_Page
     {
         $this->form = Solar::factory('Solar_Form');
         
-        $this->form->attribs['action'] = "/{$this->_controller}/search";
+        $uri = Solar::factory('Solar_Uri_Action', array(
+            'uri' => "/{$this->_controller}/search";
+        ));
+        
+        $this->form->attribs['action'] = $uri->get();
         $this->form->attribs['method'] = "get";
         
         $this->form->setElement('q', array(

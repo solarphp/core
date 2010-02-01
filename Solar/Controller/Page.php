@@ -7,26 +7,21 @@
  * 
  *     Vendor/              # your vendor namespace
  *       App/               # subdirectory for page-controllers
- *         Base/
- *           Helper/        # shared helper classes
- *           Layout/        # shared layout files
- *           Locale/        # shared locale files
- *           Model/         # shared model classes
- *           View/          # shared view scripts
  *         Example.php      # an example app
  *         Example/
- *           Helper/        # helper classes specific to the app
- *             ...
  *           Layout/        # layout files to override shared layouts
  *             ...
  *           Locale/        # locale files
  *             en_US.php
  *             pt_BR.php
+ *           Public/        # public assets
+ *             style.css    
+ *             script.js    
+ *             image.jpg    
  *           View/          # view scripts
  *             _item.php    # partial template
  *             list.php     # full template
  *             edit.php     # another full template
- * 
  * 
  * When you call [[fetch()]], these intercept methods are run in the
  * following order ...
@@ -485,9 +480,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // render the view and layout, with pre- and post-render hooks
             $this->_render();
             
-            // set the Content-Type based on the format
-            $this->_setContentType();
-            
             // done, return the response headers, cookies, and body
             return $this->_response;
             
@@ -538,6 +530,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     {
         // if no view and no layout, there's nothing to render
         if (! $this->_view && ! $this->_layout) {
+            $this->_setContentType();
             return;
         }
         
@@ -553,6 +546,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $this->_setLayoutTemplates();
             $this->_renderLayout();
         }
+        
+        $this->_setContentType();
         
         $this->_postRender();
     }
@@ -570,6 +565,29 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_view_object = Solar::factory($this->_view_class);
         $this->_addViewTemplates();
         $this->_addViewHelpers();
+        $this->_fixViewObject();
+    }
+    
+    /**
+     * 
+     * Sets the locale class for the getText helper, and adds special
+     * convenience variables, in $this->_view_object for rendering.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixViewObject()
+    {
+        // set the locale class for the getText helper
+        $class = get_class($this);
+        $this->_view_object->getHelper('getTextRaw')->setClass($class);
+        
+        // inject special vars into the view
+        $this->_view_object->controller_class = get_class($this);
+        $this->_view_object->controller       = $this->_controller;
+        $this->_view_object->action           = $this->_action;
+        $this->_view_object->layout           = $this->_layout;
+        $this->_view_object->errors           = $this->_errors;
     }
     
     /**
@@ -625,13 +643,18 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Sets a Content-Type header in the response based on $this->_format.
+     * Sets a Content-Type header in the response based on $this->_format,
+     * but only if the response does not already have a Content-Type set.
      * 
      * @return void
      * 
      */
     protected function _setContentType()
     {
+        if ($this->_reponse->getHeader('Content-Type')) {
+            return;
+        }
+        
         // get the current format (the _fixFormat() method will have set the
         // default already, if needed)
         $format = $this->_format;
@@ -659,13 +682,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Automatically sets up a helper-class stack for you, searching
      * for helper classes in this order ...
      * 
-     * 1. Vendor_App_Example_Helper_
+     * 1. Vendor_View_Helper_
      * 
-     * 2. Vendor_App_Base_Helper_
-     * 
-     * 3. Vendor_View_Helper_
-     * 
-     * 4. Solar_View_Helper_
+     * 2. Solar_View_Helper_
      * 
      * @return void
      * 
@@ -694,11 +713,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Adds template paths to $this->_view_object.
      * 
      * The search-path will be in this order, for a Vendor_App_Example class
-     * extended from Vender_App_Base ...
+     * extended from Vender_Controller_Page ...
      * 
      * 1. Vendor/App/Example/View/
      * 
-     * 2. Vendor/App/Base/View/
+     * 2. Vendor/Controller/Page/View/
+     * 
+     * 3. Solar/Controller/Page/View/
      * 
      * @return void
      * 
@@ -730,13 +751,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * the layout with zero effort.
      * 
      * Automatically sets up a template-path stack for you, searching
-     * for layout files in this order ...
+     * for layout files (e.g.) in this order ...
      * 
      * 1. Vendor/App/Example/Layout/
      * 
-     * 2. Vendor/App/Layout/
+     * 2. Vendor/Controller/Page/Layout/
      * 
-     * 3. Solar/App/Layout/
+     * 3. Solar/Controller/Page/Layout/
      * 
      * @return void
      * 
@@ -1264,7 +1285,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         return $view;
     }
     
-    
     // -----------------------------------------------------------------
     //
     // Behavior hooks.
@@ -1341,23 +1361,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _preRender()
     {
-        // set the locale class for the getText helper
-        $class = get_class($this);
-        $this->_view_object->getHelper('getTextRaw')->setClass($class);
-        
-        // inject special vars into the view
-        $this->_view_object->controller_class = get_class($this);
-        $this->_view_object->controller       = $this->_controller;
-        $this->_view_object->action           = $this->_action;
-        $this->_view_object->layout           = $this->_layout;
-        $this->_view_object->errors           = $this->_errors;
     }
     
     /**
      * 
      * Executes after rendering the controller view and layout.
      * 
-     * Use this to do a final filter or maniuplation of $this->_response
+     * Use this to do a final filter or manipulation of $this->_response
      * from the view and layout scripts.  By default, it leaves the
      * response alone.
      * 

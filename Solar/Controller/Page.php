@@ -651,7 +651,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _setContentType()
     {
-        if ($this->_reponse->getHeader('Content-Type')) {
+        if ($this->_response->getHeader('Content-Type')) {
             return;
         }
         

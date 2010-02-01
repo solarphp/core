@@ -116,6 +116,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         'auto_set_length' => true,
     );
     
+
     /**
      * 
      * Content to send along with the request.
@@ -606,8 +607,9 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Sets the HTTP method for the request (GET, POST, etc).
      * 
-     * Recgonized methods are 'OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE',
-     * 'TRACE', and 'CONNECT'.
+     * Recgonized methods are OPTIONS, GET, HEAD, POST, PUT, DELETE,
+     * TRACE, and CONNECT, GET, POST, PUT, DELETE, TRACE, OPTIONS, COPY,
+     * LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH AND UNLOCK.
      * 
      * @param string $method The method to use for the request.
      * 
@@ -616,8 +618,22 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function setMethod($method)
     {
-        $allowed = array('OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE',
-            'TRACE', 'CONNECT');
+        $allowed = array(
+            Solar_Http_Request::METHOD_GET,
+            Solar_Http_Request::METHOD_POST,
+            Solar_Http_Request::METHOD_PUT,
+            Solar_Http_Request::METHOD_DELETE,
+            Solar_Http_Request::METHOD_TRACE,
+            Solar_Http_Request::METHOD_OPTIONS,
+            Solar_Http_Request::METHOD_TRACE,
+            Solar_Http_Request::METHOD_COPY,
+            Solar_Http_Request::METHOD_LOCK,
+            Solar_Http_Request::METHOD_MKCOL,
+            Solar_Http_Request::METHOD_MOVE,
+            Solar_Http_Request::METHOD_PROPFIND,
+            Solar_Http_Request::METHOD_PROPPATCH,
+            Solar_Http_Request::METHOD_UNLOCK
+        );
             
         $method = strtoupper($method);
         
@@ -984,9 +1000,9 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         }
         
         // what kind of request is this?
-        $is_get  = ($this->_method == 'GET');
-        $is_post = ($this->_method == 'POST');
-        $is_put  = ($this->_method == 'PUT');
+        $is_get  = ($this->_method == Solar_Http_Request::METHOD_GET);
+        $is_post = ($this->_method == Solar_Http_Request::METHOD_POST);
+        $is_put  = ($this->_method == Solar_Http_Request::METHOD_PUT);
         
         // do we have any body content?
         if (is_array($this->content) && ($is_post || $is_put)) {

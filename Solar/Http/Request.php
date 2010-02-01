@@ -17,6 +17,28 @@
 class Solar_Http_Request extends Solar_Factory
 {
     /**
+     * HTTP method constants.
+     */
+    const METHOD_DELETE     = 'DELETE';
+    const METHOD_GET        = 'GET';
+    const METHOD_HEAD       = 'HEAD';
+    const METHOD_OPTIONS    = 'OPTIONS';
+    const METHOD_POST       = 'POST';
+    const METHOD_PUT        = 'PUT';
+    const METHOD_TRACE      = 'TRACE';
+    
+    /**
+     * WebDAV method constants.
+     */
+    const METHOD_COPY       = 'COPY';
+    const METHOD_LOCK       = 'LOCK';
+    const METHOD_MKCOL      = 'MKCOL';
+    const METHOD_MOVE       = 'MOVE';
+    const METHOD_PROPFIND   = 'PROPFIND';
+    const METHOD_PROPPATCH  = 'PROPPATCH';
+    const METHOD_UNLOCK     = 'UNLOCK';
+    
+    /**
      * 
      * Default configuration values.
      * 
@@ -31,6 +53,7 @@ class Solar_Http_Request extends Solar_Factory
         'adapter' => 'Solar_Http_Request_Adapter_Stream',
     );
     
+
     /**
      * 
      * Sets the default adapter to 'Solar_Http_Request_Adapter_Curl' when the
@@ -46,4 +69,5 @@ class Solar_Http_Request extends Solar_Factory
             $this->_Solar_Http_Request['adapter'] = 'Solar_Http_Request_Adapter_Curl';
         }
     }
+
 }

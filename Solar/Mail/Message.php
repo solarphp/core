@@ -501,6 +501,18 @@ class Solar_Mail_Message extends Solar_Base
             return array();
         }
     }
+
+    /**
+     * Resets all recipients in To, Cc and Bcc.
+     * 
+     * @return void
+     */
+    public function resetRcpt()
+    {
+        $this->_rcpt['To'] = array();
+        $this->_rcpt['Cc'] = array();
+        $this->_rcpt['Bcc'] = array();
+    }
     
     /**
      * 
@@ -716,6 +728,9 @@ class Solar_Mail_Message extends Solar_Base
             $headers[] = array('Return-Path', "<{$this->_from[0]}>");
         }
         
+        // Date:
+        $headers[] = array('Date', date('r'));
+
         // From:
         $value = "<{$this->_from[0]}>";
         if ($this->_from[1]) {

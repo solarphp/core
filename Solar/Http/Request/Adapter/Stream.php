@@ -106,7 +106,7 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
         $http = array();
         
         // method
-        if ($this->_method != 'GET') {
+        if ($this->_method != Solar_Http_Request::METHOD_GET) {
             $http['method'] = $this->_method;
         }
         

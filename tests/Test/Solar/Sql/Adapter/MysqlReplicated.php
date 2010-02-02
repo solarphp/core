@@ -10,6 +10,9 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
      * 
      * Configuration values.
      * 
+     * THE DEFAULT SETUP REQUIRES THAT YOU HAVE A USER CALLED
+     * 'test_readonly' WITH READ-ONLY ACCESS TO THE 'test' DATABASE.
+     * 
      * @var array
      * 
      */
@@ -52,7 +55,7 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $stmt = "INSERT INTO {$this->_table_name} (id, name) VALUES (1, 'Zim')";
         try {
             $result = $slave->query($stmt);
-            $this->fail('slave should deny insert commands');
+            $this->fail('slave is misconfigured, it should deny writes');
         } catch (PDOException $e) {
             $expect = 'SQLSTATE[42000]: Syntax error or access violation';
             $actual = substr($e->getMessage(), 0, strlen($expect));

@@ -83,6 +83,7 @@ class Solar_Docs_Apiref extends Solar_Base
                 'getCode',
                 'getFile',
                 'getLine',
+                'getPrevious',
                 'getTrace',
                 'getTraceAsString',
             ),

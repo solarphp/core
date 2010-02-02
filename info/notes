@@ -44,6 +44,11 @@ Solar_Controller_Page
   variables in the view, instead of _preRender().  This means _preRender()
   is now empty by default, just like all the other hook methods.
 
+Solar_Docs_Apiref
+-----------------
+
+* [ADD] Ignore the PHP 5.3.1 Exception::getPrevious() method in documentation.
+
 
 Solar_Http_Request
 ------------------

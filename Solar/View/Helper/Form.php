@@ -602,8 +602,14 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             // set the form status.
             $this->setStatus($spec->getStatus());
             
-            // set the form attributes
-            foreach ((array) $spec->attribs as $key => $val) {
+            // set the form attributes. settings already in the view helper
+            // override the form values.
+            $attribs = array_merge(
+                (array) $spec->attribs,
+                (array) $this->_attribs
+            );
+            
+            foreach ((array) $attribs as $key => $val) {
                 $this->setAttrib($key, $val);
             }
             

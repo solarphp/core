@@ -332,7 +332,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     {
         if ($spec instanceof Solar_Form) {
             // auto-build and fetch from a Solar_Form object
-            $this->reset();
             $this->auto($spec);
             return $this->fetch();
         } elseif (is_array($spec)) {

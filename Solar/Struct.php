@@ -25,8 +25,8 @@
  *     $struct->zim = 'irk';
  *     echo $struct['zim']; // 'irk'
  *     
- *     $struct->noSuchKey = 'nothing';
- *     echo $struct->noSuchKey; // null
+ *     $struct->addNewKey = 'something new has been added';
+ *     echo $struct->noSuchKey; // 'something new has been added'
  * }}
  * 
  * One problem is that casting the object to an array will not
@@ -161,14 +161,15 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Sets a key value and marks the struct as "dirty"; also marks all parent
-     * structs as "dirty" too.
+     * Sets a key value and marks the struct as "dirty".
      * 
      * @param string $key The requested data key.
      * 
      * @param mixed $val The value to set the data to.
      * 
      * @return void
+     * 
+     * @see _setIsDirty()
      * 
      */
     public function __set($key, $val)

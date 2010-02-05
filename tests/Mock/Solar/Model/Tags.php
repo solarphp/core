@@ -41,7 +41,7 @@ class Mock_Solar_Model_Tags extends Solar_Sql_Model
             'through' => 'taggings',
         ));
         
-        $this->_index = array(
+        $this->_index_info = array(
             'name' => 'unique',
         );
     }

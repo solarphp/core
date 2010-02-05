@@ -36,7 +36,7 @@ class Mock_Solar_Model_TestSolarFoo extends Solar_Sql_Model
         $this->_addFilter('email', 'validateEmail');
         $this->_addFilter('uri', 'validateUri');
         
-        $this->_index = array(
+        $this->_index_info = array(
             'created',
             'updated',
             'email' => 'unique',

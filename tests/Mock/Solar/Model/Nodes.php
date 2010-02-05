@@ -63,7 +63,7 @@ class Mock_Solar_Model_Nodes extends Solar_Sql_Model
         
         $this->_hasManyThrough('tags', 'taggings');
         
-        $this->_index = array(
+        $this->_index_info = array(
             'created',
             'updated',
             'area_id',

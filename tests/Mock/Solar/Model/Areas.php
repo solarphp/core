@@ -39,7 +39,7 @@ class Mock_Solar_Model_Areas extends Solar_Sql_Model
         
         $this->_belongsTo('user');
         
-        $this->_index = array(
+        $this->_index_info = array(
             'created',
             'updated',
             'user_id',

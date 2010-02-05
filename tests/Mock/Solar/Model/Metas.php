@@ -37,7 +37,7 @@ class Mock_Solar_Model_Metas extends Solar_Sql_Model
         
         $this->_belongsTo('node');
         
-        $this->_index = array(
+        $this->_index_info = array(
             'node_id',
         );
     }

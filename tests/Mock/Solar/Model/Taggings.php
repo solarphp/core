@@ -39,7 +39,7 @@ class Mock_Solar_Model_Taggings extends Solar_Sql_Model
         
         $this->_belongsTo('tag');
         
-        $this->_index = array(
+        $this->_index_info = array(
             'node_id',
             'tag_id',
         );

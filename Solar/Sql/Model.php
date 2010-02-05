@@ -274,14 +274,14 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      *     // index on a single column:
      *     // CREATE INDEX idx_name ON table_name (col_name)
-     *     $this->_index['idx_name'] = array(
+     *     $this->_index_info['idx_name'] = array(
      *         'type' => $type,
      *         'cols' => 'col_name'
      *     );
      * 
      *     // index on multiple columns:
      *     // CREATE INDEX idx_name ON table_name (col_1, col_2, ... col_N)
-     *     $this->_index['idx_name'] = array(
+     *     $this->_index_info['idx_name'] = array(
      *         'type' => $type,
      *         'cols' => array('col_1', 'col_2', ..., 'col_N')
      *     );
@@ -289,7 +289,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      *     // easy shorthand for an index on a single column,
      *     // giving the index the same name as the column:
      *     // CREATE INDEX col_name ON table_name (col_name)
-     *     $this->_index['col_name'] = $type;
+     *     $this->_index_info['col_name'] = $type;
      * }}
      * 
      * The $type may be 'normal' or 'unique'.
@@ -297,7 +297,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @var array
      * 
      */
-    protected $_index = array();
+    protected $_index_info = array();
     
     // -----------------------------------------------------------------
     //
@@ -2037,7 +2037,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixTableName();
         $this->_fixModelName();
         $this->_fixArrayName();
-        $this->_fixIndex();
+        $this->_fixIndexInfo();
         $this->_fixTableCols(); // also creates table if needed
         $this->_fixPrimaryCol();
         $this->_fixPropertyCols();
@@ -2150,12 +2150,12 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fixes $this->_index listings.
+     * Fixes $this->_index_info listings.
      * 
      * @return void
      * 
      */
-    protected function _fixIndex()
+    protected function _fixIndexInfo()
     {
         // baseline index definition
         $baseidx = array(
@@ -2165,7 +2165,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         );
         
         // fix up each index to have a full set of info
-        foreach ($this->_index as $key => $val) {
+        foreach ($this->_index_info as $key => $val) {
             
             if (is_int($key) && is_string($val)) {
                 // array('col')
@@ -2188,7 +2188,7 @@ abstract class Solar_Sql_Model extends Solar_Base
                 settype($info['cols'], 'array');
             }
             
-            $this->_index[$key] = $info;
+            $this->_index_info[$key] = $info;
         }
     }
     
@@ -2352,9 +2352,6 @@ abstract class Solar_Sql_Model extends Solar_Base
      * $_inherit_name value based on the existence of the inheritance column.
      * 
      * @return void
-     * 
-     * @todo How to make foreign_col recognize that it's inherited, and should
-     * use the parent foreign_col value?  Can we just work up the chain?
      * 
      */
     protected function _fixPropertyCols()
@@ -2609,7 +2606,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     /**
      * 
      * Creates the table and indexes in the database using $this->_table_cols
-     * and $this->_index.
+     * and $this->_index_info.
      * 
      * @return void
      * 
@@ -2627,7 +2624,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         /**
          * Create the indexes.
          */
-        foreach ($this->_index as $name => $info) {
+        foreach ($this->_index_info as $name => $info) {
             try {
                 // create this index
                 $this->_sql->createIndex(

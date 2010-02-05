@@ -46,7 +46,11 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      * @var string
      * 
      */
-    protected $_table = null;
+    protected $_table_name = null;
+    
+    protected $_table_cols = array();
+    
+    protected $_index_info = array();
     
     /**
      * 
@@ -65,15 +69,6 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      * 
      */
     protected $_tpl = array();
-    
-    /**
-     * 
-     * Whether or not to connect to the database.
-     * 
-     * @var bool
-     * 
-     */
-    protected $_connect = true;
     
     /**
      * 
@@ -108,9 +103,6 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         // we need a target directory
         $this->_setTarget();
         
-        // connect?
-        $this->_setConnect();
-        
         // we need a table name
         $this->_setTable($class);
         
@@ -125,17 +117,17 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_writeRecord($class);
         $this->_writeCollection($class);
         
-        // write out the setup information
+        // write the metadata file
         if ($this->_inherit) {
-            $this->_outln('Using inheritance, so skipping setup.');
+            $this->_outln('Using inheritance, so skipping metadata.');
         } else {
-            $this->_createSetupDir($class);
-            $this->_writeTableName($class);
-            $this->_writeTableCols($class);
-            $this->_writeIndexInfo($class);
-            $this->_createLocaleDir($class);
-            $this->_writeLocaleFile($class);
+            $this->_loadMetadata();
+            $this->_writeMetadata($class);
         }
+        
+        // write out locale info
+        $this->_createLocaleDir($class);
+        $this->_writeLocaleFile($class);
         
         // done!
         $this->_outln('Done.');
@@ -212,26 +204,9 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
             $table = strtolower($table);
         }
         
-        $this->_table = $table;
+        $this->_table_name = $table;
         
-        $this->_outln("Using table '{$this->_table}'.");
-    }
-    
-    /**
-     * 
-     * Sets the $_connect property based on the command-line --connect flag.
-     * 
-     * @return void
-     * 
-     */
-    protected function _setConnect()
-    {
-        $this->_connect = $this->_options['connect'];
-        if ($this->_connect) {
-            $this->_outln('Will connect to database for column information.');
-        } else {
-            $this->_outln('Will not connect to database.');
-        }
+        $this->_outln("Using table '{$this->_table_name}'.");
     }
     
     /**
@@ -421,158 +396,67 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln('done.');
     }
     
-    /**
-     * 
-     * Creates the model "Setup/" directory.
-     * 
-     * @param string $class The model class name.
-     * 
-     * @return void
-     * 
-     */
-    protected function _createSetupDir($class)
+    protected function _loadMetadata()
     {
-        // get the setup dir
-        $dir = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class) . '/Setup'
-        );
-        
-        if (! file_exists($dir)) {
-            $this->_out('Creating setup directory ... ');
-            mkdir($dir, 0755, true);
-            $this->_outln('Done.');
-        } else {
-            $this->_outln('Setup directory exists.');
-        }
-    }
-    
-    /**
-     * 
-     * Writes the "Setup/table_name.php" file.
-     * 
-     * @param string $class The model class name.
-     * 
-     * @return void
-     * 
-     */
-    protected function _writeTableName($class)
-    {
-        $dir = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class) . '/Setup'
-        );
-        
-        $file = $dir . DIRECTORY_SEPARATOR . 'table_name.php';
-        $text = "<?php return '{$this->_table}';";
-        
-        // write the name file
-        $this->_out('Saving table name for setup ... ');
-        file_put_contents($file, $text);
-        $this->_outln('done.');
-    }
-    
-    /**
-     * 
-     * Writes the "Setup/table_cols.php" file, connecting to the database if
-     * needed.
-     * 
-     * @param string $class The model class name.
-     * 
-     * @return void
-     * 
-     */
-    protected function _writeTableCols($class)
-    {
-        $dir = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class) . '/Setup'
-        );
-        
-        $file = $dir . DIRECTORY_SEPARATOR . 'table_cols.php';
-        
-        if (! file_exists($file)) {
-            $this->_out('Creating empty table cols setup ... ');
-            $text = "<?php return array();";
-            file_put_contents($file, $text);
-            $this->_outln('done.');
-        }
-        
-        if (! $this->_connect) {
-            $this->_outln('Not connecting to database.');
-            $this->_outln('Not fetching table cols.');
+        if (! $this->_options['connect']) {
+            $this->_outln('Will not connect to database for metadata.');
             return;
         }
         
-        // connect to database
-        $this->_out('Connecting to database ... ');
+        $this->_out('Connecting to database for metadata ...');
         $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
         $this->_outln('connected.');
         
         // fetch table cols
         $this->_out('Fetching table cols ... ');
-        $table_cols = $sql->fetchTableCols($this->_table);
-        if (! $table_cols) {
+        $this->_table_cols = $sql->fetchTableCols($this->_table_name);
+        if (! $this->_table_cols) {
             throw $this->_exception('ERR_NO_COLS', array(
-                'table' => $this->_table
+                'table' => $this->_table_name
             ));
         }
         $this->_outln('done.');
         
-        // write the cols file
-        $this->_out('Saving table cols for setup ... ');
-        $text = var_export($table_cols, true);
-        file_put_contents($file, "<?php return $text;");
-        $this->_outln('done.');
-    }
-    
-    /**
-     * 
-     * Writes the "Setup/index_info.php" file, connecting to the database if
-     * needed.
-     * 
-     * @param string $class The model class name.
-     * 
-     * @return void
-     * 
-     */
-    protected function _writeIndexInfo($class)
-    {
-        $dir = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class) . '/Setup'
-        );
-        
-        $file = $dir . DIRECTORY_SEPARATOR . 'index_info.php';
-        
-        if (! file_exists($file)) {
-            $this->_out('Creating empty index info setup ... ');
-            $text = "<?php return array();";
-            file_put_contents($file, $text);
-            $this->_outln('done.');
-        }
-        
-        if (! $this->_connect) {
-            $this->_outln('Not connecting to database.');
-            $this->_outln('Not fetching index info.');
-            return;
-        }
-        
-        // connect to database
-        $this->_out('Connecting to database ... ');
-        $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
-        $this->_outln('connected.');
-        
         // fetch index info
         $this->_out('Fetching index info ... ');
-        $index_info = $sql->fetchIndexInfo($this->_table);
-        if (! $index_info) {
+        $this->_index_info = $sql->fetchIndexInfo($this->_table_name);
+        if (! $this->_index_info) {
             $this->_outln('no indexes found.');
             return;
         } else {
             $this->_outln('done.');
         }
+    }
+    
+    protected function _writeMetadata($class)
+    {
+        $file = $this->_target
+              . str_replace('_', DIRECTORY_SEPARATOR, $class)
+              . DIRECTORY_SEPARATOR
+              . 'Metadata.php';
         
-        // write the cols file
-        $this->_out('Saving index info for setup ... ');
-        $text = var_export($index_info, true);
-        file_put_contents($file, "<?php return $text;");
+        $table_name = var_export($this->_table_name, true);
+        $preg       = "/\=\> \n(\s+)array/m";
+        $replace    = "=> array";
+        $table_cols = preg_replace($preg, $replace, var_export($this->_table_cols, true));
+        $index_info = preg_replace($preg, $replace, var_export($this->_index_info, true));
+        
+        $str_replace = array(
+            '{:class}'      => $class,
+            '{:extends}'    => $this->_extends,
+            '{:table_name}' => $table_name,
+            '{:table_cols}' => trim(preg_replace('/^/m', '    ', $table_cols)),
+            '{:index_info}' => trim(preg_replace('/^/m', '    ', $index_info)),
+        );
+        
+        $text = str_replace(
+            array_keys($str_replace),
+            array_values($str_replace),
+            $this->_tpl['metadata']
+        );
+        
+        $this->_out('Writing metadata class ... ');
+        file_put_contents($file, $text);
         $this->_outln('done.');
     }
     
@@ -587,7 +471,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      */
     protected function _createLocaleDir($class)
     {
-        // get the setup dir
+        // get the right dir
         $dir = Solar_Dir::fix(
             $this->_target . str_replace('_', '/', $class) . '/Locale'
         );
@@ -623,21 +507,14 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
             return;
         }
         
-        // where should the table_cols file be?
-        $incl = Solar_Dir::fix($this->_target . str_replace('_', '/', $class))
-              . 'Setup/table_cols.php';
-        
         // does it exist?
-        if (! file_exists($incl)) {
-            $this->_outln('Not creating locale file; no Setup/table_cols.php file.');
+        if (! $this->_table_cols) {
+            $this->_outln('Not creating locale file; no table_cols available.');
             return;
         }
         
-        // get the table cols
-        $cols = include $incl;
-        
         // create a label value & descr placeholder for each column
-        $list = array_keys($cols);
+        $list = array_keys($this->_table_cols);
         $label = array();
         $descr = array();
         foreach ($list as $col) {

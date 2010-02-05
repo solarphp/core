@@ -17,11 +17,11 @@ class {:class} extends {:extends}
         // chain to parent
         parent::_preSetup();
         
-        // use setup files generated from make-model
-        $setup_dir         = Solar_Class::dir(__CLASS__, 'Setup');
-        $this->_table_name = Solar_File::load("{$setup_dir}/table_name.php");
-        $this->_table_cols = Solar_File::load("{$setup_dir}/table_cols.php");
-        $this->_index      = Solar_File::load("{$setup_dir}/index_info.php");
+        // use metadata generated from make-model
+        $metadata          = Solar::factory('{:class}_Metadata');
+        $this->_table_name = $metadata->table_name;
+        $this->_table_cols = $metadata->table_cols;
+        $this->_index      = $metadata->index_info;
     }
     
     /**

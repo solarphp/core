@@ -1831,13 +1831,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Create a new record related to this one.
+     * Create a new record/collection related to this one and returns it.
      * 
      * @param string $name The relation name.
      * 
-     * @param array $data Initial data
+     * @param array $data Initial data.
      * 
-     * @return Solar_Sql_Model_Record
+     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection
      * 
      */
     public function newRelated($name, $data = null)
@@ -1845,6 +1845,27 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $related = $this->_model->getRelated($name);
         $new = $related->fetchNew($data);
         return $new;
+    }
+    
+    /**
+     * 
+     * Sets the related to be a new record/collection, but only if the
+     * related is empty.
+     * 
+     * @param string $name The relation name.
+     * 
+     * @param array $data Initial data.
+     * 
+     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection
+     * 
+     */
+    public function setNewRelated($name, $data = null)
+    {
+        if ($this->$name) {
+            throw $this->_exception('ERR_RELATED_ALREADY_SET');
+        }
+        $this->$name = $this->newRelated($name, $data);
+        return $this->$name;
     }
     
     /**

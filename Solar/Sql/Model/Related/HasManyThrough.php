@@ -490,8 +490,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         // we need a through mapping
         if (! $through) {
             // make a new collection
-            $through = $native->newRelated($this->through);
-            $native->{$this->through} = $through;
+            $through = $native->setNewRelated($this->through);
         }
         
         // the list of existing foreign values

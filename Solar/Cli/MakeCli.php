@@ -26,7 +26,7 @@ class Solar_Cli_MakeCli extends Solar_Controller_Command
      * 
      */
     protected $_Solar_Cli_MakeCli = array(
-        'extends'       => null,
+        'extends' => null,
     );
     
     /**
@@ -200,7 +200,7 @@ class Solar_Cli_MakeCli extends Solar_Controller_Command
     
     /**
      * 
-     * Writes the en_US application locale file.
+     * Writes the `Locale/en_US.php` locale file.
      * 
      * @return void
      * 
@@ -217,6 +217,13 @@ class Solar_Cli_MakeCli extends Solar_Controller_Command
         }
     }
     
+    /**
+     * 
+     * Writes the `Info/help.txt` file.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeInfoHelp()
     {
         $text = $this->_tpl['help'];
@@ -229,6 +236,13 @@ class Solar_Cli_MakeCli extends Solar_Controller_Command
         }
     }
     
+    /**
+     * 
+     * Writes the `Info/options.php` file.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeInfoOptions()
     {
         $text = $this->_tpl['options'];

@@ -1,4 +1,21 @@
 <?php
+/**
+ * 
+ * Staic methods to support text formatting on VT00 terminals.
+ * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ * @author Clay Loveless <clay@killersoft.com>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Command.php 4370 2010-02-11 15:41:19Z pmjones $
+ * 
+ */
 class Solar_Vt100 extends Solar_Base
 {
     /**
@@ -65,6 +82,15 @@ class Solar_Vt100 extends Solar_Base
         '%d'    => "\033[2m",       // dim        
     );
     
+    /**
+     * 
+     * Converts VT100 %-markup to control codes.
+     * 
+     * @param string $text The text to format.
+     * 
+     * @return string The formatted text.
+     * 
+     */
     static public function format($text)
     {
         return strtr($text, self::$_format);

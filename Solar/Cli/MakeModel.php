@@ -48,8 +48,22 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
      */
     protected $_table_name = null;
     
+    /**
+     * 
+     * The columns from the table.
+     * 
+     * @var array
+     * 
+     */
     protected $_table_cols = array();
     
+    /**
+     * 
+     * The indexes from the table.
+     * 
+     * @var string
+     * 
+     */
     protected $_index_info = array();
     
     /**
@@ -396,6 +410,13 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
         $this->_outln('done.');
     }
     
+    /**
+     * 
+     * Reads and retains the table metadata from the database.
+     * 
+     * @return void
+     * 
+     */
     protected function _loadMetadata()
     {
         if (! $this->_options['connect']) {
@@ -428,6 +449,15 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
         }
     }
     
+    /**
+     * 
+     * Writes the metadata class file.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeMetadata($class)
     {
         $file = $this->_target

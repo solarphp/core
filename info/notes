@@ -1,0 +1,281 @@
+Overview of Change In Relateds
+==============================
+
+We've been over this at least twice before, once when talking about the
+"unfounded" branch and again when talking about the "nullrec" branch.
+
+To recap the problem, I very much want to remove the need for the following
+idiom in records where you have to access a related object:
+
+   // where 'foo' is a related record or collection ...
+   if (! $this->foo) {
+       $this->foo = $this->newRelated('foo');
+   }
+   // ... now you can be sure that $this->foo is actually there
+
+The idea is to have related data always come back as a record or collection,
+never as a null or empty array(), so that you do not have to check it every
+time for emptiness. I want to be able to get or set `$this->foo` and have it
+be there automatically.
+
+Jeff Moore (and others) thought this might be OK for a related collection, but
+absolutely not for a related record. Among other things, you can't tell if
+related record is actually in the database or not. After lengthy discussion, I
+backed off the idea.
+
+However, still I hate that idiom and want to be rid of it. I believe I have
+found a solution that covers Jeff's concerns, and still allow me to get rid of
+that check. Brief discussion with Jeff leads me to think that he's OK with it.
+
+There are four parts to this changeset (part 3 is where it gets interesting):
+
+1. Convert hasOne to always provide a record when you attempt to get or set
+it; in the case of no data at the database, place a new record object for
+manipulation.
+
+2. Convert hasMany and hasManyThrough to always provide a collection object
+when you attempt to get or set it; in the case of no data at the database,
+place a new empty collection object.
+
+3. Create a new relationship type, hasOneOrNull, that has the behavior of the
+existing hasOne. That is, if there is data when you try to get or set it,
+provide a record object, but if there is no data, place a null.
+
+4. Leave belongsTo alone. If there is data, provide a record object, but if
+there is no data, place a null. (This goes along with existing behaviors of
+not saving related belongsTo records, throwing an exception when they don't
+exist at save() time, etc.)
+
+Note that these changes apply only to related data within record objects. The
+fetchOne() and fetchAll() methods will still return null or array() when there
+is no data for the fetch.
+
+Note also that this applies only to getting and setting related properties; if
+you don't attempt to get or set the related value, no object will be
+populated.
+
+This removes the idiom I hate so much (because the has-whatever always get an
+object, no more checking-and-setting). This also solves Jeff's concern by
+introducing a specific relationship type that says if data does not exist, it
+should not be given a placeholder object unless you create that object
+specifically.
+
+There is the problem of changing existing _hasOne() calls to _hasOneOrNull()
+calls, but I think that will be easy as a global search-and-replace. There is
+also the problem of changing any checking logic against collections from `if
+(! $record->collection)` to `if ($record->collection->isEmpty()`, and that
+one's more difficult, but I don't think terribly so.
+
+
+New Classes
+-----------
+
+* Solar_Sql_Model_Metadata: Takes the place of Setup/table_name, table_cols,
+  and index_info files for make-model script.
+
+* Solar_Sql_Model_Related_HasOneOrNull: The same as a has-one, but when
+  related data is missing, uses a null instead of a new record.
+
+
+Deleted Classes
+---------------
+
+* Solar_Cli_Base: All functionality moved up to Solar_Controller_Command, and
+  all Cli classes now extend Solar_Controller_Command.
+
+* Solar_Vt100: Extracted from Solar_Controller_Command.
+
+* Solar_Cli_MakeCli: Command to make a CLI command in a vendor-space, like
+  make-model or make-app.
+
+
+script/solar
+------------
+
+* [ADD] Recognize -v as well as --verbose, even in a string of short options.
+
+* [CHG] Consolidate exception-handling logic.
+
+* [CHG] Only print exception dumps as error messages under certain
+  circumstances; otherwise, print a nice exception message as the error.
+
+
+Solar_Class
+-----------
+
+* [ADD] Method file(). Like dir(), this finds a file related to the class
+  path.
+
+
+Solar_Cli_*
+-----------
+
+* [ADD] Placeholder help.txt and options.php files for all commands.
+
+
+Solar_Cli_MakeDocs
+------------------
+
+* [ADD] Add option `--lint` to only lint the sources, and not actually write
+  out the doc files.
+
+
+Solar_Cli_MakeModel
+-------------------
+
+* [BRK] Instead of creating three files in a Setup directory, create and use a
+  Metadata class with the same information.
+
+
+Solar_Cli_MakeVendor
+--------------------
+
+* [ADD] Add an abstract Sql_Model_Metadata class as part of vendor setup.
+
+* [ADD] Now creates Vendor_Controller_Command and Vendor_Cli_Help so that
+  users can build CLI commands as easy as apps.
+
+
+Solar_Cli_RunTests
+------------------
+
+* [FIX] The options array now has a short 'v' for the long 'verbose' option.
+
+
+Solar_Controller_Command
+------------------------
+
+* [ADD] Formal exception for invalid options.
+
+* [FIX] Add option info for 'include-path'.
+
+
+Solar_Controller_Console
+------------------------
+
+* [CHG] Confg key 'default' is now 'help', and no commands are disabled by
+  default.
+
+
+Solar_Getopt
+------------
+
+* [CHG] Throw an exception when an unknown option is passed.
+
+* [ADD] Config key 'strict' to turn strictness off and on (i.e., blow up on
+  unknown option).
+  
+* [CHG] Method validate() now uses a filter chain, instead of a custom
+  validation process.
+
+* [CHG] Keep filters in $options['filters'], do not extrac to $_filters.
+
+* [DEL] Unused $_filters property.
+
+* [CHG] Add key 'present' to the internal option tracking, so we can tell if
+  an option was passed or not.
+
+* [FIX] In method validate(), when an option is present and a param is
+  required, add a validation to make sure the param is not blank.
+
+
+Solar_Sql_Model
+---------------
+
+* [BRK] Rename internal $_index to $_index_info, and method _fixIndex() to
+  _fixInexInfo(), to keep terminology the same between the model system and
+  the sql adapter.
+
+* [ADD] Method _hasOneOrNull() to support the new has-one-or-null relationship
+  type.
+
+
+Solar_Sql_Model_Record
+----------------------
+
+* [ADD] Method setNewRelated() to capture the idiom of setting a new related
+  where one does not yet exist.
+
+
+Solar_Sql_Model_Related
+-----------------------
+
+* [CHG] Renamed abstract method fetchEmpty() to _getEmpty() to indicate it's
+  for internal results.
+
+* [BRK] Repurpose the method name fetchEmpty() for fetching empty results out
+  to lazy- or eager-fetch object creation. Belongs-to and has-one-or-null will
+  return null; has-one will return a a new record object; has-many and
+  has-many-through will return an empty collection object.
+
+* [CHG] Method fetch() now calls fetchEmpty() when it looks like the returned
+  result will be empty.
+
+
+Solar_Sql_Model_Related_ToMany
+------------------------------
+
+* [CHG] Renamed method fetchEmpty() to _getEmpty() to return an array() for
+  empty internal results. This is because the fetchEmpty() method has been
+  repurposed.
+
+
+Solar_Sql_Model_Related_ToOne
+-----------------------------
+
+* [BRK] Method newObject() now only returns a loaded record object, not a new
+  record object.
+
+* [CHG] Renamed method fetchEmpty() to _getEmpty() to return a null for empty
+  internal results. This is because the fetchEmpty() method has been
+  repurposed.
+
+
+Solar_Sql_Model_Related_BelongsTo
+---------------------------------
+
+* [ADD] Method fetchEmpty() to return a null for empty relateds.
+
+
+Solar_Sql_Model_Related_HasMany
+-------------------------------
+
+* [ADD] Method fetchEmpty() to return an empty collection object for empty
+  relateds.
+
+* [CHG] Method save() now uses `$foreign->isEmpty()` instead of `! $foreign`.
+
+
+Solar_Sql_Model_Related_HasManyThrough
+--------------------------------------
+
+* [ADD] Method fetchEmpty() to return an empty collection object for empty
+  relateds.
+
+* [CHG] Method _fetchIntoArrayAll() now uses new _getEmpty() to get the
+  internal empty value instead of fetchEmpty(), which has been repurposed.
+
+* [CHG] Method fetch() now calls fetchEmpty() when it looks like the returned
+  result will be empty.
+
+* [CHG] Method save() no longer needs to create a $through, since it will be
+  created as needed. Similarly, no more need to see if $foreign and $through
+  don't exist.
+
+
+Solar_Sql_Model_Related_HasOne
+------------------------------
+
+* [ADD] Method fetchEmpty() to return a new record object for empty relateds.
+
+
+Solar_View_Helper_Form
+----------------------
+
+* [FIX] In method form(), do not reset right away when auto-building, as there
+  may have been preparatory work on the form settings before this point.
+  Thanks, Anthony Gentile, for the report that led to this fix.
+
+* [FIX] In method auto(), the view-helper attribs should override the form
+  descriptor attribs. Thanks, Bedrich Rios, for the report that led to this
+  fix.

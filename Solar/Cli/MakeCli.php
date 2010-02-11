@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: MakeApp.php 4348 2010-02-09 00:25:16Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Cli_MakeCli extends Solar_Controller_Command

@@ -14,7 +14,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: HasOne.php 3835 2009-06-12 20:05:36Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Sql_Model_Related_HasOneOrNull extends Solar_Sql_Model_Related_HasOne

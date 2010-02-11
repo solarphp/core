@@ -13,7 +13,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Command.php 4370 2010-02-11 15:41:19Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Vt100 extends Solar_Base

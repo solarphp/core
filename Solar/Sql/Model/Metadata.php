@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Cache.php 4097 2009-09-25 02:13:15Z pmjones $
+ * @version $Id$
  * 
  */
 abstract class Solar_Sql_Model_Metadata extends Solar_Base

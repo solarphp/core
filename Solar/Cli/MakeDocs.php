@@ -133,6 +133,16 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
             $this->_source = Solar_Dir::name(__FILE__, 2);
         }
         
+        // start parsing
+        $this->_outln("Parsing source files from '{$this->_source}' ... ");
+        $ref = Solar::factory('Solar_Docs_Apiref');
+        $ref->addFiles($this->_source, $class);
+        
+        // are we only linting the sources?
+        if ($this->_options['lint']) {
+            return;
+        }
+        
         // get the target API dir
         $class_dir = $this->_options['class_dir'];
         if ($class_dir) {
@@ -154,11 +164,6 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         if (! $this->_package_dir) {
             throw $this->_exception('ERR_NO_PACKAGE_DIR');
         }
-        
-        // start parsing
-        $this->_outln("Parsing source files from '{$this->_source}' ... ");
-        $ref = Solar::factory('Solar_Docs_Apiref');
-        $ref->addFiles($this->_source, $class);
         
         // import the class data
         $this->api = $ref->api;

@@ -12,4 +12,9 @@ return array(
         'descr'   => 'Write package docs to this directory.',
         'param'   => 'required', 
     ),
+    'lint' => array(
+        'descr'   => 'Do not make docs, just lint the sources and report errors.',
+        'value'   => false,
+        'filters' => array('validateBool', 'sanitizeBool'),
+    ),
 );

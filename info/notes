@@ -7,11 +7,11 @@ We've been over this at least twice before, once when talking about the
 To recap the problem, I very much want to remove the need for the following
 idiom in records where you have to access a related object:
 
-   // where 'foo' is a related record or collection ...
-   if (! $this->foo) {
-       $this->foo = $this->newRelated('foo');
-   }
-   // ... now you can be sure that $this->foo is actually there
+    // where 'foo' is a related record or collection ...
+    if (! $this->foo) {
+        $this->foo = $this->newRelated('foo');
+    }
+    // ... now you can be sure that $this->foo is actually there
 
 The idea is to have related data always come back as a record or collection,
 never as a null or empty array(), so that you do not have to check it every

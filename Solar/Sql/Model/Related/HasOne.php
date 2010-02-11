@@ -77,6 +77,18 @@ class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related_ToOne
     
     /**
      * 
+     * Returns a new record when there is no related data.
+     * 
+     * @return null
+     * 
+     */
+    public function fetchEmpty()
+    {
+        return $this->fetchNew();
+    }
+    
+    /**
+     * 
      * Saves a related record from a native record.
      * 
      * @param Solar_Sql_Model_Record $native The native record to save from.
@@ -87,6 +99,8 @@ class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related_ToOne
     public function save($native)
     {
         $foreign = $native->{$this->name};
+        
+        // cover for has-one-or-null
         if (! $foreign) {
             return;
         }

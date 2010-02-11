@@ -1844,6 +1844,27 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
+     * Adds a named has-one-or-none relationship.
+     * 
+     * @param string $name The relationship name, which will double as a
+     * property when records are fetched from the model.
+     * 
+     * @param array $opts Additional options for the relationship.
+     * 
+     * @return void
+     * 
+     */
+    protected function _hasOneOrNull($name, $opts = null)
+    {
+        settype($opts, 'array');
+        if (empty($opts['class'])) {
+            $opts['class'] = 'Solar_Sql_Model_Related_HasOneOrNull';
+        }
+        $this->_addRelated($name, $opts);
+    }
+    
+    /**
+     * 
      * Adds a named belongs-to relationship.
      * 
      * @param string $name The relationship name, which will double as a

@@ -401,12 +401,12 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Fetch an empty value appropriate for this association.
+     * Returns an empty related value for an internal array result.
      * 
-     * @return null|array
+     * @return null
      * 
      */
-    abstract public function fetchEmpty();
+    abstract protected function _getEmpty();
     
     /**
      * 
@@ -418,7 +418,17 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * collection object.
      * 
      */
-    abstract public function fetchNew();
+    abstract public function fetchNew($data = null);
+    
+    /**
+     * 
+     * Returns a new empty value appropriate for a lazy- or eager-fetch;
+     * this is different for each kind of related.
+     * 
+     * @return mixed
+     * 
+     */
+    abstract public function fetchEmpty();
     
     /**
      * 
@@ -777,6 +787,10 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             throw $this->_exception('ERR_NOT_ONE_OR_ALL');
         }
         
+        if (! $obj) {
+            $obj = $this->fetchEmpty();
+        }
+        
         return $obj;
     }
     
@@ -937,7 +951,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             if (! empty($data[$key])) {
                 $row[$this->name] = $data[$key];
             } else {
-                $row[$this->name] = $this->fetchEmpty();
+                $row[$this->name] = $this->_getEmpty();
             }
         }
     }

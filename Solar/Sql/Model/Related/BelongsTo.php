@@ -93,6 +93,18 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related_ToOne
     
     /**
      * 
+     * Returns a null when there is no related data.
+     * 
+     * @return null
+     * 
+     */
+    public function fetchEmpty()
+    {
+        return null;
+    }
+    
+    /**
+     * 
      * Pre-save behavior when saving foreign records through this 
      * relationship.
      * 

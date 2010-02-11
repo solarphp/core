@@ -58,12 +58,12 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Fetches an empty value for the related.
+     * Returns an empty related value for an internal array result.
      * 
-     * @return array
+     * @return null
      * 
      */
-    public function fetchEmpty()
+    public function _getEmpty()
     {
         return array();
     }

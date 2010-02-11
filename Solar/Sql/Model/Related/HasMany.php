@@ -33,6 +33,18 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related_ToMany
     
     /**
      * 
+     * Returns a new, empty collection when there is no related data.
+     * 
+     * @return Solar_Sql_Model_Collection
+     * 
+     */
+    public function fetchEmpty()
+    {
+        return $this->fetchNew();
+    }
+    
+    /**
+     * 
      * Saves a related collection from a native record.
      * 
      * @param Solar_Sql_Model_Record $native The native record to save from.
@@ -43,7 +55,7 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related_ToMany
     public function save($native)
     {
         $foreign = $native->{$this->name};
-        if (! $foreign) {
+        if ($foreign->isEmpty()) {
             return;
         }
         

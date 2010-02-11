@@ -366,7 +366,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             if (! empty($data[$key])) {
                 $row[$this->name] = $data[$key];
             } else {
-                $row[$this->name] = $this->fetchEmpty();
+                $row[$this->name] = $this->_getEmpty();
             }
         }
     }
@@ -424,6 +424,11 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         );
         
         $obj = $this->_foreign_model->fetchAll($fetch);
+        
+        if (! $obj) {
+            $obj = $this->fetchEmpty();
+        }
+        
         return $obj;
     }
     
@@ -453,6 +458,18 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     
     /**
      * 
+     * Returns a new, empty collection when there is no related data.
+     * 
+     * @return Solar_Sql_Model_Collection
+     * 
+     */
+    public function fetchEmpty()
+    {
+        return $this->fetchNew();
+    }
+    
+    /**
+     * 
      * Saves the related "through" collection *and* the foreign collection
      * from a native record.
      * 
@@ -472,13 +489,8 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         // get the through collection to work with
         $through = $native->{$this->through};
         
-        // if no foreign, and no through, we're done
-        if (! $foreign && ! $through) {
-            return;
-        }
-        
         // if no foreign records, kill off all through records
-        if (! $foreign) {
+        if ($foreign->isEmpty()) {
             $through->deleteAll();
             return;
         }
@@ -486,12 +498,6 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         // save the foreign records as they are, which creates the necessary
         // primary key values the through mapping will need
         $foreign->save();
-        
-        // we need a through mapping
-        if (! $through) {
-            // make a new collection
-            $through = $native->setNewRelated($this->through);
-        }
         
         // the list of existing foreign values
         $foreign_list = $foreign->getColVals($this->foreign_col);
@@ -506,7 +512,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             }
         }
         
-        // make sure all existing "through" have the right native IDs on the
+        // make sure all existing "through" have the right native IDs on them
         foreach ($through as $record) {
             $record->{$this->through_native_col} = $native->{$this->native_col};
         }

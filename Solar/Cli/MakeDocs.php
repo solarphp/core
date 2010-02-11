@@ -140,6 +140,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         
         // are we only linting the sources?
         if ($this->_options['lint']) {
+            $this->_outln('Done.');
             return;
         }
         

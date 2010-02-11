@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar command to make a page-controller app structure.
+ * Solar command to make a command-controller CLI structure.
  * 
  * @category Solar
  * 
@@ -11,26 +11,22 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: MakeApp.php 4348 2010-02-09 00:25:16Z pmjones $
  * 
  */
-class Solar_Cli_MakeApp extends Solar_Controller_Command
+class Solar_Cli_MakeCli extends Solar_Controller_Command
 {
     /**
      * 
      * Default configuration values.
      * 
-     * @config string extends The default page-controller class to extend.
-     * 
-     * @config string extends_model The page-controller class to extend when
-     * a model name is the basis for the app.
+     * @config string extends The default command-controller class to extend.
      * 
      * @var array
      * 
      */
-    protected $_Solar_Cli_MakeApp = array(
+    protected $_Solar_Cli_MakeCli = array(
         'extends'       => null,
-        'extends_model' => null,
     );
     
     /**
@@ -45,7 +41,7 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
     
     /**
      * 
-     * The name of the app class.
+     * The name of the CLI class.
      * 
      * @var string
      * 
@@ -54,7 +50,7 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
     
     /**
      * 
-     * The directory for the app class.
+     * The directory for the CLI class.
      * 
      * @var string
      * 
@@ -63,7 +59,7 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
     
     /**
      * 
-     * The filename for the app class.
+     * The filename for the CLI class.
      * 
      * @var string
      * 
@@ -72,21 +68,12 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
     
     /**
      * 
-     * What base app to extend?
+     * What base command to extend?
      * 
      * @var string
      * 
      */
     protected $_extends = null;
-    
-    /**
-     * 
-     * The model name for the model class.
-     * 
-     * @var string
-     * 
-     */
-    protected $_model_name = null;
     
     /**
      * 
@@ -115,13 +102,10 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
             $this->_class = $class;
         }
         
-        $this->_outln('Making app.');
+        $this->_outln('Making CLI command.');
         
         // we need a target directory
         $this->_setTarget();
-        
-        // using a model?
-        $this->_setModelName();
         
         // extending which class?
         $this->_setExtends($class);
@@ -139,21 +123,20 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
             $this->_target . str_replace('_', '/', $this->_class)
         );
         
-        // create the View, Locale, Helper, Layout dirs
+        // create the Locale and Info dirs
         $this->_createDirs();
         
-        // write the app class itself
-        $this->_writeAppClass();
+        // write the CLI class itself
+        $this->_writeCliClass();
         
         // write Locale/en_US.php
         $this->_writeLocale();
         
-        // write files in the View dir
-        $this->_writeViews();
+        // write Info/help.txt
+        $this->_writeInfoHelp();
         
-        // link public dir for app
-        $link_public = Solar::factory('Solar_Cli_LinkPublic');
-        $link_public->exec($class);
+        // write Info/options.php
+        $this->_writeInfoOptions();
         
         // done!
         $this->_outln("Done.");
@@ -166,34 +149,28 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
      * @return void
      * 
      */
-    protected function _writeAppClass()
+    protected function _writeCliClass()
     {
         // emit feedback
-        $this->_outln("App class '{$this->_class}' extends '{$this->_extends}'.");
+        $this->_outln("CLI class '{$this->_class}' extends '{$this->_extends}'.");
         $this->_outln("Preparing to write to '{$this->_target}'.");
         
-        // using app, or app-model?
-        if ($this->_model_name) {
-            $tpl_key = 'app-model';
-        } else {
-            $tpl_key = 'app';
-        }
-        
-        // get the app class template
+        // get the cli class template
+        $tpl_key = 'cli';
         $text = $this->_parseTemplate($tpl_key);
         
-        // write the app class
+        // write the cli class
         if (file_exists($this->_class_file)) {
-            $this->_outln('App class already exists.');
+            $this->_outln('CLI class already exists.');
         } else {
-            $this->_outln('Writing app class.');
+            $this->_outln('Writing CLI class.');
             file_put_contents($this->_class_file, $text);
         }
     }
     
     /**
      * 
-     * Creates the application directories..
+     * Creates the CLI directories.
      * 
      * @return void
      * 
@@ -203,20 +180,20 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
         $dir = $this->_class_dir;
         
         if (! file_exists($dir)) {
-            $this->_outln('Creating app directory.');
+            $this->_outln('Creating CLI directory.');
             mkdir($dir, 0755, true);
         } else {
-            $this->_outln('App directory exists.');
+            $this->_outln('CLI directory exists.');
         }
         
-        $list = array('Layout', 'Locale', 'Public', 'View');
+        $list = array('Info', 'Locale');
         
         foreach ($list as $sub) {
             if (! file_exists("$dir/$sub")) {
-                $this->_outln("Creating app $sub directory.");
+                $this->_outln("Creating CLI $sub directory.");
                 mkdir("$dir/$sub", 0755, true);
             } else {
-                $this->_outln("App $sub directory exists.");
+                $this->_outln("CLI $sub directory exists.");
             }
         }
     }
@@ -231,7 +208,6 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
     protected function _writeLocale()
     {
         $text = $this->_tpl['locale'];
-        
         $file = $this->_class_dir . DIRECTORY_SEPARATOR . "/Locale/en_US.php";
         if (file_exists($file)) {
             $this->_outln('Locale file exists.');
@@ -241,32 +217,27 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
         }
     }
     
-    /**
-     * 
-     * Writes the application view files.
-     * 
-     * @return void
-     * 
-     */
-    protected function _writeViews()
+    protected function _writeInfoHelp()
     {
-        if (! $this->_model_name) {
-            $list = array('index');
+        $text = $this->_tpl['help'];
+        $file = $this->_class_dir . DIRECTORY_SEPARATOR . "/Info/help.txt";
+        if (file_exists($file)) {
+            $this->_outln('Help file exists.');
         } else {
-            $list = array();
+            $this->_outln('Writing help file.');
+            file_put_contents($file, $text);
         }
-        
-        foreach ($list as $view) {
-            
-            $text = $this->_parseTemplate("view-$view");
-            
-            $file = $this->_class_dir . "/View/$view.php";
-            if (file_exists($file)) {
-                $this->_outln("View '$view' exists.");
-            } else {
-                $this->_outln("Writing '$view' view.");
-                file_put_contents($file, $text);
-            }
+    }
+    
+    protected function _writeInfoOptions()
+    {
+        $text = $this->_tpl['options'];
+        $file = $this->_class_dir . DIRECTORY_SEPARATOR . "/Info/options.txt";
+        if (file_exists($file)) {
+            $this->_outln('Options file exists.');
+        } else {
+            $this->_outln('Writing options file.');
+            file_put_contents($file, $text);
         }
     }
     
@@ -284,7 +255,6 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
         $data = array(
             '{:class}'          => $this->_class,
             '{:extends}'        => $this->_extends,
-            '{:model_name}'     => $this->_model_name,
         );
         
         return str_replace(
@@ -362,12 +332,8 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
             return;
         }
         
-        // explicit as config value?
-        if ($this->_model_name) {
-            $extends = $this->_config['extends_model'];
-        } else {
-            $extends = $this->_config['extends'];
-        }
+        // explicit as a config value?
+        $extends = $this->_config['extends'];
         if ($extends) {
             $this->_extends = $extends;
             return;
@@ -375,37 +341,14 @@ class Solar_Cli_MakeApp extends Solar_Controller_Command
         
         // look at the vendor name and find a controller class
         $vendor = Solar_Class::vendor($class);
-        if ($this->_model_name) {
-            $name = "{$vendor}_Controller_Bread";
-            $file = $this->_target . "$vendor/Controller/Bread.php";
-        } else {
-            $name = "{$vendor}_Controller_Page";
-            $file = $this->_target . "$vendor/Controller/Page.php";
-        }
+        $name = "{$vendor}_Controller_Command";
+        $file = $this->_target . "$vendor/Controller/Command.php";
         if (file_exists($file)) {
             $this->_extends = $name;
             return;
         }
         
-        // final fallback: Solar_Controller_Page
-        $this->_extends = 'Solar_Controller_Page';
-        return;
-    }
-    
-    /**
-     * 
-     * Sets the model class and var name the app class will use.
-     * 
-     * @return void
-     * 
-     */
-    protected function _setModelName()
-    {
-        $model_name = $this->_options['model_name'];
-        if ($model_name) {
-            $this->_model_name = $model_name;
-        } else {
-            $this->_model_name = null;
-        }
+        // final fallback: Solar_Controller_Command
+        $this->_extends = 'Solar_Controller_Command';
     }
 }

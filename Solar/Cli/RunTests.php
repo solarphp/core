@@ -53,7 +53,7 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_RunTests extends Solar_Cli_Base
+class Solar_Cli_RunTests extends Solar_Controller_Command
 {
     /**
      * 

@@ -15,9 +15,6 @@
  * 
  * @version $Id$
  * 
- * @todo Add load() method similar to Solar_Form::load(), for loading from 
- * external XML, PHP array, etc. files.
- * 
  */
 class Solar_Getopt extends Solar_Base
 {
@@ -25,14 +22,18 @@ class Solar_Getopt extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * @config string filter_class The data-filter class to use when validating and sanitizing
-     *   parameter values.  Default is 'Solar_Filter'.
+     * @config string filter_class The data-filter class to use when 
+     * validating and sanitizing parameter values.
+     * 
+     * @config bool strict In strict mode, throw an exception when an
+     * unknown option is passed into getopt.
      * 
      * @var array
      * 
      */
     protected $_Solar_Getopt = array(
         'filter_class' => 'Solar_Filter',
+        'strict'       => true,
     );
     
     /**
@@ -69,9 +70,10 @@ class Solar_Getopt extends Solar_Base
      * 
      * `param`
      * : (string) When the option is present, does it take a parameter?  If so,
-     *   the param can be "required" every time, or be "optional". If empty, no
+     *   the param can be "r[eq[uired]]" every time, or be "[o[pt[ional]]". If empty, no
      *   parameter for the option will be recognized (the option's value will be
      *   boolean true when the option is present).  Default is 'optional'.
+     *   Recognizes `o`', `opt`, `optional`, `r`, `req`, and `required`.
      * 
      * `value`
      * : (mixed) The default value for the option parameter, if any.  This way,
@@ -118,15 +120,6 @@ class Solar_Getopt extends Solar_Base
      * 
      */
     protected $_invalid = array();
-    
-    /**
-     * 
-     * List of filters to apply to option values.
-     * 
-     * @var array
-     * 
-     */
-    protected $_filters = array();
     
     /**
      * 
@@ -208,7 +201,9 @@ class Solar_Getopt extends Solar_Base
             'param'   => $info['param'],
             'value'   => $info['value'],
             'descr'   => $info['descr'],
-            'require' => (bool) $info['require']
+            'require' => (bool) $info['require'],
+            'filters' => array(),
+            'present' => false, // present in the cli command?
         );
         
         // retain and fix any filters for the option value
@@ -224,9 +219,6 @@ class Solar_Getopt extends Solar_Base
                     $info['filters'][$key] = array($list);
                 }
             }
-            
-            // save the filters
-            $this->_filters[$name] = $info['filters'];
         }
     }
     
@@ -256,13 +248,13 @@ class Solar_Getopt extends Solar_Base
      * For a given option on the command line, these values will result:
      * 
      * `--foo-bar`
-     * : `'foo-bar' => true`
+     * : `'foo_bar' => true`
      * 
      * `--foo-bar=baz`
-     * : `'foo-bar' => 'baz'`
+     * : `'foo_bar' => 'baz'`
      * 
      * `--foo-bar="baz dib zim"`
-     * : `'foo-bar' => 'baz dib zim'`
+     * : `'foo_bar' => 'baz dib zim'`
      * 
      * `-s`
      * : `'s' => true`
@@ -274,14 +266,14 @@ class Solar_Getopt extends Solar_Base
      * : `'s' => 'dib zim gir'`
      * 
      * Short-option clusters are parsed as well, so that `-fbz` will result
-     * in `array('f' => true, 'b' => true, 'z' => true)`.  Note that you cannot
-     * pass parameters to an option in a cluster.
+     * in `array('f' => true, 'b' => true, 'z' => true)`.  Note that you 
+     * cannot pass parameters to an option in a cluster.
      * 
-     * If an option is not defined, it will not be populated.
+     * If an option is not defined, an exception will be thrown.
      * 
-     * Options values are stored under the option key name, not
-     * the short- or long-format version of the option.  For example, an option
-     * named 'foo-bar' with a short-form of 'f' will be stored under 'foo-bar'.
+     * Options values are stored under the option key name, not the short-
+     * or long-format version of the option. For example, an option named
+     * 'foo-bar' with a short-form of 'f' will be stored under 'foo-bar'.
      * This helps deconflict between long- and short-form aliases.
      * 
      * @param array $argv The argument values passed on the command line.  If
@@ -357,7 +349,7 @@ class Solar_Getopt extends Solar_Base
     
     /**
      * 
-     * Applies validation and sanitizing filters to the values.
+     * Applies validation and sanitizing filters to the option values.
      * 
      * @return bool True if all values are valid, false if not.
      * 
@@ -367,74 +359,29 @@ class Solar_Getopt extends Solar_Base
         // reset previous invalidations
         $this->_invalid = array();
         
-        // note that we use &$val here, which allows sanitizing methods to
-        // work directly with the value.
-        foreach ($this->_values as $key => &$val) {
-            
-            // does the option name exist?  (might not for numeric options)
-            if (empty($this->options[$key])) {
-                continue;
+        // reset the filter chain so we can rebuild it
+        $this->_filter->resetChain();
+        
+        // build the filter chain and requires
+        foreach ($this->options as $name => $info) {
+            if ($info['present'] && $info['param'] == 'required') {
+                $info['filters'][] = 'validateNotBlank';
             }
-            
-            // setup for 'require' on parameter values
-            $require = $this->options[$key]['require'];
-            $this->_filter->setRequire($require);
-            
-            // is a value required for the option?
-            if ($require && ! $this->_filter->validateNotBlank($val)) {
-                // value was blank, that means it is invalid.
-                // other validations will also be processed, meaning that their
-                // messages will override this one.
-                $this->_invalid[$key] = $this->locale('VALIDATE_NOT_BLANK');
-            }
-            
-            // are there other filters for this option?
-            if (empty($this->_filters[$key])) {
-                // no filters, skip it
-                continue;
-            }
-            
-            // apply other filters
-            foreach ($this->_filters[$key] as $params) {
-                
-                // take the method name off the top of the params ...
-                $method = array_shift($params);
-                
-                // ... and put the value in its place.
-                array_unshift($params, $val);
-                
-                // call the filtering method
-                $result = call_user_func_array(
-                    array($this->_filter, $method),
-                    $params
-                );
-                
-                // did the filter sanitize, or did it validate?
-                $type = strtolower(substr($method, 0, 8));
-                
-                // what to do with the result?
-                if ($type == 'sanitize') {
-                    // retain the sanitized value
-                    $val = $result;
-                } elseif ($type == 'validate' && ! $result) {
-                    // a validation method failed; use the method name as
-                    // the locale translation key, converting from camelCase
-                    // to camel_Case, then to CAMEL_CASE.
-                    $tmp = preg_replace('/([a-z])([A-Z])/', '$1_$2', $method);
-                    $tmp = strtoupper($tmp);
-                    $this->_invalid[$key] = $this->_filter->locale($tmp);
-                    // no more validations on this key
-                    break;
-                }
-            }
+            $this->_filter->addChainFilters($name, $info['filters']);
+            $this->_filter->setChainRequire($name, $info['require']);
         }
         
-        // if there were any invalids, keep them and return false
-        if ($this->_invalid) {
-            return false;
-        } else {
-            return true;
+        // apply the filter chain to the option values
+        $status = $this->_filter->applyChain($this->_values);
+        
+        // retain any invalidation messages
+        $invalid = $this->_filter->getChainInvalid();
+        foreach ((array) $invalid as $key => $val) {
+            $this->_invalid[$key] = $val;
         }
+        
+        // done
+        return $status;
     }
     
     /**
@@ -493,6 +440,9 @@ class Solar_Getopt extends Solar_Base
         if (! $name) {
             return;
         }
+        
+        // the option is present
+        $this->options[$name]['present'] = true;
         
         // was a value specified with equals?
         if ($eqpos !== false) {
@@ -609,6 +559,9 @@ class Solar_Getopt extends Solar_Base
             $info = $this->options[$name];
         }
         
+        // the option is present
+        $this->options[$name]['present'] = true;
+        
         // are we processing as part of a cluster?
         if ($cluster) {
             // is a param required for the option?
@@ -660,17 +613,35 @@ class Solar_Getopt extends Solar_Base
      * 
      * @param string $type Look in the 'long' or 'short' key for option names.
      * 
-     * @param string $value The long or short format of the option name.
+     * @param string $spec The long or short format of the option name.
      * 
      * @return string
      * 
      */
-    protected function _getOptionName($type, $value)
+    protected function _getOptionName($type, $spec)
     {
         foreach ($this->options as $name => $info) {
-            if ($info[$type] == $value) {
+            if ($info[$type] == $spec) {
                 return $name;
             }
         }
+        
+        // if not in strict mode, we can let this go
+        if (! $this->_config['strict']) {
+            return;
+        }
+        
+        // not found, blow up
+        if ($type == 'short') {
+            $spec = "-$spec";
+        } else {
+            $spec = "--$spec";
+        }
+        
+        throw $this->_exception('ERR_UNKNOWN_OPTION', array(
+            'type' => $type,
+            'name' => $spec,
+            'options' => $this->options,
+        ));
     }
 }

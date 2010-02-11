@@ -205,6 +205,23 @@ class Solar_Class
     
     /**
      * 
+     * Returns the path to a file under a specific class.
+     * 
+     * @param string|object $spec The class or object to use as the base path.
+     * 
+     * @param string $file Append this file path.
+     * 
+     * @return string The path to the file under the class.
+     * 
+     */
+    public static function file($spec, $file)
+    {
+        $dir = Solar_Class::dir($spec);
+        return Solar_File::exists($dir . $file);
+    }
+    
+    /**
+     * 
      * Find the vendor name of a given class or object; this is effectively
      * the part of the class name that comes before the first underscore.
      * 

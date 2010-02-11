@@ -83,6 +83,26 @@ class Test_Solar_Getopt extends Solar_Test {
         $this->todo('stub');
     }
     
+    public function testValidate_paramOpt()
+    {
+        
+    }
+    
+    public function testValidate_paramOptHasDefault()
+    {
+        
+    }
+    
+    public function testValidate_paramReq()
+    {
+        
+    }
+    
+    public function testValidate_paramReqHasDefault()
+    {
+        
+    }
+    
     /**
      * 
      * Test -- Returns the populated option values.

@@ -35,8 +35,8 @@ class Solar_Controller_Console extends Solar_Base
     protected $_Solar_Controller_Console = array(
         'classes' => array('Solar_Cli'),
         'routing' => array(),
-        'disable' => 'base',
-        'default' => '',
+        'disable' => array(),
+        'default' => 'help',
     );
     
     /**
@@ -46,7 +46,7 @@ class Solar_Controller_Console extends Solar_Base
      * @var array
      * 
      */
-    protected $_disable = array('base');
+    protected $_disable = array();
     
     /**
      * 

@@ -2,34 +2,32 @@
 return array(
     'dir' => array(
         'long' => 'dir',
-        'param' => 'optional',
+        'param' => 'req',
         'value' => null,
         'descr' => 'The path to the tests directory.',
     ),
     'only' => array(
         'long' => 'only',
-        'param' => null,
         'value' => false,
         'descr' => 'Run only the named test class; do not descend into subclass tests.',
         'filters' => array('validateBool', 'sanitizeBool')
     ),
     'verbose' => array(
         'long' => 'verbose',
-        'param' => null,
+        'short' => 'v',
         'value' => false,
         'descr' => 'Show all diagnostic output.',
         'filters' => array('validateBool', 'sanitizeBool')
     ),
     'test_config' => array(
         'long' => 'test-config',
-        'param' => null,
+        'param' => 'req',
         'value' => false,
         'descr' => 'Use this config file for the test cases themselves.',
         'filters' => array('validateString', 'sanitizeString')
     ),
     'stop_on_fail' => array(
         'long' => 'stop-on-fail',
-        'param' => null,
         'value' => false,
         'descr' => 'Stop running tests when a test fails.',
         'filters' => array('validateBool', 'sanitizeBool'),

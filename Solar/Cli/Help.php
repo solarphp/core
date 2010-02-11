@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_Help extends Solar_Cli_Base
+class Solar_Cli_Help extends Solar_Controller_Command
 {
     /**
      * 

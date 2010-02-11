@@ -48,7 +48,12 @@ $vendor = str_replace(' ', '', $vendor);
  */
 $verbose = false;
 foreach ($argv as $val) {
-    if ($val == '--verbose') {
+    $long  = $val == '--verbose';
+    $short = strlen($val) > 1   // at least 2 chars
+          && $val[0] == '-'     // short option
+          && $val[1] != '-'     // not long option
+          && strpos($val, 'v'); // 'v' in there somewhere
+    if ($long || $short) {
         // found the argument
         $verbose = true;
         break;
@@ -192,28 +197,10 @@ try {
     Solar::stop();
     exit(0);
     
-} catch (Solar_Controller_Console_Exception $e) {
-    
-    // find an exit code, if any
-    $exit = false;
-    $info = $e->getInfo();
-    if (array_key_exists('exit', $info)) {
-        $exit = (int) $info['exit'];
-    }
-    
-    // disallow empty or zero exit codes
-    if (! $exit) {
-        $exit = 1;
-    }
+} catch (Exception $e) {
     
     // stop Solar
     Solar::stop();
-    
-    // print the error message and exit
-    echo $e->getMessage() . PHP_EOL;
-    exit((int) $exit);
-    
-} catch (Exception $e) {
     
     // find an exit code, if any
     $exit = false;
@@ -229,11 +216,29 @@ try {
         $exit = 1;
     }
     
-    // stop Solar
-    Solar::stop();
+    // how to print the exception message?
+    switch (true) {
+        
+    case $e instanceof Solar_Controller_Command_Exception_InvalidOptions:
+        echo $e->getMessageInvalid();
+        break;
     
-    // print the error message and exit
-    echo $e . PHP_EOL;
+    case $e instanceof Solar_Controller_Console_Exception:
+        echo $e->getMessage();
+        break;
+    
+    case $e instanceof Solar_Exception:
+        if ($verbose || $e->getCode() == $e->getMessage()) {
+            echo $e;
+        } else {
+            echo $e->getMessage();
+        }
+        break;
+        
+    default:
+        echo $e;
+    }
+    
+    echo PHP_EOL;
     exit((int) $exit);
-    
 }

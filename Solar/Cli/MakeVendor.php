@@ -18,7 +18,7 @@
  * and Vendor_Cli_Base?
  * 
  */
-class Solar_Cli_MakeVendor extends Solar_Cli_Base
+class Solar_Cli_MakeVendor extends Solar_Controller_Command
 {
     /**
      * 
@@ -46,23 +46,27 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
      * 
      */
     protected $_dirs = array(
-        '/{:dashes}/script',
         '/{:dashes}/config',
         '/{:dashes}/docs',
+        '/{:dashes}/script',
         '/{:dashes}/tests',
-        '/{:dashes}/tests/Test',
-        '/{:dashes}/tests/Test/{:studly}',
         '/{:dashes}/tests/Mock',
         '/{:dashes}/tests/Mock/{:studly}',
-        '/{:dashes}/{:studly}/Model',
+        '/{:dashes}/tests/Test',
+        '/{:dashes}/tests/Test/{:studly}',
+        '/{:dashes}/{:studly}/Cli/Help',
+        '/{:dashes}/{:studly}/Cli/Help/Info',
+        '/{:dashes}/{:studly}/Cli/Help/Locale',
+        '/{:dashes}/{:studly}/Controller/Bread/Locale',
+        '/{:dashes}/{:studly}/Controller/Bread/Public',
+        '/{:dashes}/{:studly}/Controller/Bread/View',
+        '/{:dashes}/{:studly}/Controller/Command/Info',
+        '/{:dashes}/{:studly}/Controller/Command/Locale',
         '/{:dashes}/{:studly}/Controller/Page/Layout',
         '/{:dashes}/{:studly}/Controller/Page/Locale',
         '/{:dashes}/{:studly}/Controller/Page/Public',
         '/{:dashes}/{:studly}/Controller/Page/View',
-        '/{:dashes}/{:studly}/Controller/Bread/Layout',
-        '/{:dashes}/{:studly}/Controller/Bread/Locale',
-        '/{:dashes}/{:studly}/Controller/Bread/Public',
-        '/{:dashes}/{:studly}/Controller/Bread/View',
+        '/{:dashes}/{:studly}/Model',
     );
     
     /**
@@ -187,10 +191,10 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         
         // write a "config/default.php" file
         $file = "$system/source/{$this->_dashes}/config/default.php";
+        $text = "<?php\n\$config = array();\nreturn \$config;\n";
         if (file_exists($file)) {
             $this->_outln("File $file exists.");
         } else {
-            $text = "<?php\n\$config = array();\nreturn \$config;\n";
             $this->_out("Writing $file ... ");
             file_put_contents($file, $text);
             $this->_outln("done.");
@@ -198,10 +202,23 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         
         // write a "config/run-tests.php" file
         $file = "$system/source/{$this->_dashes}/config/run-tests.php";
+        $text = "<?php\n\$config = array();\nreturn \$config;\n";
         if (file_exists($file)) {
             $this->_outln("File $file exists.");
         } else {
-            $text = "<?php\n\$config = array();\nreturn \$config;\n";
+            $this->_out("Writing $file ... ");
+            file_put_contents($file, $text);
+            $this->_outln("done.");
+        }
+        
+        // write a "vendor/Vendor/Cli/Help/Info/help.txt" file
+        $file = "$system/source/{$this->_dashes}/{$this->_studly}/Cli/Help/Info/help.txt";
+        $text = "{$this->_studly} command line tool." . PHP_EOL . PHP_EOL
+              . "Usage: %*{$this->_dashes} <command> <options> <params>%n" . PHP_EOL . PHP_EOL
+              . "Try '{$this->_dashes} help <command>' for help on a specific command." . PHP_EOL;
+        if (file_exists($file)) {
+            $this->_outln("File $file exists.");
+        } else {
             $this->_out("Writing $file ... ");
             file_put_contents($file, $text);
             $this->_outln("done.");

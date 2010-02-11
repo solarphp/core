@@ -17,7 +17,7 @@
  * and Vendor_Cli_Base?
  * 
  */
-class Solar_Cli_LinkVendor extends Solar_Cli_Base
+class Solar_Cli_LinkVendor extends Solar_Controller_Command
 {
     /**
      * 

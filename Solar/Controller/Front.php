@@ -239,7 +239,7 @@ class Solar_Controller_Front extends Solar_Base
             ));
         }
         
-        $this->_explain['fetch_uri'] = $uri->getPath();
+        $this->_explain['fetch_uri'] = $uri->getFrontPath();
         
         // rewrite the uri path
         $this->_rewrite($uri);
@@ -298,8 +298,9 @@ class Solar_Controller_Front extends Solar_Base
             return;
         }
         
-        // get the original URI path, trimming slashes
-        $orig = trim($uri->getPath(), '/');
+        // get the original URI path, minus the subdirectory prefix,
+        // and trim all slashes
+        $orig = trim($uri->getFrontPath(), '/');
         
         // start matching against regexen
         foreach ($this->_rewrite as $find => $repl) {
@@ -322,7 +323,7 @@ class Solar_Controller_Front extends Solar_Base
                 // set the new path, trimming slashes again
                 $uri->setPath(trim($path, '/'));
                 $this->_explain['rewrite_rule'] = "matched '$find'";
-                $this->_explain['rewrite_uri'] = $uri->getPath();
+                $this->_explain['rewrite_uri'] = $uri->getFrontPath();
                 return;
             }
         }
@@ -372,7 +373,7 @@ class Solar_Controller_Front extends Solar_Base
         }
         
         $this->_explain['routing_class'] = $class;
-        $this->_explain['routing_uri']   = $uri->getPath();
+        $this->_explain['routing_uri']   = $uri->getFrontPath();
         return array($page, $class);
     }
     

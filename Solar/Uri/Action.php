@@ -61,4 +61,20 @@ class Solar_Uri_Action extends Solar_Uri
             '/index.php'
         );
     }
+    
+    /**
+     * 
+     * Returns a path suitable for the front controller to parse (i.e., 
+     * without the prefix for subdirectory-based installations).
+     * 
+     * @return string
+     * 
+     */
+    public function getFrontPath()
+    {
+        // we use trim() instead of empty() on string elements
+        // to allow for string-zero values.
+        return (empty($this->path)         ? '' : $this->_pathEncode($this->path))
+             . (trim($this->format) === '' ? '' : '.' . urlencode($this->format));
+    }
 }

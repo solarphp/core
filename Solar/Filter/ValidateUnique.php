@@ -7,7 +7,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Sql_Model
+ * @package Solar_Filter
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

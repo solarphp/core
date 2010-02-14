@@ -316,8 +316,7 @@ class Solar_Cli_MakeTests extends Solar_Controller_Command
         $this->_code = substr($this->_code, 0, -1);
         
         // ignore these methods
-        $ignore = array('__construct', '__destruct', 'apiVersion', 'dump',
-            'locale');
+        $ignore = array('__construct', '__destruct', 'dump', 'locale');
         
         // look for methods and add them if needed
         foreach ($api['methods'] as $name => $info) {

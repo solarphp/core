@@ -109,21 +109,6 @@ abstract class Solar_Base
     
     /**
      * 
-     * Reports the API version for this class.
-     * 
-     * If you don't override this method, your classes will use the same
-     * API version string as the Solar package itself.
-     * 
-     * @return string A PHP-standard version number.
-     * 
-     */
-    public function apiVersion()
-    {
-        return '@package_version@';
-    }
-    
-    /**
-     * 
      * Convenience method for getting a dump the whole object, or one of its
      * properties, or an external variable.
      * 

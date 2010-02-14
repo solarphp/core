@@ -170,8 +170,8 @@ class Solar_Controller_Command extends Solar_Base
         // special behavior for -V/--version
         if ($this->_options['version']) {
             $vendor = Solar_Class::vendor($this);
-            $this->_out("$vendor command-line tool, version ");
-            $this->_outln($this->apiVersion() . '.');
+            $this->_out("$vendor command-line tool, Solar version ");
+            $this->_outln(Solar::apiVersion() . '.');
             return;
         }
         

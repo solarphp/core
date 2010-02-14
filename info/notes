@@ -100,6 +100,13 @@ script/solar
   circumstances; otherwise, print a nice exception message as the error.
 
 
+Solar_Base
+----------
+
+* [DEL] Remove unused method apiVersion(). Never once in the history of the
+  Solar core has it been used.
+
+
 Solar_Class
 -----------
 

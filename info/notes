@@ -217,6 +217,8 @@ Solar_Getopt
 * [FIX] In method validate(), when an option is present and a param is
   required, add a validation to make sure the param is not blank.
 
+* [FIX] Default value for 'param' is now null.
+
 
 Solar_Sql_Model
 ---------------

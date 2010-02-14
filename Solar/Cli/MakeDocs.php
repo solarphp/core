@@ -198,6 +198,11 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writePackages()
     {
         $this->_outln("Writing package pages to '{$this->_package_dir}':");
+        
+        $this->_out("Writing package index ... ");
+        $this->writePackageIndex();
+        $this->_outln("done.");
+        
         $this->_outln("Writing package class lists:");
         $list = array_keys($this->packages);
         foreach ($list as $package) {
@@ -205,6 +210,23 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
             $this->writePackageClassList($package);
             $this->_outln("done.");
         }
+    }
+    
+    /**
+     * 
+     * Writes the package index file.
+     * 
+     * @return void
+     * 
+     */
+    public function writePackageIndex()
+    {
+        $text = array();
+        foreach ($this->packages as $name => $info) {
+            $summ = empty($info['summ']) ? '-?-' : $info['summ'];
+            $text[] = "$name | $summ";
+        }
+        $this->_write('package', 'index', $text);
     }
     
     /**
@@ -219,8 +241,8 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writePackageClassList($package)
     {
         $text = array();
-        ksort($this->packages[$package]);
-        foreach ($this->packages[$package] as $class) {
+        ksort($this->packages[$package]['list']);
+        foreach ($this->packages[$package]['list'] as $class) {
             
             // ignore classes descended from Solar_Exception
             $parents = Solar_Class::parents($class);
@@ -237,7 +259,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
             }
             $text[] = '';
         }    
-        $this->_write('package', "$package", $text);
+        $this->_write('package', $package, $text);
     }
     
     /**
@@ -317,7 +339,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     {
         $text = array();
         foreach ($this->_classes_list as $name => $summ) {
-            $text[] = "$name\t$summ";
+            $text[] = "$name | $summ";
         }
         $this->_write('class', 'index', $text);
     }

@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Docs
+ * @package Solar_Docs Tools for building API documentation from source code.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -271,8 +271,16 @@ class Solar_Docs_Apiref extends Solar_Base
             $this->_log($class, "class '$class' has no @package tag");
             $this->api[$class]['tech']['package'] = null;
         } else {
-            $name = $this->api[$class]['tech']['package'];
-            $this->packages[$name][] = $class;
+            // retain in the class list
+            $name = $this->api[$class]['tech']['package']['name'];
+            $this->packages[$name]['list'][] = $class;
+            // if a summary is present in the class, and no summary
+            // has been retained yet, then retain it.
+            $summ    = $this->api[$class]['tech']['package']['summ'];
+            $already = ! empty($this->packages[$name]['summ']);
+            if ($summ && ! $already) {
+                $this->packages[$name]['summ'] = $summ;
+            }
         }
         
         // optionally add to the subpackage list

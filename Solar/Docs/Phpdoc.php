@@ -261,7 +261,7 @@ class Solar_Docs_Phpdoc extends Solar_Base
     
     /**
      * 
-     * Parses one ore more @todo lines into $this->_info.
+     * Parses one or more @todo lines into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -375,7 +375,13 @@ class Solar_Docs_Phpdoc extends Solar_Base
      */
     public function parsePackage($line)
     {
-        $this->_info['package'] = $this->_1part($line);
+        $parts = $this->_2part($line);
+        if ($parts) {
+            $this->_info['package'] = array(
+                'name' => $parts[0],
+                'summ' => $parts[1],
+            );
+        }
     }
     
     /**

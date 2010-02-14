@@ -119,6 +119,17 @@ Solar_Cli_MakeDocs
 * [ADD] Add option `--lint` to only lint the sources, and not actually write
   out the doc files.
 
+* [ADD] Method writePackageIndex() now writes out the package summaries as
+  an index for the package directory.
+
+* [CHG] Method writePackageClassList() honors the new API-ref format for the
+  $packages property.
+
+* [BRK] Method writeClassesIndex() now separates the class name and summary
+  using a pipe character instead of a tab; this makes the classes index a
+  Markdown-Extra table, instead of a TSV file.
+
+
 
 Solar_Cli_MakeModel
 -------------------
@@ -155,6 +166,34 @@ Solar_Controller_Console
 
 * [CHG] Confg key 'default' is now 'help', and no commands are disabled by
   default.
+
+
+Solar_Controller_Front
+----------------------
+
+* [FIX] Now uses Solar_Uri_Action::getFrontPath() throughout, so that
+  rewrites do not act on the action subdirectory prefix.  Thanks,
+  shiftyrobster, for the report that led to this fix.
+
+
+Solar_Docs_Apiref
+-----------------
+
+* [BRK] Property $packages format has changed. The key is still the package
+  name, but the value is now an associative array with two keys: 'list' and
+  'summ'. The 'list' key is an array of the classes in the package; the 'summ'
+  key is the package summary line, if any.
+  
+* [CHG] Method addClass() now retains the package summary from the class API
+  docs, but only if the package summary has not already been retained from
+  another class.  (I.e., the first package summary line wins.)
+
+
+Solar_Docs_Phpdoc
+-----------------
+
+* [CHG] Method parsePackage() now supports a 2-part line where part 1 is
+  the package name and part 2 is the package summary.
 
 
 Solar_Getopt
@@ -267,6 +306,13 @@ Solar_Sql_Model_Related_HasOne
 ------------------------------
 
 * [ADD] Method fetchEmpty() to return a new record object for empty relateds.
+
+
+Solar_Uri_Action
+----------------
+
+* [ADD] Method getFrontPath() returns the path without the subdirectory
+  prefix.
 
 
 Solar_View_Helper_Form

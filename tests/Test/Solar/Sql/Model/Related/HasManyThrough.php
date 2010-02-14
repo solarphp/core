@@ -392,7 +392,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         
         // get the tags, make sure there aren't any.
         $tags = $node->tags;
-        $this->assertTrue(is_array($tags));
+        $this->assertInstance($tags, 'Solar_Sql_Model_Collection');
         $this->assertTrue(count($tags) == 0);
         
         // should have been no extra SQL calls

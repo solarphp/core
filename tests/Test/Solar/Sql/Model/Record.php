@@ -302,7 +302,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $this->diag("expect: $expect");
         
         foreach ($list as $k => $area) {
-            $this->diag($area->nodes);
+            $this->diag($area->nodes->toArray());
             foreach ($area->nodes as $node) {
                 $this->diag("{$node->id}: {$node->subj}");
                 $this->assertTrue($node->subj != '');

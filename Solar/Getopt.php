@@ -72,8 +72,8 @@ class Solar_Getopt extends Solar_Base
      * : (string) When the option is present, does it take a parameter?  If so,
      *   the param can be "r[eq[uired]]" every time, or be "[o[pt[ional]]". If empty, no
      *   parameter for the option will be recognized (the option's value will be
-     *   boolean true when the option is present).  Default is 'optional'.
-     *   Recognizes `o`', `opt`, `optional`, `r`, `req`, and `required`.
+     *   boolean true when the option is present).  Default is null; 
+     *   recognizes `o`', `opt`, `optional`, `r`, `req`, and `required`.
      * 
      * `value`
      * : (mixed) The default value for the option parameter, if any.  This way,
@@ -94,7 +94,7 @@ class Solar_Getopt extends Solar_Base
     protected $_default = array(
         'long'    => null,
         'short'   => null,
-        'param'   => 'optional',
+        'param'   => null,
         'value'   => null,
         'descr'   => null,
         'require' => false,

@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Inflect
+ * @package Solar_Inflect Word-inflection tools.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

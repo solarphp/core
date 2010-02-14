@@ -16,7 +16,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Json
+ * @package Solar_Json JSON data formatting and checking.
  * 
  * @author Michal Migurski <mike-json@teczno.com>
  * 

@@ -10,7 +10,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown_Extra
+ * @package Solar_Markdown_Extra Plugin-based system to implement the 
+ * Markdown-Extra syntax.
  * 
  * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
  * 

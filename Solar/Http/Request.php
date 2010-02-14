@@ -5,7 +5,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Http
+ * @package Solar_Http HTTP request adapters, and a generic HTTP response
+ * class.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

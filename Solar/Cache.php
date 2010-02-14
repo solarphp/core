@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cache
+ * @package Solar_Cache Caching systems.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

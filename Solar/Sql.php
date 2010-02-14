@@ -5,7 +5,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Sql
+ * @package Solar_Sql Adapters for SQL database interaction, portable data
+ * definition, and table metadata.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

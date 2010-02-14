@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Getopt
+ * @package Solar_Getopt Command-line option parsing.
  * 
  * @author Clay Loveless <clay@killersoft.com>
  * 

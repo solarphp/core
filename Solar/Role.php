@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Role
+ * @package Solar_Role Mechanisms for reading user roles from various sources.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

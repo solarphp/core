@@ -26,7 +26,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown Plugin-based system to implement standard Markdown
+ * syntax.
  * 
  * @author John Gruber <http://daringfireball.net/projects/markdown/>
  * 

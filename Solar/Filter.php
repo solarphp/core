@@ -7,7 +7,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Filter
+ * @package Solar_Filter Filters to sanitize and validate user input.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

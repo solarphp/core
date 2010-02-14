@@ -5,7 +5,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Form
+ * @package Solar_Form Form processor with automated loading and presentation
+ * hinting.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

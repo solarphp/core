@@ -8,7 +8,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper_Form
+ * @package Solar_View_Helper_Form Helpers for generating form output.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

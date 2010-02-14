@@ -110,7 +110,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Uri
+ * @package Solar_Uri Representation and manipulation of URIs (generic, 
+ * action, and public).
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

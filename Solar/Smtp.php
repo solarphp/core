@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Smtp
+ * @package Solar_Smtp Adapters for sending email via SMTP.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

@@ -10,7 +10,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown_Wiki
+ * @package Solar_Markdown_Wiki Plugin-based system to implement a 
+ * Solar-specific wiki form of the Markdown syntax.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

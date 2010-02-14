@@ -7,7 +7,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Mail
+ * @package Solar_Mail Email-sending tools.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Test
+ * @package Solar_Test Unit-testing tools.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

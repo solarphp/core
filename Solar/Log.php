@@ -20,7 +20,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Log
+ * @package Solar_Log Logging mechanisms.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

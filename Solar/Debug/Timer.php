@@ -49,7 +49,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Debug
+ * @package Solar_Debug Debugging tools.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

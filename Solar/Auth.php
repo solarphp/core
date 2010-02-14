@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Auth
+ * @package Solar_Auth User authentication systems.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

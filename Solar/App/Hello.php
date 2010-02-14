@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_App
+ * @package Solar_App Example applications bundled with Solar.
  * 
  * @subpackage Solar_App_Hello
  * 

@@ -12,7 +12,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View
+ * @package Solar_View PHP-based TemplateView system.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

@@ -28,7 +28,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Service
+ * @package Solar_Service Web-service interfaces.
  * 
  * @subpackage Solar_Service_Akismet
  * 

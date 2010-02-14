@@ -21,7 +21,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Session
+ * @package Solar_Session Session containers with support for named segments,
+ * read-once flash values, and lazy-started sessions.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

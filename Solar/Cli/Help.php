@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cli
+ * @package Solar_Cli CLI commands.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

@@ -6,7 +6,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Controller
+ * @package Solar_Controller Front and page controllers for the web, plus
+ * console and command controllers for the command line.
  * 
  * @author Clay Loveless <clay@killersoft.com>
  * 

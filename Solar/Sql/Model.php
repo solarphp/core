@@ -7,7 +7,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Sql_Model
+ * @package Solar_Sql_Model An SQL-oriented ORM system using TableDataGateway 
+ * and DataMapper patterns.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

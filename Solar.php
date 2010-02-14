@@ -6,7 +6,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar Foundation classes for all of Solar.
  * 
  * @author Paul M. Jones <pmjones@solarphp.net>
  * 

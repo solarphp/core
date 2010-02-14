@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Mime
+ * @package Solar_Mime Generic MIME support methods.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

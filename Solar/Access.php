@@ -5,7 +5,8 @@
  * 
  * @category Solar
  * 
- * @package Solar_Access
+ * @package Solar_Access User- and role-based access (authorization) control 
+ * by controller and action.
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

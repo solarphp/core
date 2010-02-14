@@ -389,21 +389,28 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
              * @package Test_Solar
              */';
         
-        $expect = array('package' => 'Test_Solar');
+        $expect = array('package' => array(
+            'name' => 'Test_Solar',
+            'summ' => '',
+        ));
         
         $actual = $this->_phpdoc->parse($source);
         $this->assertSame($actual['tech'], $expect);
+        
+        
     }
     
-    public function testParsePackage_extraSpaces()
+    public function testParsePackage_withSummary()
     {
         $source = '
             /**
-             * @package Test_Solar with extra characters
+             * @package Test_Solar This is the summary.
              */';
         
-        // should ignore extra spaces
-        $expect = array('package' => 'Test_Solar');
+        $expect = array('package' => array(
+            'name' => 'Test_Solar',
+            'summ' => 'This is the summary.',
+        ));
         
         $actual = $this->_phpdoc->parse($source);
         $this->assertSame($actual['tech'], $expect);

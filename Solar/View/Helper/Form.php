@@ -65,12 +65,21 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
-     * Attributes for the form tag.
+     * Attributes for the form tag set via the auto() method.
      * 
      * @var array
      * 
      */
-    protected $_attribs = array();
+    protected $_attribs_auto = array();
+    
+    /**
+     * 
+     * Attributes for the form tag set from the view-helper level.
+     * 
+     * @var array
+     * 
+     */
+    protected $_attribs_view = array();
     
     /**
      * 
@@ -382,7 +391,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function setAttrib($key, $val = null)
     {
-        $this->_attribs[$key] = $val;
+        $this->_attribs_view[$key] = $val;
         return $this;
     }
     
@@ -625,16 +634,12 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             // set the form status.
             $this->setStatus($spec->getStatus());
             
-            // set the form attributes. settings already in the view helper
-            // override the form values.
-            $attribs = array_merge(
-                (array) $spec->attribs,
-                (array) $this->_attribs
+            // retain the automatic attribs separately from those
+            // specified at the view level (i.e. in this object)
+            $this->_attribs_auto = array_merge(
+                (array) $this->_attribs_auto,
+                (array) $spec->attribs
             );
-            
-            foreach ((array) $attribs as $key => $val) {
-                $this->setAttrib($key, $val);
-            }
             
             // add form-level feedback
             $this->addFeedback($spec->feedback);
@@ -758,11 +763,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function reset()
     {
-        // attributes for the <form> tag
-        $this->setAttribs(array_merge(
-            $this->_default_attribs,
-            $this->_config['attribs']
-        ));
+        // form-tag attributes at the auto() level
+        $this->_attribs_auto = array();
+        
+        // form-tag attributes at the view level
+        $this->_attribs_view = array();
         
         // where does the descr go?
         $this->setDescrPart($this->_config['descr_part']);
@@ -947,6 +952,20 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * Builds the opening <form> tag for output.
      * 
+     * Merges the form-tag attributes in this fashion, with the later ones
+     * overriding the earlier ones:
+     * 
+     * 1. The $_default_attribs array.
+     * 
+     * 2. The $_config['attribs'] array.
+     * 
+     * 3. Any attribs set via the auto() method.
+     * 
+     * 4. Any attribs set via setAttrib() or setAttribs().
+     * 
+     * This keeps it so that values set directly in the view object take 
+     * precedence over anything automated via a form object.
+     * 
      * @param array &$html A reference to the array of HTML lines for output.
      * 
      * @return void
@@ -954,7 +973,14 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _buildBegin(&$html)
     {
-        $html[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
+        $attribs = array_merge(
+            (array) $this->_default_attribs,
+            (array) $this->_config['attribs'],
+            (array) $this->_attribs_auto,
+            (array) $this->_attribs_view
+        );
+        
+        $html[] = '<form' . $this->_view->attribs($attribs) . '>';
     }
     
     /**

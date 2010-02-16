@@ -80,10 +80,7 @@ class Solar_Form extends Solar_Base
      */
     protected $_default_attribs = array(
         'action'  => null,
-        'class'   => null,
-        'id'      => null,
         'method'  => 'post',
-        'name'    => null,
         'enctype' => 'multipart/form-data',
     );
     

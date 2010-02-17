@@ -52,7 +52,7 @@ class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement
             
             // build an incremented ID cleanly from original attribs
             $radio_attribs = $this->_attribs;
-            if (! empty($attribs['id'])) {
+            if (! empty($radio_attribs['id'])) {
                 $i++;
                 $radio_attribs['id'] .= "-{$i}";
             }

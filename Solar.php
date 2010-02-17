@@ -178,7 +178,10 @@ class Solar
         
         $dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Solar';
         foreach ($list as $name) {
-            require_once $dir . DIRECTORY_SEPARATOR . "$name.php";
+            // don't use the autoloader when checking for existence
+            if (! class_exists('Solar_' . $name, false)) {
+                require $dir . DIRECTORY_SEPARATOR . "$name.php";
+            }
         }
         
         // register autoloader
@@ -475,9 +478,9 @@ class Solar
         // drop 'ERR_' and 'EXCEPTION_' prefixes from the code
         // to get a suffix for the exception class
         $suffix = $code;
-        if (substr($suffix, 0, 4) == 'ERR_') {
+        if (strpos($suffix, 'ERR_') === 0) {
             $suffix = substr($suffix, 4);
-        } elseif (substr($suffix, 0, 10) == 'EXCEPTION_') {
+        } elseif (strpos($suffix, 'EXCEPTION_') === 0) {
             $suffix = substr($suffix, 10);
         }
         

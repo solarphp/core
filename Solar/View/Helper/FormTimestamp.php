@@ -5,11 +5,16 @@
  * 
  * For an element named 'foo[bar]', builds a series of selects:
  * 
- * - foo[bar][Y] : +/- 4 years from selected value; if none, current year +/- 4
+ * - foo[bar][Y] : {:y_first} - {:y_last}
  * - foo[bar][m] : 01-12
  * - foo[bar][d] : 01-31
- * - foo[bar][H] : 00-23
+ * - foo[bar][H] : 00-24
  * - foo[bar][i] : 00-59
+ * 
+ * This helper makes use of two extra element information keys: `y_first`
+ * to determine the first year shown, and `y_last` as the last year shown.
+ * The default values are -4 years from the current year, and +4 years from
+ * the current year, respectively.
  * 
  * @category Solar
  * 
@@ -24,17 +29,38 @@
  */
 class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
 {
+    protected $_Solar_View_Helper_FormTimestamp = array(
+        'y_first' => null,
+        'y_last'  => null,
+    );
+    
+    protected function _preConfig()
+    {
+        $year = date('Y');
+        $this->_Solar_View_Helper_FormTimestamp['y_first'] = $year - 4;
+        $this->_Solar_View_Helper_FormTimestamp['y_last']  = $year + 4;
+    }
+    
+    protected $_y_first;
+    
+    protected $_y_last;
+    
     /**
      * 
      * Helper for a 'timestamp' pseudo-element.
      * 
-     * For an element named 'foo[bar]', returns a series of selects:
+     * For an element named 'foo[bar]', builds a series of selects:
      * 
-     * - foo[bar][Y] : +/- 4 years from selected value; if none, current year +/- 4
+     * - foo[bar][Y] : {:y_first} - {:y_last}
      * - foo[bar][m] : 01-12
      * - foo[bar][d] : 01-31
-     * - foo[bar][H] : 00-23
+     * - foo[bar][H] : 00-24
      * - foo[bar][i] : 00-59
+     * 
+     * This helper makes use of two extra element information keys: `y_first`
+     * to determine the first year shown, and `y_last` as the last year shown.
+     * The default values are -4 years from the current year, and +4 years 
+     * from the current year, respectively.
      * 
      * @param array $info An array of element information.
      * 
@@ -49,6 +75,27 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
              . $this->_selectDay()   . ' @ '
              . $this->_selectHour()  . ':'
              . $this->_selectMinute();
+    }
+    
+    protected function _prepare($info)
+    {
+        parent::_prepare($info);
+        
+        if (array_key_exists('y_first', $info)) {
+            $this->_y_first = $info['y_first'];
+        } else {
+            $this->_y_first = $this->_config['y_first'];
+        }
+        
+        if (array_key_exists('y_last', $info)) {
+            $this->_y_last = $info['y_last'];
+        } else {
+            $this->_y_last = $this->_config['y_last'];
+        }
+        
+        if (! $this->_value) {
+            $this->_value = date('Y-m-d H:i:s');
+        }
     }
     
     /**
@@ -116,19 +163,21 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
     {
         $name    = $this->_name . '[Y]';
         $value   = $this->_getValue('Y');
+        $options = array();
+        $first   = $this->_y_first;
+        $last    = $this->_y_last;
         
-        if ($value) {
-            $tmp = $value;
+        if ($first <= $last) {
+            // low to high
+            for ($year = $first; $year <= $last; $year ++) {
+                $options[$year] = str_pad($year, 4, '0', STR_PAD_LEFT);
+            }
         } else {
-            $tmp = date('Y');
+            // high to low
+            for ($year = $first; $year >= $last; $year --) {
+                $options[$year] = str_pad($year, 4, '0', STR_PAD_LEFT);
+            }
         }
-        
-        $options = array(
-            ''=>'-',
-            $tmp-4=>$tmp-4, $tmp-3=>$tmp-3, $tmp-2=>$tmp-2, $tmp-1=>$tmp-1,
-            $tmp+0=>$tmp+0, $tmp+1=>$tmp+1, $tmp+2=>$tmp+2, $tmp+3=>$tmp+3,
-            $tmp+4=>$tmp+4,
-        );
         
         return $this->_view->formSelect(array(
             'name'    => $name,
@@ -149,7 +198,6 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[m]';
         $value   = $this->_getValue('m');
         $options = array(
-            ''   => '-',
             '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04', '05'=>'05',
             '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10',
             '11'=>'11', '12'=>'12',
@@ -174,7 +222,6 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[d]';
         $value   = $this->_getValue('d');
         $options = array(
-            ''=>'-',
             '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04', '05'=>'05',
             '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10',
             '11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14', '15'=>'15',
@@ -203,12 +250,11 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[H]';
         $value   = $this->_getValue('H');
         $options = array(
-            ''=>'-',
             '00'=>'00', '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04',
             '05'=>'05', '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09',
             '10'=>'10', '11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14',
             '15'=>'15', '16'=>'16', '17'=>'17', '18'=>'18', '19'=>'19',
-            '20'=>'20', '21'=>'21', '22'=>'22', '23'=>'23',
+            '20'=>'20', '21'=>'21', '22'=>'22', '23'=>'23', '24'=>'24',
         );
         
         return $this->_view->formSelect(array(
@@ -230,7 +276,6 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[i]';
         $value   = $this->_getValue('i');
         $options = array(
-            ''=>'-',
             '00'=>'00', '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04',
             '05'=>'05', '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09',
             '10'=>'10', '11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14',

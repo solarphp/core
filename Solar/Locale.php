@@ -107,6 +107,21 @@ class Solar_Locale extends Solar_Base
     
     /**
      * 
+     * Returns RFC 1766 (XHTML) language code for current locale code.
+     * 
+     * This is the same as the locale code, but using a dash instead of an
+     * underscore as a separator.
+     * 
+     * @return string
+     * 
+     */
+    public function getLanguageCode()
+    {
+        return str_replace('_', '-', $this->_code);
+    }
+    
+    /**
+     * 
      * Returns the translated locale string for a class and key.
      * 
      * Loads translations as needed.

@@ -1186,10 +1186,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             $attribs['class'][] = $this->_css_class['invalid'];
         }
         
-        // checkboxes that are not in groups should not be ID'd to their label
-        if (strtolower($info['type']) == 'checkbox' && ! $this->_in_group) {
-            // don't unset or we get notices; null is good enough
-            $attribs['for'] = null;
+        // checkbox elements don't get an "extra" label
+        if (strtolower($info['type']) == 'checkbox') {
+            $info['label'] = null;
         }
         
         // reset attribs
@@ -1246,10 +1245,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _buildElementValueInfo(&$info)
     {
-        // checkboxes that are not in groups don't get an "extra" label
-        if (strtolower($info['type']) == 'checkbox' && ! $this->_in_group) {
-            $info['label'] = null;
-        }
     }
     
     /**

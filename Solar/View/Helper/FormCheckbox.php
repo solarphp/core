@@ -16,6 +16,10 @@
  */
 class Solar_View_Helper_FormCheckbox extends Solar_View_Helper_FormElement
 {
+    protected $_Solar_View_Helper_FormCheckbox = array(
+        'label_class' => 'checkbox',
+    );
+    
     /**
      * 
      * Generates a 'checkbox' element.
@@ -55,7 +59,16 @@ class Solar_View_Helper_FormCheckbox extends Solar_View_Helper_FormElement
                
         // wrap in a label?
         if ($this->_label) {
-            $xhtml = '<label>' . $xhtml . $this->_view->escape($this->_label) . '</label>';
+            if ($this->_config['label_class']) {
+                $attribs = $this->_view->attribs(array(
+                    'class' => $this->_config['label_class'],
+                ));
+            } else {
+                $attribs = null;
+            }
+            
+            $label = $this->_view->escape($this->_label);
+            $xhtml = "<label{$attribs}>{$xhtml} {$label}</label>";
         }
         
         // prefix with unchecked value

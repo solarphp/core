@@ -67,7 +67,7 @@ class Solar_View_Helper_FormCheckbox extends Solar_View_Helper_FormElement
                 $attribs = null;
             }
             
-            $label = $this->_view->escape($this->_label);
+            $label = $this->_view->getText($this->_label);
             $xhtml = "<label{$attribs}>{$xhtml} {$label}</label>";
         }
         

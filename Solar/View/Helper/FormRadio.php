@@ -72,7 +72,7 @@ class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement
                       . ' name="' . $this->_view->escape($this->_name) . '"'
                       . ' value="' . $this->_view->escape($opt_value) . '"'
                       . $this->_view->attribs($radio_attribs) . ' /> '
-                      . $this->_view->escape($opt_label) . '</label>';
+                      . $this->_view->getText($opt_label) . '</label>';
         }
         
         return implode("\n", $radios);

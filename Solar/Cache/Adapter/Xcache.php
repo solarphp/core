@@ -57,10 +57,9 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
     {
         parent::_preConfig();
         if (! (extension_loaded('xcache') && ini_get('xcache.cacher'))) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'xcache')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'xcache'
+            ));
         }
     }
     

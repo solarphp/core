@@ -37,10 +37,9 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
     {
         parent::_preConfig();
         if (! ( extension_loaded('apc') && ini_get('apc.enabled') ) ) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'apc')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'apc',
+            ));
         }
     }
     

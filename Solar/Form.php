@@ -985,12 +985,10 @@ class Solar_Form extends Solar_Base
         
         // if we *still* don't have an object, or if there's no
         // fetch() method, there's a problem.
-        if (! is_object($obj) ||
-            ! is_callable(array($obj, 'fetch'))) {
-            throw $this->_exception(
-                'ERR_METHOD_NOT_CALLABLE',
-                array('method' => 'fetch')
-            );
+        if (! is_object($obj) || ! is_callable(array($obj, 'fetch'))) {
+            throw $this->_exception('ERR_METHOD_NOT_CALLABLE', array(
+                'method' => 'fetch',
+            ));
         }
         
         // get any additional arguments to pass to the fetch

@@ -53,10 +53,9 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter
         
         // does the file exist?
         if (! Solar_File::exists($file)) {
-            throw $this->_exception(
-                'ERR_FILE_NOT_READABLE',
-                array('file' => $file)
-            );
+            throw $this->_exception('ERR_FILE_NOT_READABLE', array(
+                'file' => $file,
+            ));
         }
         
         // load the file as an array of lines

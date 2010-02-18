@@ -57,10 +57,8 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
                 return array($http_response_header, null);
             } else {
                 // no server response, must be some other error
-                throw $this->_exception(
-                    'ERR_CONNECTION_FAILED',
-                    error_get_last()
-                );
+                $info = error_get_last();
+                throw $this->_exception('ERR_CONNECTION_FAILED', $info);
             }
         }
         

@@ -633,20 +633,17 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         try {
             $prep->execute();
         } catch (PDOException $e) {
-            throw $this->_exception(
-                'ERR_QUERY_FAILED',
-                array(
-                    'pdo_code'  => $e->getCode(),
-                    'pdo_text'  => $e->getMessage(),
-                    'host'      => $this->_config['host'],
-                    'port'      => $this->_config['port'],
-                    'user'      => $this->_config['user'],
-                    'name'      => $this->_config['name'],
-                    'stmt'      => $stmt,
-                    'data'      => $data,
-                    'pdo_trace' => $e->getTraceAsString(),
-                )
-            );
+            throw $this->_exception('ERR_QUERY_FAILED', array(
+                'pdo_code'  => $e->getCode(),
+                'pdo_text'  => $e->getMessage(),
+                'host'      => $this->_config['host'],
+                'port'      => $this->_config['port'],
+                'user'      => $this->_config['user'],
+                'name'      => $this->_config['name'],
+                'stmt'      => $stmt,
+                'data'      => $data,
+                'pdo_trace' => $e->getTraceAsString(),
+            ));
         }
         
         // retain the profile data?
@@ -673,20 +670,17 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $prep = $this->_pdo->prepare($stmt);
             $prep->solar_conn = $this->_pdo->solar_conn;
         } catch (PDOException $e) {
-            throw $this->_exception(
-                'ERR_PREPARE_FAILED',
-                array(
-                    'pdo_code'  => $e->getCode(),
-                    'pdo_text'  => $e->getMessage(),
-                    'host'      => $this->_config['host'],
-                    'port'      => $this->_config['port'],
-                    'sock'      => $this->_config['sock'],
-                    'user'      => $this->_config['user'],
-                    'name'      => $this->_config['name'],
-                    'stmt'      => $stmt,
-                    'pdo_trace' => $e->getTraceAsString(),
-                )
-            );
+            throw $this->_exception('ERR_PREPARE_FAILED', array(
+                'pdo_code'  => $e->getCode(),
+                'pdo_text'  => $e->getMessage(),
+                'host'      => $this->_config['host'],
+                'port'      => $this->_config['port'],
+                'sock'      => $this->_config['sock'],
+                'user'      => $this->_config['user'],
+                'name'      => $this->_config['name'],
+                'stmt'      => $stmt,
+                'pdo_trace' => $e->getTraceAsString(),
+            ));
         }
         
         return $prep;
@@ -2111,10 +2105,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         if ($err) {
             // add the table name to the info and throw the exception
             $err['__table'] = $table;
-            throw $this->_exception(
-                'ERR_TABLE_NOT_CREATED',
-                $err
-            );
+            throw $this->_exception('ERR_TABLE_NOT_CREATED', $err);
         }
         
         // no errors, build a return the CREATE statement
@@ -2435,10 +2426,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // is it a recognized column type?
         if (! array_key_exists($type, $this->_solar_native)) {
-            throw $this->_exception(
-                'ERR_COL_TYPE',
-                array('col' => $name, 'type' => $type)
-            );
+            throw $this->_exception('ERR_COL_TYPE', array(
+                'col' => $name,
+                'type' => $type,
+            ));
         }
         
         // basic declaration string
@@ -2448,10 +2439,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         case 'varchar':
             // does it have a valid size?
             if ($size < 1 || $size > 255) {
-                throw $this->_exception(
-                    'ERR_COL_SIZE',
-                    array('col' => $name, 'size' => $size)
-                );
+                throw $this->_exception('ERR_COL_SIZE', array(
+                    'col' => $name,
+                    'size' => $size,
+                ));
             } else {
                 // replace the 'size' placeholder
                 $coldef = $this->_solar_native[$type] . "($size)";
@@ -2461,17 +2452,19 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         case 'numeric':
         
             if ($size < 1 || $size > 255) {
-                throw $this->_exception(
-                    'ERR_COL_SIZE',
-                    array('col' => $name, 'size' => $size, 'scope' => $scope)
-                );
+                throw $this->_exception('ERR_COL_SIZE', array(
+                    'col' => $name,
+                    'size' => $size,
+                    'scope' => $scope,
+                ));
             }
             
             if ($scope < 0 || $scope > $size) {
-                throw $this->_exception(
-                    'ERR_COL_SCOPE',
-                    array('col' => $name, 'size' => $size, 'scope' => $scope)
-                );
+                throw $this->_exception('ERR_COL_SCOPE', array(
+                    'col' => $name,
+                    'size' => $size,
+                    'scope' => $scope,
+                ));
             }
             
             // replace the 'size' and 'scope' placeholders
@@ -2562,31 +2555,25 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // validate identifier length
         $len = strlen($part);
         if ($len < 1 || $len > $this->_maxlen) {
-            throw $this->_exception(
-                'ERR_IDENTIFIER_LENGTH',
-                array(
-                    'type' => $type,
-                    'name' => $name,
-                    'part' => $part,
-                    'min'  => 1,
-                    'max'  => $this->_maxlen,
-                )
-            );
+            throw $this->_exception('ERR_IDENTIFIER_LENGTH', array(
+                'type' => $type,
+                'name' => $name,
+                'part' => $part,
+                'min'  => 1,
+                'max'  => $this->_maxlen,
+            ));
         }
         
         // only a-z, 0-9, and _ are allowed in words.
         // must start with a letter, not a number or underscore.
         $regex = '/^[a-z][a-z0-9_]*$/';
         if (! preg_match($regex, $name)) {
-            throw $this->_exception(
-                'ERR_IDENTIFIER_CHARS',
-                array(
-                    'type'  => $type,
-                    'name'  => $name,
-                    'part'  => $part,
-                    'regex' => $regex,
-                )
-            );
+            throw $this->_exception('ERR_IDENTIFIER_CHARS', array(
+                'type'  => $type,
+                'name'  => $name,
+                'part'  => $part,
+                'regex' => $regex,
+            ));
         }
     }
     
@@ -2605,15 +2592,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // also, must not have two or more underscores in a row
         if (strpos($name, '__') !== false) {
-            throw $this->_exception(
-                'ERR_IDENTIFIER_UNDERSCORES',
-                array(
-                    'type'  => 'column',
-                    'name'  => $name,
-                    'part'  => $part,
-                    'regex' => $regex,
-                )
-            );
+            throw $this->_exception('ERR_IDENTIFIER_UNDERSCORES', array(
+                'type'  => 'column',
+                'name'  => $name,
+                'part'  => $part,
+                'regex' => $regex,
+            ));
         }
     }
     

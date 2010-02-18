@@ -475,10 +475,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         if ($spec instanceof Solar_Sql_Model_Record) {
             $key = $this->getRecordOffset($spec);
             if ($key === false) {
-                throw $this->_exception(
-                    'ERR_NOT_IN_COLLECTION',
-                    $spec->toArray()
-                );
+                $info = $spec->toArray();
+                throw $this->_exception('ERR_NOT_IN_COLLECTION', $info);
             }
         } else {
             $key = $spec;
@@ -527,10 +525,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         if ($spec instanceof Solar_Sql_Model_Record) {
             $key = $this->getRecordOffset($spec);
             if ($key === false) {
-                throw $this->_exception(
-                    'ERR_NOT_IN_COLLECTION',
-                    $spec->toArray()
-                );
+                $info = $spec->toArray();
+                throw $this->_exception('ERR_NOT_IN_COLLECTION', $info);
             }
         } else {
             $key = $spec;

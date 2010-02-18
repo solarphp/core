@@ -436,20 +436,17 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
             }
         } catch (PDOException $e) {
             // note that we use $config as set in the try block above
-            throw $this->_exception(
-                'ERR_PREPARE_FAILED',
-                array(
-                    'pdo_code'  => $e->getCode(),
-                    'pdo_text'  => $e->getMessage(),
-                    'host'      => $config['host'],
-                    'port'      => $config['port'],
-                    'sock'      => $config['sock'],
-                    'user'      => $config['user'],
-                    'name'      => $config['name'],
-                    'stmt'      => $stmt,
-                    'pdo_trace' => $e->getTraceAsString(),
-                )
-            );
+            throw $this->_exception('ERR_PREPARE_FAILED', array(
+                'pdo_code'  => $e->getCode(),
+                'pdo_text'  => $e->getMessage(),
+                'host'      => $config['host'],
+                'port'      => $config['port'],
+                'sock'      => $config['sock'],
+                'user'      => $config['user'],
+                'name'      => $config['name'],
+                'stmt'      => $stmt,
+                'pdo_trace' => $e->getTraceAsString(),
+            ));
         }
         
         return $prep;

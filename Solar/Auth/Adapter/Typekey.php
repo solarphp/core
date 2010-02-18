@@ -130,10 +130,9 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
         } elseif (extension_loaded('bcmath')) {
             $this->_ext = 'bc';
         } else {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => '(bcmath || gmp)')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => '(bcmath || gmp)'
+            ));
         }
     }
     

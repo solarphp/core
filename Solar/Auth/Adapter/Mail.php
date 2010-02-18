@@ -41,10 +41,9 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter
     {
         parent::_preConfig();
         if (! extension_loaded('imap')) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'imap')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'imap',
+            ));
         }
     }
     

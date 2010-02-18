@@ -503,10 +503,10 @@ class Solar_View extends Solar_Base
         
         // could we find it?
         if (! $file) {
-            throw $this->_exception(
-                'ERR_TEMPLATE_NOT_FOUND',
-                array('name' => $name, 'path' => $this->_template_path->get())
-            );
+            throw $this->_exception('ERR_TEMPLATE_NOT_FOUND', array(
+                'name' => $name,
+                'path' => $this->_template_path->get()
+            ));
         }
         
         // done!
@@ -541,10 +541,7 @@ class Solar_View extends Solar_Base
             // save the partial name externally
             $this->_partial_file = $this->template($name);
         } catch (Solar_View_Exception_TemplateNotFound $e) {
-            throw $this->_exception(
-                'ERR_PARTIAL_NOT_FOUND',
-                $e->getInfo()
-            );
+            throw $this->_exception('ERR_PARTIAL_NOT_FOUND', $e->getInfo());
         }
         
         // save partial vars externally. special cases for different types.

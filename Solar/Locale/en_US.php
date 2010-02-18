@@ -53,11 +53,12 @@ return array(
     
     // exception error messages  
     'ERR_CONNECTION_FAILED'      => 'Connection failed.',
-    'ERR_EXTENSION_NOT_LOADED'   => 'Extension not loaded.',
-    'ERR_FILE_NOT_FOUND'         => 'File not found.',
-    'ERR_FILE_NOT_READABLE'      => 'File not readable or does not exist.',
-    'ERR_METHOD_NOT_CALLABLE'    => 'Method not callable.',
+    'ERR_EXTENSION_NOT_LOADED'   => 'Extension {:extension} not loaded.',
+    'ERR_FILE_NOT_FOUND'         => 'File {:file} not found.',
+    'ERR_FILE_NOT_READABLE'      => 'File {:file} not readable or does not exist.',
+    'ERR_METHOD_NOT_CALLABLE'    => 'Method {:method} not callable.',
     'ERR_METHOD_NOT_IMPLEMENTED' => 'Method not implemented.',
+    'ERR_NO_SUCH_PROPERTY'       => 'Class {:class} has no such property {:property}',
     
     // success feedback messages
     'SUCCESS_FORM'               => 'Saved.',

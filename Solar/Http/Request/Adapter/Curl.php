@@ -31,10 +31,9 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
     {
         parent::_preConfig();
         if (! extension_loaded('curl')) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'curl')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'curl',
+            ));
         }
     }
 
@@ -62,13 +61,10 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
         
         // did we hit any errors?
         if ($response === false || $response === null) {
-            throw $this->_exception(
-                'ERR_CONNECTION_FAILED',
-                array(
-                    'code' => curl_errno($ch),
-                    'text' => curl_error($ch),
-                )
-            );
+            throw $this->_exception('ERR_CONNECTION_FAILED', array(
+                'code' => curl_errno($ch),
+                'text' => curl_error($ch),
+            ));
         }
         
         // get the metadata and close the connection

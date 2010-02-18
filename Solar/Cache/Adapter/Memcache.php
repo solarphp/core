@@ -134,10 +134,9 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
     {
         parent::_preConfig();
         if (! extension_loaded('memcache')) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'memcache')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'memcache',
+            ));
         }
     }
     
@@ -165,14 +164,11 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
             );
         
             if (! $result) {
-                throw $this->_exception(
-                    'ERR_CONNECTION_FAILED',
-                    array(
-                        'host' => $this->_config['host'],
-                        'port' => $this->_config['port'],
-                        'timeout' => $this->_config['timeout'],
-                    )
-                );
+                throw $this->_exception('ERR_CONNECTION_FAILED', array(
+                    'host'    => $this->_config['host'],
+                    'port'    => $this->_config['port'],
+                    'timeout' => $this->_config['timeout'],
+                ));
             }
             
         } else {
@@ -370,10 +366,8 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
         
         // make sure we connected to at least one
         if ($connection_count < 1) {
-            throw $this->_exception(
-                'ERR_CONNECTION_FAILED',
-                $this->_config['pool']
-            );
+            $info = $this->_config['pool'];
+            throw $this->_exception('ERR_CONNECTION_FAILED', $info);
         }
     }
 }

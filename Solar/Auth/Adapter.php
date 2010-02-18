@@ -294,7 +294,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         if (! in_array($key, $this->_magic)) {
             throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
-                'key' => $key,
+                'class'    => get_class($this),
+                'property' => $key,
             ));
         }
         
@@ -325,7 +326,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         if (! in_array($key, $this->_magic)) {
             throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
-                'key' => $key,
+                'class'    => get_class($this),
+                'property' => $key,
             ));
         }
         

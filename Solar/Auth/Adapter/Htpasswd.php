@@ -55,19 +55,17 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter
         
         // does the file exist?
         if (! file_exists($file)) {
-            throw $this->_exception(
-                'ERR_FILE_NOT_FOUND',
-                array('file' => $file)
-            );
+            throw $this->_exception('ERR_FILE_NOT_FOUND', array(
+                'file' => $file,
+            ));
         }
         
         // open the file
         $fp = @fopen($file, 'r');
         if (! $fp) {
-            throw $this->_exception(
-                'ERR_FILE_NOT_READABLE',
-                array('file' => $file)
-            );
+            throw $this->_exception('ERR_FILE_NOT_READABLE', array(
+                'file' => $file,
+            ));
         }
         
         // find the user's line in the file

@@ -39,10 +39,9 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
     {
         parent::_preConfig();
         if (! (extension_loaded('eaccelerator') && ini_get('eaccelerator.enable'))) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'eaccelerator')
-            );
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'eaccelerator',
+            ));
         }
     }
     

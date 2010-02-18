@@ -1963,24 +1963,18 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // is the related name already a column name?
         if (array_key_exists($name, $this->_table_cols)) {
-            throw $this->_exception(
-                'ERR_RELATED_NAME_CONFLICT',
-                array(
-                    'name'  => $name,
-                    'class' => $this->_class,
-                )
-            );
+            throw $this->_exception('ERR_RELATED_NAME_CONFLICT', array(
+                'name'  => $name,
+                'class' => $this->_class,
+            ));
         }
         
         // is the related name already in use?
         if (array_key_exists($name, $this->_related)) {
-            throw $this->_exception(
-                'ERR_RELATED_NAME_EXISTS',
-                array(
-                    'name'  => $name,
-                    'class' => $this->_class,
-                )
-            );
+            throw $this->_exception('ERR_RELATED_NAME_EXISTS', array(
+                'name'  => $name,
+                'class' => $this->_class,
+            ));
         }
         
         // keep it!
@@ -2000,13 +1994,10 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function getRelated($name)
     {
         if (! array_key_exists($name, $this->_related)) {
-            throw $this->_exception(
-                'ERR_RELATED_NAME_NOT_EXISTS',
-                array(
-                    'name'  => $name,
-                    'class' => $this->_class,
-                )
-            );
+            throw $this->_exception('ERR_RELATED_NAME_NOT_EXISTS', array(
+                'name'  => $name,
+                'class' => $this->_class,
+            ));
         }
         
         if (is_array($this->_related[$name])) {

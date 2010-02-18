@@ -54,10 +54,9 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter
         
         // does the file exist?
         if (! file_exists($file) || ! is_readable($file)) {
-            throw $this->_exception(
-                'ERR_FILE_NOT_READABLE',
-                array('file' => $file)
-            );
+            throw $this->_exception('ERR_FILE_NOT_READABLE', array(
+                'file' => $file,
+            ));
         }
         
         // parse the file into an array

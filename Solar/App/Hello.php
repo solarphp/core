@@ -29,12 +29,13 @@ class Solar_App_Hello extends Solar_Controller_Page
     
     /**
      * 
-     * Action with no code at all; only passes to the view.
+     * Action with no code at all; only passes to the view, with no layout.
      * 
      * @return void
      * 
      */
     public function actionIndex()
     {
+        $this->_layout = null;
     }
 }

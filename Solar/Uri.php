@@ -384,8 +384,10 @@ class Solar_Uri extends Solar_Base
     public function set($uri = null)
     {
         // build a default scheme (with '://' in it)
-        $ssl = $this->_request->server('HTTPS', 'off');
-        $scheme = (($ssl == 'on') ? 'https' : 'http') . '://';
+        $is_ssl = $this->_request->server('HTTPS') == 'on'
+               || $this->_request->server('SERVER_PORT') == 443;
+               
+        $scheme = (($is_ssl) ? 'https' : 'http') . '://';
         
         // get the current host, using a dummy host name if needed.
         // we need a host name so that parse_url() works properly.

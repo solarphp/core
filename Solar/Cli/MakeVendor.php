@@ -189,9 +189,9 @@ class Solar_Cli_MakeVendor extends Solar_Controller_Command
             $this->_outln("done.");
         }
         
-        // write a "config/default.php" file
+        // write a "config/default.php" file (empty)
         $file = "$system/source/{$this->_dashes}/config/default.php";
-        $text = "<?php\n\$config = array();\nreturn \$config;\n";
+        $text = "<?php // placeholder config file for {$this->_studly} classes\n";
         if (file_exists($file)) {
             $this->_outln("File $file exists.");
         } else {

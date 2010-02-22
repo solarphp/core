@@ -246,7 +246,7 @@ class Solar_Cli_MakeCli extends Solar_Controller_Command
     protected function _writeInfoOptions()
     {
         $text = $this->_tpl['options'];
-        $file = $this->_class_dir . DIRECTORY_SEPARATOR . "/Info/options.txt";
+        $file = $this->_class_dir . DIRECTORY_SEPARATOR . "/Info/options.php";
         if (file_exists($file)) {
             $this->_outln('Options file exists.');
         } else {
@@ -302,8 +302,8 @@ class Solar_Cli_MakeCli extends Solar_Controller_Command
             // having it in the template file, becuase the PEAR packager
             // complains about parsing the skeleton code.
             // 
-            // however, only do this on non-view files.
-            if (substr($key, 0, 4) != 'view') {
+            // however, only do this on non-help files.
+            if ($key != 'help') {
                 $this->_tpl[$key] = "<?php\n" . $this->_tpl[$key];
             }
         }

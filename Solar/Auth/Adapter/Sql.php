@@ -105,11 +105,23 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter
             $this->_config['salt'] . $this->_passwd
         );
         
+        // make sure the handle col is dotted so it gets quoted properly
+        $handle_col = $this->_config['handle_col'];
+        if (strpos($handle_col, '.') === false) {
+            $handle_col = "{$this->_config['table']}.{$handle_col}";
+        }
+        
+        // make sure the passwd col is dotted so it gets quoted properly
+        $passwd_col = $this->_config['passwd_col'];
+        if (strpos($passwd_col, '.') === false) {
+            $passwd_col = "{$this->_config['table']}.{$passwd_col}";
+        }
+        
         // build the select, fetch up to 2 rows (just in case there's actually
         // more than one, we don't want to select *all* of them).
         $select->from($this->_config['table'], $cols)
-               ->where("{$this->_config['handle_col']} = ?", $this->_handle)
-               ->where("{$this->_config['passwd_col']} = ?", $hash)
+               ->where("$handle_col = ?", $this->_handle)
+               ->where("$passwd_col = ?", $hash)
                ->multiWhere($this->_config['where'])
                ->limit(2);
                

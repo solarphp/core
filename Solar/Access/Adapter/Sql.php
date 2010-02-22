@@ -124,9 +124,23 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
          * add major conditions
          */
         
-        // pretty vars
+        // make sure the type col is dotted so it gets quoted properly
         $type_col = $this->_config['type_col'];
+        if (strpos($type_col, '.') === false) {
+            $type_col = "{$this->_config['table']}.{$type_col}";
+        }
+        
+        // make sure the name col is dotted so it gets quoted properly
         $name_col = $this->_config['name_col'];
+        if (strpos($name_col, '.') === false) {
+            $name_col = "{$this->_config['table']}.{$name_col}";
+        }
+        
+        // make sure the name col is dotted so it gets quoted properly
+        $order_col = $this->_config['order_col'];
+        if (strpos($order_col, '.') === false) {
+            $order_col = "{$this->_config['table']}.{$order_col}";
+        }
         
         // `WHERE (type = 'handle' AND name IN (...))`
         $select->where("($type_col = ?", 'handle');
@@ -140,7 +154,7 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
         $select->orWhere("($type_col = ?)", 'owner');
         
         // order the columns
-        $select->order($this->_config['order_col']);
+        $select->order($order_col);
         
         /**
          * fetch, process, and return

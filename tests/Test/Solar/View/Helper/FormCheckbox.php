@@ -79,14 +79,14 @@ class Test_Solar_View_Helper_FormCheckbox extends Test_Solar_View_Helper {
         // not-checked
         $actual = $this->_view->formCheckbox($info);
         $expect = '<input type="hidden" name="test" value="0" />'
-                . '<label><input type="checkbox" name="test" value="1" />Check Me</label>';
+                . '<label class="checkbox"><input type="checkbox" name="test" value="1" /> Check Me</label>';
         $this->assertSame($actual, $expect);
         
         // checked
         $info['value'] = 1;
         $actual = $this->_view->formCheckbox($info);
         $expect = '<input type="hidden" name="test" value="0" />'
-                . '<label><input type="checkbox" name="test" value="1" checked="checked" />Check Me</label>';
+                . '<label class="checkbox"><input type="checkbox" name="test" value="1" checked="checked" /> Check Me</label>';
         $this->assertSame($actual, $expect);
     }
 }

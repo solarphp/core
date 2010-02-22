@@ -164,12 +164,12 @@ class Test_Solar_View_Helper_Form extends Test_Solar_View_Helper {
         $expect = <<<EXPECT
 <form action="/path/to/index.php/appname/action?foo=bar&amp;baz=dib" method="post" enctype="multipart/form-data" foo="bar">
     <dl class="list">
-        <dt class="baz">
-            <label for="baz" class="baz">Zim Gir</label>
-        </dt>
-        <dd class="baz">
-            <input type="text" name="baz" value="dib" id="baz" class="input-text baz" />
-        </dd>
+            <dt class="baz">
+                <label for="baz" class="baz">Zim Gir</label>
+            </dt>
+            <dd class="baz">
+                <input type="text" name="baz" value="dib" id="baz" class="input-text baz" />
+            </dd>
     </dl>
 </form>
 EXPECT;
@@ -193,12 +193,12 @@ EXPECT;
         $actual = $this->_view->form()->fetch(false);
         $expect = <<<EXPECT
     <dl class="list">
-        <dt class="baz">
-            <label for="baz" class="baz">Zim Gir</label>
-        </dt>
-        <dd class="baz">
-            <input type="text" name="baz" value="dib" id="baz" class="input-text baz" />
-        </dd>
+            <dt class="baz">
+                <label for="baz" class="baz">Zim Gir</label>
+            </dt>
+            <dd class="baz">
+                <input type="text" name="baz" value="dib" id="baz" class="input-text baz" />
+            </dd>
     </dl>
 EXPECT;
         $this->assertSame(trim($actual), trim($expect));
@@ -239,12 +239,12 @@ EXPECT;
         $expect = <<<EXPECT
 <form action="/path/to/index.php/appname/action?foo=bar&amp;baz=dib" method="post" enctype="multipart/form-data" foo="bar">
     <dl class="list">
-        <dt class="baz">
-            <label for="baz" class="baz">Zim Gir</label>
-        </dt>
-        <dd class="baz">
-            <input type="text" name="baz" value="dib" size="10" id="baz" class="input-text baz" />
-        </dd>
+            <dt class="baz">
+                <label for="baz" class="baz">Zim Gir</label>
+            </dt>
+            <dd class="baz">
+                <input type="text" name="baz" value="dib" size="10" id="baz" class="input-text baz" />
+            </dd>
     </dl>
 </form>
 EXPECT;

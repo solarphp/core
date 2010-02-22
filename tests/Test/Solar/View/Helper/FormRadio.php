@@ -42,9 +42,9 @@ class Test_Solar_View_Helper_FormRadio extends Test_Solar_View_Helper {
         $actual = $this->_view->formRadio($info);
         $tmp = array();
         $tmp[] = '<input type="hidden" name="test" value="" />';
-        $tmp[] = '<label><input type="radio" name="test" value="foo" />bar</label>';
-        $tmp[] = '<label><input type="radio" name="test" value="baz" />dib</label>';
-        $tmp[] = '<label><input type="radio" name="test" value="zim" />gir</label>';
+        $tmp[] = '<label class="radio"><input type="radio" name="test" value="foo" /> bar</label>';
+        $tmp[] = '<label class="radio"><input type="radio" name="test" value="baz" /> dib</label>';
+        $tmp[] = '<label class="radio"><input type="radio" name="test" value="zim" /> gir</label>';
         $expect = implode("\n", $tmp);
         $this->assertSame($actual, $expect);
         
@@ -53,9 +53,9 @@ class Test_Solar_View_Helper_FormRadio extends Test_Solar_View_Helper {
         $actual = $this->_view->formRadio($info);
         $tmp = array();
         $tmp[] = '<input type="hidden" name="test" value="" />';
-        $tmp[] = '<label><input type="radio" name="test" value="foo" />bar</label>';
-        $tmp[] = '<label><input type="radio" name="test" value="baz" checked="checked" />dib</label>';
-        $tmp[] = '<label><input type="radio" name="test" value="zim" />gir</label>';
+        $tmp[] = '<label class="radio"><input type="radio" name="test" value="foo" /> bar</label>';
+        $tmp[] = '<label class="radio"><input type="radio" name="test" value="baz" checked="checked" /> dib</label>';
+        $tmp[] = '<label class="radio"><input type="radio" name="test" value="zim" /> gir</label>';
         $expect = implode("\n", $tmp);
         $this->assertSame($actual, $expect);
     }

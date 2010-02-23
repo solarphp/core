@@ -335,7 +335,9 @@ class Solar_Mail_Message_Part extends Solar_Base
         $list = array('content-type', 'content-transfer-encoding',
             'content-disposition');
         if (in_array(strtolower($label), $list)) {
-            throw $this->_exception('ERR_ADD_STANDARD_HEADER');
+            throw $this->_exception('ERR_USE_OTHER_METHOD', array(
+                'key' => $label,
+            ));
         }
         
         // save the label and value

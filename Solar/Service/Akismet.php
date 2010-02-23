@@ -179,7 +179,7 @@ class Solar_Service_Akismet extends Solar_Base
         } elseif ($response->content == 'false') {
             return false;
         } else {
-            throw $this->_exception('ERR_STRANGE_RESPONSE', array(
+            throw $this->_exception('ERR_UNKNOWN_RESPONSE', array(
                 'response' => $response,
                 'data'     => $data,
             ));

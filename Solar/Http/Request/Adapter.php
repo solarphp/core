@@ -563,7 +563,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         // don't allow setting of cookies
         if ($low == 'cookie') {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
-                'cookie' => 'setCookie() or setCookies()',
+                'key' => $key,
             ));
         }
         
@@ -634,11 +634,13 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             Solar_Http_Request::METHOD_PROPPATCH,
             Solar_Http_Request::METHOD_UNLOCK
         );
-            
+        
         $method = strtoupper($method);
         
         if (! in_array($method, $allowed)) {
-            throw $this->_exception('ERR_UNKNOWN_METHOD');
+            throw $this->_exception('ERR_UNKNOWN_METHOD', array(
+                'method' => $method,
+            ));
         }
         
         $this->_method = $method;
@@ -749,7 +751,9 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     public function setVersion($version)
     {
         if ($version != '1.0' && $version != '1.1') {
-            throw $this->_exception('ERR_UNKNOWN_VERSION');
+            throw $this->_exception('ERR_UNKNOWN_VERSION', array(
+                "version" => $version,
+            ));
         }
         $this->_version = $version;
         return $this;

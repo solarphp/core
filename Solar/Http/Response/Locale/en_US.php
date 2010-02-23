@@ -15,6 +15,10 @@
  * 
  */
 return array(
+    'ERR_HTTP_VERSION'      => 'HTTP version "{:version}" is unknown.',
+    'ERR_REDIRECT_NO_URI'   => 'No URI was specified for the redirect.',
+    'ERR_STATUS_CODE'       => 'Status code "{:code}" is not valid.',
+    
     'STATUS_100' => 'Continue',
     'STATUS_101' => 'Switching Protocols',
     

@@ -202,7 +202,10 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
         ));
         
         if (! $cols) {
-            throw $this->_exception('ERR_QUERY_FAILED');
+            throw $this->_exception('ERR_NO_COLS_FOUND', array(
+                'table' => $table,
+                'schema' => $schema,
+            ));
         }
         
         // loop through the result rows; each describes a column.

@@ -153,7 +153,7 @@ class Solar_Struct_Xml extends Solar_Struct
         } elseif ($spec instanceof DOMNode) {
             $this->_loadDomNode($spec);
         } else {
-            throw $this->_exception('ERR_UNKNOWN_TYPE');
+            throw $this->_exception('ERR_CANNOT_LOAD');
         }
     }
     

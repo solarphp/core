@@ -59,7 +59,7 @@ class Solar_Cli_UnlinkVendor extends Solar_Controller_Command
     {
         // we need a vendor name, at least
         if (! $vendor) {
-            throw $this->_exception('ERR_NO_VENDOR_NAME');
+            throw $this->_exception('ERR_NO_VENDOR');
         }
         
         $this->_outln("Removing links for vendor '$vendor' ...");

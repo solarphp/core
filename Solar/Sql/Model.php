@@ -636,10 +636,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         if (property_exists($this, $var)) {
             return $this->$var;
         } else {
-            throw $this->_exception('ERR_PROPERTY_NOT_DEFINED', array(
+            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
                 'class' => get_class($this),
-                'key' => $key,
-                'var' => $var,
+                'property' => $key,
             ));
         }
     }
@@ -1540,7 +1539,9 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function insert($data)
     {
         if (! is_array($data)) {
-            throw $this->_exception('ERR_DATA_NOT_ARRAY');
+            throw $this->_exception('ERR_DATA_NOT_ARRAY', array(
+                'method' => 'insert',
+            ));
         }
         
         // reset affected rows
@@ -1606,7 +1607,9 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function update($data, $where)
     {
         if (! is_array($data)) {
-            throw $this->_exception('ERR_DATA_NOT_ARRAY');
+            throw $this->_exception('ERR_DATA_NOT_ARRAY', array(
+                'method' => 'update',
+            ));
         }
         
         // reset affected rows
@@ -1963,7 +1966,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // is the related name already a column name?
         if (array_key_exists($name, $this->_table_cols)) {
-            throw $this->_exception('ERR_RELATED_NAME_CONFLICT', array(
+            throw $this->_exception('ERR_RELATED_CONFLICT', array(
                 'name'  => $name,
                 'class' => $this->_class,
             ));
@@ -1971,7 +1974,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // is the related name already in use?
         if (array_key_exists($name, $this->_related)) {
-            throw $this->_exception('ERR_RELATED_NAME_EXISTS', array(
+            throw $this->_exception('ERR_RELATED_EXISTS', array(
                 'name'  => $name,
                 'class' => $this->_class,
             ));
@@ -1994,7 +1997,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function getRelated($name)
     {
         if (! array_key_exists($name, $this->_related)) {
-            throw $this->_exception('ERR_RELATED_NAME_NOT_EXISTS', array(
+            throw $this->_exception('ERR_NO_SUCH_RELATED', array(
                 'name'  => $name,
                 'class' => $this->_class,
             ));

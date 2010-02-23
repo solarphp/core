@@ -291,7 +291,7 @@ class Solar_Http_Response extends Solar_Base
         $lower = strtolower($key);
         if ($lower == 'http') {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
-                'HTTP'          => 'setVersion()',
+                'name' => $key,
             ));
         }
         
@@ -533,9 +533,7 @@ class Solar_Http_Response extends Solar_Base
         // make sure there's actually an href
         $href = trim($href);
         if (! $href) {
-            throw $this->_exception('ERR_REDIRECT_FAILED', array(
-                'href' => $href,
-            ));
+            throw $this->_exception('ERR_REDIRECT_NO_URI');
         }
         
         // set the status code

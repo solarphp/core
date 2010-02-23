@@ -321,7 +321,9 @@ class Solar_Request extends Solar_Base
         }
         
         // now what?
-        throw $this->_exception('ERR_UNUSUAL');
+        throw $this->_exception('ERR_POST_AND_FILES', array(
+            'key' => $key,
+        ));
     }
     
     /**

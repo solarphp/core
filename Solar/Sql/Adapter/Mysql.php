@@ -216,7 +216,10 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
         // get the column descriptions
         $cols = $this->fetchAll($cmd);
         if (! $cols) {
-            throw $this->_exception('ERR_QUERY_FAILED');
+            throw $this->_exception('ERR_NO_COLS_FOUND', array(
+                'table' => $table,
+                'schema' => $schema,
+            ));
         }
         
         // where the description will be stored

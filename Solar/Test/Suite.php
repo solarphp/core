@@ -222,6 +222,8 @@ class Solar_Test_Suite extends Solar_Base
         $exit_code = $php->getExitCode();
         if ($exit_code != Solar_Test::EXIT_PASS) {
             throw $this->_exception('ERR_LOAD_TESTS', array(
+                'class' => $class,
+                'method' => ($method ? $method : '*'),
                 'exit_code' => $exit_code,
                 'last_line' => $php->getLastLine(),
             ));
@@ -279,7 +281,10 @@ class Solar_Test_Suite extends Solar_Base
         
         // is there a plan?
         if (! $this->_info['plan']) {
-            throw $this->_exception('ERR_NO_PLAN');
+            throw $this->_exception('ERR_FIND_TESTS', array(
+                'class' => $class,
+                'method' => ($method ? $method : '*'),
+            ));
         }
         
         // show the plan

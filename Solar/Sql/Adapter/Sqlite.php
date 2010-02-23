@@ -249,7 +249,10 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
         $table = $this->quoteName($table);
         $cols = $this->fetchAll("PRAGMA {$schema}TABLE_INFO($table)");
         if (! $cols) {
-            throw $this->_exception('ERR_QUERY_FAILED');
+            throw $this->_exception('ERR_NO_COLS_FOUND', array(
+                'table' => $table,
+                'schema' => substr($schema, -1), // drop the added dot
+            ));
         }
         
         // loop through the result rows; each describes a column.

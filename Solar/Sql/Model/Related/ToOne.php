@@ -152,7 +152,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         } else {
             throw $this->_exception('ERR_UNKNOWN_MERGE', array(
                 'merge' => $opts['merge'],
-                'known' => 'client, server',
+                'known' => '"client" or "server"',
             ));
         }
     }
@@ -292,7 +292,10 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
             }
             break;
         default:
-            throw $this->_exception('ERR_UNKNOWN_TYPE');
+            throw $this->_exception('ERR_UNKNOWN_FETCH', array(
+                'fetch' => $type,
+                'known' => '"one", "all", "assoc", or "array"',
+            ));
             break;
         }
     }

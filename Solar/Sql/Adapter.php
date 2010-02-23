@@ -2096,16 +2096,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         foreach ($cols as $name => $info) {
             try {
                 $coldef[] = $this->_sqlColdef($name, $info);
-            } catch (Exception $e) {
+            } catch (Solar_Sql_Exception $e) {
+                throw $this->_exception('ERR_TABLE_NOT_CREATED', array(
+                    'table' => $table,
+                    'error' => $e->getMessage(),
+                ));
                 $err[$name] = array($e->getCode(), $e->getInfo());
             }
-        }
-        
-        // were there errors?
-        if ($err) {
-            // add the table name to the info and throw the exception
-            $err['__table'] = $table;
-            throw $this->_exception('ERR_TABLE_NOT_CREATED', $err);
         }
         
         // no errors, build a return the CREATE statement
@@ -2561,6 +2558,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 'part' => $part,
                 'min'  => 1,
                 'max'  => $this->_maxlen,
+                'min'  => $len,
             ));
         }
         
@@ -2595,8 +2593,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             throw $this->_exception('ERR_IDENTIFIER_UNDERSCORES', array(
                 'type'  => 'column',
                 'name'  => $name,
-                'part'  => $part,
-                'regex' => $regex,
             ));
         }
     }

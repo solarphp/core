@@ -68,7 +68,7 @@ class Solar_Cli_RunTests extends Solar_Controller_Command
     protected function _exec($spec = null)
     {
         if (! $spec) {
-            throw $this->_exception('ERR_NEED_TEST_SPEC');
+            throw $this->_exception('ERR_NO_TEST_SPEC');
         }
         
         // look for a :: in the class name; if it's there, split into class
@@ -92,8 +92,7 @@ class Solar_Cli_RunTests extends Solar_Controller_Command
             $test_config = realpath($this->_options['test_config']);
             if ($test_config === false) {
                 throw $this->_exception('ERR_TEST_CONFIG_REALPATH', array(
-                    'test_config' => $this->_options['test_config'],
-                    'realpath'    => $test_config,
+                    'file'     => $this->_options['test_config'],
                 ));
             }
         }

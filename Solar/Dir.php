@@ -221,9 +221,9 @@ class Solar_Dir
         $result = @mkdir($path, $mode, $recursive);
         if (! $result) {
             $info = error_get_last();
-            $info['mkdir_path'] = $path;
-            $info['mkdir_mode'] = $mode;
-            $info['mkdir_recursive'] = $recursive;
+            $info['dir'] = $path;
+            $info['mode'] = $mode;
+            $info['recursive'] = $recursive;
             throw Solar_Dir::_exception('ERR_MKDIR_FAILED', $info);
         } else {
             return true;
@@ -247,7 +247,7 @@ class Solar_Dir
         $result = @rmdir($path);
         if (! $result) {
             $info = error_get_last();
-            $info['rmdir_path'] = $path;
+            $info['dir'] = $path;
             throw Solar_Dir::_exception('ERR_RMDIR_FAILED', $info);
         } else {
             return true;

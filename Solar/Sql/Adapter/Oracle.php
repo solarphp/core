@@ -175,7 +175,10 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         // get the column descriptions
         $cols = $this->fetchAll($stmt, $data);
         if (! $cols) {
-            throw $this->_exception('ERR_QUERY_FAILED');
+            throw $this->_exception('ERR_NO_COLS_FOUND', array(
+                'table' => $table,
+                'schema' => $schema,
+            ));
         }
         
         // loop through the result rows; each describes a column.
@@ -299,7 +302,9 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      */
     protected function _fetchIndexInfo($table, $schema)
     {
-        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
+        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED', array(
+            'method' => __FUNCTION__,
+        ));
     }
     
     /**

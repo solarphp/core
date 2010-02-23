@@ -237,7 +237,10 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             $this->_fetchIntoArrayAll($eager, $result, $fetch);
             break;
         default:
-            throw $this->_exception('ERR_UNKNOWN_TYPE');
+            throw $this->_exception('ERR_UNKNOWN_FETCH', array(
+                'fetch' => $type,
+                'known' => '"one", "all", "assoc", or "array"',
+            ));
             break;
         }
     }

@@ -21,27 +21,27 @@ class Solar_Cli_LinkPublic extends Solar_Controller_Command
      * 
      * Creates symlinks to the public assets for a class hierarchy.
      * 
-     * @param string $base The base class name under which to start
+     * @param string $class The base class name under which to start
      * looking for Public directories to make symlinks for.
      * 
      * @return void
      * 
      */
-    protected function _exec($base = null)
+    protected function _exec($class = null)
     {
         // we need a class name, at least
-        if (! $base) {
-            throw $this->_exception('ERR_NO_BASE_CLASS_NAME');
+        if (! $class) {
+            throw $this->_exception('ERR_NO_CLASS');
         }
         
-        $this->_outln("Making public symlinks for '$base' ...");
+        $this->_outln("Making public symlinks for '$class' ...");
         
         $system = Solar::$system;
         
         $map = Solar::factory('Solar_Class_Map');
         $map->setBase("$system/include");
         
-        $list = array_keys($map->fetch($base));
+        $list = array_keys($map->fetch($class));
         foreach ($list as $class) {
             $dir = str_replace('_', '/', $class);
             if (Solar_Dir::exists("$system/include/$dir/Public")) {

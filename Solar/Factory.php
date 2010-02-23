@@ -43,7 +43,7 @@ abstract class Solar_Factory extends Solar_Base
      */
     final public function __call($method, $params)
     {
-        throw $this->_exception('ERR_NOT_ADAPTER_INSTANCE', array(
+        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED', array(
             'method' => $method,
             'params' => $params,
         ));

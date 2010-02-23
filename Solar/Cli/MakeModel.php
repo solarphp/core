@@ -209,7 +209,9 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
             // try to determine from the class name
             $pos = strpos($class, 'Model_');
             if (! $pos) {
-                throw $this->_exception('ERR_CANNOT_DETERMINE_TABLE');
+                throw $this->_exception('ERR_CANNOT_DETERMINE_TABLE', array(
+                    'class' => $class,
+                ));
             }
             
             // convert Solar_Model_TableName to table_name

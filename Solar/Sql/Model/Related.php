@@ -784,7 +784,9 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         } elseif ($this->isMany()) {
             $obj = $this->_foreign_model->fetchAll($fetch);
         } else {
-            throw $this->_exception('ERR_NOT_ONE_OR_ALL');
+            throw $this->_exception('ERR_NOT_ONE_OR_ALL', array(
+                'class' => get_class($this),
+            ));
         }
         
         if (! $obj) {
@@ -831,8 +833,10 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             $this->wherein = $opts['native_by'];
         } else {
             throw $this->_exception('ERR_UNKNOWN_NATIVE_BY', array(
+                'name' => $this->name,
+                'native' => get_class($this->_native_model),
                 'native_by' => $opts['native_by'],
-                'known' => 'wherein, select',
+                'known' => '"wherein" or "select"',
             ));
         }
     }

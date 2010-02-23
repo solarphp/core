@@ -16,25 +16,22 @@
  */
 return array(
     
-    // general
-    'ERR_CONNECT'    => 'Could not connect to server',
-    'ERR_DATABASE'   => 'Could not select database',
-    'ERR_STATEMENT'  => 'Statement execution error',
+    // general purpose
+    'ERR_QUERY_FAILED'          => 'Query failed: ({:pdo_code}) {:pdo_text}',
+    'ERR_NO_COLS_FOUND'         => 'No columns found for table {:table} in schema {:schema}.',
+    'ERR_NOT_ENOUGH_VALUES'     => 'Not enough data values for placeholders in "{:text}".',
+    'ERR_PREPARE_FAILED'        => 'Could not prepare statement: ({:pdo_code}) {:pdo_text}',
     
     // column creation
-    'ERR_COL_LEN'    => 'Column name too long/short',
-    'ERR_COL_WORD'   => 'Column name is reserved word',
-    'ERR_COL_TYPE'   => 'Column type not valid',
-    'ERR_COL_SIZE'   => 'Column size not valid',
-    'ERR_COL_SCOPE'  => 'Column scope not valid',
+    'ERR_COL_TYPE'   => 'Column "{:col}" type "{:type}" not valid.',
+    'ERR_COL_SIZE'   => 'Column "{:col}" size of "{:size}" not valid.',
+    'ERR_COL_SCOPE'  => 'Column "{:col}" scope of "{:scope}" not valid for size "{:size}".',
     
     // table creation
-    'ERR_TABLE_LEN'  => 'Table name too long/short',
-    'ERR_TABLE_WORD' => 'Table name is reserved word',
+    'ERR_TABLE_NOT_CREATED'     => 'Table {:table} not created: {:error}',
     
-    // index creation
-    'ERR_IDX_LEN'    => 'Index name too long/short',
-    'ERR_IDX_WORD'   => 'Index name is reserved word',
-    'ERR_IDX_COLS'   => 'Index columns not valid',
-    'ERR_IDX_TYPE'   => 'Index type not valid',
+    // identifiers
+    'ERR_IDENTIFIER_CHARS' => '{:type} name {:name} has length {:len} for part {:part}; min={:min}, max={:max}.',
+    'ERR_IDENTIFIER_LENGTH' => '{:type} name {:name} part {:part} should match regex {:regex}.',
+    'ERR_IDENTIFIER_UNDERSCORES' => '{:type} name {:name} has two or more underscores in a row.',
 );

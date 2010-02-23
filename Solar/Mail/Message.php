@@ -691,7 +691,9 @@ class Solar_Mail_Message extends Solar_Base
         $list = array('to', 'cc', 'bcc', 'from', 'subject', 'return-path',
             'content-type', 'mime-version', 'content-transfer-encoding');
         if (in_array(strtolower($label), $list)) {
-            throw $this->_exception('ERR_ADD_STANDARD_HEADER');
+            throw $this->_exception('ERR_USE_OTHER_METHOD', array(
+                'key' => $label,
+            ));
         }
         
         // if replacing, or not already set, reset to a blank array

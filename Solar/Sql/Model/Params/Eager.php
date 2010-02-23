@@ -57,7 +57,7 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
         } else {
             throw $this->_exception('ERR_UNKNOWN_MERGE', array(
                 'merge' => $val,
-                'known' => 'client, server',
+                'known' => '"client" or "server"',
             ));
         }
         return $this;
@@ -102,7 +102,7 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
         } else {
             throw $this->_exception('ERR_UNKNOWN_JOIN_TYPE', array(
                 'join_type' => $val,
-                'known' => "null, 'left', 'inner'",
+                'known' => 'null, "left", or "inner"',
             ));
         }
         return $this;
@@ -192,7 +192,7 @@ class Solar_Sql_Model_Params_Eager extends Solar_Sql_Model_Params {
         } else {
             throw $this->_exception('ERR_UNKNOWN_NATIVE_BY', array(
                 'native_by' => $val,
-                'known' => 'wherein, select',
+                'known' => '"wherein" or "select"',
             ));
         }
         return $this;

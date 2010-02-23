@@ -394,8 +394,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     public function __set($key, $val)
     {
-        throw $this->_exception('ERR_PROPERTY_NOT_DEFINED', array(
-            'property' => "\$$key",
+        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+            'class' => get_class($this),
+            'property' => $key,
         ));
     }
     
@@ -410,8 +411,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     public function __get($key)
     {
-        throw $this->_exception('ERR_PROPERTY_NOT_DEFINED', array(
-            'property' => "\$$key",
+        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+            'class' => get_class($this),
+            'property' => $key,
         ));
     }
     

@@ -519,7 +519,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function save($data = null)
     {
         if ($this->isDeleted()) {
-            throw $this->_exception('ERR_DELETED');
+            throw $this->_exception('ERR_DELETED', array(
+                'class' => get_class($this),
+            ));
         }
         
         $this->_save_exception = null;
@@ -999,11 +1001,15 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function delete()
     {
         if ($this->isNew()) {
-            throw $this->_exception('ERR_CANNOT_DELETE_NEW_RECORD');
+            throw $this->_exception('ERR_CANNOT_DELETE_NEW_RECORD', array(
+                'class' => get_class($this),
+            ));
         }
         
         if ($this->isDeleted()) {
-            throw $this->_exception('ERR_DELETED');
+            throw $this->_exception('ERR_DELETED', array(
+                'class' => get_class($this),
+            ));
         }
         
         $this->_preDelete();
@@ -1054,16 +1060,22 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function refresh()
     {
         if ($this->isNew()) {
-            throw $this->_exception('ERR_CANNOT_REFRESH_NEW_RECORD');
+            throw $this->_exception('ERR_CANNOT_REFRESH_NEW_RECORD', array(
+                'class' => get_class($this),
+            ));
         }
 
         if ($this->isDeleted()) {
-            throw $this->_exception('ERR_DELETED');
+            throw $this->_exception('ERR_DELETED', array(
+                'class' => get_class($this),
+            ));
         }
         
         $id = $this->getPrimaryVal();
         if (! $id) {
-            throw $this->_exception('ERR_CANNOT_REFRESH_BLANK_ID');
+            throw $this->_exception('ERR_CANNOT_REFRESH_BLANK_ID', array(
+                'class' => get_class($this),
+            ));
         }
         
         $result = $this->_model->fetch($id);
@@ -1112,16 +1124,21 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function increment($col, $amt = 1)
     {
         if ($this->isNew()) {
-            throw $this->_exception('ERR_CANNOT_INCREMENT_NEW_RECORD');
+            throw $this->_exception('ERR_CANNOT_INCREMENT_NEW_RECORD', array(
+                'class' => get_class($this),
+            ));
         }
 
         if ($this->isDeleted()) {
-            throw $this->_exception('ERR_DELETED');
+            throw $this->_exception('ERR_DELETED', array(
+                'class' => get_class($this),
+            ));
         }
         
         // make sure the column exists
         if (! array_key_exists($col, $this->_model->table_cols)) {
             throw $this->_exception('ERR_NO_SUCH_COLUMN', array(
+                'class' => get_class($this),
                 'name' => $col,
             ));
         }
@@ -1706,7 +1723,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function init(Solar_Sql_Model $model, $spec)
     {
         if ($this->_model) {
-            throw $this->_exception('ERR_CANNOT_RE_INIT');
+            throw $this->_exception('ERR_CANNOT_REINIT', array(
+                'class' => get_class($this),
+            ));
         }
         
         // inject the model
@@ -1862,7 +1881,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function setNewRelated($name, $data = null)
     {
         if ($this->$name) {
-            throw $this->_exception('ERR_RELATED_ALREADY_SET');
+            throw $this->_exception('ERR_RELATED_ALREADY_SET', array(
+                'class' => get_class($this),
+                'name'  => $name,
+            ));
         }
         $this->$name = $this->newRelated($name, $data);
         return $this->$name;

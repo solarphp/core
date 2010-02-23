@@ -151,10 +151,10 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         if (array_key_exists($key, $this->_data)) {
             return $this->_data[$key];
         } else {
-            throw $this->_exception('ERR_NO_SUCH_KEY', array(
-                'class' => get_class($this),
-                'key'   => $key,
-                'keys'  => array_keys($this->_data),
+            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+                'class'     => get_class($this),
+                'property'  => $key,
+                'keys'      => array_keys($this->_data),
             ));
         }
     }

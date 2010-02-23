@@ -757,7 +757,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         // did we time out?
         $info = stream_get_meta_data($this->_conn);
         if (! empty($info['timed_out'])) {
-            throw $this->_exception('ERR_TIMEOUT', array(
+            throw $this->_exception('ERR_CONNECTION_TIMEOUT', array(
                 'host'    => $this->_host,
                 'port'    => $this->_port,
             ));

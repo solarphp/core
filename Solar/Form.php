@@ -885,7 +885,7 @@ class Solar_Form extends Solar_Base
         
         if (! in_array($status, $allowed)) {
             throw $this->_exception('ERR_STATUS_NOT_ALLOWED', array(
-                'status' => $status,
+                'status' => (string) $status,
             ));
         }
         

@@ -113,7 +113,7 @@ class Solar_Cli_MakeTests extends Solar_Controller_Command
         
         // make sure we have a class to work with
         if (! $class) {
-            throw $this->_exception('ERR_NO_CLASS_SPECIFIED');
+            throw $this->_exception('ERR_NO_CLASS');
         }
         
         // make sure we have a target directory
@@ -216,7 +216,9 @@ class Solar_Cli_MakeTests extends Solar_Controller_Command
         
         // make sure it exists
         if (! is_dir($this->_target)) {
-            throw $this->_exception('ERR_TARGET_NOT_EXIST');
+            throw $this->_exception('ERR_DIR_NOT_FOUND', array(
+                'dir' => $this->_target,
+            ));
         }
     }
     

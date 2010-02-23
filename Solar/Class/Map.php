@@ -177,7 +177,9 @@ class Solar_Class_Map extends Solar_Base
         }
         
         // still no base, we have a problem
-        throw $this->_exception('ERR_NO_BASE_DIR');
+        throw $this->_exception('ERR_NO_BASE_DIR', array(
+            'class' => $class,
+        ));
     }
     
     /**

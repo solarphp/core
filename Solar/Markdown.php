@@ -271,7 +271,9 @@ class Solar_Markdown extends Solar_Base
         // use tidy?
         if ($this->_config['tidy'] && ! extension_loaded('tidy')) {
             // tidy requested but not loaded
-            throw $this->_exception('ERR_TIDY_NOT_LOADED');
+            throw $this->_exception('ERR_EXTENSION_NOT_LOADED', array(
+                'extension' => 'tidy',
+            ));
         }
         
         // load each plugin object

@@ -15,6 +15,8 @@
  * 
  */
 return array(
+    'ERR_NOT_MODEL_RECORD'              => 'The data being filtered must be a from model record.',
+    'ERR_CHAIN_LOCALE_OBJECT'           => 'The spec for the chain locale object is not valid.',
     'INVALID_ALNUM'                     => 'Please use only letters (A-Z and a-z) and numbers (0-9).',
     'INVALID_ALPHA'                     => 'Please use only the letters A-Z and a-z.',
     'INVALID_BLANK'                     => 'This value must be blank.',

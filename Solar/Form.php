@@ -136,15 +136,6 @@ class Solar_Form extends Solar_Base
     
     /**
      * 
-     * The array of filters for the form elements.
-     * 
-     * @var array 
-     * 
-     */
-    protected $_filters = array();
-    
-    /**
-     * 
      * Array of submitted values.
      * 
      * Populated on the first call to [[_populate()]], which itself uses
@@ -857,7 +848,6 @@ class Solar_Form extends Solar_Base
         
         $this->elements   = array();
         $this->feedback   = array();
-        $this->_filters   = array();
         $this->_submitted = null;
     }
     

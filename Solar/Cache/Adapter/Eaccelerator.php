@@ -57,7 +57,7 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -66,8 +66,13 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // save to eaccelerator
-        return eaccelerator_put($key, $data, $this->_life);
+        return eaccelerator_put($key, $data, $life);
     }
     
     /**
@@ -81,7 +86,7 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -90,13 +95,18 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // if already there, don't add again
         if (eaccelerator_get($key) !== null) {
             return false;
         }
         
         // save to eaccelerator
-        return eaccelerator_put($key, $data, $this->_life);
+        return eaccelerator_put($key, $data, $life);
     }
     
     /**

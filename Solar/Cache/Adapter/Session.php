@@ -74,7 +74,7 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -83,9 +83,14 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // save entry and expiry in session
         $this->_entries->set($key, $data);
-        $this->_expires->set($key, time() + $this->_life);
+        $this->_expires->set($key, time() + $life);
         return true;
     }
     
@@ -100,7 +105,7 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -111,7 +116,7 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
         
         // add entry to session if not already there
         if (! $this->_entries->has($key)) {
-            return $this->save($key, $data);
+            return $this->save($key, $data, $life);
         } else {
             return false;
         }

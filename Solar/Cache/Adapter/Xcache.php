@@ -74,7 +74,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -83,8 +83,13 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // save in xcache
-        return xcache_set($key, $data, $this->_life);
+        return xcache_set($key, $data, $life);
     }
     
     /**
@@ -98,7 +103,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -107,13 +112,18 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // don't save if already there
         if (xcache_isset($key)) {
             return false;
         }
         
         // add to xcache
-        return xcache_set($key, $data, $this->_life);
+        return xcache_set($key, $data, $life);
     }
     
     /**

@@ -54,7 +54,7 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -63,8 +63,15 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
+        Solar::dump($life, 'life');
+        
         // save to apc
-        return apc_store($key, $data, $this->_life);
+        return apc_store($key, $data, $life);
     }
     
     /**
@@ -78,7 +85,7 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -87,8 +94,13 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // add to apc
-        return apc_add($key, $data, $this->_life);
+        return apc_add($key, $data, $life);
     }
     
     /**

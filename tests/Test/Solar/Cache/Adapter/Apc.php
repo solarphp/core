@@ -30,4 +30,14 @@ class Test_Solar_Cache_Adapter_Apc extends Test_Solar_Cache_Adapter {
             $this->skip('apc loaded but not enabled for cli');
         }
     }
+    
+    public function testGetLife()
+    {
+        $this->skip('per Rasmus, apc is not accurate to the second');
+    }
+    
+    public function testSave_life()
+    {
+        $this->skip('per Rasmus, apc is not accurate to the second');
+    }
 }

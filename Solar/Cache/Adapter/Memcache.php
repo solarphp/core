@@ -189,7 +189,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -198,8 +198,13 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // store in memcache
-        return $this->memcache->set($key, $data, null, $this->_life);
+        return $this->memcache->set($key, $data, null, $life);
     }
     
     /**
@@ -213,7 +218,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -222,8 +227,13 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
         // modify the key to add the prefix
         $key = $this->entry($key);
         
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
         // add to memcache
-        return $this->memcache->add($key, $data, null, $this->_life);
+        return $this->memcache->add($key, $data, null, $life);
     }
     
     /**

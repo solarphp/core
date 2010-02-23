@@ -5,6 +5,8 @@ $config = array();
  * General ini settings.
  */
  
+$config['Solar']['system'] = dirname(dirname(dirname(dirname(__FILE__))));
+
 $config['Solar']['ini_set'] = array(
 	'error_reporting' => (E_ALL|E_STRICT),
 	'display_errors'  => true,

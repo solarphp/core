@@ -27,7 +27,7 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * @return true Always reports a successsful save.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -47,7 +47,7 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * @return true Always reports a successsful add.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;

@@ -164,19 +164,26 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data)
+    public function save($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
         }
         
-        // should the data be serialized?
-        // serialize all non-scalar data.
-        if (! is_scalar($data)) {
+        // life value
+        if ($life === null) {
+            $life = $this->_life;
+        }
+        
+        // keep some meta info
+        $meta = array(
+            'serial' => ! is_scalar($data),
+            'expire' => ($life ? time() + $life : 0),
+        );
+        
+        // serialize the data?
+        if ($meta['serial']) {
             $data = serialize($data);
-            $serial = true;
-        } else {
-            $serial = false;
         }
         
         // what file should we write to?
@@ -188,39 +195,34 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
             mkdir($dir, $this->_config['mode'], true, $this->_context);
         }
         
-        // open the file for over-writing. not using file_put_contents 
-        // becuase we may need to write a serial file too (and avoid race
+        // open data file for over-writing. not using file_put_contents 
+        // becuase we need to write a meta file too (and avoid race
         // conditions while doing so). don't use include path. using ab+ is
         // much, much faster than wb.
         $fp = fopen($file, 'ab+', false, $this->_context);
         
         // was it opened?
         if (! $fp) {
-            // could not open the file for writing.
+            // could not open data file for writing.
             return false;
         }
         
         // set exclusive lock for writing.
         flock($fp, LOCK_EX);
         
-        // empty whatever might be there and the write
+        // empty whatever might be there and then write the data
         fseek($fp, 0);
         ftruncate($fp, 0);
         fwrite($fp, $data);
         
-        // add a .serial file? (do this while the file is locked to avoid
-        // race conditions)
-        if ($serial) {
-            // use this instead of touch() because it supports stream
-            // contexts.
-            file_put_contents($file . '.serial', null, LOCK_EX, $this->_context);
-        } else {
-            // make sure no serial file is there from any previous entries
-            // with the same name
-            @unlink($file . '.serial', $this->_context);
-        }
+        // write meta while the data file is locked to avoid race conditions.
+        $meta = serialize($meta);
+        file_put_contents($file . '.meta', $meta, LOCK_EX, $this->_context);
         
-        fclose($fp);  // releases the lock
+        // release the lock
+        fclose($fp);
+        
+        // done!
         return true;
     }
     
@@ -235,7 +237,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
      * @return bool True on success, false on failure.
      * 
      */
-    public function add($key, $data)
+    public function add($key, $data, $life = null)
     {
         if (! $this->_active) {
             return;
@@ -250,7 +252,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
                      $this->_isExpired($file);
         
         if ($available) {
-            return $this->save($key, $data);
+            return $this->save($key, $data, $life);
         }
         
         // key already exists
@@ -300,16 +302,17 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
             // lock the file right away
             flock($fp, LOCK_SH);
             
-            // get the cache entry data.
+            // get the cache entry data
             $data = stream_get_contents($fp);
             
-            // check for serializing while file is locked
-            // to avoid race conditions
-            if (file_exists($file . '.serial')) {
+            // get the meta info
+            $meta = unserialize(file_get_contents("$file.meta"));
+            if ($meta['serial']) {
                 $data = unserialize($data);
             }
             
-            fclose($fp); // releases lock
+            // release the lock
+            fclose($fp); 
         }
         
         // will be false if fopen() failed, otherwise is the file contents.
@@ -329,15 +332,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
      */
     protected function _isExpired($file)
     {
-        if ($this->_life) {
-            $expire_time = filemtime($file) + $this->_config['life'];
-            if (time() > $expire_time) {
-                return true;
-            }
-        }
-        
-        // lifetime is forever, or not past expiration yet.
-        return false;
+        $meta = unserialize(file_get_contents("$file.meta"));
+        return $meta['expire'] && $meta['expire'] <= time();
     }
     
     /**
@@ -413,7 +409,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         
         $file = $this->entry($key);
         @unlink($file, $this->_context);
-        @unlink($file . '.serial', $this->_context);
+        @unlink($file . '.meta', $this->_context);
     }
     
     /**

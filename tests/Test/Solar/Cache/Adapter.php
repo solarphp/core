@@ -200,7 +200,7 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
         // set up a "live forever" adapter
         $config = $this->_config;
         $config['life'] = 0;
-        $this->_adapter = Solar::factory($this->_adapter_class, $this->_config);
+        $this->_adapter = Solar::factory($this->_adapter_class, $config);
         
         // run the standard fetch test
         $this->testFetch();
@@ -313,6 +313,22 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
         $data = Solar::factory('Mock_Solar_Example');
         $this->assertTrue($this->_adapter->save($id, $data));
         $this->assertEquals($this->_adapter->fetch($id), $data);
+    }
+    
+    // save with a custom lifespan
+    public function testSave_life()
+    {
+        $id = 'coyote';
+        $data = 'Wile E. Coyote';
+        $life = 3;
+        $this->assertTrue($this->_adapter->save($id, $data, $life));
+        $this->assertSame($this->_adapter->fetch($id), $data);
+        
+        sleep($life - 1);
+        $this->assertSame($this->_adapter->fetch($id), $data);
+        
+        sleep(2);
+        $this->assertFalse($this->_adapter->fetch($id));
     }
     
     /**

@@ -5,9 +5,14 @@
  * 
  * For an element named 'foo[bar]', builds a series of selects:
  * 
- * - foo[bar][Y] : +/- 4 years from selected value; if none, current year +/- 4
+ * - foo[bar][Y] : {:y_first} - {:y_last}
  * - foo[bar][m] : 01-12
  * - foo[bar][d] : 01-31
+ * 
+ * This helper makes use of two extra element information keys: `y_first`
+ * to determine the first year shown, and `y_last` as the last year shown.
+ * The default values are -4 years from the current year, and +4 years from
+ * the current year, respectively.
  * 
  * @category Solar
  * 
@@ -26,11 +31,16 @@ class Solar_View_Helper_FormDate extends Solar_View_Helper_FormTimestamp
      * 
      * Helper for a 'date' pseudo-element.
      * 
-     * For an element named 'foo[bar]', returns a series of selects:
+     * For an element named 'foo[bar]', builds a series of selects:
      * 
-     * - foo[bar][Y] : +/- 4 years from selected value; if none, current year +/- 4
+     * - foo[bar][Y] : {:y_first} - {:y_last}
      * - foo[bar][m] : 01-12
      * - foo[bar][d] : 01-31
+     * 
+     * This helper makes use of two extra element information keys: `y_first`
+     * to determine the first year shown, and `y_last` as the last year shown.
+     * The default values are -4 years from the current year, and +4 years
+     * from the current year, respectively.
      * 
      * @param array $info An array of element information.
      * 

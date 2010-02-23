@@ -501,14 +501,21 @@ class Solar
         // get all parent classes, including the class itself
         $stack = array_reverse(Solar_Class::parents($class, true));
         
-        // add the vendor namespace, (for example, 'Solar') to the stack as a
-        // final fallback, even though it's not strictly part of the
-        // hierarchy, for generic vendor-wide exceptions.
-        $stack[] = Solar_Class::vendor($class);
+        // add the vendor namespace to the stack as a fallback, even though
+        // it's not strictly part of the hierarchy, for generic vendor-wide
+        // exceptions.
+        $vendor = Solar_Class::vendor($class);
+        if ($vendor != 'Solar') {
+            $stack[] = $vendor;
+        }
+        
+        // add Solar as the final fallback
+        $stack[] = 'Solar';
         
         // track through class stack and look for specific exceptions
         foreach ($stack as $class) {
             try {
+                var_dump("{$class}_Exception_$suffix");
                 $obj = Solar::factory("{$class}_Exception_$suffix", $config);
                 return $obj;
             } catch (Exception $e) {
@@ -519,6 +526,7 @@ class Solar
         // track through class stack and look for generic exceptions
         foreach ($stack as $class) {
             try {
+                var_dump("{$class}_Exception");
                 $obj = Solar::factory("{$class}_Exception", $config);
                 return $obj;
             } catch (Exception $e) {

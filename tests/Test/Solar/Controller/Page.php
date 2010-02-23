@@ -66,7 +66,7 @@ class Test_Solar_Controller_Page extends Solar_Test {
         try {
             $actual = $this->_page->noSuchVar;
             $this->fail('should have thrown exception on no-existing var');
-        } catch (Solar_Controller_Page_Exception_PropertyNotDefined $e) {
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // we expect this, do nothing
         }
     }
@@ -88,7 +88,7 @@ class Test_Solar_Controller_Page extends Solar_Test {
         try {
             $this->_page->zim = 'dib';
             $this->fail('should have thrown exception on non-existing var');
-        } catch (Solar_Controller_Page_Exception_PropertyNotDefined $e) {
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // we expect this, do nothing
         }
         

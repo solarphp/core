@@ -86,16 +86,16 @@ class Test_Solar_Struct extends Solar_Test {
         $struct = $this->_newStruct();
         try {
             $invalid = $struct->noSuchKey;
-            $this->fail('Should have thrown a NO_SUCH_KEY exception.');
-        } catch (Solar_Struct_Exception_NoSuchKey $e) {
+            $this->fail('Should have thrown a NO_SUCH_PROPERTY exception.');
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // pass
         }
         
         $struct = $this->_newStruct();
         try {
             $invalid = $struct['no_such_key'];
-            $this->fail('Should have thrown a NO_SUCH_KEY exception.');
-        } catch (Solar_Struct_Exception_NoSuchKey $e) {
+            $this->fail('Should have thrown a NO_SUCH_PROPERTY exception.');
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // pass
         }
     }
@@ -144,8 +144,8 @@ class Test_Solar_Struct extends Solar_Test {
         $this->assertFalse(isset($struct->foo));
         try {
             $invalid = $struct->foo;
-            $this->fail('Should have thrown a NO_SUCH_KEY exception.');
-        } catch (Solar_Struct_Exception_NoSuchKey $e) {
+            $this->fail('Should have thrown a NO_SUCH_PROPERTY exception.');
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // pass
         }
         
@@ -154,8 +154,8 @@ class Test_Solar_Struct extends Solar_Test {
         $this->assertFalse(isset($struct['foo']));
         try {
             $invalid = $struct['foo'];
-            $this->fail('Should have thrown a NO_SUCH_KEY exception.');
-        } catch (Solar_Struct_Exception_NoSuchKey $e) {
+            $this->fail('Should have thrown a NO_SUCH_PROPERTY exception.');
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // pass
         }
     }
@@ -218,8 +218,8 @@ class Test_Solar_Struct extends Solar_Test {
         
         try {
             $actual = $struct->offsetGet('noSuchKey');
-            $this->fail('Should have thrown a NO_SUCH_KEY exception.');
-        } catch (Solar_Struct_Exception_NoSuchKey $e) {
+            $this->fail('Should have thrown a NO_SUCH_PROPERTY exception.');
+        } catch (Solar_Exception_NoSuchProperty $e) {
             // pass
         }
     }

@@ -515,7 +515,6 @@ class Solar
         // track through class stack and look for specific exceptions
         foreach ($stack as $class) {
             try {
-                var_dump("{$class}_Exception_$suffix");
                 $obj = Solar::factory("{$class}_Exception_$suffix", $config);
                 return $obj;
             } catch (Exception $e) {
@@ -526,7 +525,6 @@ class Solar
         // track through class stack and look for generic exceptions
         foreach ($stack as $class) {
             try {
-                var_dump("{$class}_Exception");
                 $obj = Solar::factory("{$class}_Exception", $config);
                 return $obj;
             } catch (Exception $e) {

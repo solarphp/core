@@ -2232,7 +2232,7 @@ abstract class Solar_Sql_Model extends Solar_Base
                 // get the column descriptions from the database
                 $cols = $this->_sql->fetchTableCols($this->_table_name);
                 
-            } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
+            } catch (Solar_Sql_Adapter_Exception_NoColsFound $e) {
                 
                 // does the table exist in the database?
                 $list = $this->_sql->fetchTableList();

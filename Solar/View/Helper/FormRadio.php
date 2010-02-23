@@ -37,6 +37,15 @@ class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement
         // default value if none are checked.
         $radios[] = $this->_view->formHidden(array('name' => $this->_name, 'value' => null));
         
+        // put a class on the label?
+        if ($this->_config['label_class']) {
+            $label_attribs = $this->_view->attribs(array(
+                'class' => $this->_config['label_class']
+            ));
+        } else {
+            $label_attribs = null;
+        }
+        
         // count for ID suffixes
         $i = 0;
         
@@ -55,15 +64,6 @@ class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement
             if (! empty($radio_attribs['id'])) {
                 $i++;
                 $radio_attribs['id'] .= "-{$i}";
-            }
-            
-            // put a class on the label?
-            if ($this->_config['label_class']) {
-                $label_attribs = $this->_view->attribs(array(
-                    'class' => $this->_config['label_class']
-                ));
-            } else {
-                $label_attribs = null;
             }
             
             // build the radio button

@@ -2558,7 +2558,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 'part' => $part,
                 'min'  => 1,
                 'max'  => $this->_maxlen,
-                'min'  => $len,
+                'len'  => $len,
             ));
         }
         

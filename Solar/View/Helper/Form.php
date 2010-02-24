@@ -329,7 +329,20 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function __call($type, $args)
     {
+        if (! $args) {
+            throw $this->_exception('ERR_CALL_ARGS', array(
+                'type' => $type,
+            ));
+        }
+        
         $info = $args[0];
+        if (! is_array($info)) {
+            throw $this->_exception('ERR_CALL_INFO', array(
+                'type' => $type,
+                'info' => $info,
+            ));
+        }
+        
         $info['type'] = $type;
         return $this->addElement($info);
     }
@@ -618,8 +631,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * Automatically adds multiple pieces to the form.
      * 
-     * @param Solar_Form|array $spec If a Solar_Form object, adds
-     * attributes, elements and feedback from the object properties. 
+     * @param Solar_Form|array $spec If a Solar_Form object, adds attributes, 
+     * elements and feedback, and sets status, from the object properties. 
      * If an array, treats it as a a collection of element info
      * arrays and adds them.
      * 
@@ -630,19 +643,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     {
         if ($spec instanceof Solar_Form) {
             
-            // add from a Solar_Form object.
-            // set the form status.
-            $this->setStatus($spec->getStatus());
-            
-            // retain the automatic attribs separately from those
-            // specified at the view level (i.e. in this object)
-            $this->_attribs_auto = array_merge(
-                (array) $this->_attribs_auto,
-                (array) $spec->attribs
-            );
-            
-            // add form-level feedback
-            $this->addFeedback($spec->feedback);
+            // set status, merge attribs, add feedback
+            $this->meta($spec);
             
             // add elements
             foreach ((array) $spec->elements as $info) {
@@ -656,6 +658,26 @@ class Solar_View_Helper_Form extends Solar_View_Helper
                 $this->addElement($info);
             }
         }
+        
+        // done
+        return $this;
+    }
+    
+    public function meta(Solar_Form $form)
+    {
+        // add from a Solar_Form object.
+        // set the form status.
+        $this->setStatus($form->getStatus());
+        
+        // retain the automatic attribs separately from those
+        // specified at the view level (i.e. in this object)
+        $this->_attribs_auto = array_merge(
+            (array) $this->_attribs_auto,
+            (array) $form->attribs
+        );
+        
+        // add form-level feedback
+        $this->addFeedback($form->feedback);
         
         // done
         return $this;
@@ -698,9 +720,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * @return Solar_View_Helper_Form
      * 
      */
-    public function beginFieldset($legend)
+    public function beginFieldset($legend, $attribs = null)
     {
-        $this->_stack[] = array('fieldset', array(true, $legend));
+        $this->_stack[] = array('fieldset', array(
+            'flag'    => true,
+            'label'   => $legend,
+            'attribs' => $attribs,
+        ));
         return $this;
     }
     
@@ -713,7 +739,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function endFieldset()
     {
-        $this->_stack[] = array('fieldset', array(false, null));
+        $this->_stack[] = array('fieldset', array(
+            'flag'    => false,
+            'label'   => null,
+            'attribs' => null,
+        ));
         return $this;
     }
     
@@ -1511,8 +1541,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _buildFieldset(&$html, $info)
     {
-        $flag   = $info[0];
-        $legend = $this->_view->getText($info[1]);
+        $flag = $info['flag'];
         if ($flag) {
             
             // end any previous groups, lists, and sets
@@ -1521,7 +1550,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             $this->_buildFieldsetEnd($html);
             
             // start a new set
-            $this->_buildFieldsetBegin($html, $legend);
+            $legend  = $info['label'];
+            $attribs = $info['attribs'];
+            $this->_buildFieldsetBegin($html, $legend, $attribs);
             
         } else {
             
@@ -1544,15 +1575,21 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * @return void
      * 
      */
-    protected function _buildFieldsetBegin(&$html, $legend)
+    protected function _buildFieldsetBegin(&$html, $legend, $attribs)
     {
         if ($this->_in_fieldset) {
             // already in a fieldset, don't start another one
             return;
         }
         
-        $html[] = $this->_indent(1, "<fieldset>");
-        $html[] = $this->_indent(2, "<legend>$legend</legend>");
+        $attr   = $this->_view->attribs($attribs);
+        $html[] = $this->_indent(1, "<fieldset{$attr}>");
+        
+        if ($legend) {
+            $legend = $this->_view->getText($legend);
+            $html[] = $this->_indent(2, "<legend>$legend</legend>");
+        }
+        
         $this->_in_fieldset = true;
     }
     

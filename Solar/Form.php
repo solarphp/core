@@ -371,10 +371,10 @@ class Solar_Form extends Solar_Base
             }
         }
         
-        // return all elements of a specific array-name?
+        // return all elements of a specific prefix?
         if (is_string($spec)) {
             foreach($this->elements as $name => $info) {
-                if (strpos($name, $spec . '[') === 0) {
+                if (strpos($name, $spec) === 0) {
                     $list[$name] = $info;
                 }
             }

@@ -1,11 +1,5 @@
 <?php
 return array(
-    'target' => array(
-        'long'    => 'target',
-        'descr'   => 'Write files to this directory, typically the include directory.',
-        'param'   => 'required',
-        'value'   => Solar::$system . DIRECTORY_SEPARATOR . 'include',
-    ),
     'table' => array(
         'long'    => 'table',
         'descr'   => 'The table name for the model to use.',

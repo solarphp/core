@@ -179,15 +179,10 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
      */
     protected function _setTarget()
     {
-        $target = $this->_options['target'];
-        if (! $target) {
-            // use the solar system 'include' directory.
-            // that should automatically point to the right vendor for us.
-            $target = Solar::$system . '/include';
-        }
-        
+        // use the solar system 'include' directory.
+        // that should automatically point to the right vendor for us.
+        $target = Solar::$system . '/include';
         $this->_target = Solar_Dir::fix($target);
-        
         $this->_outln("Will write to '{$this->_target}'.");
     }
     

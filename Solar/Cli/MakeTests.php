@@ -3,37 +3,12 @@
  * 
  * Command to make a test class (or set of classes) from a given class.
  * 
- * The class should be in the include_path.
- * 
- * Synopsis
- * ========
- * 
- * `**solar make-tests** [options] CLASS`
- * 
- * Options
- * =======
- * 
- * `--config FILE`
- * : Path to the Solar.config.php file.  Default false.
- * 
- * `--target _arg_`
- * : Directory where the test classes should be written to.  Default is the
- *   current working directory.
- * 
- * `--only`
- * : Make only the test for the given class, do not recurse into subdirectories.
- * 
  * Examples
  * ========
  * 
  * Make test files for a class and its subdirectories.
  * 
- *     $ cd /path/to/tests/
- *     $ solar make-tests Vendor_Example
- * 
- * Make "remotely":
- * 
- *     $ solar make-tests --dir /path/to/tests Vendor_Example
+ *     $ ./script/solar make-tests Vendor_Example
  * 
  * Make only the Vendor_Example test (no subdirectories):
  * 
@@ -204,22 +179,8 @@ class Solar_Cli_MakeTests extends Solar_Controller_Command
      */
     protected function _setTarget()
     {
-        // look for a test directory, otherwise assume that the tests are
-        // in the same dir
-        $this->_target = $this->_options['target'];
-        if (! $this->_target) {
-            $this->_target = Solar::$system . "/include";
-        }
-        
-        // make sure it matches the OS.
-        $this->_target = Solar_Dir::fix($this->_target);
-        
-        // make sure it exists
-        if (! is_dir($this->_target)) {
-            throw $this->_exception('ERR_DIR_NOT_FOUND', array(
-                'dir' => $this->_target,
-            ));
-        }
+        $target = Solar::$system . "/include";
+        $this->_target = Solar_Dir::fix($target);
     }
     
     /**

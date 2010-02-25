@@ -1,9 +1,5 @@
 <?php
 return array(
-    'target' => array(
-        'long' => 'target',
-        'descr' => 'Where the tests will be written to.',
-    ),
     'only' => array(
         'long' => 'only',
         'param' => null,

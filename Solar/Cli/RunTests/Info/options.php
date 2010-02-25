@@ -1,11 +1,5 @@
 <?php
 return array(
-    'dir' => array(
-        'long' => 'dir',
-        'param' => 'req',
-        'value' => null,
-        'descr' => 'The path to the tests directory.',
-    ),
     'only' => array(
         'long' => 'only',
         'value' => false,

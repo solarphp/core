@@ -3,44 +3,21 @@
  * 
  * Command to run a Solar test series.
  * 
- * Synopsis
- * ========
- * 
- * `**solar run-tests** [options] [CLASS]`
- * 
- * If `CLASS` is empty, runs all test classes in the test directory, and 
- * recursively descends into subdirectories to run those tests as well.
- * 
- * If `CLASS` is given, runs that test class, and recursively descends into
- * its subdirectory to run tests there as well.
- * 
- * 
- * Options
- * =======
- * 
- * `--config FILE`
- * : Path to the Solar.config.php file.  Default false.
- * 
- * `--dir _arg_`
- * : Directory where the test classes are located.  Default is the current
- *   working directory.
- * 
  * Examples
  * ========
  * 
- * `./script/solar run-tests Test_Class`
- * : runs all methods for the test class and its subclasses
+ * `./script/solar run-tests Test_Vendor_Class`
+ * : runs all methods for the test class and its subdirectories
  * 
- * `./script/solar run-tests --only Test_Class`
- * : runs all methods for the one test class (no subclasses)
+ * `./script/solar run-tests Test_Vendor_Class --only `
+ * : runs all methods for the one test class (no subdirectories)
  * 
- * `./script/solar run-tests Test_Class::testMethod`
+ * `./script/solar run-tests Test_Vendor_Class::testMethod`
  * : runs all methods starting with "testMethod" for the test class and its 
- *   subclasses
+ *   subdirectories
  * 
- * `./script/solar run-tests --only Test_Class::testMethod`
- * : runs exactly the one Test_Class::testMethod()
- * 
+ * `./script/solar run-tests Test_Vendor_Class::testMethod --only`
+ * : runs only the one Test_Vendor_Class::testMethod() and no others
  * 
  * @category Solar
  * 

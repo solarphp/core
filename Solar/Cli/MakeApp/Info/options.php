@@ -1,18 +1,13 @@
 <?php
 return array(
-    'target' => array(
-        'long'    => 'target',
-        'descr'   => 'The target directory, typically the PEAR directory.',
-        'param'   => 'optional',
-    ),
     'extends' => array(
         'long'    => 'extends',
-        'descr'   => 'Extends from this class name.',
+        'descr'   => 'The app class should extend from this class name.',
         'param'   => 'required',
     ),
     'model-name' => array(
         'long'    => 'model-name',
-        'descr'   => 'Use this as the main model in the app.',
+        'descr'   => 'Create a browse/read/edit/add/delete app using this model name from the model catalog.',
         'param'   => 'required',
     ),
 );

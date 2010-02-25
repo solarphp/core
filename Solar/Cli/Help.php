@@ -47,8 +47,6 @@ class Solar_Cli_Help extends Solar_Controller_Command
      */
     protected function _displayCommandHelp($cmd = null)
     {
-        $this->_outln();
-        
         // the list of known command-to-class mappings
         $list = $this->_console->getCommandList();
         
@@ -60,7 +58,7 @@ class Solar_Cli_Help extends Solar_Controller_Command
         
         $class = $list[$cmd];
         $obj = Solar::factory($class);
-        $help = $obj->getInfoHelp();
+        $help = rtrim($obj->getInfoHelp());
         if ($help) {
             $this->_outln($help);
         } else {

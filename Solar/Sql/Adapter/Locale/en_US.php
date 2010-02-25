@@ -22,8 +22,8 @@ return array(
     'ERR_NOT_ENOUGH_VALUES'     => 'Not enough data values for placeholders in "{:text}".',
     'ERR_PREPARE_FAILED'        => 'Could not prepare statement: ({:pdo_code}) {:pdo_text}',
     
-    // column creation
-    'ERR_COL_TYPE'   => 'Column "{:col}" type "{:type}" not valid.',
+    // portable column creation
+    'ERR_COL_TYPE'   => 'Column "{:col}" type "{:type}"  is not a portable column type.',
     'ERR_COL_SIZE'   => 'Column "{:col}" size of "{:size}" not valid.',
     'ERR_COL_SCOPE'  => 'Column "{:col}" scope of "{:scope}" not valid for size "{:size}".',
     

@@ -101,6 +101,33 @@ class Test_Solar_View_Helper_Form extends Test_Solar_View_Helper {
         $this->todo('stub');
     }
     
+    public function testAuto_attribs()
+    {
+        // form object with default attribs
+        $form = Solar::factory('Solar_Form');
+        $form->attribs['foo'] = 'bar';
+        
+        // form helper: set attribs directly
+        $this->_view->form()->setAttrib('action', '/foo/bar/baz');
+        
+        // auto form object attribs
+        $this->_view->form()->auto($form);
+        
+        // form helper: set attrib directly
+        $this->_view->form()->setAttrib('enctype', 'application/x-www-form-urlencoded');
+        
+        // what do we actually have?
+        $actual = $this->_view->form()->fetch();
+        
+        // what should we have?
+        $expect = <<<FORM
+<form action="/foo/bar/baz" method="post" enctype="application/x-www-form-urlencoded" foo="bar">
+</form>
+FORM;
+
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
     /**
      * 
      * Test -- Begins a <fieldset> block with a legend/caption.

@@ -168,6 +168,9 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * @param string $data The data to store.
      * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
+     * 
      * @return bool True on success, false on failure.
      * 
      */
@@ -206,6 +209,9 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * @param string $key The entry ID.
      * 
      * @param string $data The data to store.
+     * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
      * 
      * @return bool True on success, false on failure.
      * 
@@ -280,6 +286,9 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * @param array $args Arguments to the callback, if any.
      * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
+     * 
      * @return mixed The fetched or created data.
      * 
      * @see save()
@@ -319,6 +328,9 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * be created for adding.
      * 
      * @param array $args Arguments to the callback, if any.
+     * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
      * 
      * @return mixed The fetched or created data.
      * 
@@ -431,6 +443,9 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * be created for insert.
      * 
      * @param array $args Arguments to the callback, if any.
+     * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
      * 
      * @return mixed The fetched or created data.
      * 

@@ -29,11 +29,31 @@
  */
 class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
 {
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config int y_first The default year to show first in the year options.
+     * Defaults to four years before the current year.
+     * 
+     * @config int y_last The default year to show last in the year options.
+     * Defaults to four years after the current year.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_View_Helper_FormTimestamp = array(
         'y_first' => null,
         'y_last'  => null,
     );
     
+    /**
+     * 
+     * Pre-config override to set default y_first and y_last values.
+     * 
+     * @return void
+     * 
+     */
     protected function _preConfig()
     {
         $year = date('Y');
@@ -41,8 +61,22 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $this->_Solar_View_Helper_FormTimestamp['y_last']  = $year + 4;
     }
     
+    /**
+     * 
+     * The default year to show first in the year options.
+     * 
+     * @var int
+     * 
+     */
     protected $_y_first;
     
+    /**
+     * 
+     * The default year to show last in the year options.
+     * 
+     * @var int
+     * 
+     */
     protected $_y_last;
     
     /**
@@ -77,6 +111,16 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
              . $this->_selectMinute();
     }
     
+    /**
+     * 
+     * Overrides the parent _prepare() to honor `y_first` and `y_last` element
+     * info keys.
+     * 
+     * @param array $info An array of element information.
+     * 
+     * @return void
+     * 
+     */
     protected function _prepare($info)
     {
         parent::_prepare($info);

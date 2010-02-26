@@ -663,6 +663,16 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * Automatically adds attributes and feedback, and sets status, for the
+     * form as a whole from a Solar_Form object. 
+     * 
+     * @param Solar_Form $form Add from this form object.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function meta(Solar_Form $form)
     {
         // add from a Solar_Form object.
@@ -716,6 +726,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * Begins a <fieldset> block with a legend/caption.
      * 
      * @param string $legend The legend or caption for the fieldset.
+     * 
+     * @param array $attribs Attributes for the fieldset tag.
      * 
      * @return Solar_View_Helper_Form
      * 
@@ -1153,6 +1165,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * @param array &$html A reference to the array of HTML lines for output.
      * 
+     * @param array $info The array of element information.
+     * 
      * @return void
      * 
      */
@@ -1572,6 +1586,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * @param string $legend The legend for the fieldset.
      * 
+     * @param array $attribs Attributes for the fieldset tag.
+     * 
      * @return void
      * 
      */
@@ -1831,6 +1847,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * @param string $tag The tag to use for decoration; this will be used as
      * both the opening and closing tag around the part.
      * 
+     * @param array $attribs Attributes for the fieldset tag.
+     * 
      * @return Solar_View_Helper_Form
      * 
      */
@@ -1870,6 +1888,19 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * Resets the attributes on a single decorator part, overwriting the
+     * existing attributes.
+     * 
+     * @param string $part The decorator part: 'list', 'elem', 'label', or
+     * 'value'.
+     * 
+     * @param array $attribs Attributes for the decorator tag.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function setDecoratorAttribs($part, $attribs)
     {
         foreach ($attribs as $key => $val) {
@@ -1879,6 +1910,19 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         return $this;
     }
     
+    /**
+     * 
+     * Adds attributes to a single decorator part, merging with existing
+     * attributes.
+     * 
+     * @param string $part The decorator part: 'list', 'elem', 'label', or
+     * 'value'.
+     * 
+     * @param array $attribs Attributes for the decorator tag.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function addDecoratorAttribs($part, $attribs)
     {
         foreach ($attribs as $key => $val) {

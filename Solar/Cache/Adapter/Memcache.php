@@ -186,6 +186,9 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
      * 
      * @param mixed $data The data to write into the entry.
      * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
+     * 
      * @return bool True on success, false on failure.
      * 
      */
@@ -214,6 +217,9 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
      * @param string $key The entry ID.
      * 
      * @param mixed $data The data to write into the entry.
+     * 
+     * @param int $life A custom lifespan, in seconds, for the entry; if null,
+     * uses the default lifespan for the adapter instance.
      * 
      * @return bool True on success, false on failure.
      * 

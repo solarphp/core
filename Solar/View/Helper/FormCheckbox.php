@@ -16,6 +16,17 @@
  */
 class Solar_View_Helper_FormCheckbox extends Solar_View_Helper_FormElement
 {
+    
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config string label_class A CSS class to use for the label tag to 
+     * identify it as a label for a checkbox.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_View_Helper_FormCheckbox = array(
         'label_class' => 'checkbox',
     );

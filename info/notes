@@ -1,336 +1,265 @@
-Overview of Change In Relateds
-==============================
+Overall
+-------
 
-We've been over this at least twice before, once when talking about the
-"unfounded" branch and again when talking about the "nullrec" branch.
+* Added localized exception messages for all known ERR_* codes, standardized
+  which exception codes are used, added more info to some exceptions for
+  their messages, and added several exception classes.
 
-To recap the problem, I very much want to remove the need for the following
-idiom in records where you have to access a related object:
-
-    // where 'foo' is a related record or collection ...
-    if (! $this->foo) {
-        $this->foo = $this->newRelated('foo');
-    }
-    // ... now you can be sure that $this->foo is actually there
-
-The idea is to have related data always come back as a record or collection,
-never as a null or empty array(), so that you do not have to check it every
-time for emptiness. I want to be able to get or set `$this->foo` and have it
-be there automatically.
-
-Jeff Moore (and others) thought this might be OK for a related collection, but
-absolutely not for a related record. Among other things, you can't tell if
-related record is actually in the database or not. After lengthy discussion, I
-backed off the idea.
-
-However, still I hate that idiom and want to be rid of it. I believe I have
-found a solution that covers Jeff's concerns, and still allow me to get rid of
-that check. Brief discussion with Jeff leads me to think that he's OK with it.
-
-There are four parts to this changeset (part 3 is where it gets interesting):
-
-1. Convert hasOne to always provide a record when you attempt to get or set
-it; in the case of no data at the database, place a new record object for
-manipulation.
-
-2. Convert hasMany and hasManyThrough to always provide a collection object
-when you attempt to get or set it; in the case of no data at the database,
-place a new empty collection object.
-
-3. Create a new relationship type, hasOneOrNull, that has the behavior of the
-existing hasOne. That is, if there is data when you try to get or set it,
-provide a record object, but if there is no data, place a null.
-
-4. Leave belongsTo alone. If there is data, provide a record object, but if
-there is no data, place a null. (This goes along with existing behaviors of
-not saving related belongsTo records, throwing an exception when they don't
-exist at save() time, etc.)
-
-Note that these changes apply only to related data within record objects. The
-fetchOne() and fetchAll() methods will still return null or array() when there
-is no data for the fetch.
-
-Note also that this applies only to getting and setting related properties; if
-you don't attempt to get or set the related value, no object will be
-populated.
-
-This removes the idiom I hate so much (because the has-whatever always get an
-object, no more checking-and-setting). This also solves Jeff's concern by
-introducing a specific relationship type that says if data does not exist, it
-should not be given a placeholder object unless you create that object
-specifically.
-
-There is the problem of changing existing _hasOne() calls to _hasOneOrNull()
-calls, but I think that will be easy as a global search-and-replace. There is
-also the problem of changing any checking logic against collections from `if
-(! $record->collection)` to `if ($record->collection->isEmpty()`, and that
-one's more difficult, but I don't think terribly so.
+* Added help text for all CLI commands.
 
 
-New Classes
------------
+Solar
+-----
 
-* Solar_Sql_Model_Metadata: Takes the place of Setup/table_name, table_cols,
-  and index_info files for make-model script.
+* [CHG] In method start(), guard base-class loading with class_exists().
+  Thanks, Jeff Moore, for the report; and thanks, Stloyd, for the patch.
 
-* Solar_Sql_Model_Related_HasOneOrNull: The same as a has-one, but when
-  related data is missing, uses a null instead of a new record.
+* [FIX] In method exception(), when the vendor class is not Solar, add Solar
+  as the final fallback.
 
 
-Deleted Classes
+Solar_Access_Adapter_Sql
+------------------------
+
+* [FIX] Prefix column names with the table name in WHERE and ORDER BY sections
+  of the SELECT query; using column names such as "order" no longer results in
+  an error. Thanks, dmytrok.
+
+
+Solar_Auth_Adapter_Sql
+----------------------
+
+* [FIX] Prefix column names with the table name in WHERE sections of the
+  SELECT query; using column names such as "order" no longer results in an
+  error. Thanks, dmytrok.
+
+
+Solar_App_Hello
 ---------------
 
-* Solar_Cli_Base: All functionality moved up to Solar_Controller_Command, and
-  all Cli classes now extend Solar_Controller_Command.
-
-* Solar_Vt100: Extracted from Solar_Controller_Command.
-
-* Solar_Cli_MakeCli: Command to make a CLI command in a vendor-space, like
-  make-model or make-app.
+* [FIX] Turn off layout for the index action.
 
 
-script/solar
-------------
+Solar_Cache_Adapter*
+--------------------
 
-* [ADD] Recognize -v as well as --verbose, even in a string of short options.
-
-* [CHG] Consolidate exception-handling logic.
-
-* [CHG] Only print exception dumps as error messages under certain
-  circumstances; otherwise, print a nice exception message as the error.
+* [CHG] In methods save(), add(), fetchOrSave(), fetchOrAdd(), and
+  _fetchOrInsert(), add a new trailing parameter $life to override the default
+  lifespan for the cache entry.
 
 
-Solar_Base
-----------
+Solar_Cache_Adapter_File
+------------------------
 
-* [DEL] Remove unused method apiVersion(). Never once in the history of the
-  Solar core has it been used.
-
-
-Solar_Class
------------
-
-* [ADD] Method file(). Like dir(), this finds a file related to the class
-  path.
+* [BRK] Now uses a .meta file to store expire and serial values, instead of
+  using filemtime() for expiry and a .serial file for the serialization flag.
+  This is to enable per-entry expiration. You may need to clear your file
+  caches for this to operate properly after you upgrade.
 
 
-Solar_Cli_*
------------
+Solar_Cli_Help
+--------------
 
-* [ADD] Placeholder help.txt and options.php files for all commands.
+* [FIX] No longer print double newlines between help text and options.
 
 
-Solar_Cli_MakeDocs
-------------------
+Solar_Cli_MakeApp
+-----------------
 
-* [ADD] Add option `--lint` to only lint the sources, and not actually write
-  out the doc files.
+* [BRK] No longer takes a --target option; writes always and only to the
+  Solar system "include" directory.
 
-* [ADD] Method writePackageIndex() now writes out the package summaries as
-  an index for the package directory.
 
-* [CHG] Method writePackageClassList() honors the new API-ref format for the
-  $packages property.
+Solar_Cli_MakeCli
+-----------------
 
-* [BRK] Method writeClassesIndex() now separates the class name and summary
-  using a pipe character instead of a tab; this makes the classes index a
-  Markdown-Extra table, instead of a TSV file.
-
+* [BRK] No longer takes a --target option; writes always and only to the
+  Solar system "include" directory.
 
 
 Solar_Cli_MakeModel
 -------------------
 
-* [BRK] Instead of creating three files in a Setup directory, create and use a
-  Metadata class with the same information.
+* [BRK] No longer takes a --target option; writes always and only to the
+  Solar system "include" directory.
+
+
+Solar_Cli_MakeTests
+-------------------
+
+* [BRK] No longer takes a --target option; writes always and only to the
+  Solar system "include" directory.
 
 
 Solar_Cli_MakeVendor
 --------------------
 
-* [ADD] Add an abstract Sql_Model_Metadata class as part of vendor setup.
+* [FIX] In config/default.php, *do not* create a $config variable, because it
+  overwrites the main $config value. Thanks, probd, for the report and patch.
 
-* [ADD] Now creates Vendor_Controller_Command and Vendor_Cli_Help so that
-  users can build CLI commands as easy as apps.
+* [FIX] Renamed options.txt to options.php in order for options to work as
+  expected. Thanks, dmytrok.
+
+* [FIX] Removed surplus and misleading "<?php\n" from the top of help.txt
+  file. Thanks, dmytrok.
 
 
 Solar_Cli_RunTests
 ------------------
 
-* [FIX] The options array now has a short 'v' for the long 'verbose' option.
+* [BRK] No longer takes a --dir option; always and only runs tests from the
+  Solar system "include" directory.
 
 
-Solar_Controller_Command
-------------------------
+Solar_Form
+----------
 
-* [ADD] Formal exception for invalid options.
+* [CHG] Remove empty default attributes 'class', 'id', and 'name' (these are
+  not elsewhere present or used in Solar_Form, nor in Solar_View_Helper_Form).
 
-* [FIX] Add option info for 'include-path'.
+* [DEL] Property $_filters is never used; removed.
 
-
-Solar_Controller_Console
-------------------------
-
-* [CHG] Confg key 'default' is now 'help', and no commands are disabled by
-  default.
+* [BRK] In method getElements(), when you provide a string prefix, it now
+  returns all elements with that string prefix, not just sub-elements of that
+  array name.
 
 
-Solar_Controller_Front
-----------------------
-
-* [FIX] Now uses Solar_Uri_Action::getFrontPath() throughout, so that
-  rewrites do not act on the action subdirectory prefix.  Thanks,
-  shiftyrobster, for the report that led to this fix.
-
-
-Solar_Docs_Apiref
------------------
-
-* [BRK] Property $packages format has changed. The key is still the package
-  name, but the value is now an associative array with two keys: 'list' and
-  'summ'. The 'list' key is an array of the classes in the package; the 'summ'
-  key is the package summary line, if any.
-  
-* [CHG] Method addClass() now retains the package summary from the class API
-  docs, but only if the package summary has not already been retained from
-  another class.  (I.e., the first package summary line wins.)
-
-
-Solar_Docs_Phpdoc
------------------
-
-* [CHG] Method parsePackage() now supports a 2-part line where part 1 is
-  the package name and part 2 is the package summary.
-
-
-Solar_Getopt
+Solar_Locale
 ------------
 
-* [CHG] Throw an exception when an unknown option is passed.
-
-* [ADD] Config key 'strict' to turn strictness off and on (i.e., blow up on
-  unknown option).
-  
-* [CHG] Method validate() now uses a filter chain, instead of a custom
-  validation process.
-
-* [CHG] Keep filters in $options['filters'], do not extrac to $_filters.
-
-* [DEL] Unused $_filters property.
-
-* [CHG] Add key 'present' to the internal option tracking, so we can tell if
-  an option was passed or not.
-
-* [FIX] In method validate(), when an option is present and a param is
-  required, add a validation to make sure the param is not blank.
-
-* [FIX] Default value for 'param' is now null.
+* [ADD] Method getLanguageCode() to get an RFC 1766 compliant language-code
+  string.
 
 
-Solar_Sql_Model
----------------
-
-* [BRK] Rename internal $_index to $_index_info, and method _fixIndex() to
-  _fixInexInfo(), to keep terminology the same between the model system and
-  the sql adapter.
-
-* [ADD] Method _hasOneOrNull() to support the new has-one-or-null relationship
-  type.
-
-
-Solar_Sql_Model_Record
+Solar_Role_Adapter_Sql
 ----------------------
 
-* [ADD] Method setNewRelated() to capture the idiom of setting a new related
-  where one does not yet exist.
+* [FIX] Prefix column names with the table name in WHERE sections of the
+  SELECT query; using column names such as "order" no longer results in an
+  error. Thanks, dmytrok.
 
 
-Solar_Sql_Model_Related
------------------------
+Solar_Uri
+---------
 
-* [CHG] Renamed abstract method fetchEmpty() to _getEmpty() to indicate it's
-  for internal results.
-
-* [BRK] Repurpose the method name fetchEmpty() for fetching empty results out
-  to lazy- or eager-fetch object creation. Belongs-to and has-one-or-null will
-  return null; has-one will return a a new record object; has-many and
-  has-many-through will return an empty collection object.
-
-* [CHG] Method fetch() now calls fetchEmpty() when it looks like the returned
-  result will be empty.
-
-
-Solar_Sql_Model_Related_ToMany
-------------------------------
-
-* [CHG] Renamed method fetchEmpty() to _getEmpty() to return an array() for
-  empty internal results. This is because the fetchEmpty() method has been
-  repurposed.
-
-
-Solar_Sql_Model_Related_ToOne
------------------------------
-
-* [BRK] Method newObject() now only returns a loaded record object, not a new
-  record object.
-
-* [CHG] Renamed method fetchEmpty() to _getEmpty() to return a null for empty
-  internal results. This is because the fetchEmpty() method has been
-  repurposed.
-
-
-Solar_Sql_Model_Related_BelongsTo
----------------------------------
-
-* [ADD] Method fetchEmpty() to return a null for empty relateds.
-
-
-Solar_Sql_Model_Related_HasMany
--------------------------------
-
-* [ADD] Method fetchEmpty() to return an empty collection object for empty
-  relateds.
-
-* [CHG] Method save() now uses `$foreign->isEmpty()` instead of `! $foreign`.
-
-
-Solar_Sql_Model_Related_HasManyThrough
---------------------------------------
-
-* [ADD] Method fetchEmpty() to return an empty collection object for empty
-  relateds.
-
-* [CHG] Method _fetchIntoArrayAll() now uses new _getEmpty() to get the
-  internal empty value instead of fetchEmpty(), which has been repurposed.
-
-* [CHG] Method fetch() now calls fetchEmpty() when it looks like the returned
-  result will be empty.
-
-* [CHG] Method save() no longer needs to create a $through, since it will be
-  created as needed. Similarly, no more need to see if $foreign and $through
-  don't exist.
-
-
-Solar_Sql_Model_Related_HasOne
-------------------------------
-
-* [ADD] Method fetchEmpty() to return a new record object for empty relateds.
-
-
-Solar_Uri_Action
-----------------
-
-* [ADD] Method getFrontPath() returns the path without the subdirectory
-  prefix.
+* [CHG] In method set(), also check to see if the server port is 443, to see
+  if we should use an https scheme. Thanks, Robert Gonzalez, for this fix.
 
 
 Solar_View_Helper_Form
 ----------------------
 
-* [FIX] In method form(), do not reset right away when auto-building, as there
-  may have been preparatory work on the form settings before this point.
-  Thanks, Anthony Gentile, for the report that led to this fix.
+* [CHG] Add config key 'decorator_attribs' and property $_decorator_attribs to
+  retain custom attributes for decorator tags.
 
-* [FIX] In method auto(), the view-helper attribs should override the form
-  descriptor attribs. Thanks, Bedrich Rios, for the report that led to this
-  fix.
+* [BRK] Config key 'decorators' and property $_decorators are now renamed to
+  'decorator_tags' and $_decorator_tags, respectively.
+
+* [CHG] Method _buildElementBegin() now takes a second paramter for the
+  element information, so it can add the right class names to the element
+  decorator.
+
+* [CHG] Method _buildDecoratorBegin() honors the new custom decorator
+  attributes.
+
+* [CHG] Method _buildDecoratorBegin() now adds the decorator type as a class
+  only when the class attribute is empty, instead of always adding it.
+
+* [ADD] Method decorateAsDivs() to decorate the list and the element (but not
+  the label or value) with a <div> tag.
+
+* [CHG] Method setDecorator() now takes a third param, $attribs, as attributes
+  for the decorator type.
+
+* [CHG] Method setDecorators() now honors two kinds of specifications.  The
+  old style, where the $list value is a string tag name, is honored.  The
+  newly added style is where the $list value is an array, where the first
+  element is a string tag name, and the second element is an array of
+  key-value pairs ('attrib' => 'value').
+
+* [ADD] Methods setDecoratorAttribs() and addDecoratorAttribs() to set
+  decorator attributes directly.
+
+* [CHG] Rename property $_attribs to $_attribs_view, to indicate attributes
+  for the form tag that are set directly at the view-helper level.
+
+* [ADD] Properte $_attribs_auto, to retain attributes for the form tag that 
+  are set indirectly via the auto() method.
+
+* [CHG] Method auto() now retains attributes from the spec in $_attribs_auto,
+  not in $_attribs_view.
+
+* [CHG] Method reset() no longer merges $_default_attribs and 
+  $this->_config['attribs'] into $_attribs_view; merging of defaults now 
+  occurs at fetch-time.  It does, however, reset $_attribs_view and
+  $_attribs_auto.
+
+* [CHG] Method _buildBegin() now merges form-tag attributes internally
+  when building the form tag.  The order of precedence from lowest to
+  highest is: $_default_attribs, $_config['attribs'], $_attribs_auto,
+  $attribs_view.  This is so that attribs set directly in the view always
+  take precedence over attribs set indirectly via the auto() method.
+
+* [BRK] Previously, checkbox labels (when not in groups) were put in the
+  'label' portion of the element, and the checkbox value itself was *not*
+  wrapped in a label. This left the checkbox itself sitting alone, and
+  clicking on the somewhat distant label for it would check/uncheck the box.
+  This has proved unintuitive, troublesome, and unpopular. As such, checkboxes
+  will now be wrapped with their label in the value portion of the element,
+  and the label portion of the element will be left blank. Sorry for the
+  trouble, folks.
+
+* [ADD] In method beginFieldset(), add a second parameter $attribs, used to
+  provide attributes for the fieldset tag. This changes the internal $_stack
+  descriptor for fieldsets, which is now honored by _buildFieldset*() methods.
+
+* [CHG] Slightly better error messages for magic __call().
+
+* [REF] Extract method meta() from auto(), to handle setting of meta-info
+  about the form view (attribs, feedback, and status) using a form object.
+
+
+Solar_View_Helper_FormCheckbox
+------------------------------
+
+* [ADD] Add config key 'label_class' to add a CSS class to the label tag
+  wrapping the checkbox input; this will help target labels on checkboxes (vs
+  generic input labels).
+
+* [FIX] Use getText() for the label text so that locale keys get translated
+  properly (vice escape()).
+
+
+Solar_View_Helper_FormRadio
+---------------------------
+
+* [FIX] Radio buttons IDs are now suffixed with an incremental count.
+
+* [ADD] Config key 'label_class' to specify a CSS class for the label tag wrapping the radio input.
+
+* [FIX] Use getText() for the label text so that locale keys get translated
+  properly (vice escape()).
+
+
+Solar_View_Helper_Form(Timestamp|Date|Time)
+-------------------------------------------
+
+* [ADD] Config keys 'y_first' and 'y_last', to set defaults for the first and
+  last years shown as select options. (These can be either low-to-high or 
+  high-to-low.)
+
+* [ADD] Method _prepare() to override the parent; this allows us to retain
+  element info keys for 'y_first' and 'y_last' which determine the first and
+  last years shown as select options.
+  
+* [ADD] Properties $_y_first and $_y_last for the first and last years shown.
+
+* [CHG] Method _selectYear() now honors the $_y_first and $_y_last properties,
+  instead of showing only +/- 4 years from the current year.
+
+* [CHG] Method _selectHour() now shows 00-24 instead of 00-23.
+
+* [CHG] The '-' empty-value has been removed from all select options.
+
+* [CHG] Method _prepare(), when no value is present, now defaults the value
+  to the current timestamp using `date('Y-m-d H:i:s')`.

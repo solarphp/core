@@ -92,6 +92,13 @@ class Solar_Cli_LinkVendor extends Solar_Controller_Command
                 'src' => "../../source/{$this->_dashes}/tests/Mock/$this->_studly",
             ),
             
+            // include/Fixture/Vendor => ../../source/vendor/tests/Fixture/Vendor
+            array(
+                'dir' => "include/Fixture",
+                'tgt' => $this->_studly,
+                'src' => "../../source/{$this->_dashes}/tests/Fixture/$this->_studly",
+            ),
+            
             // script/vendor -> ../source/solar/script/solar
             array(
                 'dir' => "script",

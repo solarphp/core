@@ -75,6 +75,7 @@ class Solar_Cli_UnlinkVendor extends Solar_Controller_Command
         // the links to remove (reverse order from make-vendor)
         $links = array(
             "script/{$this->_dashes}",
+            "include/Fixture/{$this->_studly}",
             "include/Mock/{$this->_studly}",
             "include/Test/{$this->_studly}",
             "include/{$this->_studly}",

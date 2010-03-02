@@ -50,6 +50,8 @@ class Solar_Cli_MakeVendor extends Solar_Controller_Command
         '/{:dashes}/docs',
         '/{:dashes}/script',
         '/{:dashes}/tests',
+        '/{:dashes}/tests/Fixture',
+        '/{:dashes}/tests/Fixture/{:studly}',
         '/{:dashes}/tests/Mock',
         '/{:dashes}/tests/Mock/{:studly}',
         '/{:dashes}/tests/Test',

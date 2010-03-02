@@ -21,7 +21,7 @@ class {:class} extends {:extends}
         $metadata          = Solar::factory('{:class}_Metadata');
         $this->_table_name = $metadata->table_name;
         $this->_table_cols = $metadata->table_cols;
-        $this->_index      = $metadata->index_info;
+        $this->_index_info = $metadata->index_info;
     }
     
     /**

@@ -24,6 +24,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     public function test_nativeWithoutEagerSameAsWithEager()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         
         // no eager
@@ -112,6 +114,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
      */
     public function testLoad()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         $taggings = $this->_catalog->getModel('taggings');
         $tags = $this->_catalog->getModel('tags');
@@ -147,6 +151,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
             "through" => "taggings",
             "through_alias" => "taggings",
             "through_foreign_col" => "tag_id",
+            "through_join_type" => "left",
             "through_key" => null,
             "through_native_col" => "node_id",
             "through_table" => "test_solar_taggings",
@@ -211,6 +216,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     public function test_lazyFetchOne()
     {
+        $this->_fixture->setup();
+        
         // fetch one node, then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
         $params = array(
@@ -264,6 +271,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     public function test_lazyFetchAll()
     {
+        $this->_fixture->setup();
+        
         // fetch all nodes, then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
         $node_coll = $nodes->fetchAll();
@@ -322,6 +331,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     public function test_eagerFetchOne()
     {
+        $this->_fixture->setup();
+        
         // fetch one node with an eager tags
         // then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
@@ -348,6 +359,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     public function test_eagerFetchAll()
     {
+        $this->_fixture->setup();
+        
         // fetch all nodes with eager tags
         // then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
@@ -370,6 +383,8 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     
     public function test_eagerFetchOne_noneRelated()
     {
+        $this->_fixture->setup();
+        
         // remove taggings on one of the nodes
         $node_id = rand(1,10);
         $taggings = $this->_catalog->getModel('taggings');

@@ -18,6 +18,8 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
     
     public function test_nativeWithoutEagerSameAsWithEager()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         
         // no eager
@@ -76,6 +78,8 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
      */
     public function testLoad()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         
         $related = $this->_newRelated($nodes, array(
@@ -166,6 +170,8 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
     
     public function test_lazyFetchOne()
     {
+        $this->_fixture->setup();
+        
         // get table-creation out the way after caches are cleared
         $this->_catalog->getModel('nodes');
         $this->_catalog->getModel('areas');
@@ -201,6 +207,8 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
     
     public function test_lazyFetchAll()
     {
+        $this->_fixture->setup();
+        
         // get table-creation out the way after caches are cleared
         $this->_catalog->getModel('nodes');
         $this->_catalog->getModel('areas');
@@ -234,6 +242,8 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
     
     public function test_eagerFetchOne()
     {
+        $this->_fixture->setup();
+        
         // get table-creation out the way after caches are cleared
         $this->_catalog->getModel('nodes');
         $this->_catalog->getModel('areas');
@@ -271,6 +281,8 @@ class Test_Solar_Sql_Model_Related_BelongsTo extends Test_Solar_Sql_Model_Relate
     
     public function test_eagerFetchAll()
     {
+        $this->_fixture->setup();
+        
         // get table-creation out the way after caches are cleared
         $this->_catalog->getModel('nodes');
         $this->_catalog->getModel('areas');

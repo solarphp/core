@@ -30,6 +30,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
     
     protected $_catalog = null;
     
+    protected $_fixture = null;
     
     // -----------------------------------------------------------------
     // 
@@ -63,146 +64,8 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         Solar_Registry::set('sql', $this->_sql);
         Solar_Registry::set('model_catalog', $this->_catalog);
         
-        // populate tables
-        $this->_populateAll();
-    }
-    
-    protected function _populateAll()
-    {
-        $this->_populateUsers();
-        $this->_populateAreas();
-        $this->_populateNodes();
-        $this->_populateMetas();
-        $this->_populateTags();
-        $this->_populateTaggings();
-    }
-    
-    protected function _populateUsers()
-    {
-        $users = $this->_catalog->getModel('users');
-        $handles = array('zim', 'dib', 'gir');
-        foreach ($handles as $key => $val) {
-            $user = $users->fetchNew();
-            $user->handle = $val;
-            $user->save();
-            $user = null;
-            unset($user);
-        }
-    }
-    
-    protected function _populateAreas()
-    {
-        $areas = $this->_catalog->getModel('areas');
-        $names = array('Irk', 'Earth');
-        foreach ($names as $key => $val) {
-            $area = $areas->fetchNew();
-            $area->user_id = $key + 1;
-            $area->name = $val;
-            $area->save();
-            $area = null;
-            unset($area);
-        }
-    }
-    
-    protected function _populateNodes()
-    {
-        // create some nodes, some for area 1 and some for 2,
-        // and some for user 1 and some for user 2.
-        // five nodes for each area.
-        $nodes = $this->_catalog->getModel('nodes');
-        for ($i = 1; $i <= 10; $i++) {
-            $node = $nodes->fetchNew();
-            $node->subj = "Subject Line $i: " . substr(md5($i), 0, 5);
-            $node->body = "Body for $i ... " . md5($i);
-            $node->area_id = $i % 2 + 1; // sometimes 1, sometimes 2
-            $node->user_id = ($i + 1) % 2 + 1; // sometimes 2, sometimes 1
-            $node->save();
-            $node = null;
-            unset($node);
-        }
-    }
-    
-    protected function _populateMetas()
-    {
-        // one meta for each node
-        $nodes = $this->_catalog->getModel('nodes');
-        $metas = $this->_catalog->getModel('metas');
-        $collection = $nodes->fetchAll();
-        foreach ($collection as $node) {
-            $meta = $metas->fetchNew();
-            $meta->node_id = $node->id;
-            $meta->save();
-            $meta = null;
-            unset($meta);
-        }
-    }
-    
-    protected function _populateTags()
-    {
-        // some generic tags
-        $list = array('foo', 'bar', 'baz', 'zab', 'rab', 'oof');
-        
-        // save them
-        $tags = $this->_catalog->getModel('tags');
-        foreach ($list as $name) {
-            $tag = $tags->fetchNew();
-            $tag->name = $name;
-            $tag->save();
-            $tag = null;
-            unset($tag);
-        }
-    }
-    
-    protected function _populateTaggings()
-    {
-        $tags = $this->_catalog->getModel('tags');
-        $tag_coll = $tags->fetchAll();
-        $tag_last = count($tag_coll) - 1;
-        
-        $nodes = $this->_catalog->getModel('nodes');
-        $node_coll = $nodes->fetchAll();
-        
-        $taggings = $this->_catalog->getModel('taggings');
-        
-        // add some tags on each node through taggings
-        foreach ($node_coll as $node) {
-            
-            // add 2-5 tags on this node
-            $tags_to_add = rand(2,5);
-            
-            // which tags have we used already?
-            $tags_used = array();
-            
-            // add each of the tags
-            for ($i = 0; $i < $tags_to_add; $i ++) {
-                
-                // pick a random tag that has not been used yet
-                do {
-                    $tagno = rand(0, $tag_last);
-                } while (in_array($tagno, $tags_used));
-                
-                // mark it as used
-                $tags_used[] = $tagno;
-                
-                // get the tag from the collection
-                $tag = $tag_coll[$tagno];
-                
-                // match the node to the tag with a tagging
-                $tagging = $taggings->fetchNew();
-                $tagging->node_id = $node->id;
-                $tagging->tag_id = $tag->id;
-                $tagging->save();
-                
-                $tag = null;
-                unset($tag);
-                
-                $tagging = null;
-                unset($taagging);
-            }
-        }
-        
-        $node_coll->free();
-        $tag_coll->free();
+        // fixture to populate tables
+        $this->_fixture = Solar::factory('Fixture_Solar_Sql_Model');
     }
     
     // -----------------------------------------------------------------
@@ -229,6 +92,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function test__get()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -236,8 +100,8 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         );
         $coll = $model->fetchAssoc($params);
         
-        $record = $coll->zim;
-        $this->assertEquals($record->handle, 'zim');
+        $record = $coll->handle_1;
+        $this->assertEquals($record->handle, 'handle_1');
         
         $record->free();
     }
@@ -249,6 +113,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function test__isset()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -256,7 +121,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         );
         $coll = $model->fetchAssoc($params);
         
-        $this->assertTrue(isset($coll->zim));
+        $this->assertTrue(isset($coll->handle_1));
         $this->assertFalse(isset($coll->no_such_handle));
         
         $coll->free();
@@ -269,6 +134,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function test__set()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -277,17 +143,17 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         $coll = $model->fetchAssoc($params);
         
         // get a record, make sure it's the right one
-        $record = $coll->zim;
-        $this->assertEquals($record->handle, 'zim');
+        $record = $coll->handle_1;
+        $this->assertEquals($record->handle, 'handle_1');
         
         // clone it and replace within the collection
         $clone = clone $record;
         $clone->handle = 'zim-zim';
-        $coll->zim = $clone;
+        $coll->handle_1 = $clone;
         
         // make sure it was really replaced
-        $this->assertSame($coll->zim, $clone);
-        $this->assertNotSame($coll->zim, $record);
+        $this->assertSame($coll->handle_1, $clone);
+        $this->assertNotSame($coll->handle_1, $record);
         
         $clone->free();
         $record->free();
@@ -301,6 +167,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function test__unset()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -309,14 +176,14 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         $coll = $model->fetchAssoc($params);
         
         // get a record, make sure it's the right one
-        $record = $coll->zim;
-        $this->assertEquals($record->handle, 'zim');
+        $record = $coll->handle_1;
+        $this->assertEquals($record->handle, 'handle_1');
         
         // unset it from the collection
-        unset($coll->zim);
+        unset($coll->handle_1);
         
         // make sure it's not set any more
-        $this->assertFalse(isset($coll->zim));
+        $this->assertFalse(isset($coll->handle_1));
         
         $coll->free();
         $record->free();
@@ -329,13 +196,21 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function testCount()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
+        
+        $sql    = $model->sql;
+        $stmt   = "SELECT COUNT(*) FROM {$model->table_name}";
+        $expect = $sql->fetchValue($stmt);
+        $this->assertTrue($expect > 0);
+        
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
             'order' => 'handle',
         );
         $coll = $model->fetchAll($params);
-        $this->assertEquals($coll->count(), 3);
+        $this->assertEquals($coll->count(), $expect);
+        $this->assertEquals(count($coll), $expect);
         
         $coll->free();
     }
@@ -427,6 +302,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function testOffsetExists()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -435,7 +311,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         $coll = $model->fetchAll($params);
         
         $this->assertTrue(isset($coll[0]));
-        $this->assertFalse(isset($coll[9]));
+        $this->assertFalse(isset($coll[99])); // fixture has no more than 30
         
         $coll->free();
     }
@@ -447,6 +323,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function testOffsetGet()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -455,7 +332,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         $coll = $model->fetchAll($params);
         
         $record = $coll[0];
-        $this->assertEquals($record->handle, 'dib');
+        $this->assertEquals($record->handle, 'handle_1');
         
         $record->free();
         $coll->free();
@@ -468,6 +345,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function testOffsetSet()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -477,7 +355,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         
         // get a record, make sure it's the right one
         $record = $coll[0];
-        $this->assertEquals($record->handle, 'dib');
+        $this->assertEquals($record->handle, 'handle_1');
         
         // clone it and replace within the collection
         $clone = clone $record;
@@ -500,6 +378,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
      */
     public function testOffsetUnset()
     {
+        $this->_fixture->setup();
         $model = $this->_catalog->getModel('users');
         $params = array(
             'cols'  => array('handle', 'id', 'created', 'updated'),
@@ -509,7 +388,7 @@ class Test_Solar_Sql_Model_Collection extends Solar_Test {
         
         // get a record, make sure it's the right one
         $record = $coll[0];
-        $this->assertEquals($record->handle, 'dib');
+        $this->assertEquals($record->handle, 'handle_1');
         
         // unset it from the collection
         unset($coll[0]);

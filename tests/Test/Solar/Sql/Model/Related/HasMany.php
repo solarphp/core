@@ -18,6 +18,8 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
     
     public function test_nativeWithoutEagerSameAsWithEager()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         
         // no eager
@@ -85,6 +87,8 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
      */
     public function testLoad()
     {
+        $this->_fixture->setup();
+        
         $areas = $this->_catalog->getModel('areas');
         
         $related = $this->_newRelated($areas, array(
@@ -180,6 +184,8 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
     
     public function test_lazyFetchOne()
     {
+        $this->_fixture->setup();
+        
         // fetch one area, then see how many sql calls so far
         $areas = $this->_catalog->getModel('areas');
         $params = array(
@@ -193,7 +199,7 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         // lazy-fetch the nodes and check that the area_id's match
         $nodes = $area->nodes;
         $this->assertInstance($nodes, 'Mock_Solar_Model_Nodes_Collection');
-        $this->assertEquals(count($nodes), 5);
+        $this->assertTrue(count($nodes) > 0);
         foreach ($nodes as $node) {
             $this->assertEquals($node->area_id, $area->id);
         }
@@ -211,6 +217,8 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
     
     public function test_lazyFetchAll()
     {
+        $this->_fixture->setup();
+        
         // fetch all areas, then see how many sql calls so far
         $areas = $this->_catalog->getModel('areas');
         $collection = $areas->fetchAll();
@@ -220,7 +228,7 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         foreach ($collection as $area) {
             $nodes = $area->nodes;
             $this->assertInstance($nodes, 'Mock_Solar_Model_Nodes_Collection');
-            $this->assertEquals(count($nodes), 5);
+            $this->assertTrue(count($nodes) > 0);
             foreach ($nodes as $node) {
                 $this->assertEquals($node->area_id, $area->id);
             }
@@ -243,6 +251,8 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
     
     public function test_eagerFetchOne()
     {
+        $this->_fixture->setup();
+        
         // fetch one area with an eager nodes
         // then see how many sql calls so far
         $areas = $this->_catalog->getModel('areas');
@@ -258,7 +268,7 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         // look at the nodes and make sure the area_id's match
         $nodes = $area->nodes;
         $this->assertInstance($nodes, 'Mock_Solar_Model_Nodes_Collection');
-        $this->assertEquals(count($nodes), 5);
+        $this->assertTrue(count($nodes) > 0);
         foreach ($nodes as $node) {
             $this->assertEquals($node->area_id, $area->id);
         }
@@ -270,6 +280,8 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
     
     public function test_eagerFetchAll()
     {
+        $this->_fixture->setup();
+        
         // fetch all areas with eager nodes
         // then see how many sql calls so far
         $areas = $this->_catalog->getModel('areas');
@@ -281,7 +293,7 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         foreach ($collection as $area) {
             $nodes = $area->nodes;
             $this->assertInstance($nodes, 'Mock_Solar_Model_Nodes_Collection');
-            $this->assertEquals(count($nodes), 5);
+            $this->assertTrue(count($nodes) > 0);
             foreach ($nodes as $node) {
                 $this->assertEquals($node->area_id, $area->id);
             }

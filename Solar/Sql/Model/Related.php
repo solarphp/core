@@ -923,7 +923,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $join = null;
         $where = null;
         if ($use_select) {
-            $join  = $this->_getNativeBySelect($eager, $fetch, $col);
+            $join = $this->_getNativeBySelect($eager, $fetch, $col);
             $join['cond'] = array_merge(
                 (array) $join['cond'],
                 $this->getForeignConditions($eager['alias'])
@@ -977,8 +977,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     protected function _getNativeBySelect($eager, $fetch, $col)
     {
         // get a *copy* of the fetch params; don't want to mess them up
-        // for other eagers.
-        $clone = clone($fetch);
+        // for other eagers. only use the joins marked "keep".
+        $clone = $fetch->cloneForKeeps();
         
         // reset the column list and get only the native column
         $clone['cols'] = array();

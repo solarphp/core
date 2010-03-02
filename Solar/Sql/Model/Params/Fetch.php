@@ -95,6 +95,7 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
             'name' => null,
             'cond' => null,
             'cols' => null,
+            'keep' => null,
         );
         
         foreach ($spec as $join) {
@@ -105,6 +106,7 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
                 'name' => $join['name'],
                 'cond' => $join['cond'],
                 'cols' => $join['cols'],
+                'keep' => $join['keep'],
             );
         }
         
@@ -307,6 +309,27 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
     {
         $this->_data['count_pages'] = (bool) $flag;
         return $this;
+    }
+    
+    // used for count-pages and native-by-select
+    public function cloneForKeeps()
+    {
+        $clone = clone($this);
+        
+        // drop all eagers so they don't get re-added
+        $clone->_data['eager'] = array();
+        
+        // drop joins not needed for keeps
+        foreach ($clone->_data['join'] as $key => $join) {
+            $keep = $join['keep'] === true
+                 || $join['keep'] === null && $join['type'] != 'left';
+            if (! $keep) {
+                unset($clone->_data['join'][$key]);
+            }
+        }
+        
+        // done
+        return $clone;
     }
     
     /**

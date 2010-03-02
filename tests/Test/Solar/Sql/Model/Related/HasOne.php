@@ -18,6 +18,8 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     
     public function test_nativeWithoutEagerSameAsWithEager()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         
         // no eager
@@ -84,6 +86,8 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
      */
     public function testLoad()
     {
+        $this->_fixture->setup();
+        
         $nodes = $this->_catalog->getModel('nodes');
         
         $related = $this->_newRelated($nodes, array(
@@ -177,6 +181,8 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     
     public function test_lazyFetchOne()
     {
+        $this->_fixture->setup();
+        
         // fetch one node, then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
         $params = array(
@@ -207,6 +213,8 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     
     public function test_lazyFetchAll()
     {
+        $this->_fixture->setup();
+        
         // fetch all nodes, then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
         $collection = $nodes->fetchAll();
@@ -236,6 +244,8 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     
     public function test_eagerFetchOne()
     {
+        $this->_fixture->setup();
+        
         // fetch one node with an eager meta
         // then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');
@@ -260,6 +270,8 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     
     public function test_eagerFetchAll()
     {
+        $this->_fixture->setup();
+        
         // fetch all nodes with eager meta
         // then see how many sql calls so far
         $nodes = $this->_catalog->getModel('nodes');

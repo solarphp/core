@@ -88,6 +88,15 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     
     /**
      * 
+     * The type of join for the "through" model.
+     * 
+     * @var string
+     * 
+     */
+    public $through_join_type;
+    
+    /**
+     * 
      * Sets the relationship type.
      * 
      * @return void
@@ -148,6 +157,13 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             $this->native_col = $opts['native_col'];
         }
         
+        // retain the "through join type"
+        if (empty($opts['through_join_type'])) {
+            $this->through_join_type = 'left';
+        } else {
+            $this->through_join_type = $opts['through_join_type'];
+        }
+        
         // get the through-table
         $this->through_table = $through->foreign_table;
         
@@ -199,7 +215,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     {
         // first, join the native table to the through table
         $thru = array(
-            'type' => 'left',
+            'type' => strtolower($this->through_join_type),
             'name' => "{$this->through_table} AS {$this->through_alias}",
             'cond' => array(),
             'cols' => null,
@@ -213,11 +229,18 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             $this->through_conditions
         );
         
+        // keep for countPages() calls?
+        if ($thru['type'] != 'left') {
+            $thru['keep'] = true;
+        } else {
+            $thru['keep'] = false;
+        }
+        
         $fetch->join($thru);
         
         // now join to the through table to the foreign table
         $join = array(
-            'type' => $eager['join_type'],
+            'type' => strtolower($eager['join_type']),
             'name' => "{$this->foreign_table} AS {$eager['alias']}",
             'cond' => array(),
             'cols' => null,
@@ -232,6 +255,14 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             $this->getForeignConditions($eager['alias']),
             (array) $eager['conditions']
         );
+        
+        // keep for countPages() calls only if we kept "through", and the
+        // foreign join is not a left join
+        if ($thru['keep'] && $join['type'] != 'left') {
+            $join['keep'] = true;
+        } else {
+            $join['keep'] = false;
+        }
         
         // done!
         $fetch->join($join);

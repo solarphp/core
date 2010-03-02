@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Mock_Solar_Model_Bookmarks extends Mock_Solar_Model_Nodes {
-    
+class Mock_Solar_Model_Bookmarks extends Mock_Solar_Model_Nodes
+{
     /**
      * 
      * Model-specific setup.
@@ -25,6 +25,7 @@ class Mock_Solar_Model_Bookmarks extends Mock_Solar_Model_Nodes {
      */
     protected function _setup()
     {
+        // chain to parent
         parent::_setup();
     }
 }

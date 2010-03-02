@@ -262,7 +262,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
     protected function _modEagerFetch($eager, $fetch)
     {
         $join = array(
-            'type' => $eager['join_type'],
+            'type' => strtolower($eager['join_type']),
             'name' => "{$this->foreign_table} AS {$eager['alias']}",
             'cond' => array(),
             'cols' => null,

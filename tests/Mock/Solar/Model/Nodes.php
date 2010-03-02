@@ -18,22 +18,34 @@ class Mock_Solar_Model_Nodes extends Solar_Sql_Model
 {
     /**
      * 
-     * Model setup.
+     * Establish state of this object prior to _setup().
+     * 
+     * @return void
+     * 
+     */
+    protected function _preSetup()
+    {
+        // chain to parent
+        parent::_preSetup();
+        
+        // use metadata generated from make-model
+        $metadata          = Solar::factory('Mock_Solar_Model_Nodes_Metadata');
+        $this->_table_name = $metadata->table_name;
+        $this->_table_cols = $metadata->table_cols;
+        $this->_index_info      = $metadata->index_info;
+    }
+    
+    /**
+     * 
+     * Model-specific setup.
      * 
      * @return void
      * 
      */
     protected function _setup()
     {
-        $dir = str_replace('_', DIRECTORY_SEPARATOR, __CLASS__)
-             . DIRECTORY_SEPARATOR
-             . 'Setup'
-             . DIRECTORY_SEPARATOR;
-        
-        $this->_table_name = Solar_File::load($dir . 'table_name.php');
-        $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
-        
-        $this->_model_name = 'nodes';
+        // chain to parent
+        parent::_setup();
         
         $this->_belongsTo('area');
         
@@ -62,15 +74,6 @@ class Mock_Solar_Model_Nodes extends Solar_Sql_Model
         $this->_hasMany('taggings');
         
         $this->_hasManyThrough('tags', 'taggings');
-        
-        $this->_index_info = array(
-            'created',
-            'updated',
-            'area_id',
-            'user_id',
-            'node_id',
-            'inherit',
-        );
         
         $this->_hasManyThrough('tags_false', 'taggings', array(
             'foreign_name' => 'tags',

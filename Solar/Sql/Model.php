@@ -1233,8 +1233,11 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
+        // clone the fetch for only the "keep" joins
+        $clone = $fetch->cloneForKeeps();
+        
         // get the base select
-        $select = $this->newSelect($fetch);
+        $select = $this->newSelect($clone);
         
         // count on the primary column
         $col = "{$this->_model_name}.{$this->_primary_col}";
@@ -2327,8 +2330,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         if (! $this->_model_name) {
             if ($this->_inherit_name) {
                 $this->_model_name = $this->_inherit_name;
-            } elseif ($this->_table_name) {
-                $this->_model_name = $this->_table_name;
             } else {
                 // get the part after the last Model_ portion
                 $pos = strpos($this->_class, 'Model_');

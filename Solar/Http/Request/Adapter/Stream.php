@@ -76,8 +76,20 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
             ));
         }
         
-        // return headers and content
-        return array($meta['wrapper_data'], $content);
+        // if php was compiled with --with-curlwrappers, then the field
+        // 'wrapper_data' contains two arrays, one with headers and another
+        // with readbuf.  cf. <http://darkain.livejournal.com/492112.html>
+        $with_curlwrappers = isset($meta['wrapper_type'])
+                          && strtolower($meta['wrapper_type']) == 'curl';
+                         
+        // return headers and content.
+        if ($with_curlwrappers) {
+            // compiled --with-curlwrappers
+            return array($meta['wrapper_data']['headers'], $content);
+        } else {
+            // the "normal" case
+            return array($meta['wrapper_data'], $content);
+        }
     }
     
     /**

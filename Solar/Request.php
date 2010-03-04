@@ -104,6 +104,8 @@ class Solar_Request extends Solar_Base
      */
     protected $_is_gap = null;
     
+    protected $_csrf;
+    
     /**
      * 
      * Post-construction tasks to complete object construction.
@@ -336,6 +338,15 @@ class Solar_Request extends Solar_Base
     public function isCli()
     {
         return PHP_SAPI == 'cli';
+    }
+    
+    public function isCsrf()
+    {
+        if (! $this->_csrf) {
+            $this->_csrf = Solar::factory('Solar_Csrf');
+        }
+        
+        return $this->_csrf->isForgery();
     }
     
     /**

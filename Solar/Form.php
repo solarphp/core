@@ -230,6 +230,8 @@ class Solar_Form extends Solar_Base
      */
     protected $_request;
     
+    protected $_csrf;
+    
     /**
      * 
      * Sets the default success and failure messages.
@@ -266,6 +268,9 @@ class Solar_Form extends Solar_Base
             'Solar_Filter',
             $this->_config['filter']
         );
+        
+        // csrf object
+        $this->_csrf = Solar::factory('Solar_Csrf');
         
         // set the default action attribute
         $action = $this->_request->server('REQUEST_URI');
@@ -721,7 +726,7 @@ class Solar_Form extends Solar_Base
      * 
      * Applies the filter chain to the form element values; in particular,
      * checks validation and updates the 'invalid' keys for each element that
-     * fails.
+     * fails, and checks for CSRF attempts automatically.
      * 
      * This method cycles through each element in the form, where it ...
      * 
@@ -772,6 +777,13 @@ class Solar_Form extends Solar_Base
         $invalid = $this->_filter->getChainInvalid();
         foreach ((array) $invalid as $key => $val) {
             $this->addInvalid($key, $val);
+        }
+        
+        // check for csrf attempts
+        if ($this->_csrf->isForgery()) {
+            // looks like a forgery: validation failure
+            $this->feedback[] = 'ERR_CSRF_ATTEMPT';
+            $this->setStatus(false);
         }
         
         // done!
@@ -829,7 +841,8 @@ class Solar_Form extends Solar_Base
     
     /**
      * 
-     * Resets the form object to its originally-configured state.
+     * Resets the form object to its originally-configured state, and adds
+     * an anti-CSRF element with the current value of the session token.
      * 
      * This clears out all elements, filters, validations, and feedback,
      * as well as all submitted values.  Use this method to "start over
@@ -849,6 +862,15 @@ class Solar_Form extends Solar_Base
         $this->elements   = array();
         $this->feedback   = array();
         $this->_submitted = null;
+        
+        // add the csrf token value if present
+        if ($this->_csrf->hasToken()) {
+            $name = $this->_csrf->getKey();
+            $this->setElement($name, array(
+                'type'  => 'hidden',
+                'value' => $this->_csrf->getToken(),
+            ));
+        }
     }
     
     /**

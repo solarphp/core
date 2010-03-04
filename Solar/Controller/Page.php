@@ -53,8 +53,8 @@
  * @version $Id$
  * 
  */
-abstract class Solar_Controller_Page extends Solar_Base {
-    
+abstract class Solar_Controller_Page extends Solar_Base
+{
     /**
      * 
      * The action being requested of (performed by) the controller.
@@ -471,8 +471,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // prerun hook
             $this->_preRun();
             
-            // action chain, with pre- and post-action hooks
-            $this->_forward($this->_action, $this->_info);
+            // is this a csrf attempt?
+            if ($this->_request->isCsrf()) {
+                // looks like a forgery
+                $this->_csrfAttempt();
+            } else {
+                // action chain, with pre- and post-action hooks
+                $this->_forward($this->_action, $this->_info);
+            }
             
             // postrun hook
             $this->_postRun();
@@ -1393,6 +1399,25 @@ abstract class Solar_Controller_Page extends Solar_Base {
     {
         $this->_errors[] = $this->locale($key, 1, $replace);
         $this->_response->setStatusCode(500);
+        return $this->_forward('error');
+    }
+    
+    /**
+     * 
+     * Indicates this is a cross-site request forgery attempt.
+     * 
+     * @return void
+     * 
+     */
+    protected function _csrfAttempt()
+    {
+        $this->_errors[] = 'ERR_CSRF_ATTEMPT';
+        $vars = $this->_request->post();
+        foreach ((array) $vars as $key => $val) {
+            $this->_errors[] = "$key: $val";
+        }
+        
+        $this->_response->setStatusCode(403);
         return $this->_forward('error');
     }
     

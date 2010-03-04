@@ -287,6 +287,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         'descr' => array(),
     );
     
+    protected $_csrf;
+    
     /**
      * 
      * Post-construction tasks to complete object construction.
@@ -303,6 +305,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             'Solar_Request',
             $this->_config['request']
         );
+        
+        // get csrf object
+        $this->_csrf = Solar::factory('Solar_Csrf');
         
         // make sure we have a default action
         $action = $this->_request->server('REQUEST_URI');
@@ -761,7 +766,39 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
-     * Builds and returns the form output.
+     * If no CSRF element is present, add one.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addCsrfElement()
+    {
+        // if no token, nothing to add
+        if (! $this->_csrf->hasToken()) {
+            return;
+        }
+        
+        // is a csrf element already present?
+        $name = $this->_csrf->getKey();
+        foreach ($this->_hidden as $info) {
+            if ($info['name'] == $name) {
+                // found it, no need to add it
+                return;
+            }
+        }
+        
+        // add the token to the hidden elements
+        $this->addElement(array(
+            'name'  => $name,
+            'type'  => 'hidden',
+            'value' => $this->_csrf->getToken(),
+        ));
+    }
+    
+    /**
+     * 
+     * Builds and returns the form output, adding a hidden CSRF element as 
+     * needed.
      * 
      * @param bool $with_form_tag If true (the default) outputs the form with
      * <form>...</form> tags.  If false, it does not.
@@ -773,6 +810,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function fetch($with_form_tag = true)
     {
+        // add the csrf value as needed
+        $this->_addCsrfElement();
+        
         // stack of output pieces
         $html = array();
         

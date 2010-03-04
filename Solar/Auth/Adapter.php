@@ -545,7 +545,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         $method = strtolower($this->_config['source']);
         $process = $this->_request->$method($this->_config['source_process']);
-        return $process == $this->_config['process_login'];
+        return ! $this->_request->isCsrf()
+             && $process == $this->_config['process_login'];
     }
     
     /**
@@ -560,7 +561,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         $method = strtolower($this->_config['source']);
         $process = $this->_request->$method($this->_config['source_process']);
-        return $process == $this->_config['process_logout'];
+        return ! $this->_request->isCsrf()
+            && $process == $this->_config['process_logout'];
     }
     
     /**

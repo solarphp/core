@@ -67,6 +67,7 @@ return array(
     'ERR_NO_VENDOR'              => 'No vendor name specified.',
     'ERR_RMDIR_FAILED'           => 'Failed to remove directory "{:dir}".',
     'ERR_USE_OTHER_METHOD'       => 'Please use another method to set the "{:key}" value.',
+    'ERR_CSRF_ATTEMPT'           => 'The request looks like cross-site request forgery.',
     
     // success feedback messages
     'SUCCESS_FORM'               => 'Saved.',

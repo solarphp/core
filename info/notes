@@ -1,265 +1,148 @@
-Overall
--------
+Overview
+--------
 
-* Added localized exception messages for all known ERR_* codes, standardized
-  which exception codes are used, added more info to some exceptions for
-  their messages, and added several exception classes.
+* Optimized queries for countPages() and the native-by select strategy.
 
-* Added help text for all CLI commands.
+* Added automatic cross-site request forgery (CSRF) protections at various
+  levels of the system.
 
-
-Solar
------
-
-* [CHG] In method start(), guard base-class loading with class_exists().
-  Thanks, Jeff Moore, for the report; and thanks, Stloyd, for the patch.
-
-* [FIX] In method exception(), when the vendor class is not Solar, add Solar
-  as the final fallback.
+* Optimized session-starting strategies.
 
 
-Solar_Access_Adapter_Sql
-------------------------
+New Classes
+-----------
 
-* [FIX] Prefix column names with the table name in WHERE and ORDER BY sections
-  of the SELECT query; using column names such as "order" no longer results in
-  an error. Thanks, dmytrok.
+* Solar_Csrf: Collection point for CSRF functionality.
 
 
-Solar_Auth_Adapter_Sql
-----------------------
+Solar_Auth_Adapter
+------------------
 
-* [FIX] Prefix column names with the table name in WHERE sections of the
-  SELECT query; using column names such as "order" no longer results in an
-  error. Thanks, dmytrok.
+* [CHG] Method isLoginRequest() does not honor CSRF attempts.
 
-
-Solar_App_Hello
----------------
-
-* [FIX] Turn off layout for the index action.
-
-
-Solar_Cache_Adapter*
---------------------
-
-* [CHG] In methods save(), add(), fetchOrSave(), fetchOrAdd(), and
-  _fetchOrInsert(), add a new trailing parameter $life to override the default
-  lifespan for the cache entry.
-
-
-Solar_Cache_Adapter_File
-------------------------
-
-* [BRK] Now uses a .meta file to store expire and serial values, instead of
-  using filemtime() for expiry and a .serial file for the serialization flag.
-  This is to enable per-entry expiration. You may need to clear your file
-  caches for this to operate properly after you upgrade.
-
-
-Solar_Cli_Help
---------------
-
-* [FIX] No longer print double newlines between help text and options.
-
-
-Solar_Cli_MakeApp
------------------
-
-* [BRK] No longer takes a --target option; writes always and only to the
-  Solar system "include" directory.
-
-
-Solar_Cli_MakeCli
------------------
-
-* [BRK] No longer takes a --target option; writes always and only to the
-  Solar system "include" directory.
+* [CHG] Method isLogoutRequest() does not honor CSRF attempts.
 
 
 Solar_Cli_MakeModel
 -------------------
 
-* [BRK] No longer takes a --target option; writes always and only to the
-  Solar system "include" directory.
+* [FIX] In metadata.php skeleton, retain indexes in $_index_info, not $_index.
 
 
-Solar_Cli_MakeTests
--------------------
+Solar_Cli_(MakeVendor|LinkVendor|UnlinkVendor)
+----------------------------------------------
 
-* [BRK] No longer takes a --target option; writes always and only to the
-  Solar system "include" directory.
-
-
-Solar_Cli_MakeVendor
---------------------
-
-* [FIX] In config/default.php, *do not* create a $config variable, because it
-  overwrites the main $config value. Thanks, probd, for the report and patch.
-
-* [FIX] Renamed options.txt to options.php in order for options to work as
-  expected. Thanks, dmytrok.
-
-* [FIX] Removed surplus and misleading "<?php\n" from the top of help.txt
-  file. Thanks, dmytrok.
+* [ADD] Add support for a Fixture directory in vendor sources.
 
 
-Solar_Cli_RunTests
-------------------
+Solar_Controller_Page
+---------------------
 
-* [BRK] No longer takes a --dir option; always and only runs tests from the
-  Solar system "include" directory.
+* [CHG] Method fetch() will not forward to the first action on a CSRF attempt;
+  instead, invokes added _csrfAttempt() method.
+
+* [ADD] Method _csrfAttempt() to display output when a CSRF attack is
+  detected.
 
 
 Solar_Form
 ----------
 
-* [CHG] Remove empty default attributes 'class', 'id', and 'name' (these are
-  not elsewhere present or used in Solar_Form, nor in Solar_View_Helper_Form).
+* [ADD] Property $_csrf as a Solar_Csrf object.
 
-* [DEL] Property $_filters is never used; removed.
+* [CHG] Method validate() invalidates the form as a whole on a CSRF attempt.
 
-* [BRK] In method getElements(), when you provide a string prefix, it now
-  returns all elements with that string prefix, not just sub-elements of that
-  array name.
+* [CHG] Method reset() adds a CSRF element when a CSRF token exists.
 
 
-Solar_Locale
-------------
+Solar_Http_Request_Adapter_Stream
+---------------------------------
 
-* [ADD] Method getLanguageCode() to get an RFC 1766 compliant language-code
-  string.
-
-
-Solar_Role_Adapter_Sql
-----------------------
-
-* [FIX] Prefix column names with the table name in WHERE sections of the
-  SELECT query; using column names such as "order" no longer results in an
-  error. Thanks, dmytrok.
+* [FIX] Now works when PHP is compiled --with-curlwrappers; thanks, kalkin,
+  for the fix.
 
 
-Solar_Uri
----------
+Solar_Session
+-------------
 
-* [CHG] In method set(), also check to see if the server port is 443, to see
-  if we should use an https scheme. Thanks, Robert Gonzalez, for this fix.
+* [REF] Refactor method _postConstruct() to extract new method lazyStart().
+
+* [CHG] Method delete() now lazy-starts the session; this keeps it from
+  starting a new session even if the value does not exist to be deleted.
+
+* [CHG] Method reset() now lazy-starts the session; this keeps it from
+  starting a new session even if there is nothing to be reset.
+
+* [CHG] Method deleteFlash() now lazy-starts the session; this keeps it from
+  starting a new session even if the value does not exist to be deleted.
+
+* [CHG] Method resetFlash() now lazy-starts the session; this keeps it from
+  starting a new session even if there is nothing to be reset.
+
+* [CHG] Method resetAll() no longer starts a session on its own.
+
+
+Solar_Sql_Model
+---------------
+
+* [CHG] Method countPages() no longer uses the exact same params as the
+  original fetch. Instead, it clones the fetch object for native keeps.
+
+* [FIX] Method _fixModelName() no longer uses the table name directly for the
+  default model name. This is because it may be an 'alternative' table.
+  Instead, uses the suffix after the Model_* in the class name.
+
+
+Solar_Sql_Model_Params_Fetch
+----------------------------
+
+* [CHG] Method join() now accepts a 'keep' join descriptor key: `true` means
+  we should keep the join for native selects; `false` means we should not;
+  `null` (the default) means keep it only if it is not a left join.
+
+* [ADD] Method cloneForKeeps() to clone the fetch params for a countPages()
+  call in the model, and for native-by selects from relateds. This clears all
+  `eager` params so they don't get rebuilt by Model::newSelect(), and keeps
+  only joins that are marked for keeping (i.e., because they select only on
+  the native model).
+
+
+Solar_Sql_Model_Related
+-----------------------
+
+* [CHG] In method _getNativeBySelect(), we no longer clone the $fetch params
+  internally. Instead, use $fetch->cloneForKeeps() to get a clone with only
+  the necessary joins.
+
+
+Solar_Sql_Model_Related_HasManyThrough
+--------------------------------------
+
+* [ADD] New relationship option 'through_join_type' to determine the
+  join type for the through table; default is 'left'.
+
+* [CHG] In method _modEagerFetch(), always force the through and foreign join
+  types to lower-case.
+
+* [CHG] In method _modEagerFetch(), set 'keep' explicitly on both the through
+  join and on the foreign join.  The through join is normal (i.e., keep it
+  it is non-left), and the foreign join is kept only if we kept the through
+  join *and* the foreign join is non-left.
+
+
+Solar_Request
+-------------
+
+* [ADD] Property $_csrf as a Solar_Csrf object.
+
+* [ADD] Method isCsrf() to see if the request looks like a cross-site request
+  forgery.
 
 
 Solar_View_Helper_Form
 ----------------------
 
-* [CHG] Add config key 'decorator_attribs' and property $_decorator_attribs to
-  retain custom attributes for decorator tags.
+* [ADD] Method _addCsrfElement() to add any existing CSRF token element to the
+  form, if no such element already exists.
 
-* [BRK] Config key 'decorators' and property $_decorators are now renamed to
-  'decorator_tags' and $_decorator_tags, respectively.
-
-* [CHG] Method _buildElementBegin() now takes a second paramter for the
-  element information, so it can add the right class names to the element
-  decorator.
-
-* [CHG] Method _buildDecoratorBegin() honors the new custom decorator
-  attributes.
-
-* [CHG] Method _buildDecoratorBegin() now adds the decorator type as a class
-  only when the class attribute is empty, instead of always adding it.
-
-* [ADD] Method decorateAsDivs() to decorate the list and the element (but not
-  the label or value) with a <div> tag.
-
-* [CHG] Method setDecorator() now takes a third param, $attribs, as attributes
-  for the decorator type.
-
-* [CHG] Method setDecorators() now honors two kinds of specifications.  The
-  old style, where the $list value is a string tag name, is honored.  The
-  newly added style is where the $list value is an array, where the first
-  element is a string tag name, and the second element is an array of
-  key-value pairs ('attrib' => 'value').
-
-* [ADD] Methods setDecoratorAttribs() and addDecoratorAttribs() to set
-  decorator attributes directly.
-
-* [CHG] Rename property $_attribs to $_attribs_view, to indicate attributes
-  for the form tag that are set directly at the view-helper level.
-
-* [ADD] Properte $_attribs_auto, to retain attributes for the form tag that 
-  are set indirectly via the auto() method.
-
-* [CHG] Method auto() now retains attributes from the spec in $_attribs_auto,
-  not in $_attribs_view.
-
-* [CHG] Method reset() no longer merges $_default_attribs and 
-  $this->_config['attribs'] into $_attribs_view; merging of defaults now 
-  occurs at fetch-time.  It does, however, reset $_attribs_view and
-  $_attribs_auto.
-
-* [CHG] Method _buildBegin() now merges form-tag attributes internally
-  when building the form tag.  The order of precedence from lowest to
-  highest is: $_default_attribs, $_config['attribs'], $_attribs_auto,
-  $attribs_view.  This is so that attribs set directly in the view always
-  take precedence over attribs set indirectly via the auto() method.
-
-* [BRK] Previously, checkbox labels (when not in groups) were put in the
-  'label' portion of the element, and the checkbox value itself was *not*
-  wrapped in a label. This left the checkbox itself sitting alone, and
-  clicking on the somewhat distant label for it would check/uncheck the box.
-  This has proved unintuitive, troublesome, and unpopular. As such, checkboxes
-  will now be wrapped with their label in the value portion of the element,
-  and the label portion of the element will be left blank. Sorry for the
-  trouble, folks.
-
-* [ADD] In method beginFieldset(), add a second parameter $attribs, used to
-  provide attributes for the fieldset tag. This changes the internal $_stack
-  descriptor for fieldsets, which is now honored by _buildFieldset*() methods.
-
-* [CHG] Slightly better error messages for magic __call().
-
-* [REF] Extract method meta() from auto(), to handle setting of meta-info
-  about the form view (attribs, feedback, and status) using a form object.
-
-
-Solar_View_Helper_FormCheckbox
-------------------------------
-
-* [ADD] Add config key 'label_class' to add a CSS class to the label tag
-  wrapping the checkbox input; this will help target labels on checkboxes (vs
-  generic input labels).
-
-* [FIX] Use getText() for the label text so that locale keys get translated
-  properly (vice escape()).
-
-
-Solar_View_Helper_FormRadio
----------------------------
-
-* [FIX] Radio buttons IDs are now suffixed with an incremental count.
-
-* [ADD] Config key 'label_class' to specify a CSS class for the label tag wrapping the radio input.
-
-* [FIX] Use getText() for the label text so that locale keys get translated
-  properly (vice escape()).
-
-
-Solar_View_Helper_Form(Timestamp|Date|Time)
--------------------------------------------
-
-* [ADD] Config keys 'y_first' and 'y_last', to set defaults for the first and
-  last years shown as select options. (These can be either low-to-high or 
-  high-to-low.)
-
-* [ADD] Method _prepare() to override the parent; this allows us to retain
-  element info keys for 'y_first' and 'y_last' which determine the first and
-  last years shown as select options.
-  
-* [ADD] Properties $_y_first and $_y_last for the first and last years shown.
-
-* [CHG] Method _selectYear() now honors the $_y_first and $_y_last properties,
-  instead of showing only +/- 4 years from the current year.
-
-* [CHG] Method _selectHour() now shows 00-24 instead of 00-23.
-
-* [CHG] The '-' empty-value has been removed from all select options.
-
-* [CHG] Method _prepare(), when no value is present, now defaults the value
-  to the current timestamp using `date('Y-m-d H:i:s')`.
+* [CHG] Method fetch() calls _addCsrfElement() first thing.

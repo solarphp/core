@@ -287,6 +287,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         'descr' => array(),
     );
     
+    /**
+     * 
+     * Cross-site request forgery detector.
+     * 
+     * @var Solar_Csrf
+     * 
+     */
     protected $_csrf;
     
     /**

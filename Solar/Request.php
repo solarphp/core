@@ -104,6 +104,13 @@ class Solar_Request extends Solar_Base
      */
     protected $_is_gap = null;
     
+    /**
+     * 
+     * Cross-site request forgery detector.
+     * 
+     * @var Solar_Csrf
+     * 
+     */
     protected $_csrf;
     
     /**
@@ -340,6 +347,13 @@ class Solar_Request extends Solar_Base
         return PHP_SAPI == 'cli';
     }
     
+    /**
+     * 
+     * Is the current request a cross-site forgery?
+     * 
+     * @return bool
+     * 
+     */
     public function isCsrf()
     {
         if (! $this->_csrf) {

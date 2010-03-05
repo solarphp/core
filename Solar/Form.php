@@ -230,6 +230,13 @@ class Solar_Form extends Solar_Base
      */
     protected $_request;
     
+    /**
+     * 
+     * Cross-site request forgery detector.
+     * 
+     * @var Solar_Csrf
+     * 
+     */
     protected $_csrf;
     
     /**

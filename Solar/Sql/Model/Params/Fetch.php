@@ -311,7 +311,14 @@ class Solar_Sql_Model_Params_Fetch extends Solar_Sql_Model_Params {
         return $this;
     }
     
-    // used for count-pages and native-by-select
+    /**
+     * 
+     * Returns a clone with only the joins we keep for native selects (i.e., 
+     * for page counts and for the native-by-select strategy in relateds).
+     * 
+     * @return Solar_Sql_Model_Params_Fetch
+     * 
+     */
     public function cloneForKeeps()
     {
         $clone = clone($this);

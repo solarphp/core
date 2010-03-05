@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Staic support methods for config information.
+ * Static support methods for config information.
  * 
  * @category Solar
  * 

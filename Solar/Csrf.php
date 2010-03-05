@@ -1,16 +1,73 @@
 <?php
+/**
+ * 
+ * Class to detect cross-site request forgery attempts.
+ * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Config.php 3898 2009-07-22 15:33:45Z pmjones $
+ * 
+ */
 class Solar_Csrf extends Solar_Base
 {
+    /**
+     * 
+     * The current value of the anti-CSRF token.
+     * 
+     * @var string
+     * 
+     */
     static protected $_current = null;
     
+    /**
+     * 
+     * The name of the $_POST key containing the anti-CSRF token.
+     * 
+     * @var string
+     * 
+     */
     static protected $_key = '__csrf_key';
     
+    /**
+     * 
+     * A Solar_Request dependency.
+     * 
+     * @var Solar_Request
+     * 
+     */
     static protected $_request;
     
+    /**
+     * 
+     * A Solar_Session object.
+     * 
+     * @var Solar_Session
+     * 
+     */
     static protected $_session;
     
+    /**
+     * 
+     * Has the token value been updated?
+     * 
+     * @var bool
+     * 
+     */
     static protected $_updated = false;
     
+    /**
+     * 
+     * Post-construction tasks to complete object construction.
+     * 
+     * @return void
+     * 
+     */
     protected function _postConstruct()
     {
         if (! self::$_session) {
@@ -32,6 +89,17 @@ class Solar_Csrf extends Solar_Base
         }
     }
     
+    /**
+     * 
+     * Updates this object with current values.
+     * 
+     * This helps to maintain transitions between not having a session and
+     * then having one; in the non-session state, there will be no token,
+     * so we can't expect its presence until the next page load.
+     * 
+     * @return void
+     * 
+     */
     protected function _update()
     {
         if (self::$_updated) {
@@ -61,46 +129,84 @@ class Solar_Csrf extends Solar_Base
         self::$_updated = true;
     }
     
+    /**
+     * 
+     * Returns the name of the token key in $_POST values.
+     * 
+     * @return string
+     * 
+     */
     public function getKey()
     {
         return self::$_key;
     }
     
-    // gets the outgoing token value
+    /**
+     * 
+     * Gets the token value to be used in outgoing forms.
+     * 
+     * @return string
+     * 
+     */
     public function getToken()
     {
         $this->_update();
         return self::$_session->get('token');
     }
     
-    // sets the outgoing token value
+    /**
+     * 
+     * Sets the token value to be used in outgoing forms.
+     * 
+     * @param string $token The new token value.
+     * 
+     * @return string
+     * 
+     */
     public function setToken($token)
     {
         $this->_update();
         self::$_session->set('token', $token);
     }
     
-    // does a token exist?
+    /**
+     * 
+     * Is there a token value in the session already?
+     * 
+     * @return string
+     * 
+     */
     public function hasToken()
     {
         $this->_update();
         return self::$_session->has('token');
     }
     
-    // resets the outgoing token value
-    public function resetToken()
-    {
-        self::set(uniqid(mt_rand(), true));
-    }
-    
-    // gets the current value
+    /**
+     * 
+     * Returns the expected incoming value for the token.
+     * 
+     * Note that this may be different from the outgoing value, especially in
+     * transitions from not having a session to having one.
+     * 
+     * @return string
+     * 
+     */
     public function getCurrent()
     {
         $this->_update();
         return self::$_current;
     }
     
-    // does the current request look like a forgery?
+    /**
+     * 
+     * Does the incoming request look like a cross-site forgery?
+     * 
+     * Only works for POST requests.
+     * 
+     * @return string
+     * 
+     */
     public function isForgery()
     {
         $this->_update();

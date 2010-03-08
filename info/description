@@ -1,9 +1,46 @@
-Solar is a framework for PHP 5 that provides structured, easy-to-comprehend
-E_STRICT class libraries for the common aspects of application development.
+Solar is a framework for PHP 5 that provides well-structured E_STRICT class
+libraries for the common aspects of application development.
 
-Solar is for developers who intend to distribute their applications to the
-whole world. This means, for example, the database driver functions work
-exactly the same way for each supported database. It also means that
-localization support is built in from the start.
+Why use Solar?
+
+1. Elegance and consistency: the code base itself is easy to comprehend, adheres to well-documented naming conventions, and exhibits strong conceptual integrity.
+
+2. Thorough integration of enterprise development patterns, such as:
+
+    * Dependency Injection and Service Locator
+    * Lazy Load
+    * Model View Controller
+        - Front Controller
+        - Page Controller
+        - Table Data Gateway
+        - Data Mapper
+        - Metadata Mapping
+        - Foreign Key Mapping
+        - Association Table Mapping
+        - Template View
+        - Two Step View
+    * Query Object
+    * Registry
+    * Server Session State
+
+3. Full name-spacing: Solar classes have their own PHP 5.2 name-space, and vendors developing to Solar standards also use their own name-space. This makes it easy to mix and match components from other libraries and frameworks.
+
+4. Inheritable configuration by class: Set a value in the config file for one class, and all its children inherit those values by default.
+
+5. Inheritable localization by class: Set the locale strings for a class, and all its children inherit those strings.
+
+6. Easy-to use defense-in-depth against SQL injection, cross-site scripting, cross-site request forgery, and other common exploits.
+
+7. Robust and powerful model system that lets you create forms automatically from record objects.
+
+8. Sane and extensible data filtering to validate and sanitize user input.
+
+9. Authentication adapters for LDAP, TypeKey, database, htpasswd, and other sources.
+
+10. Cache adapters for memcache, APC, XCache, and other systems.
+
+11. View helpers for links, images, stylesheets, localized text, form generation, and more.
+
+12. Active and friendly community: Join the mailing list and IRC where we make it point to be nice.
 
 Please visit http://solarphp.com/ for more information.

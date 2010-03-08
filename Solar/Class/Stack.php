@@ -329,7 +329,7 @@ class Solar_Class_Stack extends Solar_Base
         // failed to find the class in the stack
         if ($throw) {
             throw $this->_exception('ERR_CLASS_NOT_FOUND', array(
-                'name'  => $name,
+                'class' => $name,
                 'stack' => $this->_stack,
             ));
         } else {

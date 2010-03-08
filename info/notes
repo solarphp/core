@@ -14,6 +14,27 @@ New Classes
 
 * Solar_Csrf: Collection point for CSRF functionality.
 
+* Solar_Uri_Rewrite: Extracted rewrite logic from Solar_Controller_Front and
+  placed into this new class. Support the previous "pattern => rewrite" keys,
+  and support named actions with their own pattern, rewrite, replace, and
+  default values.
+
+* Solar_View_Helper_NamedAction: Generates an anchor based on a named action
+  in the rewrite rules.
+
+* Solar_View_Helper_NamedActionHref: Generates an HREF string based on a named
+  action in the rewrite rules.
+
+* Solar_View_Helper_NamedActionUri: Generates a Solar_Uri_Action object based
+  on a named action in the rewrite rules.
+
+
+Solar
+-----
+
+* [CHG] In method start(), auto-register a Solar_Uri_Rewrite object under
+  the name 'rewrite'.
+
 
 Solar_Auth_Adapter
 ------------------
@@ -35,6 +56,28 @@ Solar_Cli_(MakeVendor|LinkVendor|UnlinkVendor)
 * [ADD] Add support for a Fixture directory in vendor sources.
 
 
+Solar_Class_Stack
+-----------------
+
+* [FIX] Use 'class' as the error info key, not 'name', so that message data is
+  interpolated properly.
+
+
+Solar_Controller_Front
+----------------------
+
+* [CHG] Property $_rewrite is now the registered Solar_Uri_Rewrite object,
+  not an array of rewrite rules.
+
+* [DEL] Property $_replace, since it now exists in Solar_Uri_Rewrite.
+
+* [CHG] Method _postConstruct() now merges config keys 'rewrite' and 'replace'
+  into the registered rewrite object instead of retaining them locally.
+
+* [CHG] Method _rewrite() uses the registered rewrite object now that the
+  logic from this method has been moved there.
+
+
 Solar_Controller_Page
 ---------------------
 
@@ -43,6 +86,8 @@ Solar_Controller_Page
 
 * [ADD] Method _csrfAttempt() to display output when a CSRF attack is
   detected.
+
+* [ADD] Property $_rewrite is the registered Solar_Uri_Rewrite object.
 
 
 Solar_Form
@@ -137,6 +182,14 @@ Solar_Request
 
 * [ADD] Method isCsrf() to see if the request looks like a cross-site request
   forgery.
+
+
+Solar_View_Helper_Action_Uri
+----------------------------
+
+* [CHG] Method actionUri() now takes an optional parameter to change the path
+  of the action URI; if empty, returns the current action URI as-is (the
+  default).
 
 
 Solar_View_Helper_Form

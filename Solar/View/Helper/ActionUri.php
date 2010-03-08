@@ -42,11 +42,17 @@ class Solar_View_Helper_ActionUri extends Solar_View_Helper
      * 
      * Returns a URI object for the current action.
      * 
+     * @param string $path An optional path to replace the current path.
+     * 
      * @return Solar_Uri_Action
      * 
      */
-    public function actionUri()
+    public function actionUri($path = null)
     {
-        return clone $this->_uri;
+        $uri = clone $this->_uri;
+        if ($path !== null) {
+            $uri->setPath($path);
+        }
+        return $uri;
     }
 }

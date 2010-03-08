@@ -86,6 +86,13 @@ class Solar_Uri_Rewrite extends Solar_Base
         'default' => array(),
     );
     
+    /**
+     * 
+     * An explanantion of the last match() attempt.
+     * 
+     * @var string
+     * 
+     */
     protected $_explain;
     
     /**

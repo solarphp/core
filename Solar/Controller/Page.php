@@ -267,6 +267,15 @@ abstract class Solar_Controller_Page extends Solar_Base
     
     /**
      * 
+     * The rewrite rules object.
+     * 
+     * @var Solar_Uri_Rewrite
+     * 
+     */
+    protected $_rewrite;
+    
+    /**
+     * 
      * The class used for view objects.
      * 
      * @var string
@@ -376,6 +385,9 @@ abstract class Solar_Controller_Page extends Solar_Base
         
         // get the current request environment
         $this->_request = Solar_Registry::get('request');
+        
+        // get the registered rewrite object
+        $this->_rewrite = Solar_Registry::get('rewrite');
         
         // extended setup
         $this->_setup();

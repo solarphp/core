@@ -83,53 +83,14 @@ class Solar_Controller_Front extends Solar_Base
     
     /**
      * 
-     * A list of regular-expression rules to rewrite the URI path.
+     * The registered Solar_Uri_Rewrite object.
      * 
-     * Format is `origin` => `target`.  For example:
-     * 
-     * {{code: php
-     *     array(
-     *         'controller/([0-9+])/action' => 'controller/action/$1',
-     *         'controller/{:digit}/action' => 'controller/action/$1',
-     *         'foo/{:params}/bar/{:alpha}' => 'zim/gir/$2/$1',
-     *     );
-     * }}
-     * 
-     * The first matching rule will be used.
-     * 
-     * When rewriting, the target should always be in the order of
-     * `controller/action/param/param/param`.
-     * 
-     * Note that [[$_replace]] keys can be used in the origin in place
-     * of common regular expressions.
-     * 
-     * @var array
-     * 
-     * @see $_replace
+     * @var Solar_Uri_Rewrite
      * 
      * @see _rewrite()
      * 
      */
     protected $_rewrite = array();
-    
-    /**
-     * 
-     * Keyword regex replacements for rewrite rules.
-     * 
-     * @var array
-     * 
-     */
-    protected $_replace = array(
-        '{:action}'     => '([a-z-]+)',
-        '{:alpha}'      => '([a-zA-Z]+)',
-        '{:alnum}'      => '([a-zA-Z0-9]+)',
-        '{:controller}' => '([a-z-]+)',
-        '{:digit}'      => '([0-9]+)',
-        '{:param}'      => '([^/]+)',
-        '{:params}'     => '(.*)',
-        '{:slug}'       => '([a-zA-Z0-9-]+)',
-        '{:word}'       => '([a-zA-Z0-9_]+)',
-    );
     
     /**
      * 
@@ -186,7 +147,7 @@ class Solar_Controller_Front extends Solar_Base
         }
         
         // merge array vars from config
-        $vars = array('disable', 'rewrite', 'routing', 'replace');
+        $vars = array('disable', 'routing');
         foreach ($vars as $key) {
             if ($this->_config[$key]) {
                 $var = "_$key";
@@ -200,6 +161,19 @@ class Solar_Controller_Front extends Solar_Base
         // set up a class stack for finding apps
         $this->_stack = Solar::factory('Solar_Class_Stack');
         $this->_stack->add($this->_config['classes']);
+        
+        // retain the registered rewriter
+        $this->_rewrite = Solar_Registry::get('rewrite');
+        
+        // merge our rewrite rules
+        if ($this->_config['rewrite']) {
+            $this->_rewrite->mergeRules($this->_config['rewrite']);
+        }
+        
+        // merge our rewrite replacement tokens
+        if ($this->_config['replace']) {
+            $this->_rewrite->mergeReplacements($this->_config['replace']);
+        }
         
         // extended setup
         $this->_setup();
@@ -292,43 +266,15 @@ class Solar_Controller_Front extends Solar_Base
      */
     protected function _rewrite($uri)
     {
-        // pre-empt rewrites
-        if (! $this->_rewrite) {
-            $this->_explain['rewrite_rule'] = 'no rules';
-            return;
+        // does it match a rewrite rule?
+        $newpath = $this->_rewrite->match($uri);
+        if ($newpath) {
+            $uri->setPath($newpath);
+            $this->_explain['rewrite_rule'] = $this->_rewrite->explain();
+            $this->_explain['rewrite_uri'] = $uri->getFrontPath();
+        } else {
+            $this->_explain['rewrite_rule'] = $this->_rewrite->explain();
         }
-        
-        // get the original URI path, minus the subdirectory prefix,
-        // and trim all slashes
-        $orig = trim($uri->getFrontPath(), '/');
-        
-        // start matching against regexen
-        foreach ($this->_rewrite as $find => $repl) {
-            
-            // convert substitution expressions
-            $find = str_replace(
-                array_keys($this->_replace),
-                array_values($this->_replace),
-                $find
-            );
-            
-            // trim slashes and wrap as a full regex
-            $find = '#^' . trim($find, '/') . '$#';
-            
-            // is there a match?
-            if (preg_match($find, $orig)) {    
-                // do replacement for new path (trim slashes)
-                $repl = trim($repl, '/');
-                $path = preg_replace($find, $repl, $orig);
-                // set the new path, trimming slashes again
-                $uri->setPath(trim($path, '/'));
-                $this->_explain['rewrite_rule'] = "matched '$find'";
-                $this->_explain['rewrite_uri'] = $uri->getFrontPath();
-                return;
-            }
-        }
-        
-        $this->_explain['rewrite_rule'] = 'none matched';
     }
     
     /**

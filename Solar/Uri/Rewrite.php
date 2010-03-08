@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Uri.php 4414 2010-02-22 20:22:34Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Uri_Rewrite extends Solar_Base

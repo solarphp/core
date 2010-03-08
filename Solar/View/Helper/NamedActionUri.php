@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: ActionHref.php 4285 2009-12-31 02:18:15Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_View_Helper_NamedActionUri extends Solar_View_Helper

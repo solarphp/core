@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Config.php 3898 2009-07-22 15:33:45Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Csrf extends Solar_Base

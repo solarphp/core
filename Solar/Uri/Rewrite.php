@@ -137,7 +137,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return void
      * 
      */
-    protected function setRule($key, $val)
+    public function setRule($key, $val)
     {
         $this->_rewrite[$key] = $val;
     }
@@ -153,7 +153,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * array.
      * 
      */
-    protected function getRule($key)
+    public function getRule($key)
     {
         if (! empty($this->_rewrite[$key])) {
             return $this->_rewrite[$key];
@@ -167,7 +167,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return array
      * 
      */
-    protected function getRules()
+    public function getRules()
     {
         return $this->_rewrite;
     }
@@ -181,7 +181,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return void
      * 
      */
-    protected function resetRules($list = null)
+    public function resetRules($list = null)
     {
         $this->_rewrite = (array) $list;
     }
@@ -196,7 +196,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return void
      * 
      */
-    protected function mergeRules($list)
+    public function mergeRules($list)
     {
         $this->_rewrite = (array) $list + $this->_rewrite;
     }
@@ -212,7 +212,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return void
      * 
      */
-    protected function setReplacement($key, $val)
+    public function setReplacement($key, $val)
     {
         $this->_replace[$key] = $val;
     }
@@ -226,7 +226,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return string The replacement regex.
      * 
      */
-    protected function getReplacement($key)
+    public function getReplacement($key)
     {
         if (! empty($this->_replace[$key])) {
             return $this->_replace[$key];
@@ -240,7 +240,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return array The replacement regex tokens.
      * 
      */
-    protected function getReplacements()
+    public function getReplacements()
     {
         return $this->_replace;
     }
@@ -254,7 +254,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return void
      * 
      */
-    protected function resetReplacements($list = null)
+    public function resetReplacements($list = null)
     {
         $this->_replace = (array) $list;
     }
@@ -269,7 +269,7 @@ class Solar_Uri_Rewrite extends Solar_Base
      * @return void
      * 
      */
-    protected function mergeReplacements($list = null)
+    public function mergeReplacements($list = null)
     {
         $this->_replace = (array) $list + $this->_replace;
     }
@@ -295,7 +295,7 @@ class Solar_Uri_Rewrite extends Solar_Base
         }
         
         // convert spec to a path
-        if ($spec instanceof Solar_Action_Uri) {
+        if ($spec instanceof Solar_Uri_Action) {
             $oldpath = trim($spec->getFrontPath(), '/');
         } elseif ($spec instanceof Solar_Uri) {
             $oldpath = trim($spec->getPath());

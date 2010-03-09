@@ -121,7 +121,7 @@ Please visit http://solarphp.com/ for more information.
   <active>yes</active>
  </contributor>
  <date>2010-03-09</date>
- <time>08:09:13</time>
+ <time>09:04:55</time>
  <version>
   <release>1.0.0</release>
   <api>1.0.0</api>
@@ -141,6 +141,9 @@ Overview
   levels of the system.
 
 * Optimized session-starting strategies.
+
+* Added named-action support in the rewrite logic; this is the
+  &quot;bi-directional&quot; routing that some have asked for.
 
 
 New Classes
@@ -916,7 +919,7 @@ Solar_View_Helper_Form
     <tasks:replace from="@package_version@" to="version" type="package-info" />
     <tasks:replace from="@package_date@" to="date" type="package-info" />
    </file>
-   <file baseinstalldir="/" md5sum="047bbcaa738e9b20d68990e9d4ba005c" name="Solar/Cli/MakeVendor/Data/Sql_Model_Metadata.txt" role="php">
+   <file baseinstalldir="/" md5sum="1ffbd47e4698b40c4a8595e279da4bcc" name="Solar/Cli/MakeVendor/Data/Sql_Model_Metadata.txt" role="php">
     <tasks:replace from="@package_version@" to="version" type="package-info" />
     <tasks:replace from="@package_date@" to="date" type="package-info" />
    </file>
@@ -3947,6 +3950,9 @@ Overview
   levels of the system.
 
 * Optimized session-starting strategies.
+
+* Added named-action support in the rewrite logic; this is the
+  &quot;bi-directional&quot; routing that some have asked for.
 
 
 New Classes

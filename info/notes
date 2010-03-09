@@ -8,6 +8,9 @@ Overview
 
 * Optimized session-starting strategies.
 
+* Added named-action support in the rewrite logic; this is the
+  "bi-directional" routing that some have asked for.
+
 
 New Classes
 -----------

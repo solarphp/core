@@ -78,8 +78,8 @@ class Test_Solar_Sql_Model_Related_Queries extends Solar_Test
     protected function _diagProfile()
     {
         $profile = $this->_sql->getProfile();
-        foreach ($profile as $val) {
-            $this->diag($val['data'], $val['stmt']);
+        foreach ($profile as $key => $val) {
+            $this->diag($val['data'], "$key: {$val['stmt']}");
         }
     }
     
@@ -150,6 +150,118 @@ WHERE
 ';
         
         // check it
+        $this->assertEquals(trim($actual), trim($expect));
+    }
+    
+    public function test_relatedConditions()
+    {
+        /** PART 1 */
+        
+        // area should be a *left* join, and *should not* be used in count-pages
+        $nodes = $this->_catalog->nodes->fetchAll(array(
+            'eager' => array(
+                'area' => array(
+                ),
+            ),
+            'count_pages' => true,
+        ));
+        
+        // did we actually get nodes?
+        $this->assertTrue(count($nodes) > 0);
+        
+        // get the profile
+        $profile = $this->_sql->getProfile();
+        
+        // areas should be a left join on the fetch statement
+        $actual = $profile[0]['stmt'];
+        
+        $expect = '
+SELECT
+    "nodes"."id" AS "id",
+    "nodes"."created" AS "created",
+    "nodes"."updated" AS "updated",
+    "nodes"."area_id" AS "area_id",
+    "nodes"."user_id" AS "user_id",
+    "nodes"."node_id" AS "node_id",
+    "nodes"."inherit" AS "inherit",
+    "nodes"."subj" AS "subj",
+    "nodes"."body" AS "body",
+    "area"."id" AS "area__id",
+    "area"."created" AS "area__created",
+    "area"."updated" AS "area__updated",
+    "area"."user_id" AS "area__user_id",
+    "area"."name" AS "area__name"
+FROM "test_solar_nodes" "nodes"
+LEFT JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id"
+';
+        $this->assertEquals(trim($actual), trim($expect));
+        
+        // areas should not be in the count-pages statement
+        $actual = $profile[1]['stmt'];
+        
+        $expect = '
+SELECT
+    COUNT("nodes"."id")
+FROM "test_solar_nodes" "nodes"
+LIMIT 1
+';
+        
+        $this->assertEquals(trim($actual), trim($expect));
+        
+        
+        /** PART 2 */
+        
+        // area should be an *inner* join, and *should* be used in count-pages
+        $nodes = $this->_catalog->nodes->fetchAll(array(
+            'eager' => array(
+                'area' => array(
+                    'conditions' => array(
+                        'area.id = ?' => '1',
+                    ),
+                ),
+            ),
+            'count_pages' => true,
+        ));
+        
+        // get the profile
+        $profile = $this->_sql->getProfile();
+        
+        // areas should be an inner join on the fetch statement
+        $actual = $profile[2]['stmt'];
+        
+        $expect = '
+SELECT
+    "nodes"."id" AS "id",
+    "nodes"."created" AS "created",
+    "nodes"."updated" AS "updated",
+    "nodes"."area_id" AS "area_id",
+    "nodes"."user_id" AS "user_id",
+    "nodes"."node_id" AS "node_id",
+    "nodes"."inherit" AS "inherit",
+    "nodes"."subj" AS "subj",
+    "nodes"."body" AS "body",
+    "area"."id" AS "area__id",
+    "area"."created" AS "area__created",
+    "area"."updated" AS "area__updated",
+    "area"."user_id" AS "area__user_id",
+    "area"."name" AS "area__name"
+FROM "test_solar_nodes" "nodes"
+INNER JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id" AND "area"."id" = 1
+';
+        
+        $this->assertEquals(trim($actual), trim($expect));
+        
+        // areas should be in the count-pages statement
+        $actual = $profile[3]['stmt'];
+        
+        $expect = '
+SELECT
+    COUNT("nodes"."id")
+FROM "test_solar_nodes" "nodes"
+INNER JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id" AND "area"."id" = 1
+LIMIT 1
+';
+        
         $this->assertEquals(trim($actual), trim($expect));
     }
 }

@@ -25,6 +25,11 @@ class Test_Solar_Struct extends Solar_Test {
                     'foo' => 'bar',
                     'baz' => 'dib',
                     'zim' => 'gir',
+                    'irk' => array(
+                        'subfoo' => 'subbar',
+                        'subbaz' => 'subdib',
+                        'subzim' => 'subgir',
+                    ),
                 ),
             )
         );
@@ -169,7 +174,7 @@ class Test_Solar_Struct extends Solar_Test {
     {
         $struct = $this->_newStruct();
         $actual = count($struct);
-        $expect = 3;
+        $expect = 4;
         $this->assertSame($actual, $expect);
     }
     
@@ -185,6 +190,11 @@ class Test_Solar_Struct extends Solar_Test {
             'foo' => 'bar2',
             'baz' => 'dib2',
             'zim' => 'gir2',
+            'irk' => array(
+                'subfoo' => 'subbar2',
+                'subbaz' => 'subdib2',
+                'subzim' => 'subgir2',
+            ),
         );
         $struct->load($expect);
         $actual = $struct->toArray();
@@ -266,6 +276,11 @@ class Test_Solar_Struct extends Solar_Test {
             'foo' => 'bar',
             'baz' => 'dib',
             'zim' => 'gir',
+            'irk' => array(
+                'subfoo' => 'subbar',
+                'subbaz' => 'subdib',
+                'subzim' => 'subgir',
+            ),
         );
         $this->assertSame($actual, $expect);
     }
@@ -277,10 +292,24 @@ class Test_Solar_Struct extends Solar_Test {
             'foo' => 'bar',
             'baz' => 'dib',
             'zim' => 'gir',
+            'irk' => array(
+                'subfoo' => 'subbar',
+                'subbaz' => 'subdib',
+                'subzim' => 'subgir',
+            ),
         );
         foreach ($struct as $key => $val) {
             $this->assertTrue(array_key_exists($key, $expect));
             $this->assertSame($val, $expect[$key]);
         }
+    }
+    
+    public function testToString()
+    {
+        $struct = $this->_newStruct();
+        $expect = 'a:4:{s:3:"foo";s:3:"bar";s:3:"baz";s:3:"dib";s:3:"zim";s:3:"gir";s:3:"irk";a:3:{s:6:"subfoo";s:6:"subbar";s:6:"subbaz";s:6:"subdib";s:6:"subzim";s:6:"subgir";}}';
+        $actual = $struct->toString();
+        echo $actual;
+        $this->assertSame($actual, $expect);
     }
 }

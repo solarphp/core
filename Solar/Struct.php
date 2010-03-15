@@ -230,7 +230,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __toString()
     {
-        return serialize($this->_data);
+        return serialize($this->toArray());
     }
     
     /**

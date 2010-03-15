@@ -83,6 +83,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
+     * All form attributes from all sources merged into one array.
+     * 
+     * @var array
+     * 
+     */
+    protected $_attribs_form = array();
+    
+    /**
+     * 
      * Collection of form-level feedback messages.
      * 
      * @var array
@@ -780,6 +789,12 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _addCsrfElement()
     {
+        // if using GET, don't add csrf if not already there
+        $method = strtolower($this->_attribs_form['method']);
+        if ($method == 'get') {
+            return;
+        }
+        
         // if no token, nothing to add
         if (! $this->_csrf->hasToken()) {
             return;
@@ -817,6 +832,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function fetch($with_form_tag = true)
     {
+        // merge all form-level attributes
+        $this->_setAttribsForm();
+        
         // add the csrf value as needed
         $this->_addCsrfElement();
         
@@ -858,6 +876,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         // form-tag attributes at the view level
         $this->_attribs_view = array();
         
+        // merged form-tag attributes from all levels
+        $this->_attribs_form = array();
+        
         // where does the descr go?
         $this->setDescrPart($this->_config['descr_part']);
         
@@ -894,6 +915,35 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $this->_id_count = array();
         
         return $this;
+    }
+    
+    /**
+     * 
+     * Merges the form-tag attributes in this fashion, with the later ones
+     * overriding the earlier ones:
+     * 
+     * 1. The $_default_attribs array.
+     * 
+     * 2. The $_config['attribs'] array.
+     * 
+     * 3. Any attribs set via the auto() method.
+     * 
+     * 4. Any attribs set via setAttrib() or setAttribs().
+     * 
+     * This keeps it so that values set directly in the view object take 
+     * precedence over anything automated via a form object.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setAttribsForm()
+    {
+        $this->_attribs_form = array_merge(
+            (array) $this->_default_attribs,
+            (array) $this->_config['attribs'],
+            (array) $this->_attribs_auto,
+            (array) $this->_attribs_view
+        );
     }
     
     /**
@@ -1041,20 +1091,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * Builds the opening <form> tag for output.
      * 
-     * Merges the form-tag attributes in this fashion, with the later ones
-     * overriding the earlier ones:
-     * 
-     * 1. The $_default_attribs array.
-     * 
-     * 2. The $_config['attribs'] array.
-     * 
-     * 3. Any attribs set via the auto() method.
-     * 
-     * 4. Any attribs set via setAttrib() or setAttribs().
-     * 
-     * This keeps it so that values set directly in the view object take 
-     * precedence over anything automated via a form object.
-     * 
      * @param array &$html A reference to the array of HTML lines for output.
      * 
      * @return void
@@ -1062,14 +1098,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _buildBegin(&$html)
     {
-        $attribs = array_merge(
-            (array) $this->_default_attribs,
-            (array) $this->_config['attribs'],
-            (array) $this->_attribs_auto,
-            (array) $this->_attribs_view
-        );
-        
-        $html[] = '<form' . $this->_view->attribs($attribs) . '>';
+        $html[] = '<form' . $this->_view->attribs($this->_attribs_form) . '>';
     }
     
     /**

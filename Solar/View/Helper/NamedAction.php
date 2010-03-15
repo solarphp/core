@@ -36,9 +36,9 @@ class Solar_View_Helper_NamedAction extends Solar_View_Helper
     public function namedAction($name, $data = null, $text = null, $attribs = null)
     {
         // get an escaped href rewrite value
-        $href = $this->_view->namedActionHref($name, $data);
+        $uri = $this->_view->namedActionUri($name, $data);
         
         // now build using action helper
-        return $this->_view->action($href, $text, $attribs);
+        return $this->_view->action($uri, $text, $attribs);
     }
 }

@@ -1,204 +1,60 @@
-Overview
---------
-
-* Optimized queries for countPages() and the native-by select strategy.
-
-* Added automatic cross-site request forgery (CSRF) protections at various
-  levels of the system.
-
-* Optimized session-starting strategies.
-
-* Added named-action support in the rewrite logic; this is the
-  "bi-directional" routing that some have asked for.
-
-
 New Classes
 -----------
 
-* Solar_Csrf: Collection point for CSRF functionality.
-
-* Solar_Uri_Rewrite: Extracted rewrite logic from Solar_Controller_Front and
-  placed into this new class. Support the previous "pattern => rewrite" keys,
-  and support named actions with their own pattern, rewrite, replace, and
-  default values.
-
-* Solar_View_Helper_NamedAction: Generates an anchor based on a named action
-  in the rewrite rules.
-
-* Solar_View_Helper_NamedActionHref: Generates an HREF string based on a named
-  action in the rewrite rules.
-
-* Solar_View_Helper_NamedActionUri: Generates a Solar_Uri_Action object based
-  on a named action in the rewrite rules.
+* Solar_View_Helper_FormCsrf: Individual CSRF form element helper.
 
 
-Solar
------
+Solar_Struct
+------------
 
-* [CHG] In method start(), auto-register a Solar_Uri_Rewrite object under
-  the name 'rewrite'.
-
-
-Solar_Auth_Adapter
-------------------
-
-* [CHG] Method isLoginRequest() does not honor CSRF attempts.
-
-* [CHG] Method isLogoutRequest() does not honor CSRF attempts.
-
-
-Solar_Cli_MakeModel
--------------------
-
-* [FIX] In metadata.php skeleton, retain indexes in $_index_info, not $_index.
-
-
-Solar_Cli_(MakeVendor|LinkVendor|UnlinkVendor)
-----------------------------------------------
-
-* [ADD] Add support for a Fixture directory in vendor sources.
-
-
-Solar_Class_Stack
------------------
-
-* [FIX] Use 'class' as the error info key, not 'name', so that message data is
-  interpolated properly.
-
-
-Solar_Controller_Front
-----------------------
-
-* [CHG] Property $_rewrite is now the registered Solar_Uri_Rewrite object,
-  not an array of rewrite rules.
-
-* [DEL] Property $_replace, since it now exists in Solar_Uri_Rewrite.
-
-* [CHG] Method _postConstruct() now merges config keys 'rewrite' and 'replace'
-  into the registered rewrite object instead of retaining them locally.
-
-* [CHG] Method _rewrite() uses the registered rewrite object now that the
-  logic from this method has been moved there.
-
-
-Solar_Controller_Page
----------------------
-
-* [CHG] Method fetch() will not forward to the first action on a CSRF attempt;
-  instead, invokes added _csrfAttempt() method.
-
-* [ADD] Method _csrfAttempt() to display output when a CSRF attack is
-  detected.
-
-* [ADD] Property $_rewrite is the registered Solar_Uri_Rewrite object.
-
-
-Solar_Form
-----------
-
-* [ADD] Property $_csrf as a Solar_Csrf object.
-
-* [CHG] Method validate() invalidates the form as a whole on a CSRF attempt.
-
-* [CHG] Method reset() adds a CSRF element when a CSRF token exists.
-
-
-Solar_Http_Request_Adapter_Stream
----------------------------------
-
-* [FIX] Now works when PHP is compiled --with-curlwrappers; thanks, kalkin,
-  for the fix.
-
-
-Solar_Session
--------------
-
-* [REF] Refactor method _postConstruct() to extract new method lazyStart().
-
-* [CHG] Method delete() now lazy-starts the session; this keeps it from
-  starting a new session even if the value does not exist to be deleted.
-
-* [CHG] Method reset() now lazy-starts the session; this keeps it from
-  starting a new session even if there is nothing to be reset.
-
-* [CHG] Method deleteFlash() now lazy-starts the session; this keeps it from
-  starting a new session even if the value does not exist to be deleted.
-
-* [CHG] Method resetFlash() now lazy-starts the session; this keeps it from
-  starting a new session even if there is nothing to be reset.
-
-* [CHG] Method resetAll() no longer starts a session on its own.
-
-
-Solar_Sql_Model
----------------
-
-* [CHG] Method countPages() no longer uses the exact same params as the
-  original fetch. Instead, it clones the fetch object for native keeps.
-
-* [FIX] Method _fixModelName() no longer uses the table name directly for the
-  default model name. This is because it may be an 'alternative' table.
-  Instead, uses the suffix after the Model_* in the class name.
-
-
-Solar_Sql_Model_Params_Fetch
-----------------------------
-
-* [CHG] Method join() now accepts a 'keep' join descriptor key: `true` means
-  we should keep the join for native selects; `false` means we should not;
-  `null` (the default) means keep it only if it is not a left join.
-
-* [ADD] Method cloneForKeeps() to clone the fetch params for a countPages()
-  call in the model, and for native-by selects from relateds. This clears all
-  `eager` params so they don't get rebuilt by Model::newSelect(), and keeps
-  only joins that are marked for keeping (i.e., because they select only on
-  the native model).
+* [FIX] In method toString(), use toArray() to get the internal data instead
+  of the data property; this allows for child overrides. Thanks, probd, for
+  the report leading to this fix.
 
 
 Solar_Sql_Model_Related
 -----------------------
 
-* [CHG] In method _getNativeBySelect(), we no longer clone the $fetch params
-  internally. Instead, use $fetch->cloneForKeeps() to get a clone with only
-  the necessary joins.
-
-
-Solar_Sql_Model_Related_HasManyThrough
---------------------------------------
-
-* [ADD] New relationship option 'through_join_type' to determine the
-  join type for the through table; default is 'left'.
-
-* [CHG] In method _modEagerFetch(), always force the through and foreign join
-  types to lower-case.
-
-* [CHG] In method _modEagerFetch(), set 'keep' explicitly on both the through
-  join and on the foreign join.  The through join is normal (i.e., keep it
-  it is non-left), and the foreign join is kept only if we kept the through
-  join *and* the foreign join is non-left.
-
-
-Solar_Request
--------------
-
-* [ADD] Property $_csrf as a Solar_Csrf object.
-
-* [ADD] Method isCsrf() to see if the request looks like a cross-site request
-  forgery.
-
-
-Solar_View_Helper_Action_Uri
-----------------------------
-
-* [CHG] Method actionUri() now takes an optional parameter to change the path
-  of the action URI; if empty, returns the current action URI as-is (the
-  default).
+* [FIX] When eager conditions are present, and no join type is specified, use
+  an 'inner' join by default. This is to mimic the behavior of WHERE
+  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_View_Helper_Form
 ----------------------
 
-* [ADD] Method _addCsrfElement() to add any existing CSRF token element to the
-  form, if no such element already exists.
+* [ADD] Property $_attribs_form to retain the merged form-tag attributes from 
+  the view level and the auto level.
 
-* [CHG] Method fetch() calls _addCsrfElement() first thing.
+* [REF] Extract new method _setAttribsForm() from _buildBegin() to merge the
+  form-tag attributes from the various levels.
+
+* [CHG] Method fetch() now calls _setAttribsForm() to merge the form-tag
+  attributes, instead of having that happen internally to _buildBegin().
+
+* [CHG] Method _addCsrfElement(), when no CSRF element already exists, will no
+  longer add a CSRF element on its own when using 'method="get"'. (This
+  partially addresses a concern from Jon Elofson about sending CSRF tokens
+  in GET requests; thanks, Jon, for the report.)
+
+
+Solar_View_Helper_NamedAction
+-----------------------------
+
+* [CHG] Use a URI object, not an href string, for generating the action URI.
+
+
+Solar_View_Helper_NamedActionHref
+---------------------------------
+
+* [CHG] Use a URI object instead of accessing the rewrite rules directly for
+  generating the href.
+
+
+Solar_View_Helper_NamedActionUri
+--------------------------------
+
+* [CHG] This is now the source for named actions, instead of namedActionHref.
+  This is to help make action*() helpers and namedAction*() methods more
+  consistent with each other.
+  

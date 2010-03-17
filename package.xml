@@ -121,7 +121,7 @@ Please visit http://solarphp.com/ for more information.
   <active>yes</active>
  </contributor>
  <date>2010-03-17</date>
- <time>11:31:54</time>
+ <time>12:19:45</time>
  <version>
   <release>1.0.1</release>
   <api>1.0.1</api>
@@ -133,9 +133,20 @@ Please visit http://solarphp.com/ for more information.
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD</license>
  <notes>
 New Classes
------------
+===========
 
 * Solar_View_Helper_FormCsrf: Individual CSRF form element helper.
+
+
+Changed Classes
+===============
+
+Solar_Sql_Model_Related
+-----------------------
+
+* [FIX] When eager conditions are present, and no join type is specified, use
+  an &apos;inner&apos; join by default. This is to mimic the behavior of WHERE
+  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_Struct
@@ -144,14 +155,6 @@ Solar_Struct
 * [FIX] In method toString(), use toArray() to get the internal data instead
   of the data property; this allows for child overrides. Thanks, probd, for
   the report leading to this fix.
-
-
-Solar_Sql_Model_Related
------------------------
-
-* [FIX] When eager conditions are present, and no join type is specified, use
-  an &apos;inner&apos; join by default. This is to mimic the behavior of WHERE
-  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_View_Helper_Form
@@ -3801,9 +3804,20 @@ Solar_View_Helper_NamedActionUri
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD</license>
    <notes>
 New Classes
------------
+===========
 
 * Solar_View_Helper_FormCsrf: Individual CSRF form element helper.
+
+
+Changed Classes
+===============
+
+Solar_Sql_Model_Related
+-----------------------
+
+* [FIX] When eager conditions are present, and no join type is specified, use
+  an &apos;inner&apos; join by default. This is to mimic the behavior of WHERE
+  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_Struct
@@ -3812,14 +3826,6 @@ Solar_Struct
 * [FIX] In method toString(), use toArray() to get the internal data instead
   of the data property; this allows for child overrides. Thanks, probd, for
   the report leading to this fix.
-
-
-Solar_Sql_Model_Related
------------------------
-
-* [FIX] When eager conditions are present, and no join type is specified, use
-  an &apos;inner&apos; join by default. This is to mimic the behavior of WHERE
-  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_View_Helper_Form

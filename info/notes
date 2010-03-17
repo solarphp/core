@@ -47,8 +47,8 @@ Solar_View_Helper_NamedAction
 Solar_View_Helper_NamedActionHref
 ---------------------------------
 
-* [CHG] Use a URI object instead of accessing the rewrite rules directly for
-  generating the href.
+* [CHG] Use a URI object for generating the href, instead of accessing the
+  rewrite rules directly.
 
 
 Solar_View_Helper_NamedActionUri

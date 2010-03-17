@@ -1,7 +1,18 @@
 New Classes
------------
+===========
 
 * Solar_View_Helper_FormCsrf: Individual CSRF form element helper.
+
+
+Changed Classes
+===============
+
+Solar_Sql_Model_Related
+-----------------------
+
+* [FIX] When eager conditions are present, and no join type is specified, use
+  an 'inner' join by default. This is to mimic the behavior of WHERE
+  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_Struct
@@ -10,14 +21,6 @@ Solar_Struct
 * [FIX] In method toString(), use toArray() to get the internal data instead
   of the data property; this allows for child overrides. Thanks, probd, for
   the report leading to this fix.
-
-
-Solar_Sql_Model_Related
------------------------
-
-* [FIX] When eager conditions are present, and no join type is specified, use
-  an 'inner' join by default. This is to mimic the behavior of WHERE
-  conditions. Thanks, Jeff Surgeson, for the report leading to this fix.
 
 
 Solar_View_Helper_Form

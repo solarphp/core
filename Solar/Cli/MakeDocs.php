@@ -372,8 +372,8 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         
         // package data
         $text[] = $this->_title2('Package');
-        if ($this->api[$class]['tech']['package']) {
-            $package = $this->api[$class]['tech']['package'];
+        if ($this->api[$class]['tech']['package']['name']) {
+            $package = $this->api[$class]['tech']['package']['name'];
             $text[] = "This class is part of the [[Package::$package | ]] package.";
             $text[] = '';
         }

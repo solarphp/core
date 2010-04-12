@@ -42,6 +42,8 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
      * 
      * @config string param_default The format string for params with a default value.
      * 
+     * @config string param_void The format string for a method with no params.
+     * 
      * @config string throws The format string for throws.
      * 
      * @config string list_sep The list separator for params and throws.
@@ -56,6 +58,7 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
         'method'        => '<span class="method">%method</span>',
         'param'         => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">%name</span>",
         'param_default' => "\n        <span class=\"param-default\"><span class=\"type\">%type</span> <span class=\"name\">%name</span> default <span class=\"default\">%default</span>",
+        'param_void'    => "\n",
         'throws'        => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
         'list_sep'      => ', ',
     );
@@ -184,23 +187,27 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
         $html['%method'] = str_replace('%method', $this->_escape($method), $this->_config['method']);
         
         // params
-        $list = array();
-        foreach ($params as $key => $val) {
+        if (! $params) {
+            $html['%params'] = $this->_config['param_void'];
+        } else {
+            $list = array();
+            foreach ($params as $key => $val) {
             
-            // is there a default value?
-            if (! is_null($val['default'])) {
-                $item = $this->_config['param_default'];
-            } else {
-                $item = $this->_config['param'];
+                // is there a default value?
+                if (! is_null($val['default'])) {
+                    $item = $this->_config['param_default'];
+                } else {
+                    $item = $this->_config['param'];
+                }
+            
+                // add the param elements
+                $item = str_replace('%type',    $this->_escape($val['type']),    $item);
+                $item = str_replace('%name',    $this->_escape($val['name']),    $item);
+                $item = str_replace('%default', $this->_escape($val['default']), $item);
+                $list[] = $item;
             }
-            
-            // add the param elements
-            $item = str_replace('%type',    $this->_escape($val['type']),    $item);
-            $item = str_replace('%name',    $this->_escape($val['name']),    $item);
-            $item = str_replace('%default', $this->_escape($val['default']), $item);
-            $list[] = $item;
+            $html['%params'] = implode($this->_config['list_sep'], $list);
         }
-        $html['%params'] = implode($this->_config['list_sep'], $list);
         
         // throws
         $list = array();

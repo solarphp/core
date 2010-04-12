@@ -55,6 +55,60 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin
     
     /**
      * 
+     * The tag to open an unordered (bulleted) list.
+     * 
+     * @var string
+     * 
+     */
+    protected $_ul_open = "<ul>";
+    
+    /**
+     * 
+     * The tag to close an unordered (bulleted) list.
+     * 
+     * @var string
+     * 
+     */
+    protected $_ul_close = "</ul>";
+    
+    /**
+     * 
+     * The tag to open an ordered (numbered) list.
+     * 
+     * @var string
+     * 
+     */
+    protected $_ol_open = "<ol>";
+    
+    /**
+     * 
+     * The tag to close an ordered (numbered) list.
+     * 
+     * @var string
+     * 
+     */
+    protected $_ol_close = "</ol>";
+    
+    /**
+     * 
+     * The tag to open a list item.
+     * 
+     * @var string
+     * 
+     */
+    protected $_li_open = "<li>";
+    
+    /**
+     * 
+     * The tag to close a list item.
+     * 
+     * @var string
+     * 
+     */
+    protected $_li_close = "</li>";
+    
+    /**
+     * 
      * Resets for a new transformation.
      * 
      * @return void
@@ -150,16 +204,22 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin
         $marker_any = "(?:$marker_ul|$marker_ol)";
     
         $list = $matches[1];
-        $list_type = preg_match("/$marker_ul/", $matches[3]) ? "ul" : "ol";
-    
-        $marker_any = ( $list_type == "ul" ? $marker_ul : $marker_ol );
+        if (preg_match("/$marker_ul/", $matches[3])) {
+            $open = $this->_ul_open;
+            $close = $this->_ul_close;
+            $marker_any = $marker_ul;
+        } else {
+            $open = $this->_ol_open;
+            $close = $this->_ol_close;
+            $marker_any = $marker_ol;
+        }
     
         // Turn double returns into triple returns, so that we can make a
         // paragraph for the last item in a list, if necessary:
         $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
         $result = $this->_processItems($list, $marker_any);
         
-        return $this->_toHtmlToken("<$list_type>" . $result . "</$list_type>") . "\n";
+        return $this->_toHtmlToken($open . $result . $close) . "\n";
     }
     
     /**
@@ -181,15 +241,21 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin
         $marker_any = "(?:$marker_ul|$marker_ol)";
     
         $list = $matches[1];
-        $list_type = preg_match("/$marker_ul/", $matches[3]) ? "ul" : "ol";
-    
-        $marker_any = ( $list_type == "ul" ? $marker_ul : $marker_ol );
+        if (preg_match("/$marker_ul/", $matches[3])) {
+            $open = $this->_ul_open;
+            $close = $this->_ul_close;
+            $marker_any = $marker_ul;
+        } else {
+            $open = $this->_ol_open;
+            $close = $this->_ol_close;
+            $marker_any = $marker_ol;
+        }
     
         // Turn double returns into triple returns, so that we can make a
         // paragraph for the last item in a list, if necessary:
         $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
         $result = $this->_processItems($list, $marker_any);
-        return $this->_toHtmlToken("<$list_type>\n" . $result . "</$list_type>") . "\n\n"; // extra \n?
+        return $this->_toHtmlToken("$open\n" . $result . $close) . "\n\n"; // extra \n?
     }
     
     
@@ -274,6 +340,6 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin
             $item = $this->_processSpans($item);
         }
         
-        return "<li>$item</li>\n";
+        return $this->_li_open . $item . $this->_li_close . "\n";
     }
 }

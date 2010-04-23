@@ -519,8 +519,12 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
                 // header
                 $text[] = $this->_title2("`$name` {#class.$class.Constants.$name}");
                 
-                // value and summary
-                $text[] = "* {$info['summ']}";
+                // summary
+                if ($info['summ']) {
+                    $text[] = "* {$info['summ']}";
+                }
+                
+                // value
                 $text[] = "* Value: (*{$info['type']}*) `{$info['value']}`";
                 $text[] = "";
                 

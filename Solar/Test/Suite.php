@@ -608,7 +608,7 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * @see Solar_Test_Suite::$_log
      * 
-     * @see Solar_Log::save()
+     * @see Solar_Log_Adapter::save()
      * 
      */
     protected function _log($message)

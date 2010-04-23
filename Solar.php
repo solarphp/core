@@ -111,8 +111,7 @@ class Solar
      * value types for the $config parameter.
      * 
      * * `null|false` -- This will not load any new configuration values;
-     *   you will get only the default [[Solar::$config]] array values defined
-     *   in the Solar class.
+     *   you will get only the default values defined in the Solar class.
      * 
      * * `string` -- The string is treated as a path to a Solar.config.php
      *   file; the return value from that file will be used for [[Solar_Config::load()]].
@@ -446,7 +445,7 @@ class Solar
      * }}
      * 
      * In general, you shouldn't need to use this directly in classes
-     * extended from [[Class::Solar_Base]].  Instead, use
+     * extended from [[Solar_Base]].  Instead, use
      * [[Solar_Base::_exception() | $this->_exception()]] for automated
      * picking of the right exception class from the $code, and
      * automated translation of the error message.

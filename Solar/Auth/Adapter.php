@@ -281,7 +281,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Magic get for pseudo-public properties as defined by [[$_magic]].
+     * Magic get for pseudo-public properties as defined by [[Solar_Auth_Adapter::$_magic]].
      * 
      * @param string $key The name of the property to get.
      * 
@@ -311,7 +311,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Magic set for pseudo-public properties as defined by [[$_magic]].
+     * Magic set for pseudo-public properties as defined by [[Solar_Auth_Adapter::$_magic]].
      * 
      * @param string $key The name of the property to set.
      * 

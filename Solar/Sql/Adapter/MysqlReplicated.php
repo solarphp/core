@@ -97,7 +97,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     
     /**
      * 
-     * Which slave key the [[$_dsn]] property was built from.
+     * Which slave key the `$_dsn` property was built from.
      * 
      * @var mixed
      * 
@@ -108,7 +108,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      * A PDO-style DSN for the master server.
      * 
-     * The [[$_dsn]] property is for the slave server.
+     * The `$_dsn` property is for the slave server.
      * 
      * @var string
      * 
@@ -119,7 +119,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      * A PDO object for accessing the master server.
      * 
-     * The [[$_pdo]] property is for the slave server.
+     * The `$_pdo` property is for the slave server.
      * 
      * @var PDO
      * 

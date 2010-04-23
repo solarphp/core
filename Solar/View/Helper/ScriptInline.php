@@ -27,7 +27,7 @@ class Solar_View_Helper_ScriptInline extends Solar_View_Helper
      * 
      * @return string The <script></script> tag with the inline script.
      * 
-     * @see http://developer.mozilla.org/en/docs/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents
+     * @see <http://developer.mozilla.org/en/docs/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents>
      * 
      */
     public function scriptInline($code, $attribs = null)

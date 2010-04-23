@@ -128,7 +128,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$get]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$get | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $get key to retrieve the value of.
@@ -146,7 +146,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$post]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$post | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $post key to retrieve the value of.
@@ -164,7 +164,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$cookie]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$cookie | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $cookie key to retrieve the value of.
@@ -182,7 +182,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$env]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$env | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $env key to retrieve the value of.
@@ -200,7 +200,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$server]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$server | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $server key to retrieve the value of.
@@ -218,7 +218,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$files]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$files | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $files key to retrieve the value of.
@@ -236,7 +236,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$argv]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$argv | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $argv key to retrieve the value of.
@@ -254,7 +254,7 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$http]] property,
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$http | ]] property,
      * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $http key to retrieve the value of.
@@ -275,8 +275,8 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
-     * Retrieves an **unfiltered** value by key from the [[$post]] *and* 
-     * [[$files]] properties, or an alternate default value if that key does 
+     * Retrieves an **unfiltered** value by key from the [[Solar_Request::$post | ]] *and* 
+     * [[Solar_Request::$files | ]] properties, or an alternate default value if that key does 
      * not exist in either location.  Files takes precedence over post.
      * 
      * @param string $key The $post and $files key to retrieve the value of.
@@ -448,8 +448,9 @@ class Solar_Request extends Solar_Base
      * Is this an XmlHttpRequest?
      * 
      * Checks if the `X-Requested-With` HTTP header is `XMLHttpRequest`.
-     * Generally used in addition to the [[isPost()]], [[isGet()]], etc. 
-     * methods to identify Ajax-style HTTP requests.
+     * Generally used in addition to the [[Solar_Request::isPost() | ]],
+     * [[Solar_Request::isGet() | ]], etc. methods to identify Ajax-style 
+     * HTTP requests.
      * 
      * @return bool
      * 

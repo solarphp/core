@@ -432,7 +432,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     
     /**
      * 
-     * Support method for [[fetchOrSave()]] and [[fetchOrAdd()]].
+     * Support method for `fetchOrSave()` and `fetchOrAdd()`.
      * 
      * @param string $method The method to use for inserting created data,
      * typically 'add' or 'save'.

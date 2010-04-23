@@ -73,7 +73,7 @@ abstract class Solar_Sql_Model_Params extends Solar_Struct {
      * @param string $name The name of the related to eager-fetch.
      * 
      * @param array $opts Options for the eager-fetch; cf.
-     * [[Class::Solar_Sql_Model_Params_Eager]].
+     * [[Solar_Sql_Model_Params_Eager]].
      * 
      * @return Solar_Sql_Model_Params
      * 

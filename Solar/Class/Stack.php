@@ -4,7 +4,7 @@
  * Stack for loading classes from user-defined hierarchies.
  * 
  * As you add classes to the stack, they are searched-for first when you 
- * call [[Solar_Stack_Class::load()]].
+ * call [[Solar_Class_Stack::load()]].
  * 
  * @category Solar
  * 

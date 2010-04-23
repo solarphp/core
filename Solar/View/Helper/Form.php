@@ -827,8 +827,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * @return string
      * 
-     * @see The entire set of _build*() methods.
-     * 
      */
     public function fetch($with_form_tag = true)
     {

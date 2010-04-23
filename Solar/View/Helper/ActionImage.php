@@ -28,7 +28,7 @@ class Solar_View_Helper_ActionImage extends Solar_View_Helper
      * 
      * @return string An <a href="..."><img ... /></a> tag set.
      * 
-     * @see Solar_View_Helper_Image
+     * @see [[Solar_View_Helper_Image]]
      * 
      */
     public function actionImage($spec, $src, $attribs = array())

@@ -169,8 +169,6 @@ class Solar_Locale extends Solar_Base
      * 
      * @see Solar_Base::locale()
      * 
-     * @see Manual::Solar/Using_locales
-     * 
      */
     public function fetch($spec, $key, $num = 1, $replace = null)
     {

@@ -326,7 +326,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Injects a cache dependency for [[$_cache]].
+     * Injects a cache dependency for `$_cache`.
      * 
      * @param mixed $spec A [[Solar::dependency()]] specification.
      * 
@@ -557,9 +557,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * }}
      * 
      * To help prevent SQL injection attacks, you should **always** quote
-     * the values used in a direct query. Use [[quote()]], [[quoteInto()]],
-     * or [[quoteMulti()]] to accomplish this. Even easier, use the automated
-     * value binding provided by the query() method:
+     * the values used in a direct query. Use [[Solar_Sql_Adapter::quote() | quote()]],
+     * [[Solar_Sql_Adapter::quoteInto() | quoteInto()]], or 
+     * [[Solar_Sql_Adapter::quoteMulti() | quoteMulti()]] to accomplish this.
+     * Even easier, use the automated value binding provided by the query() 
+     * method:
      * 
      * {{code: php
      *     // BAD AND SCARY:
@@ -575,11 +577,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Note that adapters provide convenience methods to automatically quote
      * values on common operations:
      * 
-     * - [[Solar_Sql::insert()]]
-     * - [[Solar_Sql::update()]]
-     * - [[Solar_Sql::delete()]]
+     * - [[Solar_Sql_Adapter::insert()]]
+     * - [[Solar_Sql_Adapter::update()]]
+     * - [[Solar_Sql_Adapter::delete()]]
      * 
-     * Additionally, the [[Class::Solar_Sql_Select | ]] class is dedicated to
+     * Additionally, the [[Solar_Sql_Select]] class is dedicated to
      * safely creating portable SELECT statements, so you may wish to use that
      * instead of writing literal SELECTs.
      * 
@@ -847,7 +849,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Inserts a row of data into a table.
      * 
-     * Automatically applies Solar_Sql::quote() to the data values for you.
+     * Automatically applies [[Solar_Sql_Adapter::quote() | ]] to the data 
+     * values for you.
      * 
      * For example:
      * 
@@ -903,7 +906,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Updates a table with specified data based on a WHERE clause.
      * 
-     * Automatically applies Solar_Sql::quote() to the data values for you.
+     * Automatically applies [[Solar_Sql_Adapter::quote() | ]] to the data 
+     * values for you.
      * 
      * @param string $table The table to udpate.
      * 

@@ -182,10 +182,6 @@ abstract class Solar_Base
      * @return string The locale string, or the original $key if no
      * string found.
      * 
-     * @see Manual::Solar/Using_locales
-     * 
-     * @see Class::Solar_Locale
-     * 
      */
     public function locale($key, $num = 1, $replace = null)
     {

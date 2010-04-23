@@ -358,7 +358,7 @@ class Solar_Filter extends Solar_Base
     /**
      * 
      * Sets the object used for getting locale() translations during
-     * [[applyChain()]].
+     * [[Solar_Filter::applyChain() | ]].
      * 
      * @param Solar_Base|null|false $spec Any Solar object with a locale() 
      * method. When null, uses $this for locale(); when false, does not 
@@ -387,7 +387,7 @@ class Solar_Filter extends Solar_Base
     /**
      * 
      * Sets whether or not a particular data key is required to be present and
-     * non-blank in the data being processed by [[applyChain()]].
+     * non-blank in the data being processed by [[Solar_Filter::applyChain() | ]].
      * 
      * @param string $key The data key.
      * 
@@ -512,7 +512,7 @@ class Solar_Filter extends Solar_Base
     /**
      * 
      * Gets a copy of the data array, or a specific element of data, being
-     * processed by [[applyChain()]].
+     * processed by [[Solar_Filter::applyChain() | ]].
      * 
      * @param string $key If empty, returns the whole data array; otherwise,
      * returns just that key element of data.
@@ -537,7 +537,7 @@ class Solar_Filter extends Solar_Base
     
     /**
      * 
-     * Sets one data element being processed by [[applyChain()]].
+     * Sets one data element being processed by [[Solar_Filter::applyChain() | ]].
      * 
      * @param string $key Set this element key.
      * 
@@ -688,7 +688,7 @@ class Solar_Filter extends Solar_Base
     
     /**
      * 
-     * Support method for [[applyChain()]] to apply all the filters on a
+     * Support method for [[Solar_Filter::applyChain() | ]] to apply all the filters on a
      * single data element.
      * 
      * @param string $key The data element key.

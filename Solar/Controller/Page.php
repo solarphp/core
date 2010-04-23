@@ -23,24 +23,26 @@
  *             list.php     # full template
  *             edit.php     # another full template
  * 
- * When you call [[fetch()]], these intercept methods are run in the
+ * When you call [[Solar_Controller_Front::fetch() | fetch()]], these intercept methods are run in the
  * following order ...
  * 
- * 1. [[_load()]] to load class properties from the fetch() URI specification
+ * 1. [[Solar_Controller_Page::_load() | ]] to load class properties from the fetch() URI specification
  * 
- * 2. [[_preRun()]] before the first action
+ * 2. [[Solar_Controller_Page::_preRun() | ]] before the first action
  * 
- * 3. [[_preAction()]] before each action (including _forward()-ed actions)
+ * 3. [[Solar_Controller_Page::_preAction() | ]] before each action (including _forward()-ed actions)
  * 
  * 4. ... The action method itself runs here ...
  * 
- * 5. [[_postAction()]] after each action
+ * 5. [[Solar_Controller_Page::_postAction() | ]] after each action
  * 
- * 6. [[_postRun()]] after the last action, and before rendering
+ * 6. [[Solar_Controller_Page::_postRun() | ]] after the last action, and before rendering
  * 
- * 7. [[_render()]] to render the view and layout; this in its turn calls
- *    [[_setViewObject()]] and [[_renderView()]] for the view, then
- *    [[_setLayoutTemplates()]] and [[_renderLayout()]] for the layout.
+ * 7. [[Solar_Controller_Page::_render() | ]] to render the view and layout;
+ *    this in its turn calls [[Solar_Controller_Page::_setViewObject() | ]] 
+ *    and [[Solar_Controller_Page::_renderView() | ]] for the view, then
+ *    [[Solar_Controller_Page::_setLayoutTemplates() | ]] and 
+ *    [[Solar_Controller_Page::_renderLayout() | ]] for the layout.
  * 
  * @category Solar
  * 

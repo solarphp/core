@@ -267,7 +267,8 @@ class Solar_Http_Response extends Solar_Base
      * display() time.
      * 
      * This method will not set 'HTTP' headers for response status codes; use
-     * the [[setStatusCode()]] and [[setStatusText()]] methods instead.
+     * the [[Solar_Http_Response::setStatusCode() | ]] and 
+     * [[Solar_Http_Response::setStatusText() | ]] methods instead.
      * 
      * @param string $key The header label, such as "Content-Type".
      * 
@@ -578,7 +579,8 @@ class Solar_Http_Response extends Solar_Base
      * In those cases, use redirectNoCache() to turn off HTTP caching, so
      * that the re-POST warning does not occur.
      * 
-     * This method calls [[setNoCache()]] to disable caching.
+     * This method calls [[Solar_Http_Response::setNoCache() | ]] to disable
+     * caching.
      * 
      * @param Solar_Uri_Action|string $spec The URI to redirect to.
      * 

@@ -155,7 +155,8 @@ class Solar_Service_Akismet extends Solar_Base
      * 
      * Checks the comment data with Akismet to see if it is spam.
      * 
-     * See the [[_prepareData()]] method for the list of data keys.
+     * See the [[Solar_Service_Akismet::_prepareData() | ]] method for the 
+     * list of data keys.
      * 
      * @param array $data The comment data to be checked for spam.
      * 
@@ -190,7 +191,8 @@ class Solar_Service_Akismet extends Solar_Base
      * 
      * Submits data to Akismet to establish it as ham (i.e., not spam).
      * 
-     * See the [[_prepareData()]] method for the list of data keys.
+     * See the [[Solar_Service_Akismet::_prepareData() | ]] method for the 
+     * list of data keys.
      * 
      * @param array $data The comment data to be established as ham.
      * 
@@ -215,7 +217,8 @@ class Solar_Service_Akismet extends Solar_Base
      * 
      * Submits data to Akismet to establish it as spam.
      * 
-     * See the [[_prepareData()]] method for the list of data keys.
+     * See the [[Solar_Service_Akismet::_prepareData() | ]] method for the 
+     * list of data keys.
      * 
      * @param array $data The comment data to be established as spam.
      * 

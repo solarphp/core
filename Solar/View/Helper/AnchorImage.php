@@ -30,7 +30,7 @@ class Solar_View_Helper_AnchorImage extends Solar_View_Helper
      * 
      * @return string An <a href="..."><img ... /></a> tag set.
      * 
-     * @see Solar_View_Helper_Image
+     * @see [[Solar_View_Helper_Image]]
      * 
      */
     public function anchorImage($spec, $src, $a_attribs = array(),

@@ -9,8 +9,8 @@
  * them as a single URI string. This helps when building complex links,
  * such as in a paged navigation system.
  * 
- * > Note: For controller action URIs, use [[Class::Solar_Uri_Action | ]].
- * > Likewise, for public resource URIs, use [[Class::Solar_Uri_Public | ]].
+ * > Note: For controller action URIs, use [[Solar_Uri_Action]].
+ * > Likewise, for public resource URIs, use [[Solar_Uri_Public]].
  * 
  * The following is a simple example. Say that the page address is currently
  * `http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor`.
@@ -582,9 +582,9 @@ class Solar_Uri extends Solar_Base
     
     /**
      * 
-     * Returns the query portion as a string.  When [[$_query]] is non-null,
-     * uses [[php::http_build_query() | ]] on it; otherwise, returns the
-     * [[$_query_str]] property.
+     * Returns the query portion as a string.  When [[Solar_Uri::$_query | ]]
+     * is non-null, uses [[php::http_build_query() | ]] on it; otherwise, 
+     * returns the [[Solar_Uri::$_query_str]] property.
      * 
      * @return string The query string; e.g., `foo=bar&baz=dib`.
      * 

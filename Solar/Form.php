@@ -138,7 +138,7 @@ class Solar_Form extends Solar_Base
      * 
      * Array of submitted values.
      * 
-     * Populated on the first call to [[_populate()]], which itself uses
+     * Populated on the first call to [[Solar_Form::_populate() | ]], which itself uses
      * [[Solar_Request::get()]] or [[Solar_Request::post()]], depending on
      * the value of $this->attribs['method'].
      * 
@@ -621,9 +621,9 @@ class Solar_Form extends Solar_Base
      * 
      * Manually set the value of one element.
      * 
-     * Note that this is subtly different from [[populate()]].  This method
-     * takes full name of the element, whereas populate() takes a "natural"
-     * hierarchical array like $_POST.
+     * Note that this is subtly different from [[Solar_Form::populate() | ]].
+     * This method takes full name of the element, whereas populate() takes a 
+     * "natural" hierarchical array like $_POST.
      * 
      * @param string $name The element name.
      * 
@@ -648,9 +648,10 @@ class Solar_Form extends Solar_Base
      * 
      * Manually set the value of several elements.
      * 
-     * Note that this is subtly different from [[populate()]].  This method
-     * takes a flat array or struct where the full name of the element is the
-     * key, as vs populate() takes a "natural" hierarchical array like $_POST.
+     * Note that this is subtly different from [[Solar_Form::populate() | ]]. 
+     * This method takes a flat array or struct where the full name of the 
+     * element is the key, as vs populate() which takes a "natural" 
+     * hierarchical array like $_POST.
      * 
      * @param array|Solar_Struct $spec The data source to set values from.
      * 

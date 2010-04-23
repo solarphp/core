@@ -26,12 +26,16 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
      * 
      * @config string package_dir The directory in which to write package docs.
      * 
+     * @config string docbook_dir The directory in which to write converted
+     * DocBook files.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Cli_MakeDocs = array(
         'class_dir'   => null,
         'package_dir' => null,
+        'docbook_dir' => null,
     );
     
     /**
@@ -60,6 +64,15 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
      * 
      */
     protected $_package_dir;
+    
+    /**
+     * 
+     * Write DocBook files to this directory.
+     * 
+     * @var string
+     * 
+     */
+    protected $_docbook_dir;
     
     /**
      * 
@@ -105,6 +118,10 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         
         if ($this->_config['package_dir']) {
             $this->_package_dir = Solar_Dir::fix($this->_config['package_dir']);
+        }
+        
+        if ($this->_config['docbook_dir']) {
+            $this->_docbook_dir = Solar_Dir::fix($this->_config['docbook_dir']);
         }
     }
     
@@ -166,6 +183,12 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
             throw $this->_exception('ERR_NO_PACKAGE_DIR');
         }
         
+        // get the docbook dir
+        $docbook_dir = $this->_options['docbook_dir'];
+        if ($docbook_dir) {
+            $this->_docbook_dir = Solar_Dir::fix($docbook_dir);
+        }
+        
         // import the class data
         $this->api = $ref->api;
         ksort($this->api);
@@ -182,10 +205,26 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $this->_outln();
         $this->writeClasses();
         
-        // done!
-        $this->_outln();
+        // time note
         $time = time() - $begin;
-        $this->_outln("Docs completed in $time seconds.");
+        $this->_outln("Wiki docs written in $time seconds.");
+        
+        // convert to docbook?
+        if ($this->_docbook_dir) {
+            $this->_outln();
+            $cli  = Solar::factory('Solar_Cli_MakeDocbook');
+            $argv = array(
+                "--class-dir={$this->_class_dir}",
+                "--package-dir={$this->_package_dir}",
+                "--docbook-dir={$this->_docbook_dir}",
+                $class,
+            );
+            $cli->exec($argv);
+            
+            $this->_outln();
+            $time = time() - $begin;
+            $this->_outln("All docs written and converted in $time seconds.");
+        }
     }
     
     /**

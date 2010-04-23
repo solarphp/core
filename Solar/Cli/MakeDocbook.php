@@ -138,9 +138,8 @@ class Solar_Cli_MakeDocbook extends Solar_Controller_Command
         $this->_convertClasses();
         
         // done!
-        $this->_outln();
         $time = time() - $begin;
-        $this->_outln("Completed in $time seconds.");
+        $this->_outln("Wiki docs converted to DocBook in $time seconds.");
     }
     
     /**

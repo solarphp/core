@@ -204,6 +204,11 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
             return $this->_getPhpClassLink($class, $page, $text, $atch);
         }
         
+        // is it a package link?
+        if ($class == 'Package') {
+            return $this->_getPackageLink($page, $text, $atch);
+        }
+        
         // what kind of link to build?
         $is_property = false;
         if (! $page) {
@@ -230,6 +235,32 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
         $keys = array('{:class}', '{:page}');
         $vals = array($class, $page);
         $link = str_replace($keys, $vals, $tmpl);
+        
+        return '<link linkend="' .$this->_escape($link) . '">'
+             . $this->_escape($text . $atch)
+             . '</link>';
+    }
+    
+    /**
+     * 
+     * Builds a link to a package page.
+     * 
+     * @param string $name The package name.
+     * 
+     * @param string $text The displayed text for the link.
+     * 
+     * @param string $atch Additional non-linked text.
+     * 
+     * @return string The replacement text.
+     * 
+     */
+    protected function _getPackageLink($name, $text, $atch)
+    {
+        $link = "package.$name";
+        
+        if (! $text) {
+            $text = $name;
+        }
         
         return '<link linkend="' .$this->_escape($link) . '">'
              . $this->_escape($text . $atch)

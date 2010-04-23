@@ -49,11 +49,11 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * 
      */
     protected $_Solar_Markdown_Apidoc_ClassPage = array(
-        'constant'  => 'class.{:class}.Constants.{:page}.html',
-        'overview'  => 'class.{:class}.Overview.html',
-        'method'    => 'class.{:class}.{:page}.html',
-        'other'     => 'class.{:class}.{:page}.html',
-        'property'  => 'class.{:class}.Properties.html#{:page}',
+        'constant'  => 'class.{:class}.Constants.{:page}',
+        'overview'  => 'class.{:class}.Overview',
+        'method'    => 'class.{:class}.{:page}',
+        'other'     => 'class.{:class}.{:page}',
+        'property'  => 'class.{:class}.Properties.{:page}',
     );
     
     /**
@@ -64,6 +64,15 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * 
      */
     protected $_is_span = true;
+    
+    /**
+     * 
+     * A list of classes recognized as being native to PHP.
+     * 
+     * @var array
+     * 
+     */
+    protected $_php_classes = array('Exception');
     
     /**
      * 
@@ -100,7 +109,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
         $atch = empty($matches[3]) ? null  : trim($matches[3]);
         
         if (strtolower(substr($spec, 0, 5)) == 'php::') {
-            $link = $this->_getPhpLink($spec, $text, $atch);
+            $link = $this->_getPhpFunctionLink($spec, $text, $atch);
         } else {
             $link = $this->_getClassPageLink($spec, $text, $atch);
         }
@@ -110,7 +119,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
     
     /**
      * 
-     * Builds a link for php.net pages.
+     * Builds a link to functions on php.net pages.
      * 
      * @param string $spec The link specification.
      * 
@@ -121,7 +130,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * @return string The replacement text.
      * 
      */
-    protected function _getPhpLink($spec, $text, $atch)
+    protected function _getPhpFunctionLink($spec, $text, $atch)
     {
         $pos  = strpos($spec, '::');
         $page = trim(substr($spec, $pos + 2));
@@ -130,6 +139,36 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
         }
         
         $href = "http://php.net/$page";
+        
+        return '<link xlink:href="' . $this->_escape($href) . '">'
+             . $this->_escape($text . $atch)
+             . '</link>';
+    }
+    
+    /**
+     * 
+     * Builds a link to classes on php.net pages.
+     * 
+     * @param string $class The PHP class.
+     * 
+     * @param string $page The page for that class, typically a method name.
+     * 
+     * @param string $text The displayed text for the link.
+     * 
+     * @param string $atch Additional non-linked text.
+     * 
+     * @return string The replacement text.
+     * 
+     */
+    protected function _getPhpClassLink($class, $page, $text, $atch)
+    {
+        // massage page name
+        $page = preg_replace('[^a-zA-Z0-9]', '', $page);
+        
+        // http://php.net/manual/en/exception.getmessage.php
+        $href = "http://php.net/manual/en/"
+              . strtolower($class) . '.'
+              . strtolower($page) . '.php';
         
         return '<link xlink:href="' . $this->_escape($href) . '">'
              . $this->_escape($text . $atch)
@@ -160,32 +199,39 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
             $page  = trim(substr($spec, $pos + 2));
         }
         
+        // is it a recognized PHP class?
+        if (in_array($class, $this->_php_classes)) {
+            return $this->_getPhpClassLink($class, $page, $text, $atch);
+        }
+        
         // what kind of link to build?
+        $is_property = false;
         if (! $page) {
             // no page specified
-            $link = $this->_config['overview'];
+            $tmpl = $this->_config['overview'];
         } elseif (substr($page, 0, 1) == '$') {
             // $property
-            $link = $this->_config['property'];
+            $tmpl = $this->_config['property'];
             $page = substr($page, 1);
+            $is_property = true;
         } elseif (substr($page, -2) == '()') {
             // method()
-            $link = $this->_config['method'];
+            $tmpl = $this->_config['method'];
             $page = substr($page, 0, -2);
         } elseif (strtoupper($page) === $page) {
             // CONSTANT
-            $link = $this->_config['constant'];
+            $tmpl = $this->_config['constant'];
         } else {
             // other
-            $link = $this->_config['other'];
+            $tmpl = $this->_config['other'];
         }
         
         // interpolate values into link template placeholders
         $keys = array('{:class}', '{:page}');
         $vals = array($class, $page);
-        $href = str_replace($keys, $vals, $link);
+        $link = str_replace($keys, $vals, $tmpl);
         
-        return '<link xlink:href="' . $this->_escape($href) . '">'
+        return '<link linkend="' .$this->_escape($link) . '">'
              . $this->_escape($text . $atch)
              . '</link>';
     }

@@ -70,7 +70,7 @@ class Solar_Markdown_Apidoc_Section extends Solar_Markdown_Plugin
      */
     protected function _parseSections($text, $char)
     {
-        $title = '^(.+)[ \t]*'; // the section title
+        $title = '^(.+?)(\{\#(.+)\})?[ \t]*'; // the section title and optional {#xmlid}
         $under = '\n(' . $char . '+)[ \t]*\n+'; // this section (either = or -)
         $sect  = $title . $under; // title and underline
         $body  = "([\w\W]*?)?"; // the section body
@@ -89,20 +89,27 @@ class Solar_Markdown_Apidoc_Section extends Solar_Markdown_Plugin
             // the section title
             $title = $matches[2];
             
+            // the section id, if any
+            $xmlid = $matches[4];
+            
             // the title underline
-            $under = $matches[3];
+            $under = $matches[5];
             
             // section body
-            $body  = $matches[4];
+            $body  = $matches[6];
             
-            // the next section title & underline, or end of text
-            $tail  = $matches[6];
+            // the next section title/xmlid/underline, or end of text
+            $tail  = $matches[8];
             
             // what section tag should we use?
             $tag = 'section';
             
+            if ($xmlid) {
+                $xmlid = ' xml:id="' . $this->_escape($xmlid) . '"';
+            }
+            
             // the opening section tag
-            $open = "<$tag>\n"
+            $open = "<$tag$xmlid>\n"
                   . "<title>"
                   . $this->_processSpans($title)
                   . "</title>";

@@ -222,9 +222,12 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writePackageIndex()
     {
         $text = array();
+        $text[] = 'Package | Description';
+        $text[] = '------- | -----------';
+        
         foreach ($this->packages as $name => $info) {
             $summ = empty($info['summ']) ? '-?-' : $info['summ'];
-            $text[] = "$name | $summ";
+            $text[] = "[[Package::$name | ] | $summ";
         }
         $this->_write('package', 'index', $text);
     }
@@ -251,7 +254,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
             }
             
             // everything else
-            $text[] = "[$class](/class/$class)";
+            $text[] = "[[$class]]";
             if ($this->api[$class]['summ']) {
                 $text[] = ": " . $this->api[$class]['summ'];
             } else {
@@ -338,6 +341,8 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writeClassesIndex()
     {
         $text = array();
+        $text[] = 'Class | Summary';
+        $text[] = '----- | -------';
         foreach ($this->_classes_list as $name => $summ) {
             $text[] = "$name | $summ";
         }
@@ -356,7 +361,6 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writeClassOverview($class)
     {
         $text = array();
-        $text[] = $this->_title1($class);
         
         // summary
         if ($this->api[$class]['summ']) {
@@ -396,7 +400,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
                     $text[] = "$pad* $parent";
                 } else {
                     // parent is in the API, link to its overview page
-                    $text[] = "$pad* [[$parent::Overview | $parent]]";
+                    $text[] = "$pad* [[$parent]]";
                 }
             }
             $pad = str_pad('', $i++, "\t");
@@ -408,7 +412,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $text[] = $this->_title2('Configuration Keys');
         $k = count($text);
         foreach ($this->api[$class]['config_keys'] as $name => $info) {
-            $text[] = "* [[$class::Config#$name | `$name`]]: {$info['summ']}";
+            $text[] = "* [[$class::Config.$name | `$name`]]: {$info['summ']}";
         }
         if (count($text) == $k) {
             $text[] = 'None.';
@@ -419,7 +423,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $text[] = $this->_title2('Constants');
         $k = count($text);
         foreach ($this->api[$class]['constants'] as $name => $info) {
-            $text[] = "* [[$class::Constants#$name | $name]]";
+            $text[] = "* [[$class::$name | $name]]";
         }
         if (count($text) == $k) {
             $text[] = 'None.';
@@ -430,23 +434,23 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $tmp = array();
         foreach ($this->api[$class]['properties'] as $name => $info) {
             if ($info['access'] == 'public') {
-                $tmp[] = "[[$class::Properties#$name | `\$$name`]]\n: {$info['summ']}\n";
+                $tmp[] = "[[$class::\$$name | `\$$name`]]\n: {$info['summ']}\n";
             }
         }
         
         $text[] = $this->_title2('Public Properties');
         if ($tmp) {
             $text[] = "These are all the public properties in the $class class.\n";
-            $text[] = "You can also view the list of [[Properties | all public, protected, and private properties]].\n";
+            $text[] = "You can also view the list of [[$class::Properties | all public, protected, and private properties]].\n";
             $text = array_merge($text, $tmp);
         } else {
-            $text[] = "The $class class has no public properties; try the list of [[Properties | all properties]].\n";
+            $text[] = "The $class class has no public properties; try the list of [[$class::Properties | all properties]].\n";
         }
         
         // Public methods
         $text[] = $this->_title2('Public Methods');
         $text[] = "These are all the public methods in the $class class.\n";
-        $text[] = "You can also view the list of [[Methods | all public, protected, and private methods]].\n";
+        $text[] = "You can also view the list of [[$class::Methods | all public, protected, and private methods]].\n";
         
         $k = count($text);
         foreach ($this->api[$class]['methods'] as $name => $info) {
@@ -507,17 +511,28 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writeClassConstants($class)
     {
         $text = array();
-        $text[] = $this->_title1("Constants");
         
         $list = $this->api[$class]['constants'];
         if ($list) {
-            $text[] = "| Name | Type | Value |";
-            $text[] = "| ---- | ---- | ----- |";
-            foreach ($list as $name => $info) {
-                $text[] = "| $name | {$info['type']} | {$info['value']} |";
+            foreach ($this->api[$class]['constants'] as $name => $info) {
+            
+                // header
+                $text[] = $this->_title2("`$name` {#class.$class.Constants.$name}");
+                
+                // value and summary
+                $text[] = "* {$info['summ']}";
+                $text[] = "* Value: (*{$info['type']}*) `{$info['value']}`";
+                $text[] = "";
+                
+                // narrative
+                if ($info['narr']) {
+                    $text[] = $info['narr'];
+                    $text[] = '';
+                }
             }
         } else {
             $text[] = 'None.';
+            $text[] = '';
         }
         
         $this->_write("class", "$class/Constants", $text);
@@ -527,7 +542,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
      * 
      * Writes the Config file.
      * 
-     * @param string $class The class to write Properties for.
+     * @param string $class The class to write Config items for.
      * 
      * @return void
      * 
@@ -535,17 +550,17 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writeClassConfig($class)
     {
         $text = array();
-        $text[] = $this->_title1("Configuration Keys");
         $list = $this->api[$class]['config_keys'];
         if ($list) {
             foreach ($list as $name => $info) {
-                $text[] = $this->_title2("`$name` {#$name}");
+                $text[] = $this->_title2("`$name` {#class.$class.Config.$name}");
                 $text[] = "* (*{$info['type']}*) {$info['summ']}";
                 $text[] = "* Default: `{$info['value']}`";
                 $text[] = "";
             }
         } else {
-            $text[] = "None.";
+            $text[] = 'None.';
+            $text[] = '';
         }
         
         $this->_write("class", "$class/Config", $text);
@@ -563,7 +578,6 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writeClassProperties($class)
     {
         $text = array();
-        $text[] = $this->_title1("Properties");
         
         $list = array(
             'public'    => array(),
@@ -577,7 +591,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
             $tmp = array();
             
             // header
-            $tmp[] = $this->_title3("`\$$name` {#$name}");
+            $tmp[] = $this->_title3("`\$$name` {#class.$class.Properties.$name}");
             
             // summary
             $tmp[] = '_(' . ($info['static'] ? 'static ' : '')
@@ -610,6 +624,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
                 $text = array_merge($text, $properties);
             } else {
                 $text[] = 'None.';
+                $text[] = '';
             }
             
             $text[] = '';
@@ -630,7 +645,6 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writeClassMethods($class)
     {
         $text = array();
-        $text[] = $this->_title1("Methods");
         
         $list = array(
             'public' => array(),
@@ -655,6 +669,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
                 $text = array_merge($text, $methods);
             } else {
                 $text[] = 'None.';
+                $text[] = '';
             }
             
             $text[] = '';
@@ -681,8 +696,6 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $text = array();
         
         // method synopsis
-        $text[] = $this->_title1($info['name'] . '()');
-        
         $text[] = '{{method: ' . $info['name'];
         $tmp = "{$info['final']} {$info['static']} {$info['access']}";
         $tmp = preg_replace('/ {2,}/', ' ', trim($tmp));
@@ -751,19 +764,32 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         
         // narrative description
         $text[] = $this->_title2('Description');
-        $text[] = trim($info['summ']);
-        $text[] = '';
-        $text[] = trim($info['narr']);
-        $text[] = '';
+        if (! trim($info['summ']) && ! trim($info['narr'])) {
+            $text[] = '-?-';
+            $text[] = '';
+        } else {
+            $text[] = trim($info['summ']);
+            $text[] = '';
+            $text[] = trim($info['narr']);
+            $text[] = '';
+        }
         
         // see-also
         if (! empty($info['tech']['see'])) {
             $text[] = $this->_title2('See Also');
             foreach ((array) $info['tech']['see'] as $val) {
                 // allow for external links
-                if ($val[0] != '[' && $val[0] != '<') {
-                    // otherwise, turn into a wiki-link
-                    $val = "[[$val]]";
+                $is_wiki = $val[0] == '[';
+                $is_link = $val[0] == '<';
+                if (! $is_wiki && ! $is_link) {
+                    // are there double-colons already?
+                    if (strpos($val, '::') === false) {
+                        // no colons
+                        $val = "[[$class::$val | $val]]";
+                    } else {
+                        // has colons
+                        $val = "[[$val]]";
+                    }
                 }
                 $text[] = "* $val";
             }
@@ -800,9 +826,8 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
      */
     protected function _title2($text)
     {
-        return str_pad('', strlen($text), '-') . "\n"
-             . $text . "\n"
-             . str_pad('', strlen($text), '-') . "\n";
+        return $text . "\n"
+             . str_pad('', strlen($text), '=') . "\n";
     }
     
     /**
@@ -815,21 +840,6 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
      * 
      */
     protected function _title3($text)
-    {
-        return $text . "\n"
-             . str_pad('', strlen($text), '=') . "\n";
-    }
-    
-    /**
-     * 
-     * Returns level-4 title markup.
-     * 
-     * @param string $text The title text.
-     * 
-     * @return string
-     * 
-     */
-    protected function _title4($text)
     {
         return $text . "\n"
              . str_pad('', strlen($text), '-') . "\n";
@@ -852,7 +862,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     protected function _write($type, $file, $text)
     {
         if (is_array($text)) {
-            $text = trim(implode("\n", $text));
+            $text = implode("\n", $text);
         }
         
         $file = $this->_getFile($type, $file);

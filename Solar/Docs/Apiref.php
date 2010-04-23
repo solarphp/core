@@ -232,7 +232,7 @@ class Solar_Docs_Apiref extends Solar_Base
         $source = $map->fetch($class);
         foreach ($source as $class => $file) {
             require_once($file);
-            $this->addClass($class);
+            $this->addClass($class, $file);
         }
     }
     
@@ -242,10 +242,12 @@ class Solar_Docs_Apiref extends Solar_Base
      * 
      * @param string $class The class to add to the docs.
      * 
+     * @param string $file The file name in which the class is defined.
+     * 
      * @return bool True if the class was added, false if not.
      * 
      */
-    public function addClass($class)
+    public function addClass($class, $file)
     {
         if (! class_exists($class)) {
             return false;
@@ -291,7 +293,7 @@ class Solar_Docs_Apiref extends Solar_Base
         
         // add the class parents, properties and methods
         $this->_addParents($class);
-        $this->_addConstants($class);
+        $this->_addConstants($class, $file);
         $this->_addConfigKeys($class);
         $this->_addProperties($class);
         $this->_addMethods($class);
@@ -324,24 +326,96 @@ class Solar_Docs_Apiref extends Solar_Base
      * 
      * Adds the constant reflections for a given class.
      * 
-     * The Reflection API does not support doc comments for constants yet.
+     * The Reflection API does not support doc comments for constants yet,
+     * which means we have to do a lot of extra work here to extract the
+     * comments and their related information.
      * 
      * @param string $class The class name.
+     * 
+     * @param string $file The file in which the class is defined.
      * 
      * @return void
      * 
      */
-    protected function _addConstants($class)
+    protected function _addConstants($class, $file)
     {
-        $this->api[$class]['constants'] = array();
+        // get constants; bail out early if there are none
         $reflect = new ReflectionClass($class);
         $list = $reflect->getConstants();
+        if (! $list) {
+            $this->api[$class]['constants'] = array();
+            return;
+        }
+        
+        // retain basic constants information
+        $const = array();
         foreach ($list as $key => $val) {
-            $this->api[$class]['constants'][$key] = array(
+            $const[$key] = array(
+                'name' => $key,
+                'summ' => '',
+                'narr' => '',
+                'tech' => '',
                 'type' => gettype($val),
                 'value' => var_export($val, true),
+                // @todo add 'from' with inheritance check
             );
         }
+        
+        // re-purpose $list to be a regular expression clause
+        $list = implode('|', array_keys($list));
+        
+        // the contents of the class file
+        $text     = file_get_contents($file);
+        
+        // the length of the file
+        $len      = strlen($text);
+        
+        // the current docblock text
+        $block    = null;
+        
+        // are we in a docblock?
+        $in_block = false;
+        
+        // manually retrieve docblocks from the file
+        for ($pos = 0; $pos < $len; $pos ++) {
+    
+            // retain the current character
+            $char = $text[$pos];
+    
+            // are we at a "/**" opener?
+            if (substr($text, $pos, 3) == '/**') {
+                $in_block = true;
+                $block = null;
+            }
+    
+            // are we in a docblock?
+            if ($in_block) {
+                $block .= $char;
+            }
+    
+            // are we leaving a docblock?
+            if (substr($text, $pos - 1, 2) == '*/') {
+                
+                // yes, no longer in a docblock
+                $in_block = false;
+        
+                // is the docblock followed by a constant declaration?
+                $expr = '/^[\s\n]*const[\s\n]+(' . $list . ')[\s\n]*=/';
+                $next = substr($text, $pos + 1);
+                preg_match($expr, $next, $matches);
+                
+                // yes, parse and retain the docblock info
+                if (! empty($matches[1])) {
+                    $name = $matches[1];
+                    $docs = $this->_phpdoc->parse($block);
+                    $const[$name]['summ'] = $docs['summ'];
+                    $const[$name]['narr'] = $docs['narr'];
+                    $const[$name]['tech'] = $docs['tech'];
+                }
+            }
+        }
+        // retain the constants array
+        $this->api[$class]['constants'] = $const;
     }
     
     /**

@@ -31,19 +31,22 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * Default configuration values.
      * 
      * @config string constant A string template for the xml:id for 
-     * "Constants" pages.
+     * "Constants" page links.
      * 
      * @config string overview A string template for the xml:id for 
-     * "Overview" pages.
+     * "Overview" page links.
      * 
      * @config string method A string template for the xml:id for 
-     * individual method pages.
+     * individual method page links.
      * 
      * @config string other A string template for the xml:id for 
-     * all other types of pages.
+     * all other types of page links.
      * 
      * @config string property A string template for the xml:id for 
-     * "Properties" pages.
+     * "Properties" page links.
+     * 
+     * @config string package A string template for the xml:id for 
+     * "Package" page links.
      * 
      * @var array
      * 
@@ -54,6 +57,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
         'method'    => 'class.{:class}.{:page}',
         'other'     => 'class.{:class}.{:page}',
         'property'  => 'class.{:class}.Properties.{:page}',
+        'package'   => 'package.{:package}',
     );
     
     /**
@@ -245,7 +249,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * 
      * Builds a link to a package page.
      * 
-     * @param string $name The package name.
+     * @param string $package The package name.
      * 
      * @param string $text The displayed text for the link.
      * 
@@ -254,12 +258,15 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * @return string The replacement text.
      * 
      */
-    protected function _getPackageLink($name, $text, $atch)
+    protected function _getPackageLink($package, $text, $atch)
     {
-        $link = "package.$name";
+        $tmpl = $this->_config['package'];
+        $keys = array('{:package}');
+        $vals = array($package);
+        $link = str_replace($keys, $vals, $tmpl);
         
         if (! $text) {
-            $text = $name;
+            $text = $package;
         }
         
         return '<link linkend="' .$this->_escape($link) . '">'

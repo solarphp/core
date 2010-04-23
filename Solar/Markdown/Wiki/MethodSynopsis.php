@@ -56,8 +56,8 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
         'access'        => '<span class="access">%access</span>',
         'return'        => '<span class="return">%return</span>',
         'method'        => '<span class="method">%method</span>',
-        'param'         => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">%name</span>",
-        'param_default' => "\n        <span class=\"param-default\"><span class=\"type\">%type</span> <span class=\"name\">%name</span> default <span class=\"default\">%default</span>",
+        'param'         => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">$%name</span>",
+        'param_default' => "\n        <span class=\"param-default\"><span class=\"type\">%type</span> <span class=\"name\">$%name</span> default <span class=\"default\">%default</span>",
         'param_void'    => "\n",
         'throws'        => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
         'list_sep'      => ', ',
@@ -199,7 +199,10 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin
                 } else {
                     $item = $this->_config['param'];
                 }
-            
+                
+                // take the leading $ off of the name
+                $val['name'] = substr($val['name'], 1);
+                
                 // add the param elements
                 $item = str_replace('%type',    $this->_escape($val['type']),    $item);
                 $item = str_replace('%name',    $this->_escape($val['name']),    $item);

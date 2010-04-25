@@ -113,7 +113,8 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
         $atch = empty($matches[3]) ? null  : trim($matches[3]);
         
         if (strtolower(substr($spec, 0, 5)) == 'php::') {
-            $link = $this->_getPhpFunctionLink($spec, $text, $atch);
+            $func = substr($spec, 5);
+            $link = $this->_getPhpFunctionLink($func, $text, $atch);
         } else {
             $link = $this->_getClassPageLink($spec, $text, $atch);
         }
@@ -125,7 +126,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * 
      * Builds a link to functions on php.net pages.
      * 
-     * @param string $spec The link specification.
+     * @param string $func The PHP function name.
      * 
      * @param string $text The displayed text for the link.
      * 
@@ -134,15 +135,19 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      * @return string The replacement text.
      * 
      */
-    protected function _getPhpFunctionLink($spec, $text, $atch)
+    protected function _getPhpFunctionLink($func, $text, $atch)
     {
-        $pos  = strpos($spec, '::');
-        $page = trim(substr($spec, $pos + 2));
-        if (substr($page, -2) == '()') {
-            $page = substr($page, 0, -2);
+        $func = trim($func);
+        
+        if (! $text) {
+            $text = $func;
         }
         
-        $href = "http://php.net/$page";
+        if (substr($func, -2) == '()') {
+            $func = substr($func, 0, -2);
+        }
+        
+        $href = "http://php.net/$func";
         
         return '<link xlink:href="' . $this->_escape($href) . '">'
              . $this->_escape($text . $atch)
@@ -166,6 +171,10 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
      */
     protected function _getPhpClassLink($class, $page, $text, $atch)
     {
+        if (! $text) {
+            $text = "$class::$page";
+        }
+        
         // massage page name
         $page = preg_replace('[^a-zA-Z0-9]', '', $page);
         

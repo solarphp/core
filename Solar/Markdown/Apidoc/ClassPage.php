@@ -109,7 +109,16 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
     protected function _parse($matches)
     {
         $spec = $matches[1];
-        $text = empty($matches[2]) ? $spec : trim($matches[2], "| \t");
+        
+        // the display text
+        if (empty($matches[2])) {
+            // no pipe was specified, use the spec as the text
+            $text = $spec;
+        } else {
+            // a pipe was specified; take it off, and trim the rest
+            $text = trim(substr($matches[2], 1));
+        }
+        
         $atch = empty($matches[3]) ? null  : trim($matches[3]);
         
         if (strtolower(substr($spec, 0, 5)) == 'php::') {
@@ -172,7 +181,7 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
     protected function _getPhpClassLink($class, $page, $text, $atch)
     {
         if (! $text) {
-            $text = "$class::$page";
+            $text = $page;
         }
         
         // massage page name
@@ -207,9 +216,15 @@ class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin
         if ($pos === false) {
             $class = $spec;
             $page  = null;
+            if (! $text) {
+                $text = $spec;
+            }
         } else {
             $class = trim(substr($spec, 0, $pos));
             $page  = trim(substr($spec, $pos + 2));
+            if (! $text) {
+                $text = $page;
+            }
         }
         
         // is it a recognized PHP class?

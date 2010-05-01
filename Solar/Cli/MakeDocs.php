@@ -266,7 +266,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         
         foreach ($this->packages as $name => $info) {
             $summ = empty($info['summ']) ? '-?-' : $info['summ'];
-            $text[] = "[[Package::$name | ] | $summ";
+            $text[] = "[[Package::$name | ]] | $summ";
         }
         $this->_write('package', 'index', $text);
     }
@@ -383,7 +383,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $text[] = 'Class | Summary';
         $text[] = '----- | -------';
         foreach ($this->_classes_list as $name => $summ) {
-            $text[] = "$name | $summ";
+            $text[] = "[[$name::Overview | $name]] | $summ";
         }
         $this->_write('class', 'index', $text);
     }
@@ -739,7 +739,7 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $text = array();
         
         // method synopsis
-        $text[] = '{{method: ' . $info['name'];
+        $text[] = '{{method: ' . $class . '::' . $info['name'];
         $tmp = "{$info['final']} {$info['static']} {$info['access']}";
         $tmp = preg_replace('/ {2,}/', ' ', trim($tmp));
         $text[] = "    @access $tmp";

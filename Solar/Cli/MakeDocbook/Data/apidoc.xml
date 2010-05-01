@@ -14,12 +14,12 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
 >
     
-    <info>
-        <title>{:vendor} Package and Class Documentation</title>
-        <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
-    </info>
-    
-    <xi:include href="apidoc/package.xml" />
-    <xi:include href="apidoc/class.xml" />
+<info>
+    <title>{:vendor} Package and Class Documentation</title>
+    <pubdate><?dbtimestamp format="Y-m-d"?></pubdate>
+</info>
+
+<xi:include href="apidoc/package.xml" />
+<xi:include href="apidoc/class.xml" />
     
 </set>

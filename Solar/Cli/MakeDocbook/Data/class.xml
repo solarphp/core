@@ -13,7 +13,9 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
 >
 
-    <title>Classes</title>
+<title>Classes</title>
+
+    <xi:include href="class/index.xml" />
 {:xinc}
     
 </book>

@@ -13,7 +13,9 @@
 >
 
 <title>{:name}</title>
-    
+
+<para>Classes in the <literal>{:name}</literal> package:</para>
+
 {:info}
 
 </chapter>

@@ -98,6 +98,56 @@ class Solar_Vt100 extends Solar_Base
     
     /**
      * 
+     * Converts VT100 %-markup to plain text.
+     * 
+     * @param string $text The text to strip %-markup from.
+     * 
+     * @return string The plain text.
+     * 
+     */
+    static public function plain($text)
+    {
+        static $plain = null;
+        if ($plain === null) {
+            $plain = array();
+            foreach (self::$_format as $key => $val) {
+                $plain[$key] = '';
+            }
+            $plain['%%'] = '%';
+        }
+        
+        return strtr($text, $plain);
+    }
+    
+    /**
+     * 
+     * Writes text to a file handle, converting to control codes if the handle
+     * is a posix TTY, or to plain text if not.
+     * 
+     * @param resource $handle The file handle.
+     * 
+     * @param string $text The text to write to the file handle, converting
+     * %-markup if the handle is a posix TTY, or stripping markup if not.
+     * 
+     * @param string $append Append this text as-is when writing to the file
+     * handle; generally useful for adding newlines.
+     * 
+     * @return string The plain text.
+     * 
+     */
+    static public function write($handle, $text, $append = null)
+    {
+        if (posix_isatty($handle)) {
+            // it's a tty, safe to use markup
+            fwrite($handle, self::format($text) . $append);
+        } else {
+            // not a tty, use plain text
+            fwrite($handle, self::plain($text) . $append);
+        }
+    }
+    
+    /**
+     * 
      * Escapes ASCII control codes (0-31, 127) and %-signs.
      * 
      * Note that this will catch newlines and carriage returns as well.

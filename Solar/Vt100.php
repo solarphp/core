@@ -132,7 +132,7 @@ class Solar_Vt100 extends Solar_Base
      * @param string $append Append this text as-is when writing to the file
      * handle; generally useful for adding newlines.
      * 
-     * @return string The plain text.
+     * @return void
      * 
      */
     static public function write($handle, $text, $append = null)

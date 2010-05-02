@@ -261,13 +261,14 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
     public function writePackageIndex()
     {
         $text = array();
-        $text[] = 'Package | Description';
-        $text[] = '------- | -----------';
         
         foreach ($this->packages as $name => $info) {
             $summ = empty($info['summ']) ? '-?-' : $info['summ'];
-            $text[] = "[[Package::$name | ]] | $summ";
+            $text[] = "[[Package::$name | ]]";
+            $text[] = ": $summ";
+            $text[] = "";
         }
+        
         $this->_write('package', 'index', $text);
     }
     

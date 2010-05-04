@@ -313,6 +313,7 @@ class Solar
             }
             
             // $spec is an object instance, class name, or registry key
+            settype($params, 'array');
             $spec = array_shift($params);
             if (! is_object($spec)) {
                 // not an object, so treat as a class name ...

@@ -99,7 +99,7 @@ baz dib";
     <span class="access">public</span>
     <span class="return">string</span>
     <span class="method">methodName</span> (
-        <span class="param"><span class="type">int</span> <span class="name"></span>, 
+        <span class="param"><span class="type">int</span> <span class="name">$</span>, 
         <span class="param"><span class="type">bool</span> <span class="name">$var2</span>, 
         <span class="param-default"><span class="type">float</span> <span class="name">$var3</span> default <span class="default">&quot;value&quot;</span>
     )

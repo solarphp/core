@@ -577,7 +577,7 @@ abstract class {:vendor}_Controller_Bread extends {:vendor}_Controller_Page
      * 
      * Sets the <title> string in the view before rendering.
      * 
-     * @return Solar_Form
+     * @return void
      * 
      */
     protected function _preRender()

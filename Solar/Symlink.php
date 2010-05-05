@@ -123,8 +123,9 @@ class Solar_Symlink
             $cmd = "cd $dir;";
         }
         
-        // make the link
-        $cmd .= "ln -s $src $tgt";
+        // make the link. redirect stderr to stdout so we can capture the
+        // last line, in case of errors.
+        $cmd .= "ln -s $src $tgt 2>&1";
         
         // done!
         return exec($cmd);

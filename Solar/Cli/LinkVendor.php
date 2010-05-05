@@ -117,11 +117,16 @@ class Solar_Cli_LinkVendor extends Solar_Controller_Command
             // make it
             $this->_out("    Making link '$dir/$tgt' ... ");
             try {
-                Solar_Symlink::make($src, $tgt, "$system/$dir");
-                $this->_outln("done.");
+                $err = Solar_Symlink::make($src, $tgt, "$system/$dir");
+                if ($err) {
+                    $this->_outln("failed.");
+                    $this->_errln("    $err");
+                } else {
+                    $this->_outln("done.");
+                }
             } catch (Exception $e) {
-                $this->_out($e->getMessage());
-                $this->_outln(" ... failed.");
+                $this->_outln("failed.");
+                $this->_errln('    ' . $e->getMessage());
             }
         }
         

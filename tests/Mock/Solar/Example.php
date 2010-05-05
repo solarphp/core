@@ -42,7 +42,7 @@ class Mock_Solar_Example extends Solar_Base
      * @var string
      * 
      */
-    private $_protected_var = 'semi-visible';
+    protected $_protected_var = 'semi-visible';
     
     /**
      * 

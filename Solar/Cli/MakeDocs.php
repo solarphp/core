@@ -912,6 +912,12 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command
         $file = $this->_getFile($type, $file);
         $dir = dirname($file);
         
+        if (file_exists($dir)) {
+            throw $this->_exception('ERR_CANNOT_MKDIR_FILE', array(
+                'dir' => $dir,
+            ));
+        }
+        
         if (! is_dir($dir)) {
             $result = mkdir($dir, 0777, true);
             if (! $result) {

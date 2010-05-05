@@ -506,7 +506,7 @@ class Solar_Request extends Solar_Base
         foreach ($this->server as $key => $val) {
             
             // only retain HTTP headers
-            if (substr($key, 0, 4) == 'HTTP') {
+            if (substr($key, 0, 5) == 'HTTP_') {
                 
                 // normalize the header key to lower-case
                 $nicekey = strtolower(

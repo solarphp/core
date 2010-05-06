@@ -87,13 +87,21 @@ foreach ($argv as $val) {
     }
     
     if ($found && substr($val, 0, 1) != '-') {
-        $include = $val;
+        $include = realpath($val);
+        if (! $include) {
+            echo "Could not resolve include path '$val'." . PHP_EOL;
+            exit(1);
+        }
         break;
     }
     
     if (substr($val, 0, 15) == '--include-path=') {
         $found = true;
-        $include = substr($val, 15);
+        $include = realpath(substr($val, 15));
+        if (! $include) {
+            echo "Could not resolve include path '$val'." . PHP_EOL;
+            exit(1);
+        }
         break;
     }
 }
@@ -135,13 +143,21 @@ foreach ($argv as $val) {
     }
     
     if ($found && substr($val, 0, 1) != '-') {
-        $config = $val;
+        $config = realpath($val);
+        if (! $config) {
+            echo "Could not resolve config file path '$val'." . PHP_EOL;
+            exit(1);
+        }
         break;
     }
     
     if (substr($val, 0, 9) == '--config=') {
         $found = true;
-        $config = substr($val, 9);
+        $config = realpath(substr($val, 9));
+        if (! $config) {
+            echo "Could not resolve config file path '$val'." . PHP_EOL;
+            exit(1);
+        }
         break;
     }
 }

@@ -37,28 +37,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      *   to create a Solar_Cache_Adapter_Session object internal to this 
      *   instance.
      * 
-     * @config string source The source for auth credentials, 'get' (via the
-     *   for GET request vars) or 'post' (via the POST request vars).
-     *   Default is 'post'.
-     * 
-     * @config string source_handle Username key in the credential array source,
-     *   default 'handle'.
-     * 
-     * @config string source_passwd Password key in the credential array source,
-     *   default 'passwd'.
-     * 
-     * @config string source_redirect Element key in the credential array source to indicate
-     *   where to redirect on successful login or logout, default 'redirect'.
-     * 
-     * @config string source_process Element key in the credential array source to indicate
-     *   how to process the request, default 'process'.
-     * 
-     * @config string process_login The source_process element value indicating a login request;
-     *   default is the 'PROCESS_LOGIN' locale key value.
-     * 
-     * @config string process_logout The source_process element value indicating a logout request;
-     *   default is the 'PROCESS_LOGOUT' locale key value.
-     * 
      * @config callback login_callback A callback to execute after successful login, but before
      *   the source postLogin() method is called.
      * 
@@ -76,25 +54,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             'adapter' => 'Solar_Cache_Adapter_Session',
             'prefix'  => 'Solar_Auth_Adapter',
         ),
-        'source'         => 'post',
-        'source_handle'  => 'handle',
-        'source_passwd'  => 'passwd',
-        'source_redirect' => 'redirect',
-        'source_process' => 'process',
-        'process_login'  => null,
-        'process_logout' => null,
         'login_callback'  => null,
         'logout_callback' => null,
+        'protocol' => 'Solar_Auth_Protocol_Post',
     );
-    
-    /**
-     * 
-     * Details on the current request.
-     * 
-     * @var Solar_Request
-     * 
-     */
-    protected $_request;
     
     /**
      * 
@@ -104,15 +67,15 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_cache;
-    
+
     /**
      * 
-     * The source of auth credentials, either 'get' or 'post'.
+     * The protocol used to extract credentials from a request.
      * 
-     * @var string
+     * @var Solar_Auth_Protocol
      * 
      */
-    protected $_source;
+    protected $_protocol;
     
     /**
      * 
@@ -235,24 +198,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
                 'solar_auth_expire'       => $this->_config['expire'],
             ));
         }
-        
-        // make sure we have process values
-        if (empty($this->_config['process_login'])) {
-            $this->_config['process_login'] = $this->locale('PROCESS_LOGIN');
-        }
-        
-        if (empty($this->_config['process_logout'])) {
-            $this->_config['process_logout'] = $this->locale('PROCESS_LOGOUT');
-        }
-        
-        // make sure the source is either 'get' or 'post'.
-        $is_get_or_post = $this->_config['source'] == 'get' 
-                       || $this->_config['source'] == 'post';
-        
-        if (! $is_get_or_post) {
-            // default to post
-            $this->_config['source'] = 'post';
-        }
     }
     
     /**
@@ -266,9 +211,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         parent::_postConstruct();
         
-        // get the current request environment
-        $this->_request = Solar_Registry::get('request');
-        
         // set per config
         $this->allow = (bool) $this->_config['allow'];
         
@@ -277,6 +219,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             'Solar_Cache',
             $this->_config['cache']
         );
+
+        // Setup the authentication protocol
+        $this->_protocol = Solar::factory($this->_config['protocol']);
     }
     
     /**
@@ -352,12 +297,12 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // auto-login?
-        if (! $this->isValid() && $this->isLoginRequest()) {
+        if (! $this->isValid() && $this->_protocol->isLoginRequest()) {
             return $this->processLogin();
         }
         
         // auto-logout?
-        if ($this->isValid() && $this->isLogoutRequest()) {
+        if ($this->isValid() && $this->_protocol->isLogoutRequest()) {
             return $this->processLogout();
         }
     }
@@ -366,20 +311,12 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Redirects to another URI after valid authentication.
      * 
-     * Looks at the value of the 'redirect' source key, and sets a 'Location:'
-     * header from it.  Note that this will end any further processing on this
-     * page-load.
-     * 
-     * If the 'redirect' key is empty or not present, will not redirect, and
-     * processing will continue.
-     * 
      * @return void
      * 
      */
     protected function _redirect()
     {
-        $method = strtolower($this->_config['source']);
-        $href = $this->_request->$method($this->_config['source_redirect']);
+        $href = $this->_protocol->getRedirect();
         if ($href) {
             $response = Solar_Registry::get('response');
             $response->redirectNoCache($href);
@@ -532,37 +469,21 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->_cache->delete('status_text');
         return $val;
     }
-    
+
     /**
      * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log in.
+     * Loads the user credentials (handle and passwd) from the Authentication Protocol.
      * 
-     * @return bool
-     * 
-     */
-    public function isLoginRequest()
-    {
-        $method = strtolower($this->_config['source']);
-        $process = $this->_request->$method($this->_config['source_process']);
-        return ! $this->_request->isCsrf()
-             && $process == $this->_config['process_login'];
-    }
-    
-    /**
-     * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log out.
-     * 
-     * @return bool
+     * @return void
      * 
      */
-    public function isLogoutRequest()
+    protected function _loadCredentials()
     {
-        $method = strtolower($this->_config['source']);
-        $process = $this->_request->$method($this->_config['source_process']);
-        return ! $this->_request->isCsrf()
-            && $process == $this->_config['process_logout'];
+        $credentials = $this->_protocol->getCredentials();
+        
+        // retrieve the handle and passwd
+        $this->_handle = $credentials['handle'];
+        $this->_passwd = $credentials['passwd'];
     }
     
     /**
@@ -612,23 +533,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         
         // done!
         return $this->status == Solar_Auth::VALID;
-    }
-    
-    /**
-     * 
-     * Loads the user credentials (handle and passwd) from the request source.
-     * 
-     * @return void
-     * 
-     */
-    protected function _loadCredentials()
-    {
-        // where do the handle and passwd come from?
-        $method = strtolower($this->_config['source']);
-        
-        // retrieve the handle and passwd
-        $this->_handle = $this->_request->$method($this->_config['source_handle']);
-        $this->_passwd = $this->_request->$method($this->_config['source_passwd']);
     }
     
     /**

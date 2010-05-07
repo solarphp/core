@@ -104,7 +104,7 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * 
      * Loads the user credentials (handle and passwd) from the request source.
      * 
-     * @return void
+     * @return array List of authentication credentials
      * 
      */
     public function getCredentials()
@@ -124,7 +124,7 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * If the 'redirect' key is empty or not present, will not redirect, and
      * processing will continue.
      * 
-     * @return void
+     * @return string|null The url to redirect to or null if no redirect
      * 
      */
     public function getLoginRedirect()
@@ -140,7 +140,7 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * If the 'redirect' key is empty or not present, will not redirect, and
      * processing will continue.
      * 
-     * @return void
+     * @return string|null The url to redirect to or null if no redirect
      * 
      */
     public function getLogoutRedirect()

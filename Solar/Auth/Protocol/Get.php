@@ -127,7 +127,23 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * @return void
      * 
      */
-    public function getRedirect()
+    public function getLoginRedirect()
+    {
+        return $this->_request->get($this->_config['source_redirect']);
+    }
+
+    /**
+     * 
+     * Looks at the value of the 'redirect' source key, and determines a
+     * redirection url from it.
+     * 
+     * If the 'redirect' key is empty or not present, will not redirect, and
+     * processing will continue.
+     * 
+     * @return void
+     * 
+     */
+    public function getLogoutRedirect()
     {
         return $this->_request->get($this->_config['source_redirect']);
     }

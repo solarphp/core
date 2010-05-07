@@ -314,9 +314,26 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    protected function _redirect()
+    protected function _loginRedirect()
     {
-        $href = $this->_protocol->getRedirect();
+        $href = $this->_protocol->getLoginRedirect();
+        if ($href) {
+            $response = Solar_Registry::get('response');
+            $response->redirectNoCache($href);
+            exit(0);
+        }
+    }
+
+    /**
+     * 
+     * Redirects to another URI after valid authentication.
+     * 
+     * @return void
+     * 
+     */
+    protected function _logoutRedirect()
+    {
+        $href = $this->_protocol->getLogoutRedirect();
         if ($href) {
             $response = Solar_Registry::get('response');
             $response->redirectNoCache($href);
@@ -528,7 +545,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // did it work?
         if ($this->isValid()) {
             // attempt to redirect.
-            $this->_redirect();
+            $this->_loginRedirect();
         }
         
         // done!
@@ -574,7 +591,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // logout always works, so see if a redirect is needed
-        $this->_redirect();
+        $this->_logoutRedirect();
     }
     
     /**

@@ -123,7 +123,7 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * @return void
      * 
      */
-    public function completeLoginSuccess()
+    public function postLoginSuccess()
     {
     }
 
@@ -134,7 +134,7 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * @return void
      * 
      */
-    public function completeLoginFail()
+    public function postLoginFailure()
     {
     }
 

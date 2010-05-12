@@ -76,7 +76,7 @@ abstract class Solar_Auth_Protocol extends Solar_Base {
      * @return void
      * 
      */
-    abstract public function completeLoginSuccess();
+    abstract public function postLoginSuccess();
 
     /**
      * 
@@ -85,7 +85,7 @@ abstract class Solar_Auth_Protocol extends Solar_Base {
      * @return void
      * 
      */
-    abstract public function completeLoginFail();
+    abstract public function postLoginFailure();
 
     /**
      * 

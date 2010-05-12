@@ -546,14 +546,14 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         if ($this->isValid()) {
         
             // We were successfully logged in
-            $this->_protocol->completeLoginSuccess();
+            $this->_protocol->postLoginSuccess();
             
             // attempt to redirect.
             $this->_loginRedirect();
         } else {
 
             // We failed
-            $this->_protocol->completeLoginFail();
+            $this->_protocol->postLoginFailure();
         }
         
         // done!

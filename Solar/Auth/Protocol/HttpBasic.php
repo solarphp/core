@@ -56,7 +56,7 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
         // results in an access rejection
 
         if (!$this->_request->server('PHP_AUTH_USER')) {
-            $this->completeLoginFail();
+            $this->postLoginFailure();
         }
         return true;
     }
@@ -97,7 +97,7 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
      * @return void
      * 
      */
-    public function completeLoginSuccess()
+    public function postLoginSuccess()
     {
     }
 
@@ -108,7 +108,7 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
      * @return void
      * 
      */
-    public function completeLoginFail()
+    public function postLoginFailure()
     {
         $response = Solar_Registry::get('response');
         $response->setHeader('WWW-Authenticate', 'Basic realm="secure area"');

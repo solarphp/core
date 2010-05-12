@@ -118,6 +118,28 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
 
     /**
      * 
+     * The login was success, complete the protocol
+     * 
+     * @return void
+     * 
+     */
+    public function completeLoginSuccess()
+    {
+    }
+
+    /**
+     * 
+     * The login was a failure, complete the protocol
+     * 
+     * @return void
+     * 
+     */
+    public function completeLoginFail()
+    {
+    }
+
+    /**
+     * 
      * Looks at the value of the 'redirect' source key, and determines a
      * redirection url from it.
      * 

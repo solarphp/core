@@ -14,7 +14,7 @@
  * @version $Id: Adapter.php 4533 2010-04-23 16:35:15Z pmjones $
  * 
  */
-class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
+class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
 
     /**
      * 
@@ -38,35 +38,8 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      *   default is the 'PROCESS_LOGOUT' locale key value.
      *
      */
-    protected $_Solar_Auth_Protocol_Post = array(
-        'source_handle'  => 'handle',
-        'source_passwd'  => 'passwd',
-        'source_process' => 'process',
-        'source_redirect' => 'redirect',
-        'process_login'  => null,
-        'process_logout' => null,
+    protected $_Solar_Auth_Protocol_HttpBasic = array(
     );
-
-    /**
-     * 
-     * Modifies $this->_config after it has been built.
-     * 
-     * @return void
-     * 
-     */
-    protected function _postConfig()
-    {
-        parent::_postConfig();
-        
-        // make sure we have process values
-        if (empty($this->_config['process_login'])) {
-            $this->_config['process_login'] = $this->locale('PROCESS_LOGIN');
-        }
-        
-        if (empty($this->_config['process_logout'])) {
-            $this->_config['process_logout'] = $this->locale('PROCESS_LOGOUT');
-        }
-    }
 
     /**
      * 
@@ -78,10 +51,14 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      */
     public function isLoginRequest()
     {
-        if ($this->_request->isCsrf()) {
-            return false;
+        // The nature of Basic HTTP Auth is that every request is a login
+        // request and any failure to transmit authentication information
+        // results in an access rejection
+
+        if (!$this->_request->server('PHP_AUTH_USER')) {
+            $this->completeLoginFail();
         }
-        return $this->_request->post($this->_config['source_process']) == $this->_config['process_login'];
+        return true;
     }
 
     /**
@@ -94,10 +71,7 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      */
     public function isLogoutRequest()
     {
-        if ($this->_request->isCsrf()) {
-            return false;
-        }
-        return $this->_request->post($this->_config['source_process']) == $this->_config['process_logout'];
+        return false;
     }
 
     /**
@@ -110,8 +84,8 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
     public function getCredentials()
     {
         // retrieve the handle and passwd
-        $handle = $this->_request->post($this->_config['source_handle']);
-        $passwd = $this->_request->post($this->_config['source_passwd']);
+        $handle = $this->_request->server('PHP_AUTH_USER');
+        $passwd = $this->_request->server('PHP_AUTH_PW');
         
         return array('handle'=> $handle, 'passwd' => $passwd);
     }
@@ -136,6 +110,11 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      */
     public function completeLoginFail()
     {
+        $response = Solar_Registry::get('response');
+        $response->setHeader('WWW-Authenticate', 'Basic realm="secure area"');
+        $response->setStatusCode(401);
+        $response->display();
+        exit(0);
     }
 
     /**
@@ -151,7 +130,8 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      */
     public function getLoginRedirect()
     {
-        return $this->_request->post($this->_config['source_redirect']);
+        // HTTP Auth doesn't support redirecting after first authentication
+        return null;
     }
 
     /**
@@ -167,7 +147,8 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      */
     public function getLogoutRedirect()
     {
-        return $this->_request->post($this->_config['source_redirect']);
+        // HTTP Auth doesn't support redirecting after first authentication
+        return null;
     }
 
 }

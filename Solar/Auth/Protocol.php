@@ -71,6 +71,24 @@ abstract class Solar_Auth_Protocol extends Solar_Base {
 
     /**
      * 
+     * The login was success, complete the protocol
+     * 
+     * @return void
+     * 
+     */
+    abstract public function completeLoginSuccess();
+
+    /**
+     * 
+     * The login was a failure, complete the protocol
+     * 
+     * @return void
+     * 
+     */
+    abstract public function completeLoginFail();
+
+    /**
+     * 
      * Determine the location to redirect to after successful login
      * 
      * @return string|null The url to redirect to or null if no redirect

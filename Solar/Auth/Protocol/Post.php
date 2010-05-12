@@ -107,7 +107,7 @@ class Solar_Auth_Protocol_Post extends Solar_Auth_Protocol {
      * @return array List of authentication credentials
      * 
      */
-    protected function getCredentials()
+    public function getCredentials()
     {
         // retrieve the handle and passwd
         $handle = $this->_request->post($this->_config['source_handle']);

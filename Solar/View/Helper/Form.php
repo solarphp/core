@@ -920,7 +920,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $this->_hidden = array();
         $this->_stack = array();
         $this->_status = null;
-        $this->_id_count = array();
+        
+        // we *do not* reset $this->_id_count, because the form helper may be
+        // reused for another form on the same page.  need to keep the count
+        // so that IDs in the second and subsequent forms have unique values.
         
         return $this;
     }

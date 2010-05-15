@@ -22,11 +22,18 @@ class Solar_View_Helper_Title extends Solar_View_Helper
      * 
      * @param string $text The title string.
      * 
+     * @param bool $raw When true, output the title without escaping; default
+     * false.
+     * 
      * @return string The <title ... /> tag.
      * 
      */
-    public function title($text)
+    public function title($text, $raw = false)
     {
-        return '<title>' . $this->_view->escape($text) . '</title>';
+        if (! $raw) {
+            $text = $this->_view->escape($text);
+        }
+        
+        return "<title>{$text}</title>";
     }
 }

@@ -38,6 +38,15 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     
     /**
      * 
+     * Whether or not the title should be output raw.
+     * 
+     * @var string
+     * 
+     */
+    protected $_title_raw = false;
+    
+    /**
+     * 
      * Array of <meta> values.
      * 
      * @var array
@@ -191,6 +200,21 @@ class Solar_View_Helper_Head extends Solar_View_Helper
     public function getTitle()
     {
         return $this->_title;
+    }
+    
+    /**
+     * 
+     * Turn off/on escaping for the title.
+     * 
+     * @param bool $flag True to turn off escaping; default false.
+     * 
+     * @return Solar_View_Helper_Head
+     * 
+     */
+    public function setTitleRaw($flag)
+    {
+        $this->_title_raw = (bool) $flag;
+        return $this;
     }
     
     /**
@@ -404,7 +428,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper
         
         // title
         if (! empty($this->_title)) {
-            $html[] = $this->_view->title($this->_title);
+            $html[] = $this->_view->title($this->_title, $this->_title_raw);
         }
         
         // metas

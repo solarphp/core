@@ -1264,9 +1264,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // add columns
         $stmt .= implode(",\n    ", $parts['cols']) . "\n";
         
-        // from these tables
-        $stmt .= "FROM ";
-        $stmt .= implode(", ", $parts['from']) . "\n";
+        // from these tables. wrap in parens to force precedence for MySQL.
+        $stmt .= "FROM (\n    ";
+        $stmt .= implode(",\n    ", $parts['from']) . "\n";
+        $stmt .= ")\n";
         
         // joined to these tables
         if ($parts['join']) {

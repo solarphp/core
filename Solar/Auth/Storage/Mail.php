@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter
+class Solar_Auth_Storage_Mail extends Solar_Auth_Storage
 {
     /**
      * 
@@ -26,7 +26,7 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Mail = array(
+    protected $_Solar_Auth_Storage_Mail = array(
         'mailbox' => null,
     );
     

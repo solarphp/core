@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
+class Solar_Auth_Storage_Ldap extends Solar_Auth_Storage
 {
     /**
      * 
@@ -32,7 +32,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Ldap = array(
+    protected $_Solar_Auth_Storage_Ldap = array(
         'uri'    => null,
         'format' => null,
         'filter' => '\w',

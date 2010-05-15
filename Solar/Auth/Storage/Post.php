@@ -20,7 +20,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
+class Solar_Auth_Storage_Post extends Solar_Auth_Storage
 {
     /**
      * 
@@ -41,7 +41,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Post = array(
+    protected $_Solar_Auth_Storage_Post = array(
         'uri'     => 'https://example.com/services/authenticate.php',
         'handle'  => 'handle',
         'passwd'  => 'passwd',

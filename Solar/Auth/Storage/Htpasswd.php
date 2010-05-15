@@ -25,7 +25,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter
+class Solar_Auth_Storage_Htpasswd extends Solar_Auth_Storage
 {
     /**
      * 
@@ -36,7 +36,7 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Htpasswd = array(
+    protected $_Solar_Auth_Storage_Htpasswd = array(
         'file'  => null,
     );
     

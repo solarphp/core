@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract authentication adapter.
+ * authentication adapter.
  * 
  * @category Solar
  * 
@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-abstract class Solar_Auth_Adapter extends Solar_Base {
+class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
@@ -57,6 +57,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'login_callback'  => null,
         'logout_callback' => null,
         'protocol' => 'Solar_Auth_Protocol_Post',
+        'storage' => null,
     );
     
     /**
@@ -76,24 +77,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_protocol;
-    
-    /**
-     * 
-     * The user-provided plaintext handle, if any.
-     * 
-     * @var string
-     * 
-     */
-    protected $_handle;
-    
-    /**
-     * 
-     * The user-provided plaintext password, if any.
-     * 
-     * @var string
-     * 
-     */
-    protected $_passwd;
     
     /**
      * 
@@ -489,22 +472,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
 
     /**
      * 
-     * Loads the user credentials (handle and passwd) from the Authentication Protocol.
-     * 
-     * @return void
-     * 
-     */
-    protected function _loadCredentials()
-    {
-        $credentials = $this->_protocol->getCredentials();
-        
-        // retrieve the handle and passwd
-        $this->_handle = $credentials['handle'];
-        $this->_passwd = $credentials['passwd'];
-    }
-    
-    /**
-     * 
      * Processes login attempts and sets user credentials.
      * 
      * @return bool True if the login was successful, false if not.
@@ -517,10 +484,14 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->reset();
         
         // load the user-provided handle and password
-        $this->_loadCredentials();
-        
-        // adapter-specific login processing
-        $result = $this->_processLogin();
+        $credentials = $this->_protocol->getCredentials();
+
+        if ($this->_config['storage']) {
+            $storage = Solar::factory($this->_config['storage']);
+            $result = $storage->validateCredentials($credentials);
+        } else {
+            $result = false;
+        }
         
         // did it work?
         if (is_array($result)) {
@@ -558,21 +529,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         
         // done!
         return $this->status == Solar_Auth::VALID;
-    }
-    
-    /**
-     * 
-     * Adapter-specific login processing.
-     * 
-     * @return mixed An array of user information if valid; if not valid, a
-     * string error code or empty value.
-     * 
-     */
-    protected function _processLogin()
-    {
-        // you should implement this in an adapter, but the default is to 
-        // not-validate login attempts.
-        return false;
     }
     
     /**

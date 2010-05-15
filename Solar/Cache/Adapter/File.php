@@ -431,12 +431,60 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
             return;
         }
         
+        if (! $this->_hash) {
+            // not hashing, so delete recursively
+            $this->_deleteAll($this->_path);
+            return;
+        }
+        
+        // because we are hashing, we have a flat directory space, so we
+        // don't need to recurse into subdirectories.
+        // 
         // get the list of files in the directory, suppress warnings.
         $list = (array) @scandir($this->_path, null, $this->_context);
         
         // delete each file 
         foreach ($list as $file) {
             @unlink($this->_path . $file, $this->_context);
+        }
+    }
+    
+    /**
+     * 
+     * Support method to recursively descend into cache subdirectories and
+     * remove their contents.
+     * 
+     * @param string $dir The directory to remove.
+     * 
+     * @return void
+     * 
+     */
+    protected function _deleteAll($dir)
+    {
+        // get the list of files in the directory, suppress warnings.
+        $list = (array) @scandir($dir, null, $this->_context);
+        
+        // delete each file, and recurse into subdirectories
+        foreach ($list as $item) {
+            
+            // ignore dot-dirs
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+            
+            // set up the absolute path to the item
+            $item = $dir . DIRECTORY_SEPARATOR . $item;
+            
+            // how to handle the item?
+            if (is_dir($item)) {
+                // recurse into each subdirectory ...
+                $this->_deleteAll($item);
+                // ... then remove it
+                Solar_Dir::rmdir($item);
+            } else {
+                // remove the cache file
+                @unlink($item, $this->_context);
+            }
         }
     }
     

@@ -782,16 +782,27 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
-     * If no CSRF element is present, add one.
+     * If a CSRF element is needed but not present, add it; if present and not
+     * needed, remove it.
      * 
      * @return void
      * 
      */
-    protected function _addCsrfElement()
+    protected function _modCsrfElement()
     {
-        // if using GET, don't add csrf if not already there
+        // the name of the csrf element
+        $name = $this->_csrf->getKey();
+        
+        // if using GET, don't add csrf if not already there ...
         $method = strtolower($this->_attribs_form['method']);
         if ($method == 'get') {
+            // ... and remove it if present.
+            foreach ($this->_hidden as $key => $info) {
+                if ($info['name'] == $name) {
+                    unset($this->_hidden[$key]);
+                }
+            }
+            // done
             return;
         }
         
@@ -801,7 +812,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         }
         
         // is a csrf element already present?
-        $name = $this->_csrf->getKey();
         foreach ($this->_hidden as $info) {
             if ($info['name'] == $name) {
                 // found it, no need to add it
@@ -833,8 +843,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         // merge all form-level attributes
         $this->_setAttribsForm();
         
-        // add the csrf value as needed
-        $this->_addCsrfElement();
+        // add or remove the csrf value as needed
+        $this->_modCsrfElement();
         
         // stack of output pieces
         $html = array();

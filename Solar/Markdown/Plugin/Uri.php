@@ -157,7 +157,8 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin
         // strip the mailto: from the visible part
         $addr = preg_replace('/">.+?:/', '">', $addr);
         
-        return $addr;
+        // done
+        return $this->_toHtmlToken($addr);
     }
     
     /**

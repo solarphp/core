@@ -32,7 +32,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
      *   'PAGER_PREV'.
      * 
      * @config string next The locale key for the "next" link text.  Default is
-     *   'PAGER_PREV'.
+     *   'PAGER_NEXT'.
      * 
      * @config string prev_class The CSS class for the previous-page <a> tag. Default is
      *   'prev'.
@@ -124,10 +124,10 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
         $html[] = "    <li>";
         if ($page > 1) {
             $href = str_replace('__PAGE__', $page - 1, $base);
-            $html[] = $this->_view->action($href, 'PAGER_PREV',
+            $html[] = $this->_view->action($href, $config['prev'],
                 array('class' => $config['prev_class']));
         } else {
-            $html[] = $this->_view->getText('PAGER_PREV');
+            $html[] = $this->_view->getText($config['prev']);
         }
         $html[] = "</li>";
         
@@ -156,10 +156,10 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
         $html[] = "    <li>";
         if ($page < $pages) {
             $href = str_replace('__PAGE__', $page + 1, $base);
-            $html[] = $this->_view->action($href, 'PAGER_NEXT',
+            $html[] = $this->_view->action($href, $config['next'],
                 array('class' => $config['next_class']));
         } else {
-            $html[] = $this->_view->getText('PAGER_NEXT');
+            $html[] = $this->_view->getText($config['next']);
         }
         $html[] = "</li>";
         

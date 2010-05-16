@@ -31,7 +31,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
+class Solar_Auth_Protocol_Typekey extends Solar_Auth_Protocol
 {
     /**
      * 
@@ -53,7 +53,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Typekey = array(
+    protected $_Solar_Auth_Protocol_Typekey = array(
         'token'     => null,
         'window'    => 10,
         'cache'     => null,
@@ -66,9 +66,9 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * 
      * @var string
      * 
-     * @see Solar_Auth_Adapter_Typekey::isLoginValid()
+     * @see Solar_Auth_Protocol_Typekey::isLoginValid()
      * 
-     * @see Solar_Auth_Adapter_Typekey::_processLogin()
+     * @see Solar_Auth_Protocol_Typekey::_processLogin()
      * 
      */
     protected $_msg;
@@ -79,7 +79,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * 
      * @var string
      * 
-     * @see Solar_Auth_Adapter_Typekey::_fetchKeyData()
+     * @see Solar_Auth_Protocol_Typekey::_fetchKeyData()
      * 
      */
     protected $_key;
@@ -90,9 +90,9 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * 
      * @var string
      * 
-     * @see Solar_Auth_Adapter_Typekey::isLoginValid()
+     * @see Solar_Auth_Protocol_Typekey::isLoginValid()
      * 
-     * @see Solar_Auth_Adapter_Typekey::_processLogin()
+     * @see Solar_Auth_Protocol_Typekey::_processLogin()
      * 
      */
     protected $_sig;
@@ -228,7 +228,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
      * if verification failed.
      * 
      */
-    protected function _processLogin()
+    protected function getCredentials()
     {
         // get data from the request.
         $email = $this->_request->get('email');
@@ -496,4 +496,51 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
         
         return array($a0, $b0, $x);
     }
+
+    /**
+     * 
+     * The login was success, complete the protocol
+     * 
+     * @return void
+     * 
+     */
+    public function postLoginSuccess()
+    {
+    }
+
+    /**
+     * 
+     * The login was a failure, complete the protocol
+     * 
+     * @return void
+     * 
+     */
+    public function postLoginFailure()
+    {
+    }
+
+    /**
+     * 
+     * Determine the location to redirect to after successful login
+     * 
+     * @return string|null The url to redirect to or null if no redirect
+     * 
+     */
+    public function getLoginRedirect()
+    {
+        return null;
+    }
+
+    /**
+     * 
+     * Determine the location to redirect to after logout
+     * 
+     * @return string|null The url to redirect to or null if no redirect
+     * 
+     */
+    function getLogoutRedirect()
+    {
+        return null;
+    }
+
 }

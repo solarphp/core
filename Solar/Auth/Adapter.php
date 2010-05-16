@@ -486,11 +486,10 @@ class Solar_Auth_Adapter extends Solar_Base {
         // load the user-provided handle and password
         $credentials = $this->_protocol->getCredentials();
 
-        if ($this->_config['storage']) {
+        $result = false;
+        if ($credentials && $this->_config['storage']) {
             $storage = Solar::factory($this->_config['storage']);
             $result = $storage->validateCredentials($credentials);
-        } else {
-            $result = false;
         }
         
         // did it work?

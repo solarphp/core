@@ -49,21 +49,31 @@ class Solar_Auth_Storage_Mail extends Solar_Auth_Storage
     
     /**
      * 
-     * Verifies a username handle and password.
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
-     * @todo Check the server status with fsockopen().
-     * 
      */
-    protected function _processLogin()
+    public function validateCredentials($credentials)
     {
+
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+            return false;
+        }
+        $handle = $credentials['handle'];
+        $passwd = $credentials['passwd'];
+
         $mailbox = '{' . $this->_config['mailbox'] . '}';
-        $conn = @imap_open($mailbox, $this->_handle, $this->_passwd, OP_HALFOPEN);
+        $conn = @imap_open($mailbox, $handle, $passwd, OP_HALFOPEN);
         if (is_resource($conn)) {
             @imap_close($conn);
-            return array('handle' => $this->_handle);
+            return array('handle' => $handle);
         } else {
             return false;
         }

@@ -41,14 +41,26 @@ class Solar_Auth_Storage_Ini extends Solar_Auth_Storage
     
     /**
      * 
-     * Verifies a username handle and password.
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
      */
-    protected function _processLogin()
+    public function validateCredentials($credentials)
     {
+
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+            return false;
+        }
+        $handle = $credentials['handle'];
+        $passwd = $credentials['passwd'];
+
         // force the full, real path to the .ini file
         $file = realpath($this->_config['file']);
         
@@ -63,12 +75,12 @@ class Solar_Auth_Storage_Ini extends Solar_Auth_Storage
         $data = parse_ini_file($file, true);
         
         // get user info for the handle
-        $user = (! empty($data[$this->_handle])) ? $data[$this->_handle] : array();
+        $user = (! empty($data[$handle])) ? $data[$handle] : array();
         
         // there must be an entry for the username,
         // and the plain-text password must match.
-        if (! empty($user['passwd']) && $user['passwd'] == $this->_passwd) {
-            $user['handle'] = $this->_handle;
+        if (! empty($user['passwd']) && $user['passwd'] == $passwd) {
+            $user['handle'] = $handle;
             return $user;
         } else {
             return false;

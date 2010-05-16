@@ -42,14 +42,25 @@ class Solar_Auth_Storage_Htpasswd extends Solar_Auth_Storage
     
     /**
      * 
-     * Verifies a username handle and password.
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
      */
-    protected function _processLogin()
+    public function validateCredentials($credentials)
     {
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+            return false;
+        }
+        $handle = $credentials['handle'];
+        $passwd = $credentials['passwd'];
+
         // force the full, real path to the file
         $file = realpath($this->_config['file']);
         
@@ -69,10 +80,10 @@ class Solar_Auth_Storage_Htpasswd extends Solar_Auth_Storage
         }
         
         // find the user's line in the file
-        $len = strlen($this->_handle) + 1;
+        $len = strlen($handle) + 1;
         $ok = false;
         while ($line = fgets($fp)) {
-            if (substr($line, 0, $len) == "{$this->_handle}:") {
+            if (substr($line, 0, $len) == "{$handle}:") {
                 // found the line, leave the loop
                 $ok = true;
                 break;
@@ -98,14 +109,14 @@ class Solar_Auth_Storage_Htpasswd extends Solar_Auth_Storage
         if (substr($stored_hash, 0, 6) == '$apr1$') {
         
             // use the apache-specific MD5 encryption
-            $computed_hash = self::_apr1($this->_passwd, $stored_hash);
+            $computed_hash = self::_apr1($passwd, $stored_hash);
             
         } elseif (substr($stored_hash, 0, 5) == '{SHA}') {
         
             // use SHA1 encryption.  pack SHA binary into hexadecimal,
             // then encode into characters using base64. this is per
             // Tomas V. V. Cox.
-            $hex = pack('H40', sha1($this->_passwd));
+            $hex = pack('H40', sha1($passwd));
             $computed_hash = '{SHA}' . base64_encode($hex);
             
         } else {
@@ -121,17 +132,17 @@ class Solar_Auth_Storage_Htpasswd extends Solar_Auth_Storage
             // it.
             //
             // is the password longer than 8 characters?
-            if (strlen($this->_passwd) > 8) {
+            if (strlen($passwd) > 8) {
                 // automatically reject
                 return false;
             } else {
-                $computed_hash = crypt($this->_passwd, $stored_hash);
+                $computed_hash = crypt($passwd, $stored_hash);
             }
         }
         
         // did the hashes match?
         if ($stored_hash == $computed_hash) {
-            return array('handle' => $this->_handle);
+            return array('handle' => $handle);
         } else {
             return false;
         }

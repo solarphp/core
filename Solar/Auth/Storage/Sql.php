@@ -63,15 +63,25 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
     
     /**
      * 
-     * Verifies a username handle and password.
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
-     * 
      */
-    protected function _processLogin()
+    public function validateCredentials($credentials)
     {
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+            return false;
+        }
+        $handle = $credentials['handle'];
+        $passwd = $credentials['passwd'];
+
         // get the dependency object of class Solar_Sql
         $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
@@ -102,7 +112,7 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
         // salt and hash the password
         $hash = hash(
             $this->_config['hash_algo'],
-            $this->_config['salt'] . $this->_passwd
+            $this->_config['salt'] . $passwd
         );
         
         // make sure the handle col is dotted so it gets quoted properly
@@ -120,7 +130,7 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
         // build the select, fetch up to 2 rows (just in case there's actually
         // more than one, we don't want to select *all* of them).
         $select->from($this->_config['table'], $cols)
-               ->where("$handle_col = ?", $this->_handle)
+               ->where("$handle_col = ?", $handle)
                ->where("$passwd_col = ?", $hash)
                ->multiWhere($this->_config['where'])
                ->limit(2);
@@ -133,7 +143,7 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
         if (count($rows) == 1) {
             
             // set base info
-            $info = array('handle' => $this->_handle);
+            $info = array('handle' => $handle);
             
             // set optional info from optional cols
             $row = current($rows);

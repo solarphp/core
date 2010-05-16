@@ -18,30 +18,14 @@ abstract class Solar_Auth_Storage extends Solar_Base {
 
     /**
      * 
-     * The user-provided plaintext handle, if any.
-     * 
-     * @var string
-     * 
-     */
-    protected $_handle;
-    
-    /**
-     * 
-     * The user-provided plaintext password, if any.
-     * 
-     * @var string
-     * 
-     */
-    protected $_passwd;
-
-    /**
+     * Verifies set of credentials.
      *
+     * @param array $credentials A list of credentials to verify
+     * 
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
      */
-    public function validateCredentials($credentials) {
-        $this->_handle = $credentials['handle'];
-        $this->_passwd = $credentials['passwd'];
-
-        return $this->_processLogin();
-    }
+    abstract public function validateCredentials($credentials);
     
 }

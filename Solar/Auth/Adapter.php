@@ -56,7 +56,8 @@ class Solar_Auth_Adapter extends Solar_Base {
         ),
         'login_callback'  => null,
         'logout_callback' => null,
-        'protocol' => 'Solar_Auth_Protocol_Post',
+        'login_protocol' => 'Solar_Auth_Protocol_Post',
+        'logout_protocol' => 'Solar_Auth_Protocol_Get',
         'storage' => null,
     );
     
@@ -69,15 +70,6 @@ class Solar_Auth_Adapter extends Solar_Base {
      */
     protected $_cache;
 
-    /**
-     * 
-     * The protocol used to extract credentials from a request.
-     * 
-     * @var Solar_Auth_Protocol
-     * 
-     */
-    protected $_protocol;
-    
     /**
      * 
      * The current error code string.
@@ -202,9 +194,6 @@ class Solar_Auth_Adapter extends Solar_Base {
             'Solar_Cache',
             $this->_config['cache']
         );
-
-        // Setup the authentication protocol
-        $this->_protocol = Solar::factory($this->_config['protocol']);
     }
     
     /**
@@ -280,13 +269,19 @@ class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // auto-login?
-        if (! $this->isValid() && $this->_protocol->isLoginRequest()) {
-            return $this->processLogin();
+        if (! $this->isValid()) {
+            $protocol = Solar::factory($this->_config['login_protocol']);
+            if ($protocol->isLoginRequest()) {
+                return $this->processLogin($protocol);
+            }
         }
         
         // auto-logout?
-        if ($this->isValid() && $this->_protocol->isLogoutRequest()) {
-            return $this->processLogout();
+        if ($this->isValid()) {
+            $protocol = Solar::factory($this->_config['logout_protocol']);
+            if ($protocol->isLogoutRequest()) {
+                return $this->processLogout($protocol);
+            }
         }
     }
     
@@ -297,26 +292,8 @@ class Solar_Auth_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    protected function _loginRedirect()
+    protected function _redirect($href)
     {
-        $href = $this->_protocol->getLoginRedirect();
-        if ($href) {
-            $response = Solar_Registry::get('response');
-            $response->redirectNoCache($href);
-            exit(0);
-        }
-    }
-
-    /**
-     * 
-     * Redirects to another URI after valid authentication.
-     * 
-     * @return void
-     * 
-     */
-    protected function _logoutRedirect()
-    {
-        $href = $this->_protocol->getLogoutRedirect();
         if ($href) {
             $response = Solar_Registry::get('response');
             $response->redirectNoCache($href);
@@ -477,14 +454,14 @@ class Solar_Auth_Adapter extends Solar_Base {
      * @return bool True if the login was successful, false if not.
      * 
      */
-    public function processLogin()
+    public function processLogin($protocol)
     {
         // clear out current error and user data.
         $this->_err = null;
         $this->reset();
         
         // load the user-provided handle and password
-        $credentials = $this->_protocol->getCredentials();
+        $credentials = $protocol->getCredentials();
 
         $result = false;
         if ($credentials && $this->_config['storage']) {
@@ -516,14 +493,14 @@ class Solar_Auth_Adapter extends Solar_Base {
         if ($this->isValid()) {
         
             // We were successfully logged in
-            $this->_protocol->postLoginSuccess();
+            $protocol->postLoginSuccess();
             
             // attempt to redirect.
-            $this->_loginRedirect();
+            $this->_redirect($protocol->getLoginRedirect());
         } else {
 
             // We failed
-            $this->_protocol->postLoginFailure();
+            $protocol->postLoginFailure();
         }
         
         // done!
@@ -537,7 +514,7 @@ class Solar_Auth_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    public function processLogout()
+    public function processLogout($protocol)
     {
         // process logout
         $code = $this->_processLogout();
@@ -554,7 +531,7 @@ class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // logout always works, so see if a redirect is needed
-        $this->_logoutRedirect();
+        $this->_redirect($protocol->getLogoutRedirect());
     }
     
     /**

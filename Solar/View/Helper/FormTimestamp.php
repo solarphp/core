@@ -137,7 +137,8 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
             $this->_y_last = $this->_config['y_last'];
         }
         
-        if (! $this->_value) {
+        // if the value is required but empty, fill with current timestamp
+        if (! $this->_value && $this->_require) {
             $this->_value = date('Y-m-d H:i:s');
         }
     }
@@ -207,7 +208,7 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
     {
         $name    = $this->_name . '[Y]';
         $value   = $this->_getValue('Y');
-        $options = array();
+        $options = array('' => '----');
         $first   = $this->_y_first;
         $last    = $this->_y_last;
         
@@ -242,6 +243,7 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[m]';
         $value   = $this->_getValue('m');
         $options = array(
+            '' => '--',
             '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04', '05'=>'05',
             '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10',
             '11'=>'11', '12'=>'12',
@@ -266,6 +268,7 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[d]';
         $value   = $this->_getValue('d');
         $options = array(
+            '' => '--',
             '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04', '05'=>'05',
             '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10',
             '11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14', '15'=>'15',
@@ -294,6 +297,7 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[H]';
         $value   = $this->_getValue('H');
         $options = array(
+            '' => '--',
             '00'=>'00', '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04',
             '05'=>'05', '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09',
             '10'=>'10', '11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14',
@@ -320,6 +324,7 @@ class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
         $name    = $this->_name . '[i]';
         $value   = $this->_getValue('i');
         $options = array(
+            '' => '--',
             '00'=>'00', '01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04',
             '05'=>'05', '06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09',
             '10'=>'10', '11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14',

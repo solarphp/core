@@ -59,11 +59,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * @config string process_logout The source_process element value indicating a logout request;
      *   default is the 'PROCESS_LOGOUT' locale key value.
      * 
-     * @config callback login_callback A callback to execute after successful login, but before
-     *   the source postLogin() method is called.
+     * @config callback login_callback A callback to execute as part of the login process,
+     * whether or not login was successful.
      * 
-     * @config callback logout_callback A callback to execute after successful logout, but before
-     *   the source postLogout() method is called.
+     * @config callback logout_callback A callback to execute as part of the logout process.
      * 
      * @var array
      * 
@@ -156,12 +155,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * The available magic properties are ...
      * 
-     * - status:  (string)  The Unix time at which the authenticated handle was last 
-     *   valid.
-     * 
-     * - initial:  (int)  The Unix time at which the handle was initially authenticated.
-     * 
-     * - active:  (int)  The status code of the current user authentication. The string
+     * - status:  (int)  The status code of the current user authentication. The string
      *   codes are ...
      *   
      *     - Solar_Auth::ANON (or empty): The user is anonymous/unauthenticated (no attempt to authenticate)
@@ -174,6 +168,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      *     
      *     - Solar_Auth::WRONG: The user attempted authentication but failed
      *   
+     * - initial:  (int)  The Unix time at which the handle was initially authenticated.
+     * 
+     * - active:  (string)  The Unix time at which the authenticated handle was last 
+     *   valid.
+     * 
      * - handle:  (string) The currently authenticated user handle.
      * 
      * - email:  (string) The email address of the currently authenticated user. May 

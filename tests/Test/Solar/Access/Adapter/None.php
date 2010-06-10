@@ -46,31 +46,31 @@ class Test_Solar_Access_Adapter_None extends Test_Solar_Access_Adapter {
         
         // deny all override
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Deny',
+            'Fixture_Solar_App_Deny',
             '*'
         ));
         
         // deny for role bar
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Example',
+            'Fixture_Solar_App_Example',
             'read'
         ));
         
         // test wildcard actions
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Example2',
+            'Fixture_Solar_App_Example2',
             'read'
         ));
         
         // test specific action
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Example3',
+            'Fixture_Solar_App_Example3',
             'edit'
         ));
         
         // allow access to all authenticated users ('+')
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Example4',
+            'Fixture_Solar_App_Example4',
             'read'
         ));
         
@@ -78,7 +78,7 @@ class Test_Solar_Access_Adapter_None extends Test_Solar_Access_Adapter {
         
         // deny access for role 'foo'
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Example',
+            'Fixture_Solar_App_Example',
             'read'
         ));
         
@@ -86,7 +86,26 @@ class Test_Solar_Access_Adapter_None extends Test_Solar_Access_Adapter {
         $this->_access->load(null, array());
         
         $this->assertFalse($this->_access->isAllowed(
-            'Vendor_App_Auth',
+            'Fixture_Solar_App_Auth',
+            'read'
+        ));
+    }
+    
+    public function testIsAllowed_objectSpec()
+    {
+        $controller = Solar::factory('Fixture_Solar_App_Example');
+        
+        // deny for role bar
+        $this->_access->load('gir', array('bar'));
+        $this->assertFalse($this->_access->isAllowed(
+            $controller,
+            'read'
+        ));
+        
+        // deny access for role 'foo'
+        $this->_access->load('someone', array('foo'));
+        $this->assertFalse($this->_access->isAllowed(
+            $controller,
             'read'
         ));
     }

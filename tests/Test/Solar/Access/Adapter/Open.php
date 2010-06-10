@@ -91,6 +91,25 @@ class Test_Solar_Access_Adapter_Open extends Test_Solar_Access_Adapter {
         ));
     }
     
+    public function testIsAllowed_objectSpec()
+    {
+        $controller = Solar::factory('Fixture_Solar_App_Example');
+        
+        // deny for role bar
+        $this->_access->load('gir', array('bar'));
+        $this->assertTrue($this->_access->isAllowed(
+            $controller,
+            'read'
+        ));
+        
+        // deny access for role 'foo'
+        $this->_access->load('someone', array('foo'));
+        $this->assertTrue($this->_access->isAllowed(
+            $controller,
+            'read'
+        ));
+    }
+    
     public function testLoad()
     {
         // load with literal handle and roles

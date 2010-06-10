@@ -132,8 +132,9 @@ abstract class Solar_Access_Adapter extends Solar_Base
      * 
      * Tells whether or not to allow access to a class/action/process combination.
      * 
-     * @param string $class The name of the class to control; use '*' for
-     * all values.
+     * @param object|string $spec If a string, the name of the class to 
+     * control; use '*' for all values.  If an object, the controller object
+     * itself.
      * 
      * @param string $action The action within that class; use '*' for
      * all values.  For handle types, use '+' to indicate any non-empty
@@ -148,8 +149,14 @@ abstract class Solar_Access_Adapter extends Solar_Base
      * @see isOwner()
      * 
      */
-    public function isAllowed($class = '*', $action = '*', $object = null)
+    public function isAllowed($spec = '*', $action = '*', $object = null)
     {
+        if (is_object($spec)) {
+            $class = get_class($spec);
+        } else {
+            $class = $spec;
+        }
+        
         foreach ($this->list as $info) {
             $class_match   = ($info['class']  == $class  || $info['class']  == '*');
             $action_match  = ($info['action'] == $action || $info['action'] == '*');

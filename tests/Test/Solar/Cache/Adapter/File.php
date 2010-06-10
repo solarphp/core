@@ -45,4 +45,16 @@ class Test_Solar_Cache_Adapter_File extends Test_Solar_Cache_Adapter {
         $expect = $this->_config['path'] . md5($id);
         $this->assertSame($actual, $expect);
     }
+    
+    public function testDeleteAll_recursive()
+    {
+        // change the config to turn off hashing
+        $this->_config['hash'] = false;
+        
+        // rebuild the adapter
+        $this->_adapter = Solar::factory($this->_adapter_class, $this->_config);
+        
+        // now try deleteAll() again
+        $this->testDeleteAll();
+    }
 }

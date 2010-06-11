@@ -98,6 +98,32 @@ class Test_Solar_Uri extends Solar_Test {
         $this->assertSame($actual, $expect);
     }
     
+    public function test_secureHttps()
+    {
+        $_SERVER['HTTPS'] = 'on';
+        $uri = $this->_newUri();
+        $this->assertSame($uri->scheme, 'https');
+        $this->assertSame($uri->host, 'example.com');
+        $this->assertSame($uri->port, null);
+        $this->assertSame($uri->user, null);
+        $this->assertSame($uri->pass, null);
+        $this->assertSame($uri->path, array('path', 'to', 'index.php', 'appname', 'action'));
+        $this->assertSame($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
+    }
+    
+    public function test_secureServerPort()
+    {
+        $_SERVER['SERVER_PORT'] = '443';
+        $uri = $this->_newUri();
+        $this->assertSame($uri->scheme, 'https');
+        $this->assertSame($uri->host, 'example.com');
+        $this->assertSame($uri->port, null);
+        $this->assertSame($uri->user, null);
+        $this->assertSame($uri->pass, null);
+        $this->assertSame($uri->path, array('path', 'to', 'index.php', 'appname', 'action'));
+        $this->assertSame($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
+    }
+    
     /**
      * 
      * Test -- Implements access to $_query **by reference** so that it appears to be a public $query property.

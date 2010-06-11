@@ -186,7 +186,7 @@ class Test_Solar_Request extends Solar_Test {
     
     /**
      * 
-     * Test -- Is this a command-line request?
+     * Test -- Is this a secure SSL request?
      * 
      */
     public function testIsCli()
@@ -197,6 +197,31 @@ class Test_Solar_Request extends Solar_Test {
         } else {
             $this->assertFalse($request->isCli());
         }
+    }
+    
+    /**
+     * 
+     * Test -- Is this a command-line request?
+     * 
+     */
+    public function testIsSsl_https()
+    {
+        $_SERVER['HTTPS'] = 'on';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isSsl());
+    }
+    
+    public function testIsSsl_serverPort()
+    {
+        $_SERVER['SERVER_PORT'] = '443';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isSsl());
+    }
+    
+    public function testIsSsl_http()
+    {
+        $request = Solar::factory('Solar_Request');
+        $this->assertfalse($request->isSsl());
     }
     
     /**

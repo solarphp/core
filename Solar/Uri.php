@@ -332,6 +332,18 @@ class Solar_Uri extends Solar_Base
         // set properties
         $this->set($this->_config['uri']);
     }
+
+    /** 
+     * 
+     * Converts the URI object to a string and returns it. 
+     * 
+     * @return string The full URI this object represents.
+     *  
+     */ 
+    public function __toString() 
+    { 
+        return $this->get(true); 
+    }
     
     /**
      * 

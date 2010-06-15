@@ -111,7 +111,8 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
         
         // are we making multiple classes?
         if (substr($class, -2) == '_*') {
-            return $this->_execMulti($class);
+            $prefix = substr($class, 0, -2);
+            return $this->_execMulti($prefix);
         }
         
         $this->_outln("Making model '$class'.");
@@ -152,14 +153,22 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
         $this->_outln('Done.');
     }
     
+    /**
+     * 
+     * Makes one model/record/collection class for each table in the database 
+     * using a class-name prefix.
+     * 
+     * @param string $prefix The prefix for each model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _execMulti($prefix)
     {
-        // strip off final `_*`
-        $prefix = substr($prefix, 0, -2);
-        $this->_out("Making one '$prefix' class for each table in the database.");
+        $this->_outln("Making one '$prefix' class for each table in the database.");
         
         // get the list of tables
-        $this->_out('Connecting to database for table list ...');
+        $this->_out('Connecting to database for table list ... ');
         $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
         $this->_outln('connected.');
         $list = $sql->fetchTableList();
@@ -449,7 +458,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
             return;
         }
         
-        $this->_out('Connecting to database for metadata ...');
+        $this->_out('Connecting to database for metadata ... ');
         $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
         $this->_outln('connected.');
         

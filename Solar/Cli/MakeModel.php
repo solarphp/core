@@ -109,6 +109,11 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
             throw $this->_exception('ERR_NO_CLASS');
         }
         
+        // are we making multiple classes?
+        if (substr($class, -2) == '_*') {
+            return $this->_execMulti($class);
+        }
+        
         $this->_outln("Making model '$class'.");
         
         // load the templates
@@ -145,6 +150,29 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command
         
         // done!
         $this->_outln('Done.');
+    }
+    
+    protected function _execMulti($prefix)
+    {
+        // strip off final `_*`
+        $prefix = substr($prefix, 0, -2);
+        $this->_out("Making one '$prefix' class for each table in the database.");
+        
+        // get the list of tables
+        $this->_out('Connecting to database for table list ...');
+        $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
+        $this->_outln('connected.');
+        $list = $sql->fetchTableList();
+        $this->_outln('Found ' . count($list) . ' tables.');
+        
+        // process each table in turn
+        $inflect = Solar_Registry::get('inflect');
+        foreach ($list as $table) {
+            $name = $inflect->underToStudly($table);
+            $class = "{$prefix}_$name";
+            $this->_outln("Using table '$table' to make class '$class'.");
+            $this->_exec($class);
+        }
     }
     
     /**

@@ -616,6 +616,23 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
+     * Adds arbitrary raw HTML to the form stack outside the normal element
+     * structure.
+     * 
+     * @param string $html The raw HTML to add to the stack; it will not
+     * be escaped for you at output time.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function addHtml($html)
+    {
+        $this->_stack[] = array('html', $html);
+        return $this;
+    }
+    
+    /**
+     * 
      * Sets the form validation status.
      * 
      * @param bool $flag True if you want to say the form is valid,
@@ -1217,6 +1234,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
                 $this->_buildGroup($html, $info);
             } elseif ($type == 'fieldset') {
                 $this->_buildFieldset($html, $info);
+            } elseif ($type == 'html') {
+                $this->_buildHtml($html, $info);
             }
         }
         
@@ -1224,6 +1243,22 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $this->_buildGroupEnd($html);
         $this->_buildElementListEnd($html);
         $this->_buildFieldsetEnd($html);
+    }
+    
+    /**
+     * 
+     * Builds added HTML for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param string $info The raw HTML to add to the output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildHtml(&$html, $info)
+    {
+        $html[] = $info;
     }
     
     /**

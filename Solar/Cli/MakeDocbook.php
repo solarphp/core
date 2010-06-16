@@ -13,7 +13,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: MakeDocs.php 4527 2010-03-21 16:50:29Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Cli_MakeDocbook extends Solar_Controller_Command

@@ -25,7 +25,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Uri.php 3732 2009-04-29 17:27:56Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Apidoc_Uri extends Solar_Markdown_Plugin_Uri

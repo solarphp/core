@@ -17,7 +17,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Wiki.php 4380 2010-02-14 16:06:52Z pmjones $
+ * @version $Id$
  * 
  * @todo Implement the markdown-in-html portion of Markdown-Extra.
  * 

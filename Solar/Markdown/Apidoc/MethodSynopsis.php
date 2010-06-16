@@ -21,7 +21,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: MethodSynopsis.php 3850 2009-06-24 20:18:27Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Apidoc_MethodSynopsis extends Solar_Markdown_Wiki_MethodSynopsis

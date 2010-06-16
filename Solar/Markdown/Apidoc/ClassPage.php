@@ -21,7 +21,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Link.php 3988 2009-09-04 13:51:51Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Apidoc_ClassPage extends Solar_Markdown_Plugin

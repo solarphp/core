@@ -1,5 +1,3 @@
-(DONE THROUGH 4585)
-
 New Classes
 ===========
 
@@ -18,8 +16,11 @@ Changes
 script/solar
 ------------
 
-* !!! SHOULD WE REVERT THIS? !!! [FIX] Use realpath() on --include-path and
-  --config values so we know in advance if the paths exist or not.
+* [FIX] Use realpath() on --config value so we know in advance if it exists
+  or not.
+
+* [REF] Convert from a procedural script to a class for easier maintenance.
+
 
 Solar
 -----
@@ -100,6 +101,15 @@ Solar_Cli_MakeDocs
 
 * [FIX] In method _write(), if a file exists where a directory needs to be
   created, throw an exception. Thanks, zined, for the report and patch.
+
+
+Solar_Cli_MakeModel
+-------------------
+
+* [ADD] Method _execMulti(). When you call "make-model Vendor_Model_*", the
+  _exec() method will recognize the trailing "_*" and interpret it as a
+  command to make one model class for each table in the database. Thanks,
+  Anthony Gentile, for the report that led to this feature.
 
 
 Solar_Cache_Adapter
@@ -189,7 +199,9 @@ Solar_Request
 
 * [FIX] Remove empty string index when HTTPS_* values are passed in $_SERVER.
   Thanks, Robert Gonzalez, for the report and patch.
-  
+
+* [ADD] Method isSsl() to check if the request is HTTPS or on port 443.
+
 
 Solar_Sql_Adapter
 -----------------
@@ -205,6 +217,13 @@ Solar_Symlink
 
 * [FIX] Method _make() now redirects STDERR to STDOUT so that if the last line is an error line, exec() will return it.
 
+
+Solar_Uri
+---------
+
+* [CHG] Method set() now uses $request->isSsl() to determine the scheme.
+
+* [ADD] Method __toString() to represent the object as its full URI string.  Thanks, Luke Visinoni, for the patch.  fixes #276
 
 
 Solar_View_Helper_Form
@@ -222,6 +241,9 @@ Solar_View_Helper_Form
   page, and those forms might have identical element names, so they need to be
   deconflicted from each other for W3C validation. Thanks, dmytrok, for the
   report that led to this fix.
+
+* [ADD] Method addHtml() to add arbitrary HTML as part of the stack (i.e., not
+  as an element in the form). Thanks, Eric Parent, for the report and patch.
 
 
 Solar_View_Helper_(Date|Time|Timestamp)

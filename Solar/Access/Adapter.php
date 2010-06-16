@@ -63,7 +63,7 @@ abstract class Solar_Access_Adapter extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * @config array owner_method An array of key-value pairs to map object
+     * An array of key-value pairs to map object
      * class to a method in that class to determine if a user is the owner
      * of that object. The key is the class name, the value is the method
      * name within that class.

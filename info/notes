@@ -1,10 +1,10 @@
 New Classes
 ===========
 
+* Solar_Cli_MakeDocbook: Class to convert wiki-based docs to DocBook files.
+
 * Solar_Markdown_Apidoc: Transformation classes for converting apidoc
   wiki markup to DocBook.
-
-* Solar_Cli_MakeDocbook: Class to convert wiki-based docs to DocBook files.
 
 * Solar_View_Helper_Foot: Class to collect scripts for the foot of the
   document; thanks, Bedrich Rios, for the request that lead to this feature.
@@ -226,6 +226,14 @@ Solar_Uri
 * [ADD] Method __toString() to represent the object as its full URI string.  Thanks, Luke Visinoni, for the patch.  fixes #276
 
 
+Solar_View_Helper_(Date|Time|Timestamp)
+---------------------------------------
+
+* [CHG] Now displays empty/null options (shown as "--") when the value is
+  empty and not required. When the value is empty and *is* required, it still
+  defaults to the current timestamp.
+
+
 Solar_View_Helper_Form
 ----------------------
 
@@ -244,14 +252,6 @@ Solar_View_Helper_Form
 
 * [ADD] Method addHtml() to add arbitrary HTML as part of the stack (i.e., not
   as an element in the form). Thanks, Eric Parent, for the report and patch.
-
-
-Solar_View_Helper_(Date|Time|Timestamp)
----------------------------------------
-
-* [CHG] Now displays empty/null options (shown as "--") when the value is
-  empty and not required. When the value is empty and *is* required, it still
-  defaults to the current timestamp.
 
 
 Solar_View_Helper_Head
@@ -276,7 +276,6 @@ Solar_View_Helper_Title
 
 * [ADD] Method title() now has second parameter $raw; when true, will output
   the title without escaping it (default false).
-
 
 
 Solar_Vt100

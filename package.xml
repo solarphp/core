@@ -121,7 +121,7 @@ Please visit http://solarphp.com/ for more information.
   <active>yes</active>
  </contributor>
  <date>2010-06-17</date>
- <time>10:00:10</time>
+ <time>11:27:50</time>
  <version>
   <release>1.1.0</release>
   <api>1.1.0</api>
@@ -759,7 +759,7 @@ Solar_Vt100
     <tasks:replace from="@package_version@" to="version" type="package-info" />
     <tasks:replace from="@package_date@" to="date" type="package-info" />
    </file>
-   <file baseinstalldir="/" md5sum="d0b94b61e1300f9dfc2cc4ba728aad1a" name="Solar/Cli/MakeDocs.php" role="php">
+   <file baseinstalldir="/" md5sum="bb630fc217aae190a7ca293b70a69ada" name="Solar/Cli/MakeDocs.php" role="php">
     <tasks:replace from="@package_version@" to="version" type="package-info" />
     <tasks:replace from="@package_date@" to="date" type="package-info" />
    </file>

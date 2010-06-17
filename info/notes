@@ -52,7 +52,7 @@ Solar_Cli_LinkPublic
 
 
 Solar_Cli_LinkVendor
----------------------
+--------------------
 
 * [CHG] Better error reporting when symlink creation fails.
 
@@ -60,7 +60,9 @@ Solar_Cli_LinkVendor
 Solar_Cli_MakeDocs
 ------------------
 
-* [FIX] Method writeClassOverview() now sets the package name correctly. (This was due to the change from @package being only a name, to being a name and an optional summary.)
+* [FIX] Method writeClassOverview() now sets the package name correctly. (This
+  was due to the change from @package being only a name, to being a name and
+  an optional summary.)
 
 * [CHG] Method writePackageIndex() now structures the index file as a table,
   rather than as a pipe-separated values file.
@@ -191,7 +193,8 @@ Solar_Markdown_Wiki_MethodSynopsis
 
 * [CHG] Method _parse() now honors 'param_void'.
 
-* [CHG] Config values for 'param' and 'param_default' now have the `$` hard-coded in them.
+* [CHG] Config values for 'param' and 'param_default' now have the `$`
+  hard-coded in them.
 
 
 Solar_Request
@@ -215,7 +218,8 @@ Solar_Sql_Adapter
 Solar_Symlink
 -------------
 
-* [FIX] Method _make() now redirects STDERR to STDOUT so that if the last line is an error line, exec() will return it.
+* [FIX] Method _make() now redirects STDERR to STDOUT so that if the last line
+  is an error line, exec() will return it.
 
 
 Solar_Uri
@@ -223,7 +227,8 @@ Solar_Uri
 
 * [CHG] Method set() now uses $request->isSsl() to determine the scheme.
 
-* [ADD] Method __toString() to represent the object as its full URI string.  Thanks, Luke Visinoni, for the patch.  fixes #276
+* [ADD] Method __toString() to represent the object as its full URI string.
+  Thanks, Luke Visinoni, for the patch. fixes #276
 
 
 Solar_View_Helper_(Date|Time|Timestamp)

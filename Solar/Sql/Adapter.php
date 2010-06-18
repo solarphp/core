@@ -1264,10 +1264,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // add columns
         $stmt .= implode(",\n    ", $parts['cols']) . "\n";
         
-        // from these tables. wrap in parens to force precedence for MySQL.
-        $stmt .= "FROM (\n    ";
-        $stmt .= implode(",\n    ", $parts['from']) . "\n";
-        $stmt .= ")\n";
+        // from these tables
+        $stmt .= $this->_selectSingleFrom($parts['from']);
         
         // joined to these tables
         if ($parts['join']) {
@@ -1314,6 +1312,22 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // done!
         return $stmt;
+    }
+    
+    /**
+     * 
+     * Builds the FROM clause for a SELECT command.
+     * 
+     * @param array $from The array of FROM clause elements.
+     * 
+     * @return string The FROM clause.
+     * 
+     */
+    protected function _selectSingleFrom($from)
+    {
+        return "FROM \n    "
+             . implode(",\n    ", $from) . "\n"
+             . "\n";
     }
     
     /**

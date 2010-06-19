@@ -1325,8 +1325,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _selectSingleFrom($from)
     {
-        return "FROM \n    "
-             . implode(",\n    ", $from) . "\n"
+        return "FROM\n    "
+             . implode(",\n    ", $from)
              . "\n";
     }
     

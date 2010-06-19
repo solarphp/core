@@ -195,9 +195,10 @@ class Solar_Cli_MakeDocbook extends Solar_Controller_Command
     protected function _loadTemplates()
     {
         $dir = Solar_Class::dir($this, 'Data');
-        $list = glob("$dir/*.xml");
+        $list = glob("$dir/*.txt");
         foreach ($list as $file) {
             $name = basename($file);
+            $name = str_replace('.txt', '.xml');
             $this->_templates[$name] = file_get_contents($file);
         }
     }

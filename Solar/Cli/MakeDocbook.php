@@ -198,7 +198,7 @@ class Solar_Cli_MakeDocbook extends Solar_Controller_Command
         $list = glob("$dir/*.txt");
         foreach ($list as $file) {
             $name = basename($file);
-            $name = str_replace('.txt', '.xml');
+            $name = str_replace('.txt', '.xml', $name);
             $this->_templates[$name] = file_get_contents($file);
         }
     }

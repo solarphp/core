@@ -140,14 +140,12 @@ SELECT
     "comments"."email" AS "email",
     "comments"."uri" AS "uri",
     "comments"."body" AS "body"
-FROM (
+FROM
     "test_solar_comments" "comments"
-)
 INNER JOIN (SELECT
     "id" AS "id"
-FROM (
+FROM
     "test_solar_nodes" "nodes"
-)
 WHERE
     "nodes"."id" <= 10
 ) "nodes" ON "nodes"."id" = "comments"."node_id"
@@ -195,9 +193,8 @@ SELECT
     "area"."updated" AS "area__updated",
     "area"."user_id" AS "area__user_id",
     "area"."name" AS "area__name"
-FROM (
+FROM
     "test_solar_nodes" "nodes"
-)
 LEFT JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id"
 ';
         $this->assertEquals(trim($actual), trim($expect));
@@ -208,9 +205,8 @@ LEFT JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id"
         $expect = '
 SELECT
     COUNT("nodes"."id")
-FROM (
+FROM
     "test_solar_nodes" "nodes"
-)
 LIMIT 1
 ';
         
@@ -253,9 +249,8 @@ SELECT
     "area"."updated" AS "area__updated",
     "area"."user_id" AS "area__user_id",
     "area"."name" AS "area__name"
-FROM (
+FROM
     "test_solar_nodes" "nodes"
-)
 INNER JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id" AND "area"."id" = 1
 ';
         
@@ -267,9 +262,8 @@ INNER JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id" AND "are
         $expect = '
 SELECT
     COUNT("nodes"."id")
-FROM (
+FROM
     "test_solar_nodes" "nodes"
-)
 INNER JOIN "test_solar_areas" "area" ON "nodes"."area_id" = "area"."id" AND "area"."id" = 1
 LIMIT 1
 ';

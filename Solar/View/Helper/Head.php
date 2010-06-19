@@ -206,7 +206,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper
      * 
      * Turn off/on escaping for the title.
      * 
-     * @param bool $flag True to turn off escaping; default false.
+     * @param bool $flag True to turn off escaping, false to leave escaping on.
      * 
      * @return Solar_View_Helper_Head
      * 

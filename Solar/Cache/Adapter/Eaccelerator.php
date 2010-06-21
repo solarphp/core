@@ -156,11 +156,12 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
             return;
         }
         
+        // make sure we have a key to increment (the add() method adds the 
+        // prefix on its own, so no need to use entry() here)
+        $this->add($key, 0, null, $this->_life);
+        
         // modify the key to add the prefix
         $key = $this->entry($key);
-        
-        // make sure we have a key to increment
-        $this->add($key, 0, null, $this->_life);
         
         // fetch the current value
         $val = $this->fetch($key);

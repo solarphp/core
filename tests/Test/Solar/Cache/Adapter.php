@@ -256,10 +256,20 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
         
         // increment it a few times, check return values
         for ($i = 1; $i <= 5; $i ++) {
-            $this->diag("increment $i");
             $actual = $this->_adapter->increment($id);
             $this->assertSame($i, $actual);
         }
+    }
+    
+    public function testIncrement_withPrefix()
+    {
+        // build an adapter with a prefix on it
+        $config = $this->_config;
+        $config['prefix'] = 'zim';
+        $this->_adapter = Solar::factory($this->_adapter_class, $config);
+        
+        // and test increment again
+        return $this->testIncrement();
     }
     
     /**

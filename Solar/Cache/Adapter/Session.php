@@ -118,10 +118,11 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
         }
         
         // modify the key to add the prefix
-        $key = $this->entry($key);
+        $modkey = $this->entry($key);
         
         // add entry to session if not already there
-        if (! $this->_entries->has($key)) {
+        if (! $this->_entries->has($modkey)) {
+            // use the original key here, because save() will add the prefix
             return $this->save($key, $data, $life);
         } else {
             return false;
@@ -182,11 +183,12 @@ class Solar_Cache_Adapter_Session extends Solar_Cache_Adapter
             return;
         }
         
+        // make sure we have a key to increment (the add() method adds the 
+        // prefix on its own, so no need to use entry() here)
+        $this->add($key, 0, null, $this->_life);
+        
         // modify the key to add the prefix
         $key = $this->entry($key);
-        
-        // make sure we have a key to increment
-        $this->add($key, 0, null, $this->_life);
         
         // increment it
         $val = $this->_entries->get($key);

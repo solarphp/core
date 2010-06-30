@@ -510,7 +510,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // reset the session id and delete previous session, but only
         // if a session is actually in place
         if (session_id() !== '' && ! headers_sent()) {
-            session_regenerate_id();
+            session_regenerate_id(true);
         }
         
         // cache any messages

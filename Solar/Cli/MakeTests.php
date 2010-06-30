@@ -119,7 +119,7 @@ class Solar_Cli_MakeTests extends Solar_Controller_Command
             
             // load the class and get its API reference
             $apiref = Solar::factory('Solar_Docs_Apiref');
-            $apiref->addClass($class);
+            $apiref->addClass($class, $file);
             $api = $apiref->api[$class];
             
             // set the file name, creating if needed

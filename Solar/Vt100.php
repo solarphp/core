@@ -137,11 +137,11 @@ class Solar_Vt100 extends Solar_Base
      */
     static public function write($handle, $text, $append = null)
     {
-        if (posix_isatty($handle)) {
+        if (function_exists('posix_isatty') && posix_isatty($handle)) {
             // it's a tty, safe to use markup
             fwrite($handle, self::format($text) . $append);
         } else {
-            // not a tty, use plain text
+            // not posix or not a tty, use plain text
             fwrite($handle, self::plain($text) . $append);
         }
     }

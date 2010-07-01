@@ -53,6 +53,15 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      * 
      */
     protected $_response;
+
+    /**
+     * 
+     * Which header are we on
+     * 
+     * @var int
+     * 
+     */
+    protected $_count = 1;
     
     /**
      * 
@@ -71,36 +80,22 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
         );
         
         $this->_json = Solar::factory('Solar_Json');
-        
+        // Setup headers based on the wildfire standard        
         $this->_response->setHeader(
-            'X-FirePHP-Data-100000000001',
-            '{'
+            'X-Wf-Protocol-1',
+            'http://meta.wildfirehq.org/Protocol/JsonStream/0.2'
         );
         
         $this->_response->setHeader(
-            'X-FirePHP-Data-300000000001',
-            '"FirePHP.Firebug.Console":['
+            'X-Wf-1-Plugin-1',
+            'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3'
         );
         
         $this->_response->setHeader(
-            'X-FirePHP-Data-399999999999',
-            '["__SKIP__"]],'
+            'X-Wf-1-Structure-1',
+            'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1'
         );
         
-        $this->_response->setHeader(
-            'X-FirePHP-Data-200000000001',
-            '"FirePHP.Dump":{'
-        );
-        
-        $this->_response->setHeader(
-            'X-FirePHP-Data-299999999999',
-            '"__SKIP__":"__SKIP__"},'
-        );
-        
-        $this->_response->setHeader(
-            'X-FirePHP-Data-999999999999',
-            '"__SKIP__":"__SKIP__"}'
-        );
     }
     
     /**
@@ -109,7 +104,7 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      * 
      * @param string $class The class name reporting the event.
      * 
-     * @param string $event The event type (for example 'info' or 'debug').
+     * @param string $event The event type (LOG/INFO/WARN/ERROR).
      * 
      * @param string $descr A description of the event. 
      * 
@@ -120,30 +115,70 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      */
     protected function _save($class, $event, $descr)
     {
-        if (strtolower($event) == 'dump') {
-            $data = '"' . $class . '":' . $this->_json->encode($descr);
-            $type = 2;
-        } else {
-            $data = $this->_json->encode(array($event, "$class: $descr"));
-            $type = 3;
-        }
         
-        if (strlen($data <= 5000)) {
-            $this->_setHeader($data, $type);
+        if (strlen($descr) <= 5000) {
+            $json = $this->_buildJson($class, $event, $descr);
+            $this->_setHeader(sizeof($json) . "|$json|");
         } else {
-            $chunks = chunk_split($msg, 5000, "\n");
+            $json = $this->_buildJson($class, $event, $descr);
+            $chunks = chunk_split($json, 5000, "\n");
             $parts = explode("\n", $chunks);
-            foreach ($parts as $part) {
+            $this->_setHeader(strlen($json) . "|{$parts[0]}|\\");
+            next($parts);
+            $num = sizeof($parts);
+            // We start with 2 because we skipped the first item and don't want the last item
+            $count = 2;
+            while (list($key, $part) = each($parts)) {
+                $count++;
                 if ($part) {
-                    // ensure microtime() increments with each loop.
-                    // not very elegant but it works.
-                    usleep(1);
-                    $this->_setHeader($part, $type);
+                    $string = "|$part|";
+                    if($count < $num) {
+                        $string = $string . "\\";
+                    }
+                    $this->_setHeader($string);
                 }
             }
         }
         
         return true;
+    }
+
+    /**
+     * 
+     * Builds json string
+     * 
+     * @param string $class The class name reporting the event.
+     * 
+     * @param string $event The event type (LOG/INFO/WARN/ERROR).
+     * 
+     * @param string $descr A description of the event. 
+     * 
+     * @return string/json
+     * 
+     */
+    protected function _buildJson($class, $event, $descr)
+    {
+        $return = array();
+        $return[0] = new stdClass();
+        $return[1] = $descr;
+        $event = strtoupper($event);
+        switch($event) {
+            case 'GROUP_START':
+                $return[0]->Type = 'GROUP_START';
+            break;
+            case 'GROUP_END':
+                $return[0]->Type = 'GROUP_END';
+           break;
+            case 'LOG':
+            case 'INFO':
+            case 'WARN':
+            case 'ERROR':
+            default:
+                $return[0]->Type = $event;
+                $return[0]->Label = $class;
+            break;
+        }
+        return json_encode($return);
     }
     
     /**
@@ -157,13 +192,11 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      * @return void
      * 
      */
-    protected function _setHeader($data, $type = 3)
+    protected function _setHeader($data)
     {
-        $utime = explode(' ', microtime());
-        $utime = substr($utime[1], 7) . substr($utime[0], 2);  
         $this->_response->setHeader(
-            "X-FirePHP-Data-{$type}{$utime}",
-            "{$data},"
+            "X-Wf-1-1-1-".$this->_count, "$data"
         );
+        $this->_count++;
     }
 }

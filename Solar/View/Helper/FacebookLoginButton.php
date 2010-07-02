@@ -5,8 +5,6 @@
  * 
  * @category Solar
  * 
- * @category Solar
- * 
  * @package Solar_View_Helper
  * 
  * @author Richard Thomas <richard@phpjack.com>
@@ -68,7 +66,7 @@ class Solar_View_Helper_FacebookLoginButton extends Solar_View_Helper
         'onlogin'           => null,
         'perm'              => 'email',
     );
-
+    
     /**
      * 
      * Generates a Facebook login button.

@@ -60,7 +60,6 @@ class Solar_Auth_Adapter_Facebook extends Solar_Auth_Adapter
      * 
      * @var Facebook
      * 
-     * 
      */   
      protected $_facebook;
     

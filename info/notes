@@ -19,3 +19,59 @@ r4624 | pmjones | 2010-06-30 16:56:24 -0500 (Wed, 30 Jun 2010) | 1 line
 
 Solar_Cli_MakeTests: [FIX] In method _exec(), when adding classes, pass the file name of the class.
 ------------------------------------------------------------------------
+r4626 | pmjones | 2010-07-02 08:27:51 -0500 (Fri, 02 Jul 2010) | 1 line
+
+Solar_Log_Adapter_Firephp: [CHG] Update to latest standards.  Thanks, Richard Thomas.
+------------------------------------------------------------------------
+r4627 | pmjones | 2010-07-02 08:30:30 -0500 (Fri, 02 Jul 2010) | 3 lines
+
+Solar_Auth_Adapter_Facebook: [NEW] An authentication adapter that recognizes Facebook requests. Requires the Facebook library. Includes two view helpers to assist with generating the right links and scripts (facebookLink() and facebookScript()).  Thanks, Richard Thomas.
+------------------------------------------------------------------------
+r4628 | pmjones | 2010-07-02 08:55:56 -0500 (Fri, 02 Jul 2010) | 1 line
+
+Solar_Auth_Adapter_Facebook: [CHG] Renamed config key 'facebook_instance' to just 'facebook' -- this is consistent with all other dependency keys.
+------------------------------------------------------------------------
+r4629 | pmjones | 2010-07-02 09:23:19 -0500 (Fri, 02 Jul 2010) | 1 line
+
+rename helper FacebookLink to FacebookLoginButton: [CHG] Support all login button attribs.
+------------------------------------------------------------------------
+r4630 | pmjones | 2010-07-02 09:23:47 -0500 (Fri, 02 Jul 2010) | 1 line
+
+rename helper FacebookLink to FacebookLoginButton
+------------------------------------------------------------------------
+r4631 | pmjones | 2010-07-02 09:25:57 -0500 (Fri, 02 Jul 2010) | 1 line
+
+rename helper FacebookLink to FacebookLoginButton: [CHG] Support all login button attribs.
+------------------------------------------------------------------------
+r4632 | pmjones | 2010-07-02 09:28:46 -0500 (Fri, 02 Jul 2010) | 1 line
+
+no need to pre-process attribs
+------------------------------------------------------------------------
+r4633 | pmjones | 2010-07-02 09:33:14 -0500 (Fri, 02 Jul 2010) | 1 line
+
+white-glove changes to FacebookScript
+------------------------------------------------------------------------
+r4634 | pmjones | 2010-07-02 09:39:02 -0500 (Fri, 02 Jul 2010) | 1 line
+
+whitespace change
+------------------------------------------------------------------------
+r4635 | pmjones | 2010-07-02 09:39:48 -0500 (Fri, 02 Jul 2010) | 1 line
+
+comment changes
+------------------------------------------------------------------------
+r4636 | pmjones | 2010-07-02 09:40:16 -0500 (Fri, 02 Jul 2010) | 1 line
+
+being collecting notes for next release
+------------------------------------------------------------------------
+r4637 | pmjones | 2010-07-02 09:41:39 -0500 (Fri, 02 Jul 2010) | 1 line
+
+finished merge from phpjack for facebook.  svn merge --revision=4620:HEAD branches/phpjack trunk
+------------------------------------------------------------------------
+r4638 | pmjones | 2010-07-02 10:50:10 -0500 (Fri, 02 Jul 2010) | 1 line
+
+Solar_View_Helper_FacebookLoginButton: [ADD] Add back support for extended permissions.
+------------------------------------------------------------------------
+r4639 | pmjones | 2010-07-02 11:51:15 -0500 (Fri, 02 Jul 2010) | 1 line
+
+Solar_View_Helper_FacebookScript: [CHG] Load scripts via the foot() helper, doing so in _postConstruct(), instead of outputting directly via the facebookScript() method.
+------------------------------------------------------------------------

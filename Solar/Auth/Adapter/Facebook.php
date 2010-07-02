@@ -1,19 +1,32 @@
 <?php
 /**
  * 
- * Authentication adapter for a Generic Facebook login
+ * Authentication adapter for a generic Facebook login.
  * 
- * Requires that you have setup the Facebook.php class in your registry
- * Facebook.php is not Solar so doesn't enjoy Solars config loading so we have to
- * push the config to it through the registry_set feature
- *$config['Solar']['registry_set']['facebook'] = array('Facebook',
- *    array(
- *        'appId'     => '127186213963424',
- *        'secret'    => 'fe524a375e606b8aa245c79414656e67',
- *        'apiKey'    => 'e2954dfa4f7b13a26d41c1139870d949',
- *        'cookie'    => true,
- *    ),
- *); 
+ * You will need the Facebook SDK library for this to work; it is available
+ * at <http://github.com/facebook/php-sdk>.  Place the library in your
+ * Solar system at `(system)/source/facebook`, then change directories to 
+ * `include` and create a symlink to the source so the autoloader can find it:
+ * 
+ *     (system)/include$ ln -s ../source/facebook/src/facebook.php Facebook.php
+ * 
+ * Alternatively, you can copy the `facebook.php` class into your include 
+ * directory as `Facebook.php`.
+ * 
+ * The Facebook class uses a universal constructor, but not Solar_Base, so 
+ * one has to push the config to it directly when registering it:
+ * 
+ * {{code: php
+ *      $config['Solar']['registry_set']['facebook'] = array('Facebook',
+ *          array(
+ *              'appId'     => '127186213963424',
+ *              'secret'    => 'fe524a375e606b8aa245c79414656e67',
+ *              'apiKey'    => 'e2954dfa4f7b13a26d41c1139870d949',
+ *              'cookie'    => true,
+ *          ),
+ *      ); 
+ * }} 
+ * 
  * @category Solar
  * 
  * @package Solar_Auth
@@ -31,20 +44,21 @@ class Solar_Auth_Adapter_Facebook extends Solar_Auth_Adapter
      * 
      * Default configuration values.
      * 
-     * @config string facebook_instance The value to use for Solar::dependency
+     * @config dependency facebook A dependency on a Facebook instance; 
+     * default is a Solar_Registry entry named 'facebook'.
      *   
      * @var array
      * 
      */  
     protected $_Solar_Auth_Adapter_Facebook = array(
-        'facebook_instance' => 'facebook',
+        'facebook' => 'facebook',
     );
     
     /**
      * 
-     * This is the Facebook.php object
+     * A Facebook library instance.
      * 
-     * @var string
+     * @var Facebook
      * 
      * 
      */   
@@ -52,22 +66,43 @@ class Solar_Auth_Adapter_Facebook extends Solar_Auth_Adapter
     
     /**
      * 
-     * We just need to setup the dependency to the facebook object
+     * Set up the dependency to the Facebook object.
      * 
      * @return void
      * 
      */
     protected function _postConstruct()
     {
-        $this->_facebook = Solar::dependency('Facebook', $this->_config['facebook_instance']);
         parent::_postConstruct();
+        
+        $this->_facebook = Solar::dependency(
+            'Facebook',
+            $this->_config['facebook']
+        );
     }
-    
-
 
     /**
      * 
-     * Verifies The facebook session.
+     * Is the current page-load a login request?
+     * 
+     * Facebook sets a specific cookie; if this cookie is set then the user
+     * is attempting to log in.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoginRequest()
+    {
+        // check for a facebook session
+        if ($this->_request->cookie('fbs_'.$this->_facebook->getAppId())) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * 
+     * Verifies the Facebook session.
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
@@ -87,25 +122,6 @@ class Solar_Auth_Adapter_Facebook extends Solar_Auth_Adapter
             } catch (FacebookApiException $e) {
                 // Session is invalid, login failed
             }
-        }
-        return false;
-    }
-
-    /**
-     * 
-     * Is the current page-load a login request?
-     * 
-     * Facebook sets a specific cookie, if this cookie is set then they should
-     * Be "logged in"
-     * 
-     * @return bool
-     * 
-     */
-    public function isLoginRequest()
-    {
-        // check for a facebook session
-        if ($this->_request->cookie('fbs_'.$this->_facebook->getAppId())) {
-            return true;
         }
         return false;
     }

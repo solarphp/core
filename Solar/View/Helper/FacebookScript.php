@@ -1,9 +1,7 @@
 <?php
 /**
  * 
- * Generates the scriptblock required by facebook
- * 
- * @category Solar
+ * Generates the script block required by Facebook.
  * 
  * @category Solar
  * 
@@ -18,16 +16,44 @@
  */
 class Solar_View_Helper_FacebookScript extends Solar_View_Helper
 {
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config dependency facebook A dependency on a Facebook instance; 
+     * default is a Solar_Registry entry named 'facebook'.
+     *   
+     * @var array
+     * 
+     */  
     protected $_Solar_View_Helper_FacebookScript = array(
-        'facebook_instance' => 'facebook',
+        'facebook' => 'facebook',
     );
-
-    protected $_facebook;
-
+    
+    /**
+     * 
+     * A Facebook library instance.
+     * 
+     * @var Facebook
+     * 
+     */   
+     protected $_facebook;
+    
+    /**
+     * 
+     * Set up the dependency to the Facebook object.
+     * 
+     * @return void
+     * 
+     */
     protected function _postConstruct()
     {
-        $this->_facebook = Solar::dependency('Facebook', $this->_config['facebook_instance']);
         parent::_postConstruct();
+        
+        $this->_facebook = Solar::dependency(
+            'Facebook',
+            $this->_config['facebook']
+        );
     }
 
     /**
@@ -44,8 +70,8 @@ class Solar_View_Helper_FacebookScript extends Solar_View_Helper
     public function FacebookScript()
     {
         return
-        $this->_view->Script("http://connect.facebook.net/en_US/all.js") .
-        $this->_view->ScriptInline("FB.init({appId: '".$this->_facebook->getAppId()."', xfbml: true, cookie: true});
+        $this->_view->script("http://connect.facebook.net/en_US/all.js") .
+        $this->_view->scriptInline("FB.init({appId: '".$this->_facebook->getAppId()."', xfbml: true, cookie: true});
 FB.Event.subscribe('auth.login', function(response) {
   window.location.reload();
 });");

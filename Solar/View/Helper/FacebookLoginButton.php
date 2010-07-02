@@ -54,7 +54,11 @@ class Solar_View_Helper_FacebookLoginButton extends Solar_View_Helper
      * Don't use the attribute if you need to use the original Facebook 
      * Connect login buttons.
      * 
-     * * @var array
+     * @config string perms A comma-separated list of permissions to request
+     * from Facebook.  See <http://developers.facebook.com/docs/authentication/permissions>
+     * for a list of permissions.
+     * 
+     * @var array
      * 
      */
     protected $_Solar_View_Helper_FacebookLoginButton = array(
@@ -64,7 +68,7 @@ class Solar_View_Helper_FacebookLoginButton extends Solar_View_Helper
         'background'        => null,
         'length'            => null,
         'onlogin'           => null,
-        'perm'              => 'email',
+        'perms'             => null,
     );
     
     /**

@@ -1,17 +1,21 @@
-Solar_Sql_Adapter and Solar_Sql_Adapter_Mysql
----------------------------------------------
+------------------------------------------------------------------------
+r4618 | pmjones | 2010-06-21 10:15:19 -0500 (Mon, 21 Jun 2010) | 1 line
 
-* [FIX] The previous fix on ticket #243 breaks Postgres. This fix adds a
-  method, Solar_Sql_Adapter::_selectSingleFrom(), to make building the FROM
-  clause overridable behavior; the default behavior is *not* to use
-  parentheses. The added Solar_Sql_Adapter_Mysql::_selectSingleFrom() method
-  overrides the base adapter to add parentheses per the original fix on #234.
-  Thanks, Anthony Gentile, for the report that led to this fix.
+Solar_Cache_Adapter_Memcache: [FIX] Method increment() no longer double-prefixes the incremented key. Thanks, Eric Parent, for the report and patch.
+------------------------------------------------------------------------
+r4619 | pmjones | 2010-06-21 10:56:46 -0500 (Mon, 21 Jun 2010) | 1 line
 
+Solar_Cache_Adapter_*: [FIX] In all increment() methods, fix logic so that the incremented keys don't get double-prefixed.
+------------------------------------------------------------------------
+r4622 | pmjones | 2010-06-30 07:53:52 -0500 (Wed, 30 Jun 2010) | 1 line
 
-Solar_Cli_MakeDocbook
----------------------
+Solar_Vt100: [FIX] Method write() now checks to see if posix_isatty() is available.  Thanks, Jeff Surgeson and Roy Gu, for the report and patch.
+------------------------------------------------------------------------
+r4623 | pmjones | 2010-06-30 08:01:06 -0500 (Wed, 30 Jun 2010) | 1 line
 
-* [FIX] Change .xml skeletons to .txt. This is because the PEAR packaging
-  system silently ignores package.xml files, so we have to name the data file
-  .txt instead. Method _loadTemplates() honors the new extension properly.
+Solar_Auth_Adapter: [FIX] Method reset() now uses the true flag when regeerating the session ID.
+------------------------------------------------------------------------
+r4624 | pmjones | 2010-06-30 16:56:24 -0500 (Wed, 30 Jun 2010) | 1 line
+
+Solar_Cli_MakeTests: [FIX] In method _exec(), when adding classes, pass the file name of the class.
+------------------------------------------------------------------------

@@ -78,13 +78,7 @@ class Solar_View_Helper_FacebookLoginButton extends Solar_View_Helper
      */
     public function facebookLoginButton()
     {
-        $attribs = array();
-        foreach ($this->_config as $key => $val) {
-            if ($val !== null) {
-                $attribs[$key] = $val;
-            }
-        }
-        
+        $attribs = $this->_config;
         return '<fb:login-button'
              . $this->_view->attribs($attribs)
              . '></fb:login-button>';

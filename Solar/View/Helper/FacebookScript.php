@@ -3,6 +3,10 @@
  * 
  * Generates the script block required by Facebook.
  * 
+ * It's not enough to call this helper; you also need to call
+ * `$this->foot()->fetch()` to render the scripts just before
+ * the HTML `</body>` closing tag.
+ * 
  * @category Solar
  * 
  * @package Solar_View_Helper
@@ -41,7 +45,7 @@ class Solar_View_Helper_FacebookScript extends Solar_View_Helper
     
     /**
      * 
-     * Set up the dependency to the Facebook object.
+     * Generates the script block required by Facebook.
      * 
      * @return void
      * 
@@ -50,31 +54,39 @@ class Solar_View_Helper_FacebookScript extends Solar_View_Helper
     {
         parent::_postConstruct();
         
+        // retain the facebook dependency
         $this->_facebook = Solar::dependency(
             'Facebook',
             $this->_config['facebook']
         );
-    }
+        
+        // add the FB script to the foot helper
+        $href = "http://connect.facebook.net/en_US/all.js";
+        $this->_view->foot()->addScript($href);
+        
+        // initialize the application and set up login event subscription,
+        // also done via the foot helper
+        $appid  = $this->_facebook->getAppId();
+        $inline = <<<INLINE
+FB.init({appId: '$appid', xfbml: true, cookie: true});
+FB.Event.subscribe('auth.login', function(response) {
+  window.location.reload();
+});"
+INLINE;
 
+        $this->_view->foot()->addScriptInline($inline);
+    }
+    
     /**
      * 
-     * Generates the scriptblock required by facebook
-     * 
-     * @param string $text The text to display for the link.
-     * 
-     * @param array $attribs Attributes for the anchor.
+     * Technically, this does nothing at all; the necessary pieces have
+     * been added to the foot() helper by _postConstruct().
      * 
      * @return string
      * 
      */
-    public function FacebookScript()
+    public function facebookScript()
     {
-        return
-        $this->_view->script("http://connect.facebook.net/en_US/all.js") .
-        $this->_view->scriptInline("FB.init({appId: '".$this->_facebook->getAppId()."', xfbml: true, cookie: true});
-FB.Event.subscribe('auth.login', function(response) {
-  window.location.reload();
-});");
+        // do nothing; at this point, the scripts have already been added
     }
-
 }

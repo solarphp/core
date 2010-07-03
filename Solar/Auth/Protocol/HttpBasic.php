@@ -19,26 +19,11 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
     /**
      * 
      * Default configuration values.
-     * @config string source_handle Username key in the credential array source,
-     *   default 'handle'.
-     * 
-     * @config string source_passwd Password key in the credential array source,
-     *   default 'passwd'.
-     * 
-     * @config string source_redirect Element key in the credential array source to indicate
-     *   where to redirect on successful login or logout, default 'redirect'.
-     * 
-     * @config string source_process Element key in the credential array source to indicate
-     *   how to process the request, default 'process'.
-     * 
-     * @config string process_login The source_process element value indicating a login request;
-     *   default is the 'PROCESS_LOGIN' locale key value.
-     * 
-     * @config string process_logout The source_process element value indicating a logout request;
-     *   default is the 'PROCESS_LOGOUT' locale key value.
+     * @config string realm Realm to use in the auth challenge
      *
      */
     protected $_Solar_Auth_Protocol_HttpBasic = array(
+        'realm' => 'Secure Area',
     );
 
     /**
@@ -111,7 +96,7 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
     public function postLoginFailure()
     {
         $response = Solar_Registry::get('response');
-        $response->setHeader('WWW-Authenticate', 'Basic realm="secure area"');
+        $response->setHeader('WWW-Authenticate', 'Basic realm="' . $this->_config['realm'] . '"');
         $response->setStatusCode(401);
         $response->display();
         exit(0);

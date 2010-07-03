@@ -228,7 +228,7 @@ class Solar_Auth_Protocol_Typekey extends Solar_Auth_Protocol
      * if verification failed.
      * 
      */
-    protected function getCredentials()
+    public function getCredentials()
     {
         // get data from the request.
         $email = $this->_request->get('email');
@@ -541,6 +541,19 @@ class Solar_Auth_Protocol_Typekey extends Solar_Auth_Protocol
     function getLogoutRedirect()
     {
         return null;
+    }
+
+    /**
+     * 
+     * Tells if the current page load appears to be the result of
+     * an attempt to log out.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLogoutRequest()
+    {
+        return false;
     }
 
 }

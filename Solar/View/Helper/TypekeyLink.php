@@ -77,7 +77,7 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper
         
         // add the typekey token
         if (empty($this->_config['token'])) {
-            $uri->query['t'] = Solar_Config::get('Solar_Auth_Adapter_Typekey', 'token');
+            $uri->query['t'] = Solar_Config::get('Solar_Auth_Protocol_Typekey', 'token');
         } else {
             $uri->query['t'] = $this->_config['token'];
         }

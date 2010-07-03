@@ -266,6 +266,7 @@ class Solar_Auth_Protocol_Typekey extends Solar_Auth_Protocol
                 'handle'  => $name,  // username
                 'email'   => $email, // email
                 'moniker' => $nick,  // display name
+                'verified' => true, // Third party vouches for these credentials
             );
         } else {
             return false;

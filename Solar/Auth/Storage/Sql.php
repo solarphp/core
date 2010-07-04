@@ -43,6 +43,9 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
      * 
      * @config string|array where Additional _multiWhere() conditions to use
      *   when selecting rows for authentication.
+     *
+     * @config boolean Insert credentials into backend storage if verified by third
+     *   party.
      * 
      * @var array
      * 
@@ -59,38 +62,18 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
         'hash_algo'   => 'md5',
         'salt'        => null,
         'where'       => array(),
+        'auto_create' => false,
     );
-    
+
     /**
      * 
-     * Verifies set of credentials.
+     * Return a list columns that represents the fetched user data
      *
-     * @param array $credentials A list of credentials to verify
-     * 
-     * @return mixed An array of verified user information, or boolean false
-     * if verification failed.
+     * @return array A list of columns to fetch.
      * 
      */
-    public function validateCredentials($credentials)
+    protected function _getCols()
     {
-        if (empty($credentials['handle'])) {
-            return false;
-        }
-        if (empty($credentials['passwd'])) {
-            return false;
-        }
-        $handle = $credentials['handle'];
-        $passwd = $credentials['passwd'];
-
-        // get the dependency object of class Solar_Sql
-        $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
-        
-        // get a selection tool using the dependency object
-        $select = Solar::factory(
-            'Solar_Sql_Select',
-            array('sql' => $obj)
-        );
-        
         // list of optional columns as (property => field)
         $optional = array(
             'email'   => 'email_col',
@@ -108,30 +91,192 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
                 $cols[] = $this->_config[$val];
             }
         }
-        
-        // salt and hash the password
-        $hash = hash(
-            $this->_config['hash_algo'],
-            $this->_config['salt'] . $passwd
-        );
-        
-        // make sure the handle col is dotted so it gets quoted properly
+        return $cols;
+    }
+
+    /**
+     * 
+     * Return a quoted reference to the handle column
+     *
+     * @return string Handle column
+     * 
+     */
+    protected function _getHandleCol()
+    {
         $handle_col = $this->_config['handle_col'];
         if (strpos($handle_col, '.') === false) {
             $handle_col = "{$this->_config['table']}.{$handle_col}";
         }
-        
-        // make sure the passwd col is dotted so it gets quoted properly
+        return $handle_col;
+    }
+
+    /**
+     * 
+     * Return a quoted reference to the passwd column
+     *
+     * @return string Passwd column
+     * 
+     */
+    protected function _getPasswdCol()
+    {
         $passwd_col = $this->_config['passwd_col'];
         if (strpos($passwd_col, '.') === false) {
             $passwd_col = "{$this->_config['table']}.{$passwd_col}";
         }
+        return $passwd_col;
+    }
+
+    /**
+     * 
+     * Convert a row loaded from the database into a set of auth
+     * credentials
+     * 
+     */
+    protected function _convertRow($row)
+    {
+        $info = array();
+        $cols = array(
+            'handle'  => 'handle_col',
+            'email'   => 'email_col',
+            'moniker' => 'moniker_col',
+            'uri'     => 'uri_col',
+            'uid'     => 'uid_col',
+        );
+        foreach ($cols as $key => $val) {
+            if ($this->_config[$val]) {
+                $info[$key] = $row[$this->_config[$val]];
+            }
+        }
+        
+        // done
+        return $info;
+    }
+    
+    /**
+     * 
+     * Stores a set of credentials
+     *
+     * @param array $credentials A list of credentials to store
+     * 
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
+     */
+    public function _autoCreate($credentials)
+    {
+        $sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
+        
+        $data = array();
+        $cols = array(
+            'handle'  => 'handle_col',
+            'email'   => 'email_col',
+            'moniker' => 'moniker_col',
+            'uri'     => 'uri_col',
+            );
+        foreach ($cols as $key => $val) {
+            if ($this->_config[$val] && !empty($credentials[$key])) {
+                $data[$this->_config[$val]] = $credentials[$key];
+            }
+        }
+        
+        $data['status'] = 'active';
+        
+        $result = $sql->insert($this->_config['table'], $data);
+        
+        if ($result) {
+            $credentials['uid'] = $sql->lastInsertId();
+            return $credentials;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 
+     * Load a user based on a set of credentials, not including the p
+     *
+     * @param array $credentials A list of credentials to verify
+     * 
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
+     */
+    protected function _loadUser($credentials)
+    {
+        // get the dependency object of class Solar_Sql
+        $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
+        
+        // get a selection tool using the dependency object
+        $select = Solar::factory(
+            'Solar_Sql_Select',
+            array('sql' => $obj)
+        );
+
+        // build the select, fetch up to 2 rows (just in case there's actually
+        // more than one, we don't want to select *all* of them).
+        $select->from($this->_config['table'], $this->_getCols())
+               ->where($this->_getHandleCol() . " = ?", $credentials['handle'])
+               ->multiWhere($this->_config['where'])
+               ->limit(1);
+
+        $row = $select->fetchOne();
+        error_log($select->fetchSql());
+        error_log(var_export($row, true));
+        if ($row) {
+            return $this->_convertRow($row);
+        } else {
+            if ($this->_config['auto_create']) {
+                return $this->_autoCreate($credentials);
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
+     * 
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
+     */
+    public function validateCredentials($credentials)
+    {
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+
+            // This is a password-less authentication
+            if (!empty($credentials['verified'])) {
+                return $this->_loadUser($credentials);
+            }
+            
+            return false;
+        }
+
+        // get the dependency object of class Solar_Sql
+        $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
+        
+        // get a selection tool using the dependency object
+        $select = Solar::factory(
+            'Solar_Sql_Select',
+            array('sql' => $obj)
+        );
+        
+        // salt and hash the password
+        $hash = hash(
+            $this->_config['hash_algo'],
+            $this->_config['salt'] . $credentials['passwd']
+        );
         
         // build the select, fetch up to 2 rows (just in case there's actually
         // more than one, we don't want to select *all* of them).
-        $select->from($this->_config['table'], $cols)
-               ->where("$handle_col = ?", $handle)
-               ->where("$passwd_col = ?", $hash)
+        $select->from($this->_config['table'], $this->_getCols())
+               ->where($this->_getHandleCol() . " = ?", $credentials['handle'])
+               ->where($this->_getPasswdCol() . " = ?", $hash)
                ->multiWhere($this->_config['where'])
                ->limit(2);
                
@@ -142,21 +287,11 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
         // otherwise, it's more or less than exactly 1 row.
         if (count($rows) == 1) {
             
-            // set base info
-            $info = array('handle' => $handle);
-            
-            // set optional info from optional cols
-            $row = current($rows);
-            foreach ($optional as $key => $val) {
-                if ($this->_config[$val]) {
-                    $info[$key] = $row[$this->_config[$val]];
-                }
-            }
-            
-            // done
-            return $info;
+            return $this->_convertRow(current($rows));
             
         } else {
+        
+            // User credentials are not valid
             return false;
         }
     }

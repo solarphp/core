@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract class for session adapters.
+ * Abstract class for session save handler adapters.
  * 
  * @category Solar
  * 

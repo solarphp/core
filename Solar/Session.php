@@ -46,6 +46,10 @@ class Solar_Session extends Solar_Base
      *   is the string 'php', which means to use the native PHP session save.
      *   handler instead of a dependency injection.
      * 
+     * @config dependency manager A Solar_Session_Manager dependency injection.  Default
+     *   is Solar_Session_Manager_Native which uses php's native session functions for
+     *   transferring state between successive requests.
+     * 
      * @config string P3P Compact [Platform for Privacy Preferences][] policy. Default is
      *   'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
      *   which translates to:
@@ -165,7 +169,17 @@ class Solar_Session extends Solar_Base
         'class'   => 'Solar',
         'handler' => null,
         'P3P'     => 'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
+        'manager' => 'session_manager',
     );
+
+    /**
+     * 
+     * The Manager responsible for tranfering state between requests
+     * 
+     * @var Solar_Session_Manager
+     * 
+     */
+    protected $_manager;
     
     /**
      * 
@@ -243,6 +257,11 @@ class Solar_Session extends Solar_Base
                 $this->_config['handler']
             );
         }
+
+        $this->_manager = Solar::dependency(
+            'Solar_Session_Manager',
+            $this->_config['manager']
+        );
         
         // only set up the request if it doesn't exist yet.
         if (! self::$_request) {

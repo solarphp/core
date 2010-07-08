@@ -76,7 +76,10 @@ class Solar_Auth extends Solar_Base {
      *   the the PHP ini setting for `session.gc_maxlifetime`, it will throw
      *   an exception.
      * 
-     * @config bool allow Whether or not to allow automatic login/logout at start()
+     * @config bool auto_login Whether or not to allow automatic login at start()
+     *   time. Default true.
+     *
+     * @config bool auto_logout Whether or not to allow automatic logout at start()
      *   time. Default true.
      * 
      * @config callback login_callback A callback to execute after successful login, but before
@@ -91,7 +94,8 @@ class Solar_Auth extends Solar_Base {
     protected $_Solar_Auth = array(
         'expire'         => 14400,
         'idle'           => 1440,
-        'allow'          => true,
+        'auto_login'  => true,
+        'auto_logout' => true,
         'login_callback'  => null,
         'logout_callback' => null,
         'login_protocol' => 'Solar_Auth_Protocol_Post',
@@ -107,15 +111,6 @@ class Solar_Auth extends Solar_Base {
      * 
      */
     protected $_session;
-    
-    /**
-     * 
-     * Whether or not to allow automatic login/logout at start() time.
-     * 
-     * @var bool
-     * 
-     */
-    public $allow = true;
     
     /**
      * 
@@ -215,9 +210,6 @@ class Solar_Auth extends Solar_Base {
     {
         parent::_postConstruct();
         
-        // set per config
-        $this->allow = (bool) $this->_config['allow'];
-        
         // create the session object for this class
         $this->_session = Solar::factory(
             'Solar_Session',
@@ -279,6 +271,40 @@ class Solar_Auth extends Solar_Base {
         
         $this->_session->set($key, $val);
     }
+
+    /**
+     * 
+     * determine which login protocol might be associated with this request
+     * 
+     * @return Solar_Auth_Protocol|null Returns the protocol object or 
+     *      null if not a login request
+     * 
+     */
+    public function getLoginProtocol()
+    {
+        $protocol = Solar::factory($this->_config['login_protocol']);
+        if ($protocol->isLoginRequest()) {
+            return $protocol;
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * determine which logout protocol might be associated with this request
+     * 
+     * @return Solar_Auth_Protocol|null Returns the protocol object or 
+     *      null if not a login request
+     * 
+     */
+    public function getLogoutProtocol()
+    {
+        $protocol = Solar::factory($this->_config['logout_protocol']);
+        if ($protocol->isLogoutRequest()) {
+            return $protocol;
+        }
+        return null;
+    }
     
     /**
      * 
@@ -292,25 +318,14 @@ class Solar_Auth extends Solar_Base {
         // update idle and expire times no matter what
         $this->updateIdleExpire();
         
-        // allow auto-processing?
-        if (! $this->isAllowed()) {
-            return;
-        }
-        
         // auto-login?
-        if (! $this->isValid()) {
-            $protocol = Solar::factory($this->_config['login_protocol']);
-            if ($protocol->isLoginRequest()) {
-                return $this->processLogin($protocol);
-            }
+        if ($this->_config['auto_login'] && !$this->isValid()) {
+            return $this->processLogin($this->getLoginProtocol());
         }
         
         // auto-logout?
-        if ($this->isValid()) {
-            $protocol = Solar::factory($this->_config['logout_protocol']);
-            if ($protocol->isLogoutRequest()) {
-                return $this->processLogout($protocol);
-            }
+        if ($this->_config['auto_logout'] && $this->isValid()) {
+            return $this->processLogout($this->getLogoutProtocol());
         }
     }
     
@@ -385,18 +400,6 @@ class Solar_Auth extends Solar_Base {
     public function isValid()
     {
         return $this->status == Solar_Auth::VALID;
-    }
-    
-    /**
-     * 
-     * Tells whether authentication processing is allowed.
-     * 
-     * @return bool Whether or not authentication processing is allowed.
-     * 
-     */
-    public function isAllowed()
-    {
-        return (bool) $this->allow;
     }
     
     /**
@@ -482,6 +485,10 @@ class Solar_Auth extends Solar_Base {
      */
     public function processLogin($protocol)
     {
+        if (!$protocol) {
+            return false;
+        }
+
         // clear out current error and user data.
         $this->reset();
         
@@ -541,6 +548,10 @@ class Solar_Auth extends Solar_Base {
      */
     public function processLogout($protocol)
     {
+        if (!$protocol) {
+            return false;
+        }
+    
         // process logout
         $code = $this->_processLogout();
         

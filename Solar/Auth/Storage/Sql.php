@@ -193,7 +193,7 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
 
     /**
      * 
-     * Load a user based on a set of credentials, not including the p
+     * Load a user based on a set of credentials
      *
      * @param array $credentials A list of credentials to verify
      * 
@@ -212,16 +212,13 @@ class Solar_Auth_Storage_Sql extends Solar_Auth_Storage
             array('sql' => $obj)
         );
 
-        // build the select, fetch up to 2 rows (just in case there's actually
-        // more than one, we don't want to select *all* of them).
+        // build the select
         $select->from($this->_config['table'], $this->_getCols())
                ->where($this->_getHandleCol() . " = ?", $credentials['handle'])
                ->multiWhere($this->_config['where'])
                ->limit(1);
 
         $row = $select->fetchOne();
-        error_log($select->fetchSql());
-        error_log(var_export($row, true));
         if ($row) {
             return $this->_convertRow($row);
         } else {

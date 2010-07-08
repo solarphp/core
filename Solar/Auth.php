@@ -282,9 +282,12 @@ class Solar_Auth extends Solar_Base {
      */
     public function getLoginProtocol()
     {
-        $protocol = Solar::factory($this->_config['login_protocol']);
-        if ($protocol->isLoginRequest()) {
-            return $protocol;
+        $protocol_list = (array) $this->_config['login_protocol'];
+        foreach ($protocol_list as $protocol_spec) {
+            $protocol = Solar::factory($protocol_spec);
+            if ($protocol->isLoginRequest()) {
+                return $protocol;
+            }
         }
         return null;
     }
@@ -299,9 +302,12 @@ class Solar_Auth extends Solar_Base {
      */
     public function getLogoutProtocol()
     {
-        $protocol = Solar::factory($this->_config['logout_protocol']);
-        if ($protocol->isLogoutRequest()) {
-            return $protocol;
+        $protocol_list = (array) $this->_config['logout_protocol'];
+        foreach ($protocol_list as $protocol_spec) {
+            $protocol = Solar::factory($protocol_spec);
+            if ($protocol->isLogoutRequest()) {
+                return $protocol;
+            }
         }
         return null;
     }

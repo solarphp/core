@@ -42,10 +42,6 @@ class Solar_Session extends Solar_Base
      * @config string class Store values in this top-level key in $_SESSION.  Default is
      *   'Solar'.
      * 
-     * @config dependency handler A Solar_Session_Handler dependency injection. Default
-     *   is the string 'php', which means to use the native PHP session save.
-     *   handler instead of a dependency injection.
-     * 
      * @config dependency manager A Solar_Session_Manager dependency injection.  Default
      *   is Solar_Session_Manager_Native which uses php's native session functions for
      *   transferring state between successive requests.
@@ -167,7 +163,6 @@ class Solar_Session extends Solar_Base
      */
     protected $_Solar_Session = array(
         'class'   => 'Solar',
-        'handler' => null,
         'P3P'     => 'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
         'manager' => 'session_manager',
     );
@@ -180,15 +175,6 @@ class Solar_Session extends Solar_Base
      * 
      */
     protected $_manager;
-    
-    /**
-     * 
-     * The session save handler object.
-     * 
-     * @var Solar_Session_Handler_Adapter
-     * 
-     */
-    static protected $_handler;
     
     /**
      * 
@@ -249,14 +235,6 @@ class Solar_Session extends Solar_Base
     protected function _postConstruct()
     {
         parent::_postConstruct();
-        
-        // only set up the handler if it doesn't exist yet.
-        if (! self::$_handler) {
-            self::$_handler = Solar::dependency(
-                'Solar_Session_Handler',
-                $this->_config['handler']
-            );
-        }
 
         $this->_manager = Solar::dependency(
             'Solar_Session_Manager',

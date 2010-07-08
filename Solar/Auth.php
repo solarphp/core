@@ -460,11 +460,8 @@ class Solar_Auth extends Solar_Base {
         $this->uri     = $info['uri'];
         $this->uid     = $info['uid'];
         
-        // reset the session id and delete previous session, but only
-        // if a session is actually in place
-        if (session_id() !== '' && ! headers_sent()) {
-            session_regenerate_id();
-        }
+        // reset the session id and delete previous session
+        $this->_session->regenerateId();
         
         // cache any messages
         $this->_session->set('status_text', $this->locale($this->status));

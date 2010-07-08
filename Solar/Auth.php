@@ -79,10 +79,6 @@ class Solar_Auth extends Solar_Base {
      * @config bool allow Whether or not to allow automatic login/logout at start()
      *   time. Default true.
      * 
-     * @config dependency cache A Solar_Cache dependency to store user data. Default is
-     *   to create a Solar_Cache_Adapter_Session object internal to this 
-     *   instance.
-     * 
      * @config callback login_callback A callback to execute after successful login, but before
      *   the source postLogin() method is called.
      * 
@@ -96,10 +92,6 @@ class Solar_Auth extends Solar_Base {
         'expire'         => 14400,
         'idle'           => 1440,
         'allow'          => true,
-        'cache' => array(
-            'adapter' => 'Solar_Cache_Adapter_Session',
-            'prefix'  => 'Solar_Auth',
-        ),
         'login_callback'  => null,
         'logout_callback' => null,
         'login_protocol' => 'Solar_Auth_Protocol_Post',
@@ -109,12 +101,12 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * A cache object to retain the current user information.
+     * A session object for retaining authentication state between requests
      * 
-     * @var Solar_Cache_Adapter
+     * @var Solar_Session
      * 
      */
-    protected $_cache;
+    protected $_session;
 
     /**
      * 
@@ -136,7 +128,7 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Magic "public" properties that are actually stored in the cache.
+     * Magic "public" properties that are actually stored in the session.
      * 
      * The available magic properties are ...
      * 
@@ -235,10 +227,10 @@ class Solar_Auth extends Solar_Base {
         // set per config
         $this->allow = (bool) $this->_config['allow'];
         
-        // cache dependency injection
-        $this->_cache = Solar::dependency(
-            'Solar_Cache',
-            $this->_config['cache']
+        // create the session object for this class
+        $this->_session = Solar::factory(
+            'Solar_Session',
+            array('class' => get_class($this))
         );
     }
     
@@ -262,7 +254,7 @@ class Solar_Auth extends Solar_Base {
             ));
         }
         
-        $val = $this->_cache->fetch($key);
+        $val = $this->_session->get($key);
         
         // special behavior for 'status'
         if ($key == 'status' && ! $val) {
@@ -294,7 +286,7 @@ class Solar_Auth extends Solar_Base {
             ));
         }
         
-        $this->_cache->save($key, $val);
+        $this->_session->set($key, $val);
     }
     
     /**
@@ -418,7 +410,7 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Resets any authentication data in the cache.
+     * Resets any authentication data in the session.
      * 
      * Typically used for idling, expiration, and logout.  Calls
      * [[php::session_regenerate_id() | ]] to clear previous session, if any
@@ -475,12 +467,12 @@ class Solar_Auth extends Solar_Base {
         }
         
         // cache any messages
-        $this->_cache->save('status_text', $this->locale($this->status));
+        $this->_session->set('status_text', $this->locale($this->status));
     }
     
     /**
      * 
-     * Retrieve the status text from the cache and then deletes it, making it
+     * Retrieve the status text from the session and then deletes it, making it
      * act like a read-once session flash value.
      * 
      * @return string The status text.
@@ -488,8 +480,8 @@ class Solar_Auth extends Solar_Base {
      */
     public function getStatusText()
     {
-        $val = $this->_cache->fetch('status_text');
-        $this->_cache->delete('status_text');
+        $val = $this->_session->get('status_text');
+        $this->_session->delete('status_text');
         return $val;
     }
 

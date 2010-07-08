@@ -107,15 +107,6 @@ class Solar_Auth extends Solar_Base {
      * 
      */
     protected $_session;
-
-    /**
-     * 
-     * The current error code string.
-     * 
-     * @var string
-     * 
-     */
-    protected $_err;
     
     /**
      * 
@@ -492,7 +483,6 @@ class Solar_Auth extends Solar_Base {
     public function processLogin($protocol)
     {
         // clear out current error and user data.
-        $this->_err = null;
         $this->reset();
         
         // load the user-provided handle and password

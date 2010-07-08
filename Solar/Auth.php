@@ -481,7 +481,29 @@ class Solar_Auth extends Solar_Base {
         $this->_session->delete('status_text');
         return $val;
     }
-
+    
+    /**
+     * 
+     * Validate credentials against a list of back end storage
+     * 
+     * @return bool|array|string 
+     * 
+     */
+    protected function _validateCredentials($credentials)
+    {
+        if (!$credentials) {
+            return false;
+        }
+        $storage_list = (array) $this->_config['storage'];
+        foreach ($storage_list as $storage_spec) {
+            $storage = Solar::factory($storage_spec);
+            $result = $storage->validateCredentials($credentials);
+            if ($result) {
+                return $result;
+            }
+        }
+    }
+    
     /**
      * 
      * Processes login attempts and sets user credentials.
@@ -501,11 +523,7 @@ class Solar_Auth extends Solar_Base {
         // load the user-provided handle and password
         $credentials = $protocol->getCredentials();
 
-        $result = false;
-        if ($credentials && $this->_config['storage']) {
-            $storage = Solar::factory($this->_config['storage']);
-            $result = $storage->validateCredentials($credentials);
-        }
+        $result = $this->_validateCredentials($credentials);
         
         // did it work?
         if (is_array($result)) {

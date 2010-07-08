@@ -178,15 +178,6 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
-     * The current request object.
-     * 
-     * @var Solar_Request
-     * 
-     */
-    static protected $_request;
-    
-    /**
-     * 
      * Array of read-once "flash" keys and values.
      * 
      * Convenience reference to $_SESSION['Solar_Session']['flash'][$this->_class].
@@ -240,11 +231,6 @@ class Solar_Session extends Solar_Base
             'Solar_Session_Manager',
             $this->_config['manager']
         );
-        
-        // only set up the request if it doesn't exist yet.
-        if (! self::$_request) {
-            self::$_request = Solar_Registry::get('request');
-        }
         
         // determine the storage segment; use trim() and strict-equals to 
         // allow for string zero segment names.
@@ -312,7 +298,7 @@ class Solar_Session extends Solar_Base
         }
         
         // start the session
-        session_start();
+        $this->_manager->start();
         
         // load the session segment
         $this->load();
@@ -335,8 +321,7 @@ class Solar_Session extends Solar_Base
             return;
         }
         
-        $name = session_name();
-        if (self::$_request->cookie($name)) {
+        if ($this->_manager->isContinuing()) {
             // a previous session exists, start it
             $this->start();
         }
@@ -351,7 +336,7 @@ class Solar_Session extends Solar_Base
      */
     public function isStarted()
     {
-        return session_id() !== '';
+        return $this->_manager->isStarted();
     }
     
     /**
@@ -707,7 +692,7 @@ class Solar_Session extends Solar_Base
     {
         $this->start();
         if (! headers_sent()) {
-            session_regenerate_id(true);
+            $this->_manager->regenerateId();
         }
     }
 }

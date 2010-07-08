@@ -41,6 +41,16 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
      */
     static protected $_handler;
 
+    
+    /**
+     * 
+     * The current request object.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request;
+
     /**
      * 
      * Post-construction tasks to complete object construction.
@@ -59,6 +69,61 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
                 $this->_config['handler']
             );
         }
+
+        $this->_request = Solar_Registry::get('request');
+    }
+
+    /**
+     * 
+     * Starts the session
+     * 
+     * @return void
+     * 
+     */
+    public function start()
+    {
+        session_start();
+    }
+
+    /**
+     * 
+     * Regenerates the session ID.
+     * 
+     * Use this every time there is a privilege change.
+     * 
+     * @return void
+     * 
+     * @see [[php::session_regenerate_id()]]
+     * 
+     */
+    public function regenerateId()
+    {
+        session_regenerate_id(true);
+    }
+
+    /**
+     * 
+     * Has a session been started yet?
+     * 
+     * @return bool
+     * 
+     */
+    public function isStarted()
+    {
+        return session_id() !== '';
+    }    
+
+    /**
+     * 
+     * Has the user requested a prior session?
+     * 
+     * @return bool
+     * 
+     */
+    public function isContinuing()
+    {
+        $name = session_name();
+        return $this->_request->cookie($name);
     }
 
 }

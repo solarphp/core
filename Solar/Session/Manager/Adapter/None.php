@@ -16,4 +16,56 @@
  */
 class Solar_Session_Manager_Adapter_None extends Solar_Session_Manager_Adapter
 {
+
+    /**
+     * 
+     * Starts the session
+     * 
+     * @return void
+     * 
+     */
+    public  function start()
+    {
+        throw $this->_exception('ERR_CANNOT_START_SESSION');
+    }
+
+    /**
+     * 
+     * Regenerates the session ID.
+     * 
+     * Use this every time there is a privilege change.
+     * 
+     * @return void
+     * 
+     * @see [[php::session_regenerate_id()]]
+     * 
+     */
+    public function regenerateId()
+    {
+    }
+
+    /**
+     * 
+     * Has a session been started yet?
+     * 
+     * @return bool
+     * 
+     */
+    public function isStarted()
+    {
+        return false;
+    }
+
+    /**
+     * 
+     * Has the user requested a prior session?
+     * 
+     * @return bool
+     * 
+     */
+    public function isContinuing()
+    {
+        return false;
+    }
+
 }

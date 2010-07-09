@@ -66,4 +66,13 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
      */
     abstract function stop();
 
+    /**
+     * 
+     * Allow session segments to register with the mothership
+     * 
+     * @return void
+     * 
+     */
+    abstract function addSession(Solar_Session $session);
+
 }

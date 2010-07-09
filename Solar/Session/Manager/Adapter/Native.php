@@ -53,6 +53,24 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
 
     /**
      * 
+     * A list of sessions.
+     * 
+     * @var array
+     * 
+     */
+    protected $_sessions = array();
+
+    /**
+     * 
+     * Has a session already been stopped in this request?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_stopped = false;
+
+    /**
+     * 
      * Post-construction tasks to complete object construction.
      * 
      * @return void
@@ -122,6 +140,10 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
      */
     public function isContinuing()
     {
+        if ($this->_stopped) {
+            // Don't attempt to continue a session we've already destroyed
+            return false;
+        }
         $name = session_name();
         return $this->_request->cookie($name);
     }
@@ -135,10 +157,33 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
      */
     public function stop()
     {
+        // remove the session cookie
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000,
             $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+
+        // Kill the backend storage of the session
         session_destroy();
+        
+        // Let all the sessions know that their data is no longer valid
+        foreach($this->_sessions as $segment) {
+            $segment->unload();
+        }
+        
+        // We've already processed one session during this request
+        $this->_stopped = true;
+    }
+
+    /**
+     * 
+     * Allow sessions to register with the mothership
+     * 
+     * @return void
+     * 
+     */
+    public function addSession(Solar_Session $session)
+    {
+        $this->_sessions[] = $session;
     }
 
 }

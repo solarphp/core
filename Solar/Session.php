@@ -232,6 +232,9 @@ class Solar_Session extends Solar_Base
             $this->_config['manager']
         );
         
+        // Add ourselves to the session manager's list to receive updates
+        $this->_manager->addSession($this);
+        
         // determine the storage segment; use trim() and strict-equals to 
         // allow for string zero segment names.
         $this->_class = trim($this->_config['class']);
@@ -338,6 +341,24 @@ class Solar_Session extends Solar_Base
     {
         return $this->_manager->isStarted();
     }
+
+    /**
+     * 
+     * Unloads the session segment after the session has ended
+     * 
+     * @return void
+     * 
+     */
+    public function unload()
+    {
+        // cannot unload started sessions
+        if ($this->isStarted()) {
+            return;
+        }
+        $this->_is_loaded = false;
+        $this->_store = array();
+        $this->_flash = array();
+    }
     
     /**
      * 
@@ -356,9 +377,7 @@ class Solar_Session extends Solar_Base
         // can't be loaded if the session has started
         if (! $this->isStarted()) {
             // not possible for anything to be loaded, then
-            $this->_is_loaded = false;
-            $this->_store = array();
-            $this->_flash = array();
+            $this->unload();
             return;
         }
         

@@ -57,4 +57,13 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
      */
     abstract function isContinuing();
 
+    /**
+     * 
+     * Remove this session
+     * 
+     * @return bool
+     * 
+     */
+    abstract function stop();
+
 }

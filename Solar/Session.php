@@ -695,4 +695,17 @@ class Solar_Session extends Solar_Base
             $this->_manager->regenerateId();
         }
     }
+
+    /**
+     * 
+     * Remove this session
+     * 
+     * @return bool
+     * 
+     */
+    public function stop()
+    {
+        $this->_manager->stop();
+    }
+
 }

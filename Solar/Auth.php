@@ -582,6 +582,9 @@ class Solar_Auth extends Solar_Base {
         // change status
         $this->reset($code);
         
+        // End the entire session
+        $this->_session->stop();
+        
         // callback?
         if ($this->_config['logout_callback']) {
             call_user_func(

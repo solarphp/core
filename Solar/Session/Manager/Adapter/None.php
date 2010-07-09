@@ -68,4 +68,15 @@ class Solar_Session_Manager_Adapter_None extends Solar_Session_Manager_Adapter
         return false;
     }
 
+    /**
+     * 
+     * Remove this session
+     * 
+     * @return bool
+     * 
+     */
+    public function stop()
+    {
+    }
+
 }

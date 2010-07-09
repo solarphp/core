@@ -126,4 +126,19 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
         return $this->_request->cookie($name);
     }
 
+    /**
+     * 
+     * Remove this session and kill the cookie
+     * 
+     * @return bool
+     * 
+     */
+    public function stop()
+    {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+        session_destroy();
+    }
+
 }

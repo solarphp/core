@@ -93,6 +93,20 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
 
     /**
      * 
+     * unload all related sessions
+     * 
+     * @return bool
+     * 
+     */
+    public function _unloadAll()
+    {
+        foreach($this->_sessions as $segment) {
+            $segment->unload();
+        }
+    }
+    
+    /**
+     * 
      * Starts the session
      * 
      * @return void
@@ -166,9 +180,7 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
         session_destroy();
         
         // Let all the sessions know that their data is no longer valid
-        foreach($this->_sessions as $segment) {
-            $segment->unload();
-        }
+        $this->_unloadAll();
         
         // We've already processed one session during this request
         $this->_stopped = true;
@@ -197,6 +209,13 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
     public function close()
     {
         session_write_close();
+
+        // Let all the sessions know that their data is no longer valid
+        $this->_unloadAll();
+        
+        // clean out the session data, further changes to $_SESSION will not
+        // be written out unless the sesion is restarted
+        $_SESSION = array();
     }
 
 }

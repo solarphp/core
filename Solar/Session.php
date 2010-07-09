@@ -9,8 +9,8 @@
  * first attempt to write to the session before starting it.
  * 
  * Instantiate this once for each class that wants access to $_SESSION
- * values.  It automatically segments $_SESSION by class name, so be 
- * sure to use setClass() (or the 'class' config key) to identify the
+ * values.  It automatically segments $_SESSION by segment name, so be 
+ * sure to use setSegment() (or the 'segment' config key) to identify the
  * segment properly.
  * 
  * A "flash" is a session value that propagates only until it is read,
@@ -39,8 +39,11 @@ class Solar_Session extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * @config string class Store values in this top-level key in $_SESSION.  Default is
+     * @config string segment Store values in this top-level key in $_SESSION.  Default is
      *   'Solar'.
+     * 
+     * @config string class deprecated synonym for segment.  Used only if not null.  Default is
+     *   null.
      * 
      * @config dependency manager A Solar_Session_Manager dependency injection.  Default
      *   is Solar_Session_Manager_Native which uses php's native session functions for
@@ -162,7 +165,8 @@ class Solar_Session extends Solar_Base
      * 
      */
     protected $_Solar_Session = array(
-        'class'   => 'Solar',
+        'segment'   => 'Solar',
+        'class'   => null,
         'P3P'     => 'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
         'manager' => 'session_manager',
     );
@@ -180,7 +184,7 @@ class Solar_Session extends Solar_Base
      * 
      * Array of read-once "flash" keys and values.
      * 
-     * Convenience reference to $_SESSION['Solar_Session']['flash'][$this->_class].
+     * Convenience reference to $_SESSION['Solar_Session']['flash'][$this->_segment].
      * 
      * @var array
      * 
@@ -191,7 +195,7 @@ class Solar_Session extends Solar_Base
      * 
      * Array of "normal" session keys and values.
      * 
-     * Convenience reference to $_SESSION[$this->_class].
+     * Convenience reference to $_SESSION[$this->_segment].
      * 
      * @var array
      * 
@@ -205,7 +209,7 @@ class Solar_Session extends Solar_Base
      * @var array
      * 
      */
-    protected $_class = 'Solar';
+    protected $_segment = 'Solar';
     
     /**
      * 
@@ -237,13 +241,14 @@ class Solar_Session extends Solar_Base
         
         // determine the storage segment; use trim() and strict-equals to 
         // allow for string zero segment names.
-        $this->_class = trim($this->_config['class']);
-        if ($this->_class === '') {
-            $this->_class = 'Solar';
+        $segment = is_null($this->_config['class']) ? $this->_config['segment'] : $this->_config['class'];
+        $segment = trim($segment);
+        if ($segment === '') {
+            $segment = 'Solar';
         }
         
         // set the class
-        $this->setClass($this->_class);
+        $this->setSegment($segment);
         
         // lazy-start any existing session
         $this->lazyStart();
@@ -382,16 +387,16 @@ class Solar_Session extends Solar_Base
         }
         
         // set up the value store.
-        if (empty($_SESSION[$this->_class])) {
-            $_SESSION[$this->_class] = array();
+        if (empty($_SESSION[$this->_segment])) {
+            $_SESSION[$this->_segment] = array();
         }
-        $this->_store =& $_SESSION[$this->_class];
+        $this->_store =& $_SESSION[$this->_segment];
         
         // set up the flash store
-        if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
-            $_SESSION['Solar_Session']['flash'][$this->_class] = array();
+        if (empty($_SESSION['Solar_Session']['flash'][$this->_segment])) {
+            $_SESSION['Solar_Session']['flash'][$this->_segment] = array();
         }
-        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
+        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_segment];
         
         // done!
         $this->_is_loaded = true;
@@ -414,15 +419,15 @@ class Solar_Session extends Solar_Base
      * Sets the class segment for $_SESSION; unloads existing store and flash
      * values.
      * 
-     * @param string $class The class name to segment by.
+     * @param string $segment The class name to segment by.
      * 
      * @return void
      * 
      */
-    public function setClass($class)
+    public function setSegment($segment)
     {
         $this->_is_loaded = false;
-        $this->_class = $class;
+        $this->_segment = $segment;
         $this->load();
     }
     
@@ -433,9 +438,9 @@ class Solar_Session extends Solar_Base
      * @return string
      * 
      */
-    public function getClass()
+    public function getSegment()
     {
-        return $this->_class;
+        return $this->_segment;
     }
     
     /**

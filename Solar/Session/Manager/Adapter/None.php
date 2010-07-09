@@ -90,4 +90,16 @@ class Solar_Session_Manager_Adapter_None extends Solar_Session_Manager_Adapter
     {
     }
 
+    /**
+     * 
+     * Close this session for use in this request, writing the results
+     * to storage for the next request
+     * 
+     * @return void
+     * 
+     */
+    public function close()
+    {
+    }
+
 }

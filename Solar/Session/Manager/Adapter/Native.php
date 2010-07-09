@@ -186,4 +186,17 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
         $this->_sessions[] = $session;
     }
 
+    /**
+     * 
+     * Close this session for use in this request, writing the results
+     * to storage for the next request
+     * 
+     * @return void
+     * 
+     */
+    public function close()
+    {
+        session_write_close();
+    }
+
 }

@@ -75,4 +75,14 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
      */
     abstract function addSession(Solar_Session $session);
 
+    /**
+     * 
+     * Close this session for use in this request, writing the results
+     * to storage for the next request
+     * 
+     * @return void
+     * 
+     */
+    abstract function close();
+
 }

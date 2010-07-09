@@ -732,4 +732,17 @@ class Solar_Session extends Solar_Base
         $this->_manager->stop();
     }
 
+    /**
+     * 
+     * Close this session for use in this request, writing the results
+     * to storage for the next request
+     * 
+     * @return bool
+     * 
+     */
+    public function close()
+    {
+        $this->_manager->close();
+    }
+
 }

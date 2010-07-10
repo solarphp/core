@@ -98,8 +98,8 @@ class Solar_Auth extends Solar_Base {
         'auto_logout' => true,
         'login_callback'  => null,
         'logout_callback' => null,
-        'login_protocol' => 'Solar_Auth_Protocol_Post',
-        'logout_protocol' => 'Solar_Auth_Protocol_Get',
+        'login_protocol' => 'Solar_Auth_Login_Post',
+        'logout_protocol' => 'Solar_Auth_Logout_Get',
         'storage' => null,
     );
     

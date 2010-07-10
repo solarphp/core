@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract Authentication Protocol.
+ * Login protocol implementing HTTP Auth Login.
  * 
  * @category Solar
  * 
@@ -14,7 +14,7 @@
  * @version $Id: Adapter.php 4533 2010-04-23 16:35:15Z pmjones $
  * 
  */
-class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
+class Solar_Auth_Login_HttpBasic extends Solar_Auth_Login {
 
     /**
      * 
@@ -22,7 +22,7 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
      * @config string realm Realm to use in the auth challenge
      *
      */
-    protected $_Solar_Auth_Protocol_HttpBasic = array(
+    protected $_Solar_Auth_Login_HttpBasic = array(
         'realm' => 'Secure Area',
     );
 
@@ -44,19 +44,6 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
             $this->postLoginFailure();
         }
         return true;
-    }
-
-    /**
-     * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log out.
-     * 
-     * @return bool
-     * 
-     */
-    public function isLogoutRequest()
-    {
-        return false;
     }
 
     /**
@@ -114,23 +101,6 @@ class Solar_Auth_Protocol_HttpBasic extends Solar_Auth_Protocol {
      * 
      */
     public function getLoginRedirect()
-    {
-        // HTTP Auth doesn't support redirecting after first authentication
-        return null;
-    }
-
-    /**
-     * 
-     * Looks at the value of the 'redirect' source key, and determines a
-     * redirection url from it.
-     * 
-     * If the 'redirect' key is empty or not present, will not redirect, and
-     * processing will continue.
-     * 
-     * @return string|null The url to redirect to or null if no redirect
-     * 
-     */
-    public function getLogoutRedirect()
     {
         // HTTP Auth doesn't support redirecting after first authentication
         return null;

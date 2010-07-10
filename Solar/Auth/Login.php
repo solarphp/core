@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract Authentication Protocol.
+ * Abstract Authentication Login Protocol.
  * 
  * @category Solar
  * 
@@ -14,7 +14,7 @@
  * @version $Id: Adapter.php 4533 2010-04-23 16:35:15Z pmjones $
  * 
  */
-abstract class Solar_Auth_Protocol extends Solar_Base {
+abstract class Solar_Auth_Login extends Solar_Base {
 
     /**
      * 
@@ -52,16 +52,6 @@ abstract class Solar_Auth_Protocol extends Solar_Base {
 
     /**
      * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log out.
-     * 
-     * @return bool
-     * 
-     */
-    abstract public function isLogoutRequest();
-
-    /**
-     * 
      * Loads the user credentials (handle and passwd) from the request source.
      * 
      * @return array List of authentication credentials
@@ -95,14 +85,5 @@ abstract class Solar_Auth_Protocol extends Solar_Base {
      * 
      */
     abstract public function getLoginRedirect();
-
-    /**
-     * 
-     * Determine the location to redirect to after logout
-     * 
-     * @return string|null The url to redirect to or null if no redirect
-     * 
-     */
-    abstract function getLogoutRedirect();
     
 }

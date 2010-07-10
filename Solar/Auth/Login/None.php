@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Protocol_None extends Solar_Auth_Protocol
+class Solar_Auth_Login_None extends Solar_Auth_Login
 {
 
     /**
@@ -22,7 +22,7 @@ class Solar_Auth_Protocol_None extends Solar_Auth_Protocol
      * Default configuration values.
      *
      */
-    protected $_Solar_Auth_Protocol_Get = array(
+    protected $_Solar_Auth_Login_None = array(
     );
 
 
@@ -35,19 +35,6 @@ class Solar_Auth_Protocol_None extends Solar_Auth_Protocol
      * 
      */
     public function isLoginRequest()
-    {
-        return false;
-    }
-
-    /**
-     * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log out.
-     * 
-     * @return bool
-     * 
-     */
-    public function isLogoutRequest()
     {
         return false;
     }
@@ -102,19 +89,4 @@ class Solar_Auth_Protocol_None extends Solar_Auth_Protocol
         return null;
     }
 
-    /**
-     * 
-     * Looks at the value of the 'redirect' source key, and determines a
-     * redirection url from it.
-     * 
-     * If the 'redirect' key is empty or not present, will not redirect, and
-     * processing will continue.
-     * 
-     * @return string|null The url to redirect to or null if no redirect
-     * 
-     */
-    public function getLogoutRedirect()
-    {
-        return null;
-    }
 }

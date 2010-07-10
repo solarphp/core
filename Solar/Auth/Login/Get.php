@@ -1,7 +1,8 @@
 <?php
 /**
  * 
- * Abstract Authentication Protocol.
+ * Login protocol based on passing username credentials via URI parameters.
+ * Probably not a very good idea, really.
  * 
  * @category Solar
  * 
@@ -14,7 +15,7 @@
  * @version $Id: Adapter.php 4533 2010-04-23 16:35:15Z pmjones $
  * 
  */
-class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
+class Solar_Auth_Login_Get extends Solar_Auth_Login {
 
     /**
      * 
@@ -26,25 +27,21 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      *   default 'passwd'.
      * 
      * @config string source_redirect Element key in the credential array source to indicate
-     *   where to redirect on successful login or logout, default 'redirect'.
+     *   where to redirect on successful login, default 'redirect'.
      * 
      * @config string source_process Element key in the credential array source to indicate
      *   how to process the request, default 'process'.
      * 
-     * @config string process_login The source_process element value indicating a login request;
+     * @config string process The source_process element value indicating a login request;
      *   default is the 'PROCESS_LOGIN' locale key value.
-     * 
-     * @config string process_logout The source_process element value indicating a logout request;
-     *   default is the 'PROCESS_LOGOUT' locale key value.
      *
      */
-    protected $_Solar_Auth_Protocol_Get = array(
+    protected $_Solar_Auth_Login_Get = array(
         'source_handle'  => 'handle',
         'source_passwd'  => 'passwd',
         'source_process' => 'process',
         'source_redirect' => 'redirect',
-        'process_login'  => null,
-        'process_logout' => null,
+        'process'  => null,
     );
 
     /**
@@ -59,13 +56,10 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
         parent::_postConfig();
         
         // make sure we have process values
-        if (empty($this->_config['process_login'])) {
-            $this->_config['process_login'] = $this->locale('PROCESS_LOGIN');
+        if (empty($this->_config['process'])) {
+            $this->_config['process'] = $this->locale('PROCESS_LOGIN');
         }
         
-        if (empty($this->_config['process_logout'])) {
-            $this->_config['process_logout'] = $this->locale('PROCESS_LOGOUT');
-        }
     }
 
     /**
@@ -81,23 +75,7 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
         if ($this->_request->isCsrf()) {
             return false;
         }
-        return $this->_request->get($this->_config['source_process']) == $this->_config['process_login'];
-    }
-
-    /**
-     * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log out.
-     * 
-     * @return bool
-     * 
-     */
-    public function isLogoutRequest()
-    {
-        if ($this->_request->isCsrf()) {
-            return false;
-        }
-        return $this->_request->get($this->_config['source_process']) == $this->_config['process_logout'];
+        return $this->_request->get($this->_config['source_process']) == $this->_config['process'];
     }
 
     /**
@@ -150,22 +128,6 @@ class Solar_Auth_Protocol_Get extends Solar_Auth_Protocol {
      * 
      */
     public function getLoginRedirect()
-    {
-        return $this->_request->get($this->_config['source_redirect']);
-    }
-
-    /**
-     * 
-     * Looks at the value of the 'redirect' source key, and determines a
-     * redirection url from it.
-     * 
-     * If the 'redirect' key is empty or not present, will not redirect, and
-     * processing will continue.
-     * 
-     * @return string|null The url to redirect to or null if no redirect
-     * 
-     */
-    public function getLogoutRedirect()
     {
         return $this->_request->get($this->_config['source_redirect']);
     }

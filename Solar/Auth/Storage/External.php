@@ -40,7 +40,6 @@ class Solar_Auth_Storage_External extends Solar_Auth_Storage
      */
     public function validateCredentials($credentials)
     {
-        error_log('hello');
         if (!empty($credentials['verified'])) {
             return $credentials;
         } else {

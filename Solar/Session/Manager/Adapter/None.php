@@ -26,7 +26,6 @@ class Solar_Session_Manager_Adapter_None extends Solar_Session_Manager_Adapter
      */
     public  function start()
     {
-        throw $this->_exception('ERR_CANNOT_START_SESSION');
     }
 
     /**
@@ -53,7 +52,7 @@ class Solar_Session_Manager_Adapter_None extends Solar_Session_Manager_Adapter
      */
     public function isStarted()
     {
-        return false;
+        return true;
     }
 
     /**

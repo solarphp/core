@@ -469,7 +469,17 @@ class Solar_Auth extends Solar_Base {
     {
 
         // canonicalize the status value
-        $this->status = strtoupper($status);
+        $status = strtoupper($status);
+
+        if (($this->status == self::ANON) && ($status == self::ANON)) {
+            // If we are transitioning between anonymous and anonymous,
+            // don't attempt to store information which would trigger
+            // a session to start
+            return;
+        }
+
+        // change the current status
+        $this->status = $status;
         
         // change properties
         if ($this->status == Solar_Auth::VALID) {

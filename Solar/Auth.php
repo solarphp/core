@@ -166,6 +166,7 @@ class Solar_Auth extends Solar_Base {
         'moniker',
         'uri',
         'uid',
+        'info',
     );
     
     /**
@@ -241,6 +242,11 @@ class Solar_Auth extends Solar_Base {
         // special behavior for 'status'
         if ($key == 'status' && ! $val) {
             $val = Solar_Auth::ANON;
+        }
+
+        // special behavior for 'info'
+        if ($key == 'info' && ! $val) {
+            $val = array();
         }
         
         return $val;
@@ -406,6 +412,41 @@ class Solar_Auth extends Solar_Base {
     {
         return $this->status == Solar_Auth::VALID;
     }
+
+    /**
+     * 
+     * Set user information. Only serializable information may be included.
+     * 
+     * @param array $info Array of user attributes
+     * 
+     * @return void
+     * 
+     */
+    protected function _setInfo($info = array())
+    {
+        // baseline user information
+        $base = array(
+           'handle'  => null,
+           'moniker' => null,
+           'email'   => null,
+           'uri'     => null,
+           'uid'     => null,
+        );
+
+        // Set default values for require info keys        
+        $info = array_merge($base, (array) $info);
+
+        // Store any additional information gathered from the login protocol
+        // or from the backend storage.
+        $this->info = $info;
+
+        // For historical reasons, some user attributes get their own properties        
+        $this->handle  = $info['handle'];
+        $this->moniker = $info['moniker'];
+        $this->email   = $info['email'];
+        $this->uri     = $info['uri'];
+        $this->uid     = $info['uid'];
+    }
     
     /**
      * 
@@ -426,16 +467,8 @@ class Solar_Auth extends Solar_Base {
      */
     public function reset($status = Solar_Auth::ANON, $info = array())
     {
-        // baseline user information
-        $base = array(
-           'handle'  => null,
-           'moniker' => null,
-           'email'   => null,
-           'uri'     => null,
-           'uid'     => null,
-        );
-        
-        // reset the status
+
+        // canonicalize the status value
         $this->status = strtoupper($status);
         
         // change properties
@@ -451,14 +484,8 @@ class Solar_Auth extends Solar_Base {
             $info = null;
         }
         
-        // set the user-info properties
-        $info = array_merge($base, (array) $info);
-        $this->handle  = $info['handle'];
-        $this->moniker = $info['moniker'];
-        $this->email   = $info['email'];
-        $this->uri     = $info['uri'];
-        $this->uid     = $info['uid'];
-        
+        $this->_setInfo($info);
+                
         // reset the session id and delete previous session
         $this->_session->regenerateId();
         

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * authentication class.
+ * Authentication class.
  * 
  * @category Solar
  * 
@@ -201,14 +201,13 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Constructor;
+     * Post-construction tasks to complete object construction.
      * 
-     * @param array $config User-defined configuration values.
+     * @return void
      * 
      */
-    public function __construct($config = null)
+    protected function _postConstruct()
     {
-        parent::__construct($config);
         
         // create the session object for this class
         $this->_session = Solar::factory(

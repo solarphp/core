@@ -201,14 +201,14 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Post-construction tasks to complete object construction.
+     * Constructor;
      * 
-     * @return void
+     * @param array $config User-defined configuration values.
      * 
      */
-    protected function _postConstruct()
+    public function __construct($config = null)
     {
-        parent::_postConstruct();
+        parent::__construct($config);
         
         // create the session object for this class
         $this->_session = Solar::factory(
@@ -484,7 +484,9 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Validate credentials against a list of back end storage
+     * Validate credentials against a list of back end storage adapters
+     * 
+     * @param array $credentials An array of authentication credentials
      * 
      * @return bool|array|string 
      * 
@@ -492,6 +494,7 @@ class Solar_Auth extends Solar_Base {
     protected function _validateCredentials($credentials)
     {
         if (!$credentials) {
+            // empty credentials are never valid
             return false;
         }
         $storage_list = (array) $this->_config['storage'];
@@ -502,30 +505,41 @@ class Solar_Auth extends Solar_Base {
                 return $result;
             }
         }
+        return false;
     }
     
     /**
      * 
-     * Processes login attempts and sets user credentials.
+     * Validate that the protocol passed is a valid login protocol
+     * in the current context.
+     * Subclasses may add additional validation regarding which
+     * protocol is valid in which context.
      * 
-     * @return bool True if the login was successful, false if not.
+     * @param Solar_Auth_Login $protocol Login Protocol instance
+     * 
+     * @return bool True if protocol is valid
      * 
      */
-    public function processLogin($protocol)
+    protected function _isValidLoginProtocol($protocol)
     {
         if (!$protocol) {
             return false;
         }
+        return true;
+    }
 
-        // clear out current error and user data.
-        $this->reset();
-        
-        // load the user-provided handle and password
-        $credentials = $protocol->getCredentials();
-
-        $result = $this->_validateCredentials($credentials);
-        
-        // did it work?
+    /**
+     * 
+     * Reset authentication status based on a credential
+     * validation result.
+     * 
+     * @param mixed $result Login An array result indicates success, anything else is a form of failure.
+     * 
+     * @return void
+     * 
+     */
+    protected function _processCredentialStatus($result)
+    {
         if (is_array($result)) {
             // successful login, treat result as user info
             $this->reset(Solar_Auth::VALID, $result);
@@ -536,7 +550,19 @@ class Solar_Auth extends Solar_Base {
             // failed login, generic error code
             $this->reset(Solar_Auth::WRONG);
         }
-        
+    }
+
+    /**
+     * 
+     * Process any login callbacks that might be registered.
+     * Callbacks are called regardless of success or failure
+     * of login.
+     * 
+     * @return void
+     * 
+     */
+    protected function _processLoginCallbacks()
+    {
         // callback?
         if ($this->_config['login_callback']) {
             call_user_func(
@@ -544,23 +570,160 @@ class Solar_Auth extends Solar_Base {
                 $this
             );
         }
+    }
+
+    /**
+     * 
+     * Allow subclasses to perform pre Login processing
+     * 
+     * @return void
+     * 
+     */
+    protected function _preLogin()
+    {
+    }
+
+    /**
+     * 
+     * Allow subclasses to perform post login processing
+     * 
+     * @return void
+     * 
+     */
+    protected function _postLoginSuccess()
+    {
+    }
+
+    /**
+     * 
+     * Allow subclasses to perform post login processing
+     * 
+     * @return void
+     * 
+     */
+    protected function _postLoginFailure()
+    {
+    }
+    
+    /**
+     * 
+     * Processes login attempts and sets user credentials.
+     * This may be called as part of the autostart sequence or
+     * explicitly called with a desired protocol to initiate
+     * Authentication.
+     * If you call processLogin outside of the autostart sequence,
+     * You may also need to regenerate roles, access rules, and 
+     * other data dependent upon the current authentication context.
+     * 
+     * @param Solar_Auth_Login $protocol Login Protocol instance
+     * 
+     * @return bool True if the login was successful, false if not.
+     * 
+     */
+    public function processLogin($protocol)
+    {
+        if (!$this->_isValidLoginProtocol($protocol)) {
+            return false;
+        }
+        
+        $this->_preLogin();
+
+        // load the user-provided credentials, such as handle and password
+        $credentials = $protocol->getCredentials();
+
+        $result = $this->_validateCredentials($credentials);
+
+        $this->_processCredentialStatus($result);
+        
+        $this->_processLoginCallbacks();
         
         // did it work?
         if ($this->isValid()) {
         
-            // We were successfully logged in
+            // Allow logic to be performed by subclasses upon success
+            $this->_postLoginSuccess();
+        
+            // We must notify the credential providing protocol of success
             $protocol->postLoginSuccess();
             
             // attempt to redirect.
             $this->_redirect($protocol->getLoginRedirect());
+            
+            return true;
+            
         } else {
 
-            // We failed
+            // Allow logic to be performed by subclasses upon failure
+            $this->_postLoginFailure();
+
+            // We must notify the credential providing protocol of failure
             $protocol->postLoginFailure();
+            
+            return false;
+            
         }
-        
-        // done!
-        return $this->status == Solar_Auth::VALID;
+    }
+
+    /**
+     * 
+     * Validate that the protocol passed is a valid logout protocol
+     * in the current context.
+     * Subclasses may add additional validation regarding which
+     * protocol is valid in which context.
+     * 
+     * @param Solar_Auth_Logout $protocol Logout Protocol instance
+     * 
+     * @return bool True if protocol is valid
+     * 
+     */
+    protected function _isValidLogoutProtocol($protocol)
+    {
+        if (!$protocol) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * Process any logout callbacks that might be registered.
+     * Callbacks are called regardless of success or failure
+     * of logout.
+     * 
+     * @return void
+     * 
+     */
+    protected function _processLogoutCallbacks()
+    {
+        // callback?
+        if ($this->_config['logout_callback']) {
+            call_user_func(
+                $this->_config['logout_callback'],
+                $this
+            );
+        }
+    }
+
+    /**
+     * 
+     * Allow subclasses to perform pre Logout processing
+     * 
+     * @return void
+     * 
+     */
+    protected function _preLogout()
+    {
+    }
+
+    /**
+     * 
+     * Allow subclasses to perform post logout processing
+     * 
+     * @return void
+     * 
+     */
+    protected function _postLogout()
+    {
     }
     
     /**
@@ -572,40 +735,35 @@ class Solar_Auth extends Solar_Base {
      */
     public function processLogout($protocol)
     {
-        if (!$protocol) {
+        if (!$this->_isValidLogoutProtocol($protocol)) {
             return false;
         }
+
+        $this->_preLogout();
     
-        // process logout
-        $code = $this->_processLogout();
+        $this->_processLogout();
+
+        $this->_processLogoutCallbacks();
         
-        // change status
-        $this->reset($code);
+        $this->_postLogout();
         
-        // End the entire session
-        $this->_session->stop();
-        
-        // callback?
-        if ($this->_config['logout_callback']) {
-            call_user_func(
-                $this->_config['logout_callback'],
-                $this
-            );
-        }
-        
-        // logout always works, so see if a redirect is needed
+        // See if a redirect is needed
         $this->_redirect($protocol->getLogoutRedirect());
     }
     
     /**
      * 
-     * Adapter-specific logout processing.
+     * Logout processing.
      * 
-     * @return string A status code string for reset().
+     * @return void
      * 
      */
     protected function _processLogout()
     {
-        return Solar_Auth::ANON;
+        // change status
+        $this->reset(Solar_Auth::ANON);
+        
+        // End the entire session
+        $this->_session->stop();
     }
 }

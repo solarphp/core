@@ -33,7 +33,7 @@ class Solar_View_Helper_GoogleAnalytics extends Solar_View_Helper
      * @var array
      * 
      */  
-    protected $_Beer_View_Helper_GoogleAnalytics = array(
+    protected $_Solar_View_Helper_GoogleAnalytics = array(
         'google_ua'     => 'UA-XXXXX-X',
         'domain_name'   => null,
         'allow_linker' => false,
@@ -51,17 +51,15 @@ class Solar_View_Helper_GoogleAnalytics extends Solar_View_Helper
         parent::_postConstruct();
         $setDomainName = '';
         if ($this->_config['domain_name']) {
-            $setDomainName = "_gaq.push(['_setDomainName', '{$this->_config['domain_name']}']);";
+            $setDomainName = "\n  _gaq.push(['_setDomainName', '{$this->_config['domain_name']}']);";
         }
         $setAllowLinker = '';
         if ($this->_config['allow_linker']) {
-            $setAllowLinker = "_gaq.push(['_setAllowLinker', true]);";
+            $setAllowLinker = "\n  _gaq.push(['_setAllowLinker', true]);";
         }
         $inline = <<<INLINE
 var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '{$this->_config['google_ua']}']);
-$setDomainName
-$setAllowLinker
+  _gaq.push(['_setAccount', '{$this->_config['google_ua']}']);$setDomainName$setAllowLinker
   _gaq.push(['_trackPageview']);
 
   (function() {

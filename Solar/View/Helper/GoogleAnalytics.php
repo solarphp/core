@@ -18,7 +18,7 @@
  * @version $Id: TypekeyLink.php 4285 2009-12-31 02:18:15Z pmjones $
  * 
  */
-class Beer_View_Helper_GoogleAnalytics extends Solar_View_Helper
+class Solar_View_Helper_GoogleAnalytics extends Solar_View_Helper
 {
     /**
      * 

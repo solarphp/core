@@ -1591,7 +1591,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         if ($autoinc) {
             return $lastInsertId;
         } else {
-            return $true;
+            return true;
         }
     }
     

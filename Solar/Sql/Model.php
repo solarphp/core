@@ -1570,10 +1570,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             $this->_table_name,
             $data
         );
-        
-        // clear the cache for this model and related models
-        $this->_cache->deleteAll();
-        
+                
         // does the table have an autoincrement column?
         $autoinc = null;
         foreach ($this->_table_cols as $name => $info) {
@@ -1585,7 +1582,14 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // return the last insert id, or just "true" ?
         if ($autoinc) {
-            return $this->_sql->lastInsertId($this->_table_name, $autoinc);
+            $id = $this->_sql->lastInsertId($this->_table_name, $autoinc);
+        } 
+
+        // clear the cache for this model and related models
+        $this->_cache->deleteAll();
+
+        if ($autoinc) {
+            return $id;
         } else {
             return true;
         }

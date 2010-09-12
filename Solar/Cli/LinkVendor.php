@@ -114,7 +114,11 @@ class Solar_Cli_LinkVendor extends Solar_Controller_Command
             // $dir, $src, $tgt
             extract($link);
             
-            // make it
+            // fix for windows
+            $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
+            $src = str_replace('/', DIRECTORY_SEPARATOR, $src);
+            $tgt = str_replace('/', DIRECTORY_SEPARATOR, $tgt);
+            
             $this->_out("    Making link '$dir/$tgt' ... ");
             try {
                 $err = Solar_Symlink::make($src, $tgt, "$system/$dir");

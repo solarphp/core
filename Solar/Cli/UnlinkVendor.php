@@ -85,6 +85,10 @@ class Solar_Cli_UnlinkVendor extends Solar_Controller_Command
         foreach ($links as $link) {
             $this->_out("    Removing '$link' ... ");
             $path = "$system/$link";
+            
+            // fix for windows
+            $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+            
             if (Solar_File::exists($path)) {
                 unlink($path);
                 $this->_outln("done.");

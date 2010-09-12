@@ -157,7 +157,7 @@ class Solar_Symlink
         }
         
         // make the link
-        $cmd .= "mklink /D $src $tgt";
+        $cmd .= "mklink /D $tgt $src";
         
         // done!
         return exec($cmd);
@@ -189,7 +189,7 @@ class Solar_Symlink
         }
         
         // make the link
-        $cmd .= "mklink $src $tgt";
+        $cmd .= "mklink $tgt $src";
         
         // done!
         return exec($cmd);

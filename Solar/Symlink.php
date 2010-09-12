@@ -143,7 +143,7 @@ class Solar_Symlink
      * symlink, typically the target directory; this helps when making
      * relative symlinks.
      * 
-     * @return string The command to make a directory symlink.
+     * @return string Empty on success, or the error message on failure.
      * 
      */
     protected static function _makeWinDir($src, $tgt, $dir)
@@ -159,8 +159,16 @@ class Solar_Symlink
         // make the link
         $cmd .= "mklink /D $tgt $src";
         
-        // done!
-        return exec($cmd);
+        // run the command
+        $result = exec($cmd);
+        
+        // windows returns a message on both success and failure.
+        // the success message starts with 
+        if (substr($result, 0, 21) == 'symbolic link created') {
+            return '';
+        } else {
+            return $result;
+        }
     }
     
     /**
@@ -175,7 +183,7 @@ class Solar_Symlink
      * symlink, typically the target directory; this helps when making
      * relative symlinks.
      * 
-     * @return string The command to make a directory symlink.
+     * @return string Empty on success, or the error message on failure.
      * 
      */
     protected static function _makeWinFile($src, $tgt, $dir)
@@ -191,8 +199,16 @@ class Solar_Symlink
         // make the link
         $cmd .= "mklink $tgt $src";
         
-        // done!
-        return exec($cmd);
+        // run the command
+        $result = exec($cmd);
+        
+        // windows returns a message on both success and failure.
+        // the success message starts with 
+        if (substr($result, 0, 21) == 'symbolic link created') {
+            return '';
+        } else {
+            return $result;
+        }
     }
     
     /**

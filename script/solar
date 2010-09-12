@@ -75,6 +75,8 @@ class _Solar_Script
         $this->_system = false;
         $file = __FILE__;
         foreach ($dirs as $dir) {
+            // make comparison windows-friendly
+            $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
             $len = -1 * strlen($dir);
             if (substr($file, $len) == $dir) {
                 $this->_system = substr($file, 0, $len);
@@ -110,7 +112,8 @@ class _Solar_Script
     protected function _setIncludePath()
     {
         if ($this->_system) {
-            $include = "{$this->_system}/include:.";
+            $include = $this->_system . DIRECTORY_SEPARATOR . 'include'
+                     . PATH_SEPARATOR . '.';
         } else {
             $include = get_include_path();
         }
@@ -160,7 +163,7 @@ class _Solar_Script
     protected function _setConfig()
     {
         if ($this->_system) {
-            $config = "{$this->_system}/config.php";
+            $config = $this->_system . DIRECTORY_SEPARATOR . 'config.php';
         } else {
             $config = false;
         }

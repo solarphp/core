@@ -223,7 +223,7 @@ class Solar_Symlink
      * @return void
      * 
      */
-    public function remove($path)
+    public static function remove($path)
     {
         // are we on a windows system prior to NT6?
         $is_win = strtolower(substr(PHP_OS, 0, 3)) == 'win';

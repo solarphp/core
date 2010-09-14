@@ -231,7 +231,7 @@ class Solar_Symlink
             throw Solar_Symlink::_exception('ERR_WINDOWS_VERSION');
         }
         
-        // is the spec a directory or a file?
+        // does the path exist for removal?
         $is_dir  = Solar_Dir::exists($path);
         $is_file = Solar_File::exists($path);
         if (! $is_dir && ! $is_file) {
@@ -241,11 +241,10 @@ class Solar_Symlink
         }
         
         // how to remove?
-        if ($is_win && $is_file) {
-            // windows file
+        if ($is_win) {
+            // have to double up on removals because windows reports all
+            // symlinks as files, even if they point to dirs.
             @unlink($path);
-        } elseif ($is_win && $is_dir) {
-            // windows dir
             Solar_Dir::rmdir($path);
         } else {
             // unix file or dir

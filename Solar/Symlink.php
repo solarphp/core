@@ -133,7 +133,7 @@ class Solar_Symlink
     
     /**
      * 
-     * Returns the command to create a directory symlink on Windows systems.
+     * Creates a directory symlink on Windows systems.
      * 
      * @param string $src The source path of the real directory.
      * 
@@ -173,7 +173,7 @@ class Solar_Symlink
     
     /**
      * 
-     * Returns the command to create a file symlink on Windows systems.
+     * Creates a file symlink on Windows systems.
      * 
      * @param string $src The source path of the real file.
      * 
@@ -208,6 +208,48 @@ class Solar_Symlink
             return '';
         } else {
             return $result;
+        }
+    }
+    
+    /**
+     * 
+     * Removes a file or directory symbolic link.
+     * 
+     * Actually, this will remove the file or directory even if it's not
+     * a symbolic link, so be careful with it.
+     * 
+     * @param string $path The symbolic link to remove.
+     * 
+     * @return void
+     * 
+     */
+    public function remove($path)
+    {
+        // are we on a windows system prior to NT6?
+        $is_win = strtolower(substr(PHP_OS, 0, 3)) == 'win';
+        if ($is_win && php_uname('r') < 6) {
+            throw Solar_Symlink::_exception('ERR_WINDOWS_VERSION');
+        }
+        
+        // is the spec a directory or a file?
+        $is_dir  = Solar_Dir::exists($path);
+        $is_file = Solar_File::exists($path);
+        if (! $is_dir && ! $is_file) {
+            throw Solar_Symlink::_exception('ERR_PATH_NOT_FOUND', array(
+                'path' => $path,
+            ));
+        }
+        
+        // how to remove?
+        if ($is_win && $is_file) {
+            // windows file
+            @unlink($path);
+        } elseif ($is_win && $is_dir) {
+            // windows dir
+            Solar_Dir::rmdir($path);
+        } else {
+            // unix file or dir
+            @unlink($path);
         }
     }
     

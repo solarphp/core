@@ -89,8 +89,8 @@ class Solar_Cli_UnlinkVendor extends Solar_Controller_Command
             // fix for windows
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
             
-            if (Solar_File::exists($path)) {
-                unlink($path);
+            if (Solar_File::exists($path) || Solar_Dir::exists($path)) {
+                Solar_Symlink::remove($path);
                 $this->_outln("done.");
             } else {
                 $this->_outln("missing.");

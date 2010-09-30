@@ -526,11 +526,14 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         
         $list = (array) $list;
         if ($list) {
-            // add only listed elements
-            foreach ($elements as $info) {
-                if (in_array($info['name'], $list)) {
-                    // it's on the list, add it
-                    $this->addElement($info);
+            // add only listed elements, in the order specified by the list
+            foreach ($list as $name) {
+                foreach ($elements as $info) {
+                    if ($info['name'] == $name) {
+                        // it's on the list, add it
+                        $this->addElement($info);
+                        break;
+                    }
                 }
             }
         } else {

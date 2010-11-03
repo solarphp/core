@@ -66,7 +66,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
         // date & time
         'date'              => 'date',
         'datetime'          => 'timestamp',
-        'timestamp'         => 'int',
+        'timestamp'         => 'timestamp',
         'time'              => 'time',
         
         // string

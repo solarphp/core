@@ -75,3 +75,57 @@ r4639 | pmjones | 2010-07-02 11:51:15 -0500 (Fri, 02 Jul 2010) | 1 line
 
 Solar_View_Helper_FacebookScript: [CHG] Load scripts via the foot() helper, doing so in _postConstruct(), instead of outputting directly via the facebookScript() method.
 ------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4640 | pmjones | 2010-07-02 12:59:32 -0500 (Fri, 02 Jul 2010) | 1 line
+
+updating preliminary change notes
+------------------------------------------------------------------------
+r4694 | pmjones | 2010-09-06 09:33:18 -0500 (Mon, 06 Sep 2010) | 1 line
+
+Solar_Sql_Model: [FIX] In method insert(), clear the cache *after* retrieving the last insert ID.  Thanks, Richard Thomas, for the patch.
+------------------------------------------------------------------------
+r4695 | pmjones | 2010-09-12 17:08:03 -0500 (Sun, 12 Sep 2010) | 1 line
+
+script/solar: [FIX] Make more Win-friendly by using DIRECTORY_SEPARATOR and PATH_SEPARATOR in appropriate locations.
+------------------------------------------------------------------------
+r4696 | pmjones | 2010-09-12 17:11:11 -0500 (Sun, 12 Sep 2010) | 1 line
+
+Solar_Symlink: [FIX] In methods _makeWinDir() and _makeWinFile(), use the proper argument order (the opposite of what it is in Unix).
+------------------------------------------------------------------------
+r4697 | pmjones | 2010-09-12 18:41:46 -0500 (Sun, 12 Sep 2010) | 1 line
+
+Solar_Cli_LinkVendor: [FIX] Convert slashes to DIRECTORY_SEPARATOR to soothe Windows.
+------------------------------------------------------------------------
+r4698 | pmjones | 2010-09-12 18:42:21 -0500 (Sun, 12 Sep 2010) | 1 line
+
+Solar_Cli_UnlinkVendor: [FIX] Convert slashes to DIRECTORY_SEPARATOR to soothe Windows.
+------------------------------------------------------------------------
+r4699 | pmjones | 2010-09-12 18:43:33 -0500 (Sun, 12 Sep 2010) | 1 line
+
+Solar_Symlink: [FIX] The mklink command on Windows returns a message even on success; change the Windows methods to account for this.
+------------------------------------------------------------------------
+r4700 | pmjones | 2010-09-13 20:20:43 -0500 (Mon, 13 Sep 2010) | 1 line
+
+Solar_Symlink: [ADD] Method remove() to remove symlinks. Need this because Windows uses "rd" to remove a directory symlink, and "del" to remove a file symlink. (Unix uses "rm" for both.)
+------------------------------------------------------------------------
+r4701 | pmjones | 2010-09-13 20:21:36 -0500 (Mon, 13 Sep 2010) | 1 line
+
+Solar_Cli_UnlinkVendor: [CHG] When removing symlinks, use Solar_Symlink::remove() instead of PHP unlink().
+------------------------------------------------------------------------
+r4702 | pmjones | 2010-09-14 08:59:16 -0500 (Tue, 14 Sep 2010) | 1 line
+
+Solar_Symlink: [CHG] Method remove() now doubles-up on removal for Windows symlinks, since Windows reports a symlinked directory as a file, but will only let you remove it using `rd` (remove directory).
+------------------------------------------------------------------------
+r4703 | pmjones | 2010-09-14 12:13:31 -0500 (Tue, 14 Sep 2010) | 1 line
+
+Solar_Symlink: [FIX] New method remove() should be static.
+------------------------------------------------------------------------
+r4704 | pmjones | 2010-09-30 15:56:49 -0500 (Thu, 30 Sep 2010) | 2 lines
+
+Solar_View_Helper_Form: [FIX] Method addElements() now adds elements in the order they appear in the whitelist, not the order they appear in the form object.
+
+------------------------------------------------------------------------
+r4705 | pmjones | 2010-11-03 11:19:27 -0500 (Wed, 03 Nov 2010) | 1 line
+
+Solar_Sql_Adapter_Mysql: [FIX] Native "timestamp" type should map to "timestamp", not "int". Thanks, Kalkin, for the report.
+------------------------------------------------------------------------

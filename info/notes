@@ -69,10 +69,6 @@ Solar_Symlink
 
 * [ADD] Method remove() to remove symlinks. Need this because Windows uses "rd" to remove a directory symlink, and "del" to remove a file symlink. (Unix uses "rm" for both.)
 
-* [CHG] Method remove() now doubles-up on removal for Windows symlinks, since Windows reports a symlinked directory as a file, but will only let you remove it using `rd` (remove directory).
-
-* [FIX] New method remove() should be static.
-
 
 Solar_Vt100
 -----------

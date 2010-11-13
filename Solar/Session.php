@@ -9,8 +9,8 @@
  * first attempt to write to the session before starting it.
  * 
  * Instantiate this once for each class that wants access to $_SESSION
- * values.  It automatically segments $_SESSION by class name, so be 
- * sure to use setClass() (or the 'class' config key) to identify the
+ * values.  It automatically segments $_SESSION by segment name, so be 
+ * sure to use setSegment() (or the 'segment' config key) to identify the
  * segment properly.
  * 
  * A "flash" is a session value that propagates only until it is read,
@@ -39,12 +39,15 @@ class Solar_Session extends Solar_Base
      * 
      * Default configuration values.
      * 
-     * @config string class Store values in this top-level key in $_SESSION.  Default is
+     * @config string segment Store values in this top-level key in $_SESSION.  Default is
      *   'Solar'.
      * 
-     * @config dependency handler A Solar_Session_Handler dependency injection. Default
-     *   is the string 'php', which means to use the native PHP session save.
-     *   handler instead of a dependency injection.
+     * @config string class deprecated synonym for segment.  Used only if not null.  Default is
+     *   null.
+     * 
+     * @config dependency manager A Solar_Session_Manager dependency injection.  Default
+     *   is Solar_Session_Manager_Native which uses php's native session functions for
+     *   transferring state between successive requests.
      * 
      * @config string P3P Compact [Platform for Privacy Preferences][] policy. Default is
      *   'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
@@ -162,34 +165,26 @@ class Solar_Session extends Solar_Base
      * 
      */
     protected $_Solar_Session = array(
-        'class'   => 'Solar',
-        'handler' => null,
+        'segment'   => 'Solar',
+        'class'   => null,
         'P3P'     => 'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
+        'manager' => 'session_manager',
     );
-    
+
     /**
      * 
-     * The session save handler object.
+     * The Manager responsible for tranfering state between requests
      * 
-     * @var Solar_Session_Handler_Adapter
-     * 
-     */
-    static protected $_handler;
-    
-    /**
-     * 
-     * The current request object.
-     * 
-     * @var Solar_Request
+     * @var Solar_Session_Manager
      * 
      */
-    static protected $_request;
+    protected $_manager;
     
     /**
      * 
      * Array of read-once "flash" keys and values.
      * 
-     * Convenience reference to $_SESSION['Solar_Session']['flash'][$this->_class].
+     * Convenience reference to $_SESSION['Solar_Session']['flash'][$this->_segment].
      * 
      * @var array
      * 
@@ -200,7 +195,7 @@ class Solar_Session extends Solar_Base
      * 
      * Array of "normal" session keys and values.
      * 
-     * Convenience reference to $_SESSION[$this->_class].
+     * Convenience reference to $_SESSION[$this->_segment].
      * 
      * @var array
      * 
@@ -214,7 +209,7 @@ class Solar_Session extends Solar_Base
      * @var array
      * 
      */
-    protected $_class = 'Solar';
+    protected $_segment = 'Solar';
     
     /**
      * 
@@ -235,29 +230,25 @@ class Solar_Session extends Solar_Base
     protected function _postConstruct()
     {
         parent::_postConstruct();
+
+        $this->_manager = Solar::dependency(
+            'Solar_Session_Manager',
+            $this->_config['manager']
+        );
         
-        // only set up the handler if it doesn't exist yet.
-        if (! self::$_handler) {
-            self::$_handler = Solar::dependency(
-                'Solar_Session_Handler',
-                $this->_config['handler']
-            );
-        }
-        
-        // only set up the request if it doesn't exist yet.
-        if (! self::$_request) {
-            self::$_request = Solar_Registry::get('request');
-        }
+        // Add ourselves to the session manager's list to receive updates
+        $this->_manager->addSession($this);
         
         // determine the storage segment; use trim() and strict-equals to 
         // allow for string zero segment names.
-        $this->_class = trim($this->_config['class']);
-        if ($this->_class === '') {
-            $this->_class = 'Solar';
+        $segment = is_null($this->_config['class']) ? $this->_config['segment'] : $this->_config['class'];
+        $segment = trim($segment);
+        if ($segment === '') {
+            $segment = 'Solar';
         }
         
         // set the class
-        $this->setClass($this->_class);
+        $this->setSegment($segment);
         
         // lazy-start any existing session
         $this->lazyStart();
@@ -315,7 +306,7 @@ class Solar_Session extends Solar_Base
         }
         
         // start the session
-        session_start();
+        $this->_manager->start();
         
         // load the session segment
         $this->load();
@@ -338,8 +329,7 @@ class Solar_Session extends Solar_Base
             return;
         }
         
-        $name = session_name();
-        if (self::$_request->cookie($name)) {
+        if ($this->_manager->isContinuing()) {
             // a previous session exists, start it
             $this->start();
         }
@@ -354,7 +344,25 @@ class Solar_Session extends Solar_Base
      */
     public function isStarted()
     {
-        return session_id() !== '';
+        return $this->_manager->isStarted();
+    }
+
+    /**
+     * 
+     * Unloads the session segment after the session has ended
+     * 
+     * @return void
+     * 
+     */
+    public function unload()
+    {
+        // cannot unload started sessions
+        if ($this->isStarted()) {
+            return;
+        }
+        $this->_is_loaded = false;
+        $this->_store = array();
+        $this->_flash = array();
     }
     
     /**
@@ -374,23 +382,21 @@ class Solar_Session extends Solar_Base
         // can't be loaded if the session has started
         if (! $this->isStarted()) {
             // not possible for anything to be loaded, then
-            $this->_is_loaded = false;
-            $this->_store = array();
-            $this->_flash = array();
+            $this->unload();
             return;
         }
         
         // set up the value store.
-        if (empty($_SESSION[$this->_class])) {
-            $_SESSION[$this->_class] = array();
+        if (empty($_SESSION[$this->_segment])) {
+            $_SESSION[$this->_segment] = array();
         }
-        $this->_store =& $_SESSION[$this->_class];
+        $this->_store =& $_SESSION[$this->_segment];
         
         // set up the flash store
-        if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
-            $_SESSION['Solar_Session']['flash'][$this->_class] = array();
+        if (empty($_SESSION['Solar_Session']['flash'][$this->_segment])) {
+            $_SESSION['Solar_Session']['flash'][$this->_segment] = array();
         }
-        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
+        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_segment];
         
         // done!
         $this->_is_loaded = true;
@@ -413,15 +419,15 @@ class Solar_Session extends Solar_Base
      * Sets the class segment for $_SESSION; unloads existing store and flash
      * values.
      * 
-     * @param string $class The class name to segment by.
+     * @param string $segment The class name to segment by.
      * 
      * @return void
      * 
      */
-    public function setClass($class)
+    public function setSegment($segment)
     {
         $this->_is_loaded = false;
-        $this->_class = $class;
+        $this->_segment = $segment;
         $this->load();
     }
     
@@ -432,9 +438,9 @@ class Solar_Session extends Solar_Base
      * @return string
      * 
      */
-    public function getClass()
+    public function getSegment()
     {
-        return $this->_class;
+        return $this->_segment;
     }
     
     /**
@@ -710,7 +716,33 @@ class Solar_Session extends Solar_Base
     {
         $this->start();
         if (! headers_sent()) {
-            session_regenerate_id(true);
+            $this->_manager->regenerateId();
         }
     }
+
+    /**
+     * 
+     * Remove this session
+     * 
+     * @return bool
+     * 
+     */
+    public function stop()
+    {
+        $this->_manager->stop();
+    }
+
+    /**
+     * 
+     * Close this session for use in this request, writing the results
+     * to storage for the next request
+     * 
+     * @return bool
+     * 
+     */
+    public function close()
+    {
+        $this->_manager->close();
+    }
+
 }

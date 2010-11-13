@@ -45,7 +45,7 @@ abstract class Solar_Access_Adapter extends Solar_Base
      * 
      * A Solar_Auth object representing the current user.
      * 
-     * @var Solar_Auth_Adapter
+     * @var Solar_Auth
      * 
      */
     protected $_auth;
@@ -91,11 +91,11 @@ abstract class Solar_Access_Adapter extends Solar_Base
      * 
      * Fetches the access list from the adapter into $this->list.
      * 
-     * @param string|Solar_Auth_Adapter $auth_spec Fetch access controls for
+     * @param string|Solar_Auth $auth_spec Fetch access controls for
      * this user handle.  If a string, is assumed to be the handle directly;
-     * otherwise, the handle is pulled from a Solar_Auth_Adapter object.
+     * otherwise, the handle is pulled from a Solar_Auth object.
      * 
-     * @param array|Solar_Auth_Adapter $role_spec Fetch access controls for
+     * @param array|Solar_Auth $role_spec Fetch access controls for
      * these user roles.  If an array, is assumed to be the roles directly;
      * otherwise, the roles are pulled from a Solar_Role_Adapter object.
      * 
@@ -107,7 +107,7 @@ abstract class Solar_Access_Adapter extends Solar_Base
         // clear out previous values
         $this->reset();
         
-        if ($auth_spec instanceof Solar_Auth_Adapter) {
+        if ($auth_spec instanceof Solar_Auth) {
             $this->_auth = $auth_spec;
             $handle = $this->_auth->handle;
         } else {

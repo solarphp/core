@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
+class Solar_Auth_Storage_Ldap extends Solar_Auth_Storage
 {
     /**
      * 
@@ -32,7 +32,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Ldap = array(
+    protected $_Solar_Auth_Storage_Ldap = array(
         'uri'    => null,
         'format' => null,
         'filter' => '\w',
@@ -57,15 +57,26 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
     
     /**
      * 
-     * Verifies a username handle and password.
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
-     * 
      */
-    protected function _processLogin()
+    abstract public function validateCredentials($credentials)
     {
+
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+            return false;
+        }
+        $handle = $credentials['handle'];
+        $passwd = $credentials['passwd'];
+
         // connect
         $conn = @ldap_connect($this->_config['uri']);
         
@@ -79,16 +90,16 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter
         
         // filter the handle to prevent LDAP injection
         $regex = '/[^' . $this->_config['filter'] . ']/';
-        $this->_handle = preg_replace($regex, '', $this->_handle);
+        $handle = preg_replace($regex, '', $handle);
         
         // bind to the server
-        $rdn = sprintf($this->_config['format'], $this->_handle);
-        $bind = @ldap_bind($conn, $rdn, $this->_passwd);
+        $rdn = sprintf($this->_config['format'], $handle);
+        $bind = @ldap_bind($conn, $rdn, $passwd);
         
         // did the bind succeed?
         if ($bind) {
             ldap_close($conn);
-            return array('handle' => $this->_handle);
+            return array('handle' => $handle);
         } else {
             $this->_err = @ldap_errno($conn) . " " . @ldap_error($conn);
             ldap_close($conn);

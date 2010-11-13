@@ -20,7 +20,7 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
+class Solar_Auth_Storage_Post extends Solar_Auth_Storage
 {
     /**
      * 
@@ -41,7 +41,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
      * @var array
      * 
      */
-    protected $_Solar_Auth_Adapter_Post = array(
+    protected $_Solar_Auth_Storage_Post = array(
         'uri'     => 'https://example.com/services/authenticate.php',
         'handle'  => 'handle',
         'passwd'  => 'passwd',
@@ -51,19 +51,30 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
     
     /**
      * 
-     * Verifies a username handle and password.
+     * Verifies set of credentials.
+     *
+     * @param array $credentials A list of credentials to verify
      * 
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
-     * 
      */
-    protected function _processLogin()
+    public function validateCredentials($credentials)
     {
+
+        if (empty($credentials['handle'])) {
+            return false;
+        }
+        if (empty($credentials['passwd'])) {
+            return false;
+        }
+        $handle = $credentials['handle'];
+        $passwd = $credentials['passwd'];
+
         // create an array of POST data
         $content = array(
-            $this->_config['handle'] => $this->_handle,
-            $this->_config['passwd'] => $this->_passwd,
+            $this->_config['handle'] => $handle,
+            $this->_config['passwd'] => $passwd,
         );
         
         // build the base request
@@ -86,7 +97,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter
               (bool) $this->_config['replies'][$reply];
              
         if ($ok) {
-            return array('handle' => $this->_handle);
+            return array('handle' => $handle);
         } else {
             return false;
         }

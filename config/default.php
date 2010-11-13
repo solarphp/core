@@ -18,6 +18,7 @@ $config['Solar']['ini_set'] = array(
  */
 $config['Solar']['registry_set'] = array(
     'sql'              => 'Solar_Sql',
+    'session_manager'  => 'Solar_Session_Manager',
     'user'             => 'Solar_User',
     'model_catalog'    => 'Solar_Sql_Model_Catalog',
     'mail_transport'   => 'Solar_Mail_Transport',

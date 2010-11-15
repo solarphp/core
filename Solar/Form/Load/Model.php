@@ -751,7 +751,7 @@ class Solar_Form_Load_Model extends Solar_Base
      */
     protected function _fixElementFilters(&$elem, $name, $col)
     {
-        if (! $elem['filters'] === null) {
+        if ( $elem['filters'] !== null) {
             return;
         }
         

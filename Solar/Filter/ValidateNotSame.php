@@ -33,7 +33,7 @@ class Solar_Filter_ValidateNotSame extends Solar_Filter_Abstract
      * @return bool True if the types and values are equal, false if not.
      * 
      */
-    public function validateSame($value, $other_key)
+    public function validateNotSame($value, $other_key)
     {
         if (! $this->_filter->dataKeyExists($other_key)) {
             return false;

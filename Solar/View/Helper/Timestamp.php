@@ -118,26 +118,35 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
         if (! $this->_tz_output) {
             $this->_tz_output = date_default_timezone_get();
         }
-        
+
+        $this->_calculateOffset(time());
+    }
+
+    /**
+     *
+     * Calculates the offset between the origin and output timezones
+     * for the given timestamp.
+     *
+     * @param integer $timestamp a Unix timestamp
+     *
+     * @return void
+     *
+     **/
+    protected function _calculateOffset($timestamp)
+    {
         // if different zones, determine the offset between them
         if ($this->_tz_origin != $this->_tz_output) {
             
             // origin timestamp
             $origin_tz     = new DateTimeZone($this->_tz_origin);
-            $origin_date   = new DateTime('now', $origin_tz);
-            $origin_offset = $origin_tz->getOffset($origin_date);
-            if ($origin_offset < 0) {
-                $origin_offset += (12 * 3600); // move forward 12 hours
-            }
-            
+            $origin_date   = new DateTime(date('Y-m-d H:i:s', $timestamp), $origin_tz);
+            $origin_offset = $origin_date->getOffset();
+
             // output timestamp
             $output_tz     = new DateTimeZone($this->_tz_output);
-            $output_date   = new DateTime('now', $output_tz);
+            $output_date   = new DateTime(date('Y-m-d H:i:s', $timestamp), $output_tz);
             $output_offset = $output_tz->getOffset($output_date);
-            if ($output_offset < 0) {
-                $output_offset += (12 * 3600); // move forward 12 hours
-            }
-            
+
             // retain the differential offset
             $this->_tz_offset = $output_offset - $origin_offset;
         }
@@ -152,13 +161,21 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
      * 
      * @param string $format An optional custom [[php::date() | ]]
      * formatting string.
-     * 
+     *
+     * @param string $tz_origin an optional time zone name for the origin
+     * timestamp. If $tz_origin or $tz_output are not set, the default values
+     * (from config) will be used. The system time zone is used, if there are
+     * no time zones configured.
+     *
+     * @param string $tz_output an optional time zone name, the output timestamp
+     * will be converted to this time zone
+     *
      * @return string The formatted date string.
      * 
      */
-    public function timestamp($spec, $format = null)
+    public function timestamp($spec, $format = null, $tz_origin = null, $tz_output = null)
     {
-        return $this->_process($spec, $format);
+        return $this->_process($spec, $format, $tz_origin, $tz_output);
     }
     
     /**
@@ -174,7 +191,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
      * @return string The formatted date string.
      * 
      */
-    protected function _process($spec, $format)
+    protected function _process($spec, $format, $tz_origin = null, $tz_output = null)
     {
         // must have an explicit spec; empty *does not* mean "now"
         if (! $spec) {
@@ -190,7 +207,23 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
         } else {
             $time = strtotime($spec);
         }
-        
+
+        // origin and output timezones specified?
+        // if so, use them, otherwise use the configured zones
+
+        if ($tz_origin) {
+            $tz_origin_save = $this->_tz_origin;
+            $this->_tz_origin = $tz_origin;
+        }
+
+        if ($tz_output) {
+            $tz_output_save = $this->_tz_output;
+            $this->_tz_output = $tz_output;
+        }
+
+        // calculate the offset between origin and output timezones
+        $this->_calculateOffset($time);
+
         // move by the offset
         $time += $this->_tz_offset;
         
@@ -200,7 +233,17 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
         } else {
             $val = date($format, $time);
         }
-        
+
+        // restore configured time zones
+
+        if (isset($tz_origin_save)) {
+            $this->_tz_origin = $tz_origin_save;
+        }
+
+        if (isset($tz_output_save)) {
+            $this->_tz_output = $tz_output_save;
+        }
+
         return $this->_view->escape($val);
     }
 }

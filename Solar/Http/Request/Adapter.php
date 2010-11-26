@@ -620,6 +620,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     {
         $allowed = array(
             Solar_Http_Request::METHOD_GET,
+            Solar_Http_Request::METHOD_HEAD,
             Solar_Http_Request::METHOD_POST,
             Solar_Http_Request::METHOD_PUT,
             Solar_Http_Request::METHOD_DELETE,

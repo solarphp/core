@@ -23,6 +23,7 @@ $config['Solar']['registry_set'] = array(
     'model_catalog'    => 'Solar_Sql_Model_Catalog',
     'mail_transport'   => 'Solar_Mail_Transport',
     'controller_front' => 'Solar_Controller_Front',
+    'session_manager'  => 'Solar_Session_Manager',
 );
 
 /**

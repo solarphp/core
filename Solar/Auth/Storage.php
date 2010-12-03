@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract Authentication Storage.
+ * Credential storage adapter factory.
  * 
  * @category Solar
  * 
@@ -14,18 +14,18 @@
  * @version $Id: Adapter.php 4533 2010-04-23 16:35:15Z pmjones $
  * 
  */
-abstract class Solar_Auth_Storage extends Solar_Base {
-
+class Solar_Auth_Storage extends Solar_Factory {
+    
     /**
      * 
-     * Verifies set of credentials.
-     *
-     * @param array $credentials A list of credentials to verify
+     * Default configuration values.
      * 
-     * @return mixed An array of verified user information, or boolean false
-     * if verification failed.
+     * @config string adapter The adapter class, for example 'Solar_Access_Adapter_Open'.
+     * 
+     * @var array
      * 
      */
-    abstract public function validateCredentials($credentials);
-    
+    protected $_Solar_Auth_Storage = array(
+        'adapter' => 'Solar_Auth_Storage_Adapter_Var',
+    );
 }

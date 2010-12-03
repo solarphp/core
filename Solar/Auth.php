@@ -15,7 +15,7 @@
  * 
  */
 class Solar_Auth extends Solar_Base {
-
+    
     /**
      * 
      * The user is anonymous/unauthenticated (no attempt has been made to 
@@ -76,17 +76,17 @@ class Solar_Auth extends Solar_Base {
      *   the the PHP ini setting for `session.gc_maxlifetime`, it will throw
      *   an exception.
      * 
-     * @config bool auto_login Whether or not to allow automatic login at start()
-     *   time. Default true.
+     * @config bool auto_login Whether or not to allow automatic login at 
+     * start() time. Default true.
      *
-     * @config bool auto_logout Whether or not to allow automatic logout at start()
-     *   time. Default true.
+     * @config bool auto_logout Whether or not to allow automatic logout at 
+     * start() time. Default true.
      * 
-     * @config callback login_callback A callback to execute after successful login, but before
-     *   the source postLogin() method is called.
+     * @config callback login_callback A callback to execute after successful
+     * login, but before the source postLogin() method is called.
      * 
-     * @config callback logout_callback A callback to execute after successful logout, but before
-     *   the source postLogout() method is called.
+     * @config callback logout_callback A callback to execute after successful
+     * logout, but before the source postLogout() method is called.
      * 
      * @var array
      * 
@@ -98,9 +98,15 @@ class Solar_Auth extends Solar_Base {
         'auto_logout' => true,
         'login_callback'  => null,
         'logout_callback' => null,
-        'login_protocol' => 'Solar_Auth_Login_Post',
-        'logout_protocol' => 'Solar_Auth_Logout_Get',
-        'storage' => null,
+        'login_protocol' => array(
+            'adapter' => 'Solar_Auth_Login_Adapter_Post',
+        ),
+        'logout_protocol' => array(
+            'adapter' => 'Solar_Auth_Logout_Adapter_Post',
+        ),
+        'storage' => array(
+            'adapter' => 'Solar_Auth_Storage_Adapter_Var',
+        ),
     );
     
     /**
@@ -169,6 +175,12 @@ class Solar_Auth extends Solar_Base {
         'info',
     );
     
+    protected $_login_protocol;
+    
+    protected $_logout_protocol;
+    
+    protected $_storage;
+    
     /**
      * 
      * Modifies $this->_config after it has been built.
@@ -209,11 +221,28 @@ class Solar_Auth extends Solar_Base {
      */
     protected function _postConstruct()
     {
-        
         // create the session object for this class
         $this->_session = Solar::factory(
             'Solar_Session',
             array('class' => get_class($this))
+        );
+        
+        // make sure we have a login adapter
+        $this->_login_protocol = Solar::dependency(
+            'Solar_Auth_Login',
+            $this->_config['login_protocol']
+        );
+        
+        // make sure we have a logout adapter
+        $this->_logout_protocol = Solar::dependency(
+            'Solar_Auth_Logout',
+            $this->_config['logout_protocol']
+        );
+        
+        // make sure we have a storage adapter
+        $this->_storage = Solar::dependency(
+            'Solar_Auth_Storage',
+            $this->_config['storage']
         );
     }
     
@@ -243,7 +272,7 @@ class Solar_Auth extends Solar_Base {
         if ($key == 'status' && ! $val) {
             $val = Solar_Auth::ANON;
         }
-
+        
         // special behavior for 'info'
         if ($key == 'info' && ! $val) {
             $val = array();
@@ -276,7 +305,7 @@ class Solar_Auth extends Solar_Base {
         
         $this->_session->set($key, $val);
     }
-
+    
     /**
      * 
      * determine which login protocol might be associated with this request
@@ -287,16 +316,13 @@ class Solar_Auth extends Solar_Base {
      */
     public function getLoginProtocol()
     {
-        $protocol_list = (array) $this->_config['login_protocol'];
-        foreach ($protocol_list as $protocol_spec) {
-            $protocol = Solar::factory($protocol_spec);
-            if ($protocol->isLoginRequest()) {
-                return $protocol;
-            }
+        if ($this->_login_protocol->isLoginRequest()) {
+            return $this->_login_protocol->getProtocol();
+        } else {
+            return null;
         }
-        return null;
     }
-
+    
     /**
      * 
      * determine which logout protocol might be associated with this request
@@ -307,14 +333,11 @@ class Solar_Auth extends Solar_Base {
      */
     public function getLogoutProtocol()
     {
-        $protocol_list = (array) $this->_config['logout_protocol'];
-        foreach ($protocol_list as $protocol_spec) {
-            $protocol = Solar::factory($protocol_spec);
-            if ($protocol->isLogoutRequest()) {
-                return $protocol;
-            }
+        if ($this->_logout_protocol->isLogoutRequest()) {
+            return $this->_logout_protocol->getProtocol();
+        } else {
+            return null;
         }
-        return null;
     }
     
     /**
@@ -331,12 +354,14 @@ class Solar_Auth extends Solar_Base {
         
         // auto-login?
         if ($this->_config['auto_login'] && !$this->isValid()) {
-            return $this->processLogin($this->getLoginProtocol());
+            $protocol = $this->getLoginProtocol();
+            return $this->processLogin($protocol);
         }
         
         // auto-logout?
         if ($this->_config['auto_logout'] && $this->isValid()) {
-            return $this->processLogout($this->getLogoutProtocol());
+            $protocol = $this->getLogoutProtocol();
+            return $this->processLogout($protocol);
         }
     }
     
@@ -412,7 +437,7 @@ class Solar_Auth extends Solar_Base {
     {
         return $this->status == Solar_Auth::VALID;
     }
-
+    
     /**
      * 
      * Set user information. Only serializable information may be included.
@@ -432,14 +457,14 @@ class Solar_Auth extends Solar_Base {
            'uri'     => null,
            'uid'     => null,
         );
-
+    
         // Set default values for require info keys        
         $info = array_merge($base, (array) $info);
-
+    
         // Store any additional information gathered from the login protocol
         // or from the backend storage.
         $this->info = $info;
-
+    
         // For historical reasons, some user attributes get their own properties        
         $this->handle  = $info['handle'];
         $this->moniker = $info['moniker'];
@@ -467,17 +492,16 @@ class Solar_Auth extends Solar_Base {
      */
     public function reset($status = Solar_Auth::ANON, $info = array())
     {
-
         // canonicalize the status value
         $status = strtoupper($status);
-
+        
         if (($this->status == self::ANON) && ($status == self::ANON)) {
             // If we are transitioning between anonymous and anonymous,
             // don't attempt to store information which would trigger
             // a session to start
             return;
         }
-
+        
         // change the current status
         $this->status = $status;
         
@@ -529,19 +553,17 @@ class Solar_Auth extends Solar_Base {
      */
     protected function _validateCredentials($credentials)
     {
-        if (!$credentials) {
+        if (! $credentials) {
             // empty credentials are never valid
             return false;
         }
-        $storage_list = (array) $this->_config['storage'];
-        foreach ($storage_list as $storage_spec) {
-            $storage = Solar::factory($storage_spec);
-            $result = $storage->validateCredentials($credentials);
-            if ($result) {
-                return $result;
-            }
+        
+        $result = $this->_storage->validateCredentials($credentials);
+        if ($result) {
+            return $result;
         }
-        return false;
+        
+        return null;
     }
     
     /**
@@ -558,18 +580,19 @@ class Solar_Auth extends Solar_Base {
      */
     protected function _isValidLoginProtocol($protocol)
     {
-        if (!$protocol) {
+        if (! $protocol) {
             return false;
         }
         return true;
     }
-
+    
     /**
      * 
      * Reset authentication status based on a credential
      * validation result.
      * 
-     * @param mixed $result Login An array result indicates success, anything else is a form of failure.
+     * @param mixed $result Login An array result indicates success, anything 
+     * else is a form of failure.
      * 
      * @return void
      * 
@@ -587,7 +610,7 @@ class Solar_Auth extends Solar_Base {
             $this->reset(Solar_Auth::WRONG);
         }
     }
-
+    
     /**
      * 
      * Process any login callbacks that might be registered.
@@ -607,7 +630,7 @@ class Solar_Auth extends Solar_Base {
             );
         }
     }
-
+    
     /**
      * 
      * Allow subclasses to perform pre Login processing
@@ -618,7 +641,7 @@ class Solar_Auth extends Solar_Base {
     protected function _preLogin()
     {
     }
-
+    
     /**
      * 
      * Allow subclasses to perform post login processing
@@ -629,7 +652,7 @@ class Solar_Auth extends Solar_Base {
     protected function _postLoginSuccess()
     {
     }
-
+    
     /**
      * 
      * Allow subclasses to perform post login processing
@@ -663,12 +686,12 @@ class Solar_Auth extends Solar_Base {
         }
         
         $this->_preLogin();
-
+    
         // load the user-provided credentials, such as handle and password
         $credentials = $protocol->getCredentials();
-
+    
         $result = $this->_validateCredentials($credentials);
-
+    
         $this->_processCredentialStatus($result);
         
         $this->_processLoginCallbacks();
@@ -688,10 +711,10 @@ class Solar_Auth extends Solar_Base {
             return true;
             
         } else {
-
+    
             // Allow logic to be performed by subclasses upon failure
             $this->_postLoginFailure();
-
+    
             // We must notify the credential providing protocol of failure
             $protocol->postLoginFailure();
             
@@ -699,7 +722,7 @@ class Solar_Auth extends Solar_Base {
             
         }
     }
-
+    
     /**
      * 
      * Validate that the protocol passed is a valid logout protocol
@@ -719,7 +742,7 @@ class Solar_Auth extends Solar_Base {
         }
         return true;
     }
-
+    
     /**
      * 
      * Process any logout callbacks that might be registered.
@@ -739,7 +762,7 @@ class Solar_Auth extends Solar_Base {
             );
         }
     }
-
+    
     /**
      * 
      * Allow subclasses to perform pre Logout processing
@@ -750,7 +773,7 @@ class Solar_Auth extends Solar_Base {
     protected function _preLogout()
     {
     }
-
+    
     /**
      * 
      * Allow subclasses to perform post logout processing
@@ -774,11 +797,11 @@ class Solar_Auth extends Solar_Base {
         if (!$this->_isValidLogoutProtocol($protocol)) {
             return false;
         }
-
+    
         $this->_preLogout();
     
         $this->_processLogout();
-
+    
         $this->_processLogoutCallbacks();
         
         $this->_postLogout();

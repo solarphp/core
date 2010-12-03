@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract Authentication Logout Protocol.
+ * Logout protocol adapter factory.
  * 
  * @category Solar
  * 
@@ -14,49 +14,18 @@
  * @version $Id: Adapter.php 4533 2010-04-23 16:35:15Z pmjones $
  * 
  */
-abstract class Solar_Auth_Logout extends Solar_Base {
-
-    /**
-     * 
-     * Details on the current request.
-     * 
-     * @var Solar_Request
-     * 
-     */
-    protected $_request;
-
-    /**
-     * 
-     * Post-construction tasks to complete object construction.
-     * 
-     * @return void
-     * 
-     */
-    protected function _postConstruct()
-    {
-        parent::_postConstruct();
-        
-        // get the current request environment
-        $this->_request = Solar_Registry::get('request');
-    }
-
-    /**
-     * 
-     * Tells if the current page load appears to be the result of
-     * an attempt to log out.
-     * 
-     * @return bool
-     * 
-     */
-    abstract public function isLogoutRequest();
-
-    /**
-     * 
-     * Determine the location to redirect to after logout
-     * 
-     * @return string|null The url to redirect to or null if no redirect
-     * 
-     */
-    abstract function getLogoutRedirect();
+class Solar_Auth_Logout extends Solar_Factory {
     
+    /**
+     * 
+     * Default configuration values.
+     * 
+     * @config string adapter The adapter class, for example 'Solar_Access_Adapter_Open'.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Auth_Logout = array(
+        'adapter' => 'Solar_Auth_Logout_Adapter_Post',
+    );
 }

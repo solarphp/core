@@ -70,8 +70,6 @@ abstract class Test_Solar_Auth_Logout_Adapter extends Solar_Test {
         );
         
         $this->_request = Solar_Registry::get('request');
-        
-        Solar_Registry::set('session_manager', 'Solar_Session_Manager');
     }
     
     /**

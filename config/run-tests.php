@@ -14,6 +14,8 @@ $config['Solar']['ini_set'] = array(
 	'date.timezone'   => 'America/Chicago',
 );
 
+$config['Solar']['registry_set']['session_manager'] = 'Solar_Session_Manager';
+
 /**
  * Database connections.
  */

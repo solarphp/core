@@ -22,7 +22,6 @@ class Test_Solar_Auth extends Solar_Test {
     
     public function preTest()
     {
-        Solar_Registry::set('session_manager', 'Solar_Session_Manager');
         $this->_request = Solar_Registry::get('request');
         $this->_auth = $this->_newAuth();
     }

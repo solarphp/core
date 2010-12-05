@@ -48,7 +48,7 @@ class Test_Solar_Session extends Solar_Test {
     {
         parent::preTest();
         $this->_session = Solar::factory('Solar_Session');
-        $this->_session->setClass($this->_class);
+        $this->_session->setSegment($this->_class);
     }
     
     // -----------------------------------------------------------------
@@ -331,11 +331,11 @@ class Test_Solar_Session extends Solar_Test {
     public function testSetClass()
     {
         $expect = get_class($this);
-        $this->assertSame($this->_session->getClass(), $expect);
+        $this->assertSame($this->_session->getSegment(), $expect);
         
         $expect = 'Some_Other_Class';
-        $this->_session->setClass($expect);
-        $this->assertSame($this->_session->getClass(), $expect);
+        $this->_session->setSegment($expect);
+        $this->assertSame($this->_session->getSegment(), $expect);
     }
     
     /**

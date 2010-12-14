@@ -41,7 +41,6 @@ class Solar_Log_Adapter_Mail extends Solar_Log_Adapter {
      */
     protected $_Solar_Log_Adapter_Mail = array(
         'events' => '*',
-        'file'   => '',
         'format' => '%t %c %e %m',
         'from'   => null,
         'to'     => null,

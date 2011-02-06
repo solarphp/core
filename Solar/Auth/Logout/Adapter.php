@@ -40,6 +40,13 @@ abstract class Solar_Auth_Logout_Adapter extends Solar_Base {
         $this->_request = Solar_Registry::get('request');
     }
     
+    /**
+     * 
+     * Returns this protocol object.
+     * 
+     * @return Solar_Auth_Logout_Adapter
+     * 
+     */
     public function getProtocol()
     {
         return $this;

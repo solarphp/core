@@ -27,7 +27,9 @@ class Solar_Auth_Logout_Adapter_Get extends Solar_Auth_Logout_Adapter {
      * 
      * @config string process The source_process element value indicating a logout request;
      *   default is the 'PROCESS_LOGOUT' locale key value.
-     *
+     * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Logout_Adapter_Get = array(
         'source_process' => 'process',

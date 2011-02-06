@@ -67,14 +67,14 @@ class Solar_Auth extends Solar_Base {
      * Default configuration values.
      * 
      * @config int expire Authentication lifetime in seconds; zero is
-     *   forever.  Default is 14400 (4 hours). If this value is greater than
-     *   the non-zero PHP ini setting for `session.cookie_lifetime`, it will
-     *   throw an exception.
+     * forever.  Default is 14400 (4 hours). If this value is greater than
+     * the non-zero PHP ini setting for `session.cookie_lifetime`, it will
+     * throw an exception.
      * 
      * @config int idle Maximum allowed idle time in seconds; zero is
-     *   forever.  Default is 1440 (24 minutes). If this value is greater than
-     *   the the PHP ini setting for `session.gc_maxlifetime`, it will throw
-     *   an exception.
+     * forever.  Default is 1440 (24 minutes). If this value is greater than
+     * the the PHP ini setting for `session.gc_maxlifetime`, it will throw
+     * an exception.
      * 
      * @config bool auto_login Whether or not to allow automatic login at 
      * start() time. Default true.
@@ -82,11 +82,14 @@ class Solar_Auth extends Solar_Base {
      * @config bool auto_logout Whether or not to allow automatic logout at 
      * start() time. Default true.
      * 
-     * @config callback login_callback A callback to execute after successful
-     * login, but before the source postLogin() method is called.
+     * @config dependency login_protocol A Solar_Auth_Login dependency to 
+     * handle login attempts.
      * 
-     * @config callback logout_callback A callback to execute after successful
-     * logout, but before the source postLogout() method is called.
+     * @config dependency logout_protocol A Solar_Auth_Logout dependency to 
+     * handle logout attempts.
+     * 
+     * @config dependency storage A Solar_Auth_Storage dependency to handle
+     * checking of credentials against a storage system.
      * 
      * @var array
      * 
@@ -175,10 +178,32 @@ class Solar_Auth extends Solar_Base {
         'info',
     );
     
+    /**
+     * 
+     * A Solar_Auth_Login dependency to handle login attempts.
+     * 
+     * @var Solar_Auth_Login_Adapter
+     * 
+     */
     protected $_login_protocol;
     
+    /**
+     * 
+     * A Solar_Auth_Logout dependency to handle login attempts.
+     * 
+     * @var Solar_Auth_Logout_Adapter
+     * 
+     */
     protected $_logout_protocol;
     
+    /**
+     * 
+     * A Solar_Auth_Storage dependency to handle checking of credentials 
+     * against a storage system.
+     * 
+     * @var Solar_Auth_Storage
+     * 
+     */
     protected $_storage;
     
     /**
@@ -368,6 +393,8 @@ class Solar_Auth extends Solar_Base {
     /**
      * 
      * Redirects to another URI after valid authentication.
+     * 
+     * @param string $href The location to redirect to.
      * 
      * @return void
      * 
@@ -788,6 +815,8 @@ class Solar_Auth extends Solar_Base {
     /**
      * 
      * Processes logout attempts.
+     * 
+     * @param Solar_Auth_Logout $protocol Logout protocol instance.
      * 
      * @return void
      * 

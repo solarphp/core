@@ -20,7 +20,7 @@ class Solar_Auth_Storage_Adapter_Var extends Solar_Auth_Storage_Adapter
      * 
      * Default configuration values.
      * 
-     * @config string file Path to .ini file.
+     * @config array data The credential data.
      * 
      * @var array
      * 
@@ -29,8 +29,22 @@ class Solar_Auth_Storage_Adapter_Var extends Solar_Auth_Storage_Adapter
         'data' => array(),
     );
     
+    /**
+     * 
+     * The credential data.
+     * 
+     * @var array
+     * 
+     */
     protected $_data = array();
     
+    /**
+     * 
+     * Post-construction tasks.
+     * 
+     * @return void
+     * 
+     */
     protected function _postConstruct()
     {
         $this->_data = (array) $this->_config['data'];

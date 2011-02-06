@@ -24,12 +24,13 @@ class Solar_View_Helper_GoogleAnalytics extends Solar_View_Helper
      * 
      * Default configuration values.
      * 
-     * @config string google analytics account id
+     * @config string google_ua Google analytics account ID.
      *
-     * @config string domain_name used to define base domain name if your using same code across
-     *  multiple subdomains, for example '.test.com' or 'none' if being used on multiple top-level domains
+     * @config string domain_name Used to define base domain name if your using same code across
+     *  multiple subdomains, for example '.test.com' or 'none' if being used on multiple top-level domains.
      *
-     * @config bool allow_linker set to 'true' if you want to use across multiple top-level domains
+     * @config bool allow_linker Set to 'true' if you want to use across multiple top-level domains.
+     * 
      * @var array
      * 
      */  

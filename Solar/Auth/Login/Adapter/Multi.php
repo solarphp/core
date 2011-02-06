@@ -20,17 +20,43 @@ class Solar_Auth_Login_Adapter_Multi extends Solar_Auth_Login_Adapter
     /**
      * 
      * Default configuration values.
-     *
+     * 
+     * @config array adapters An array of login dependency objects, one for
+     * each of the login protocols to be used.
+     * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Login_Adapter_Multi = array(
         'adapters' => array(),
     );
     
-
+    /**
+     * 
+     * An array of adapter dependencies, one for each of the login protocols
+     * to be used.
+     * 
+     * @var array
+     * 
+     */
     protected $_adapters;
     
+    /**
+     * 
+     * The current login protocol being used.
+     * 
+     * @var Solar_Auth_Adapter_Login
+     * 
+     */
     protected $_protocol;
     
+    /**
+     * 
+     * Post-construction tasks.
+     * 
+     * @return void
+     * 
+     */
     protected function _postConstruct()
     {
         $this->_adapters = (array) $this->_config['adapters'];
@@ -72,6 +98,13 @@ class Solar_Auth_Login_Adapter_Multi extends Solar_Auth_Login_Adapter
         return null;
     }
     
+    /**
+     * 
+     * Returns the current protocol object being used.
+     * 
+     * @return Solar_Auth_Login_Adapter
+     * 
+     */
     public function getProtocol()
     {
         return $this->_protocol;

@@ -44,7 +44,7 @@ class Solar_Auth_Storage_Adapter_Sql extends Solar_Auth_Storage_Adapter
      * @config string|array where Additional _multiWhere() conditions to use
      *   when selecting rows for authentication.
      *
-     * @config boolean Insert credentials into backend storage if verified by third
+     * @config boolean auto_create Insert credentials into backend storage if verified by third
      *   party.
      * 
      * @var array
@@ -128,8 +128,11 @@ class Solar_Auth_Storage_Adapter_Sql extends Solar_Auth_Storage_Adapter
     
     /**
      * 
-     * Convert a row loaded from the database into a set of auth
-     * credentials
+     * Convert a row loaded from the database into a set of auth credentials.
+     * 
+     * @param array $row The database row.
+     * 
+     * @return array $info The converted credential set.
      * 
      */
     protected function _convertRow($row)
@@ -244,6 +247,7 @@ class Solar_Auth_Storage_Adapter_Sql extends Solar_Auth_Storage_Adapter
         if (empty($credentials['handle'])) {
             return false;
         }
+        
         if (empty($credentials['passwd'])) {
     
             // This is a password-less authentication
@@ -253,7 +257,7 @@ class Solar_Auth_Storage_Adapter_Sql extends Solar_Auth_Storage_Adapter
             
             return false;
         }
-    
+        
         // get the dependency object of class Solar_Sql
         $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         

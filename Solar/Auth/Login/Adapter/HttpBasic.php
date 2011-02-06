@@ -25,6 +25,8 @@ class Solar_Auth_Login_Adapter_HttpBasic extends Solar_Auth_Login_Adapter {
      * @config bool force Force HTTP authentication; if not authenticated,
      * issue a 401 response code to force the user to enter credentials.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Login_Adapter_HttpBasic = array(
         'realm' => 'Secure Area',
@@ -106,10 +108,17 @@ class Solar_Auth_Login_Adapter_HttpBasic extends Solar_Auth_Login_Adapter {
         return null;
     }
     
+    /**
+     * 
+     * Forces the user to log in by presenting an authentication dialog in the 
+     * browser.
+     * 
+     * @return void
+     * 
+     */
     protected function _forceLogin()
     {
         $response = Solar_Registry::get('response');
-        
         $label = 'WWW-Authenticate';
         $value = 'Basic realm="' . $this->_config['realm'] . '"';
         $response->setHeader($label, $value);

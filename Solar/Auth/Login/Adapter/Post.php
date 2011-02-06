@@ -34,6 +34,8 @@ class Solar_Auth_Login_Adapter_Post extends Solar_Auth_Login_Adapter {
      * @config string process The source_process element value indicating a login request;
      *   default is the 'PROCESS_LOGIN' locale key value.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Login_Adapter_Post = array(
         'source_handle'  => 'handle',

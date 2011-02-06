@@ -22,6 +22,9 @@ class Solar_Auth_Storage_Adapter_Multi extends Solar_Auth_Storage_Adapter
      * 
      * Default configuration values.
      * 
+     * @config array adapters An array of storage dependency objects, one for
+     * each of the storage systems to be used.
+     * 
      * @var array
      * 
      */
@@ -29,8 +32,23 @@ class Solar_Auth_Storage_Adapter_Multi extends Solar_Auth_Storage_Adapter
         'adapters' => array(),
     );
     
+    /**
+     * 
+     * An array of adapter dependencies, one for each of the storage systems
+     * to be used.
+     * 
+     * @var array
+     * 
+     */
     protected $_adapters;
     
+    /**
+     * 
+     * Post-construction tasks.
+     * 
+     * @return void
+     * 
+     */
     protected function _postConstruct()
     {
         $this->_adapters = (array) $this->_config['adapters'];

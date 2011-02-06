@@ -20,13 +20,33 @@ class Solar_Auth_Logout_Adapter_Multi extends Solar_Auth_Logout_Adapter {
      * 
      * Default configuration values.
      * 
+     * @config array adapters An array of logout dependency objects, one for
+     * each of the logout protocols to be used.
+     * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Logout_Adapter_Multi = array(
         'adapters' => array(),
     );
     
+    /**
+     * 
+     * An array of adapter dependencies, one for each of the logout protocols
+     * to be used.
+     * 
+     * @var array
+     * 
+     */
     protected $_adapters;
     
+    /**
+     * 
+     * The current logout protocol being used.
+     * 
+     * @var Solar_Auth_Adapter_Logout
+     * 
+     */
     protected $_protocol;
     
     /**
@@ -77,6 +97,13 @@ class Solar_Auth_Logout_Adapter_Multi extends Solar_Auth_Logout_Adapter {
         return null;
     }
     
+    /**
+     * 
+     * Returns the current protocol object being used.
+     * 
+     * @return Solar_Auth_Logout_Adapter
+     * 
+     */
     public function getProtocol()
     {
         return $this->_protocol;

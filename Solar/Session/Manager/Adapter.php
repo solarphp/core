@@ -19,7 +19,7 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
 
     /**
      * 
-     * Starts the session
+     * Starts the session.
      * 
      * @return void
      * 
@@ -59,7 +59,7 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
 
     /**
      * 
-     * Remove this session
+     * Remove this session.
      * 
      * @return bool
      * 
@@ -68,7 +68,9 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
 
     /**
      * 
-     * Allow session segments to register with the mothership
+     * Allow session segments to register with the mothership.
+     * 
+     * @param Solar_Session $session The session object to add.
      * 
      * @return void
      * 
@@ -78,11 +80,10 @@ abstract class Solar_Session_Manager_Adapter extends Solar_Base {
     /**
      * 
      * Close this session for use in this request, writing the results
-     * to storage for the next request
+     * to storage for the next request.
      * 
      * @return void
      * 
      */
     abstract function close();
-
 }

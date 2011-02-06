@@ -32,7 +32,9 @@ class Solar_Auth_Logout_Adapter_Facebook extends Solar_Auth_Logout_Adapter {
      *
      * @config dependency facebook A dependency on a Facebook instance; 
      *  default is a Solar_Registry entry named 'facebook'.
-     *
+     * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Logout_Adapter_Facebook = array(
         'source_process' => 'process',
@@ -41,7 +43,6 @@ class Solar_Auth_Logout_Adapter_Facebook extends Solar_Auth_Logout_Adapter {
         'method'  => 'post',
         'facebook' => 'facebook',
     );
-    
 
     /**
      * 

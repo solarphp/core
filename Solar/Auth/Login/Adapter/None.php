@@ -20,6 +20,8 @@ class Solar_Auth_Login_Adapter_None extends Solar_Auth_Login_Adapter
     /**
      * 
      * Default configuration values.
+     * 
+     * @var array
      *
      */
     protected $_Solar_Auth_Login_Adapter_None = array(

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Log adapter for Chromephp
+ * Log adapter for Chromephp.
  * 
  * @category Solar
  * 
@@ -35,6 +35,10 @@ class Solar_Log_Adapter_Chromephp extends Solar_Log_Adapter {
      * 
      * @config dependency response A Solar_Http_Response dependency injection.
      * 
+     * @config string cookie The ChromePHP cookie name.
+     * 
+     * @config string cookie The ChromePHP version number.
+     * 
      * @var array
      * 
      */
@@ -55,7 +59,23 @@ class Solar_Log_Adapter_Chromephp extends Solar_Log_Adapter {
      * 
      */
     protected $_response;
+    
+    /**
+     * 
+     * A session object for this class.
+     * 
+     * @var Solar_Session
+     * 
+     */
     protected $_session;
+    
+    /**
+     * 
+     * A ChromePHP data object.
+     * 
+     * @var StdClass
+     * 
+     */
     protected $_obj;
     
     /**
@@ -110,7 +130,14 @@ class Solar_Log_Adapter_Chromephp extends Solar_Log_Adapter {
         $this->_cookie();
         return true;
     }
-
+    
+    /**
+     * 
+     * Sets the ChromePHP cookie.
+     * 
+     * @return void
+     * 
+     */
     protected function _cookie()
     {
         $data = array(
@@ -122,6 +149,15 @@ class Solar_Log_Adapter_Chromephp extends Solar_Log_Adapter {
         setcookie($this->_config['cookie'], json_encode($data), time() + 30);
     }
 
+    /**
+     * 
+     * Encodes values for ChromePHP.
+     * 
+     * @param string $value The value to be encoded.
+     * 
+     * @return void The encoded value.
+     * 
+     */
     protected function _encode($value)
     {
         if (!is_string($value)) {

@@ -37,7 +37,7 @@ class Solar_Log_Adapter_Chromephp extends Solar_Log_Adapter {
      * 
      * @config string cookie The ChromePHP cookie name.
      * 
-     * @config string cookie The ChromePHP version number.
+     * @config string version The ChromePHP version number.
      * 
      * @var array
      * 

@@ -188,7 +188,9 @@ class Solar_Session_Manager_Adapter_Native extends Solar_Session_Manager_Adapter
 
     /**
      * 
-     * Allow sessions to register with the mothership
+     * Allow session segments to register with the mothership.
+     * 
+     * @param Solar_Session $session The session object to add.
      * 
      * @return void
      * 

@@ -80,7 +80,9 @@ class Solar_Session_Manager_Adapter_None extends Solar_Session_Manager_Adapter
 
     /**
      * 
-     * Allow session segments to register with the mothership
+     * Allow session segments to register with the mothership.
+     * 
+     * @param Solar_Session $session The session object to add.
      * 
      * @return void
      * 

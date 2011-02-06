@@ -82,6 +82,12 @@ class Solar_Auth extends Solar_Base {
      * @config bool auto_logout Whether or not to allow automatic logout at 
      * start() time. Default true.
      * 
+     * @config callback login_callback A callback to execute after successful login, but before
+     *   the source postLogin() method is called.
+     * 
+     * @config callback logout_callback A callback to execute after successful logout, but before
+     *   the source postLogout() method is called.
+     * 
      * @config dependency login_protocol A Solar_Auth_Login dependency to 
      * handle login attempts.
      * 

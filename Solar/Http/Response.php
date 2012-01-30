@@ -446,8 +446,8 @@ class Solar_Http_Response extends Solar_Base
      */
     public function getCookie($key)
     {
-        if (! empty($this->_cookie[$key])) {
-            return $this->_cookie[$key];
+        if (! empty($this->_cookies[$key])) {
+            return $this->_cookies[$key];
         }
     }
     

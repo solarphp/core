@@ -71,7 +71,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter
         
         // get the access source and split into lines
         $src = file_get_contents($this->_config['file']);
-        $src = preg_replace('/[ \t]{2,}/', ' ', trim($src));
+        $src = preg_replace('/[ \t]+/', ' ', trim($src));
         $lines = explode("\n", $src);
         
         foreach ($lines as $line) {

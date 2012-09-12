@@ -232,7 +232,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
         
         if ($schema) {
             // sanitize and add a dot
-            $schema = preg_replace('/[^\w]/', '', $table) . '.';
+            $schema = preg_replace('/[^\w]/', '', $schema) . '.';
         }
         
         // where the description will be stored

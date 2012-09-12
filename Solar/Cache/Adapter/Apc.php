@@ -71,8 +71,6 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
             $life = $this->_life;
         }
         
-        Solar::dump($life, 'life');
-        
         // save to apc
         return apc_store($key, $data, $life);
     }

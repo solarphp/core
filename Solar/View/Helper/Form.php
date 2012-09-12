@@ -1503,6 +1503,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _buildElementDescr(&$html, $info)
     {
+
+        // get localized value if it has been set
+        $info['descr'] = $this->_view->getText($info['descr']); 
+
         // only build a description if it's non-empty, and isn't a
         // DESCR_* "empty" locale value.
         if (! $info['descr'] || substr($info['descr'], 0, 6) == 'DESCR_') {

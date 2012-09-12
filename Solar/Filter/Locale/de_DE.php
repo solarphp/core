@@ -29,6 +29,8 @@ return array(
     'INVALID_IPV4'                      => 'Bitte geben Sie eine gültige IPv4 Adresse ein.',
     'INVALID_IPV6'                      => 'Bitte geben Sie eine gültige IPv6 Adresse ein.',
     'INVALID_ISO_DATE'                  => 'Bitte geben Sie ein Datum im "JJJJ-MM-TT" Format ein.',
+    'INVALID_MIN_ISO_DATE'              => 'Bitte geben Sie ein spaeteres Datum ein .',
+    'INVALID_MAX_ISO_DATE'              => 'Bitte geben Sie ein früheres Datum ein .',
     'INVALID_ISO_TIME'                  => 'Bitte geben Sie eine Zeit im "HH:MM:SS" Format ein.',
     'INVALID_ISO_TIMESTAMP'             => 'Bitte geben Sie einen Zeitstempel im "JJJJ-MM-TTThh:HH:SS" Format ein.',
     'INVALID_LOCALE_CODE'               => 'Bitte geben Sie ein gültiges Sprachcode im ISO 639 Format ein (z.B de_DE).',

@@ -51,7 +51,11 @@ class Solar_Auth_Storage_Adapter_Multi extends Solar_Auth_Storage_Adapter
      */
     protected function _postConstruct()
     {
-        $this->_adapters = (array) $this->_config['adapters'];
+        $adapters = (array) $this->_config['adapters'];
+        foreach ($adapters as $class) {
+            $this->_adapters[] = Solar::factory($class);
+            // alternatively use a Solar::dependency(); might be a better option
+        }
     }
     /**
      * 
@@ -66,7 +70,7 @@ class Solar_Auth_Storage_Adapter_Multi extends Solar_Auth_Storage_Adapter
     public function validateCredentials($credentials)
     {
         foreach ($this->_adapters as $adapter) {
-            $result = $adapter->validateCredentials();
+            $result = $adapter->validateCredentials($credentials);
             if ($result) {
                 return $result;
             }

@@ -296,7 +296,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      */
     public function fetchOrSave($key, $callback, $args = array(), $life = null)
     {
-        $this->_fetchOrInsert('save', $key, $callback, $args, $life);
+        return $this->_fetchOrInsert('save', $key, $callback, $args, $life);
     }
     
     /**
@@ -339,7 +339,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      */
     public function fetchOrAdd($key, $callback, $args = array(), $life = null)
     {
-        $this->_fetchOrInsert('add', $key, $callback, $args, $life);
+        return $this->_fetchOrInsert('add', $key, $callback, $args, $life);
     }
     
     /**
@@ -457,7 +457,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     protected function _fetchOrInsert($method, $key, $callback, $args = null, $life = null)
     {
         // only attempt a fetch if the cache is active
-        if ($this->active) {
+        if ($this->_active) {
             // try to fetch the data
             $data = $this->fetch($key);
             if ($data !== false) {
